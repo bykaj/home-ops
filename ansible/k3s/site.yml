@@ -1,0 +1,87 @@
+---
+- name: Pre tasks
+  hosts: all
+  pre_tasks:
+    - name: Verify Ansible is version 2.11 or above. (If this fails you may need to update Ansible)
+      ansible.builtin.assert:
+        that: ansible_version.full is version_compare('2.11', '>=')
+        msg: >
+          "Ansible is out of date. See here for more info: https://docs.technotim.live/posts/ansible-automation/"
+
+- name: Prepare Proxmox cluster
+  hosts: proxmox
+  gather_facts: true
+  become: true
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: proxmox_lxc
+      when: proxmox_lxc_configure
+
+- name: Prepare K3s nodes
+  hosts: k3s_cluster
+  gather_facts: true
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: prepare_lxc
+      become: true
+      when: proxmox_lxc_configure
+    - role: prerequisites
+      become: true
+    - role: download
+      become: true
+    - role: k3s_custom_registries
+      become: true
+      when: custom_registries
+  post_tasks:
+    - name: Reboot and wait for nodes to come back up
+      become: true
+      ansible.builtin.reboot:
+        reboot_command: "{{ custom_reboot_command | default(omit) }}"
+        reboot_timeout: 3600
+
+- name: Setup K3s servers
+  hosts: master
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: k3s_server
+      become: true
+
+- name: Setup K3s agents
+  hosts: node
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: k3s_agent
+      become: true
+
+- name: Configure K3s cluster
+  hosts: master
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: k3s_server_post
+      become: true
+
+- name: Change MOTD
+  hosts: k3s_cluster
+  gather_facts: true
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - role: change_motd
+      become: true
+      when: change_motd
+
+- name: Storing kubeconfig
+  hosts: master
+  environment: "{{ proxy_env | default({}) }}"
+  tasks:
+    - name: Copying kubeconfig from {{ hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname'] }}
+      ansible.builtin.fetch:
+        src: "{{ ansible_user_dir }}/.kube/config"
+        dest: ./kubeconfig
+        flat: true
+      when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+    - name: Copying kubeconfig from {{ hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname'] }}
+      ansible.builtin.fetch:
+        src: "{{ ansible_user_dir }}/.kube/config"
+        dest: ~/.kube/config
+        flat: true
+      when: (copy_kube_config) and (ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname'])

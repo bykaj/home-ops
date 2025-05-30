@@ -1,0 +1,2 @@
+#!/bin/bash
+figlet -f /usr/share/figlet/basic.flf -w 120 $(hostname) | /usr/games/lolcat -f

@@ -1,0 +1,8 @@
+---
+argument_specs:
+  main:
+    short_description: Change the Message Of The Day (MOTD)
+    options:
+      change_motd:
+        description: True or False
+        required: true

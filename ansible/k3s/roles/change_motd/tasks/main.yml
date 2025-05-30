@@ -1,0 +1,35 @@
+---
+- name: Install the packages figlet and lolcat
+  ansible.builtin.package:
+    name:
+      - figlet
+      - lolcat
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Change permissions on existing MOTD files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: u=rw,g=r,o=r
+  with_items:
+    - "/etc/update-motd.d/10-help-text"
+    - "/etc/update-motd.d/50-motd-news"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Copy MOTD header
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/assets/change_motd/10-hostname"
+    dest: /etc/update-motd.d/10-hostname
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Figlet font
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/assets/change_motd/basic.flf"
+    dest: /usr/share/figlet/basic.flf
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+  when: ansible_distribution == "Ubuntu"
