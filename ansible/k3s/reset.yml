@@ -21,7 +21,7 @@
         state: absent
     - name: Remove ~/.kube
       ansible.builtin.file:
-        path: "~/.kube"
+        path: "~/.kube/"
         state: absent
       when: copy_kube_config
 
