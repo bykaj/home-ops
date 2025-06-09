@@ -1,0 +1,5 @@
+machine:
+  network:
+    disableSearchDomain: true
+    nameservers:
+      - 10.73.0.254
