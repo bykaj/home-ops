@@ -21,7 +21,7 @@ spec:
       namespace: network
   values:
     controllers:
-      echo:
+      it-tools:
         strategy: RollingUpdate
         containers:
           app:
