@@ -1,0 +1,7 @@
+kubernetes-k8s-server-01.yaml
+kubernetes-k8s-server-02.yaml
+kubernetes-k8s-server-03.yaml
+kubernetes-k8s-agent-01.yaml
+kubernetes-k8s-agent-02.yaml
+kubernetes-k8s-agent-03.yaml
+talosconfig
