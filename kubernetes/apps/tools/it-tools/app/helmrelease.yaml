@@ -61,12 +61,13 @@ spec:
             subPath: tmp
       media:
         enabled: true
-        existingClaim: smb-media-pvc
+        existingClaim: tools-smb-media-pvc
         type: persistentVolumeClaim
         advancedMounts:
           it-tools:
             app:
-              - path: /data
+              - path: /series
+                subPath: Series
     serviceMonitor:
       app:
         serviceName: it-tools

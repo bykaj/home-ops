@@ -5,7 +5,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: smb-media-pv
+  name: tools-smb-media-pv
 spec:
   capacity:
     storage: 2T
@@ -19,7 +19,7 @@ spec:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: "${SMB_SERVER}#Media"
+    volumeHandle: tools-smb-media
     volumeAttributes:
       source: //${SMB_SERVER}/Media
     nodeStageSecretRef:
@@ -30,7 +30,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: smb-media-pvc
+  name: tools-smb-media-pvc
 spec:
   accessModes:
     - ReadWriteMany
