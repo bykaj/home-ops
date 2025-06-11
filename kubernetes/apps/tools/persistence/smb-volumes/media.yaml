@@ -37,5 +37,5 @@ spec:
   resources:
     requests:
       storage: 2T
-  volumeName: smb-media-pv
+  volumeName: tools-smb-media-pv
   storageClassName: smb
