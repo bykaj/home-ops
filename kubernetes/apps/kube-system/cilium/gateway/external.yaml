@@ -15,28 +15,28 @@ spec:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "external.${APPS_DOMAIN}"
   listeners:
-    - name: http
+    - name: http-apps
       protocol: HTTP
       port: 80
       hostname: "*.${APPS_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: http
+    - name: http-apps-alt
       protocol: HTTP
       port: 80
       hostname: "*.${APPS_ALT_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: http
+    - name: http-dev
       protocol: HTTP
       port: 80
       hostname: "*.${DEV_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https
+    - name: https-apps
       protocol: HTTPS
       port: 443
       hostname: "*.${APPS_DOMAIN}"
@@ -47,7 +47,7 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${APPS_DOMAIN/./-}-production-tls
-    - name: https
+    - name: https-apps-alt
       protocol: HTTPS
       port: 443
       hostname: "*.${APPS_ALT_DOMAIN}"
@@ -58,7 +58,7 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${APPS_ALT_DOMAIN/./-}-production-tls
-    - name: https
+    - name: https-dev
       protocol: HTTPS
       port: 443
       hostname: "*.${DEV_DOMAIN}"
