@@ -16,9 +16,9 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  # dependsOn:
-  #   - name: cloudflare-tunnel
-  #     namespace: network
+  dependsOn:
+    - name: cloudflare-tunnel
+      namespace: network
   values:
     controllers:
       it-tools:
