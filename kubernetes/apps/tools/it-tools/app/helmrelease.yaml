@@ -66,7 +66,7 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["tools.${SECRET_DOMAIN}"]
+        hostnames: ["tools.${DEV_DOMAIN}"]
         parentRefs:
           - name: internal
             namespace: kube-system

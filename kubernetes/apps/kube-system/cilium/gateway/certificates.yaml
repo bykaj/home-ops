@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${APPS_DOMAIN/./-}-production"
+spec:
+  secretName: "${APPS_DOMAIN/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${APPS_DOMAIN}"
+  dnsNames: ["${APPS_DOMAIN}", "*.${APPS_DOMAIN}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${APPS_ALT_DOMAIN/./-}-production"
+spec:
+  secretName: "${APPS_ALT_DOMAIN/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${APPS_ALT_DOMAIN}"
+  dnsNames: ["${APPS_ALT_DOMAIN}", "*.${APPS_ALT_DOMAIN}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DEV_DOMAIN/./-}-production"
+spec:
+  secretName: "${DEV_DOMAIN/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DEV_DOMAIN}"
+  dnsNames: ["${DEV_DOMAIN}", "*.${DEV_DOMAIN}"]

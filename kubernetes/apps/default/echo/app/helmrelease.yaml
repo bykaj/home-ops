@@ -73,7 +73,7 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        hostnames: ["{{ .Release.Name }}.${DEV_DOMAIN}"]
         parentRefs:
           - name: external
             namespace: kube-system
