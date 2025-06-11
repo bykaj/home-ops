@@ -17,6 +17,8 @@ spec:
     - noperm
   csi:
     driver: smb.csi.k8s.io
+    # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
     volumeHandle: "${SMB_SERVER}#Media"
     volumeAttributes:
       source: //${SMB_SERVER}/Media
