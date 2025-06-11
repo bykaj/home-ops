@@ -68,9 +68,6 @@ spec:
       app:
         hostnames: ["tools.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
           - name: internal
             namespace: kube-system
             sectionName: https
