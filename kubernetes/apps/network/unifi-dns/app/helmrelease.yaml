@@ -64,9 +64,9 @@ spec:
     triggerLoopOnEvent: true
     policy: sync
     sources: ["gateway-httproute", "service"]
-    txtOwnerId: main
-    txtPrefix: k8s.main.
-    domainFilters: ["${APPS_DOMAIN}", "${APPS_ALT_DOMAIN}", "${DEV_DOMAIN}"]
+    txtOwnerId: k8s.
+    txtPrefix: default
+    domainFilters: ["${DOMAIN_APP_APPS}", "${DOMAIN_APP_INFRA}", "${DOMAIN_DEV}", "${DOMAIN_ID}", "${DOMAIN_CLOUD}", "${DOMAIN_ST}", "home.${DOMAIN_NET}", "kvm.home.${DOMAIN_NET}"]
     serviceMonitor:
       enabled: true
     podAnnotations:

@@ -1,18 +1,26 @@
 ---
 originRequest:
-  originServerName: "external.${APPS_DOMAIN}"
+  originServerName: "proxy.${DOMAIN_NET}"
 
 ingress:
-  - hostname: "${APPS_DOMAIN}"
+  - hostname: "${DOMAIN_APP_APPS}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
-  - hostname: "*.${APPS_DOMAIN}"
+  - hostname: "*.${DOMAIN_APP_APPS}"
     service: *svc
-  - hostname: "${APPS_ALT_DOMAIN}"
+  - hostname: "${DOMAIN_APP_INFRA}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
-  - hostname: "*.${APPS_ALT_DOMAIN}"
+  - hostname: "*.${DOMAIN_APP_INFRA}"
     service: *svc
-  - hostname: "${DEV_DOMAIN}"
+  - hostname: "${DOMAIN_DEV}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
-  - hostname: "*.${DEV_DOMAIN}"
+  - hostname: "*.${DOMAIN_DEV}"
+    service: *svc
+  - hostname: "${DOMAIN_ID}"
+    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+  - hostname: "*.${DOMAIN_ID}"
+    service: *svc
+  - hostname: "${DOMAIN_CLOUD}"
+    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+  - hostname: "*.${DOMAIN_CLOUD}"
     service: *svc
   - service: http_status:404

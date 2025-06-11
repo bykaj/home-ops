@@ -66,11 +66,11 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["tools.${DEV_DOMAIN}"]
+        hostnames: ["tools.${DOMAIN_APP_APPS}"]
         parentRefs:
-          - name: internal
+          - name: external
             namespace: kube-system
-            sectionName: https-dev
+            sectionName: https-app-apps
         rules:
           - backendRefs:
               - identifier: app

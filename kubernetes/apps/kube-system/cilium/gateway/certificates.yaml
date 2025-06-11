@@ -3,37 +3,102 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${APPS_DOMAIN/./-}-production"
+  name: "${DOMAIN_APP_APPS/./-}-production"
 spec:
-  secretName: "${APPS_DOMAIN/./-}-production-tls"
+  secretName: "${DOMAIN_APP_APPS/./-}-production-tls"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${APPS_DOMAIN}"
-  dnsNames: ["${APPS_DOMAIN}", "*.${APPS_DOMAIN}"]
+  commonName: "${DOMAIN_APP_APPS}"
+  dnsNames: ["${DOMAIN_APP_APPS}", "*.${DOMAIN_APP_APPS}"]
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${APPS_ALT_DOMAIN/./-}-production"
+  name: "${DOMAIN_APP_INFRA/./-}-production"
 spec:
-  secretName: "${APPS_ALT_DOMAIN/./-}-production-tls"
+  secretName: "${DOMAIN_APP_INFRA/./-}-production-tls"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${APPS_ALT_DOMAIN}"
-  dnsNames: ["${APPS_ALT_DOMAIN}", "*.${APPS_ALT_DOMAIN}"]
+  commonName: "${DOMAIN_APP_INFRA}"
+  dnsNames: ["${DOMAIN_APP_INFRA}", "*.${DOMAIN_APP_INFRA}"]
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DEV_DOMAIN/./-}-production"
+  name: "${DOMAIN_DEV/./-}-production"
 spec:
-  secretName: "${DEV_DOMAIN/./-}-production-tls"
+  secretName: "${DOMAIN_DEV/./-}-production-tls"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${DEV_DOMAIN}"
-  dnsNames: ["${DEV_DOMAIN}", "*.${DEV_DOMAIN}"]
+  commonName: "${DOMAIN_DEV}"
+  dnsNames: ["${DOMAIN_DEV}", "*.${DOMAIN_DEV}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DOMAIN_ID/./-}-production"
+spec:
+  secretName: "${DOMAIN_ID/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_ID}"
+  dnsNames: ["${DOMAIN_ID}", "*.${DOMAIN_ID}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DOMAIN_CLOUD/./-}-production"
+spec:
+  secretName: "${DOMAIN_CLOUD/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_CLOUD}"
+  dnsNames: ["${DOMAIN_CLOUD}", "*.${DOMAIN_CLOUD}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "home-${DOMAIN_NET/./-}-production"
+spec:
+  secretName: "home-${DOMAIN_NET/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "home.${DOMAIN_NET}"
+  dnsNames: ["home.${DOMAIN_NET}", "*.home.${DOMAIN_NET}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "kvm-home-${DOMAIN_NET/./-}-production"
+spec:
+  secretName: "kvm-home-${DOMAIN_NET/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "kvm.home.${DOMAIN_NET}"
+  dnsNames: ["kvm.home.${DOMAIN_NET}", "*.kvm.home.${DOMAIN_NET}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DOMAIN_ST/./-}-production"
+spec:
+  secretName: "${DOMAIN_ST/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_ST}"
+  dnsNames: ["${DOMAIN_ST}", "*.${DOMAIN_ST}"]

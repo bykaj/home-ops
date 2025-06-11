@@ -5,7 +5,7 @@ kind: Gateway
 metadata:
   name: internal
   annotations:
-    external-dns.alpha.kubernetes.io/target: "internal.${APPS_DOMAIN}"
+    external-dns.alpha.kubernetes.io/target: "proxy.home.${DOMAIN_NET}"
 spec:
   gatewayClassName: cilium
   addresses:
@@ -13,59 +13,149 @@ spec:
       value: "10.73.3.30"
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "internal.${APPS_DOMAIN}"
+      external-dns.alpha.kubernetes.io/hostname: "proxy.home.${DOMAIN_NET}"
   listeners:
-    - name: http-apps
+    - name: http-app-apps
       protocol: HTTP
       port: 80
-      hostname: "*.${APPS_DOMAIN}"
+      hostname: "*.${DOMAIN_APP_APPS}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: http-apps-alt
+    - name: https-app-apps
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_APP_APPS}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_APP_APPS/./-}-production-tls
+    - name: http-app-infra
       protocol: HTTP
       port: 80
-      hostname: "*.${APPS_ALT_DOMAIN}"
+      hostname: "*.${DOMAIN_APP_INFRA}"
       allowedRoutes:
         namespaces:
           from: Same
+    - name: https-app-infra
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_APP_INFRA}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_APP_INFRA/./-}-production-tls
     - name: http-dev
       protocol: HTTP
       port: 80
-      hostname: "*.${DEV_DOMAIN}"
+      hostname: "*.${DOMAIN_DEV}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-apps
-      protocol: HTTPS
-      port: 443
-      hostname: "*.${APPS_DOMAIN}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: ${APPS_DOMAIN/./-}-production-tls
-    - name: https-apps-alt
-      protocol: HTTPS
-      port: 443
-      hostname: "*.${APPS_ALT_DOMAIN}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: ${APPS_ALT_DOMAIN/./-}-production-tls
     - name: https-dev
       protocol: HTTPS
       port: 443
-      hostname: "*.${DEV_DOMAIN}"
+      hostname: "*.${DOMAIN_DEV}"
       allowedRoutes:
         namespaces:
           from: All
       tls:
         certificateRefs:
           - kind: Secret
-            name: ${DEV_DOMAIN/./-}-production-tls
+            name: ${DOMAIN_DEV/./-}-production-tls
+    - name: http-id
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_ID}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-id
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_ID}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_ID/./-}-production-tls
+    - name: http-cloud
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_CLOUD}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-cloud
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_CLOUD}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_CLOUD/./-}-production-tls
+    - name: http-st
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_ST}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-st
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_ST}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_ST/./-}-production-tls
+    - name: http-net-home
+      protocol: HTTP
+      port: 80
+      hostname: "*.home.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-net-home
+      protocol: HTTPS
+      port: 443
+      hostname: "*.home.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: home-${DOMAIN_NET/./-}-production-tls
+    - name: http-net-home-kvm
+      protocol: HTTP
+      port: 80
+      hostname: "*.kvm.home.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-net-home-kvm
+      protocol: HTTPS
+      port: 443
+      hostname: "*.kvm.home.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: kvm-home-${DOMAIN_NET/./-}-production-tls
