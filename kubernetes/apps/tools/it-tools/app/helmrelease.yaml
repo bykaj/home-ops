@@ -59,15 +59,15 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-      media:
-        enabled: true
-        existingClaim: tools-smb-media-pvc
-        type: persistentVolumeClaim
-        advancedMounts:
-          it-tools:
-            app:
-              - path: /series
-                subPath: Series
+      # media:
+      #   enabled: true
+      #   existingClaim: tools-smb-media-pvc
+      #   type: persistentVolumeClaim
+      #   advancedMounts:
+      #     it-tools:
+      #       app:
+      #         - path: /series
+      #           subPath: Series
     serviceMonitor:
       app:
         serviceName: it-tools
