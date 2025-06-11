@@ -59,6 +59,14 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+      public:
+        enabled: true
+        existingClaim: smb-media-pvc
+        type: persistentVolumeClaim
+        advancedMounts:
+          it-tools:
+            app:
+              - path: /data
     serviceMonitor:
       app:
         serviceName: it-tools
