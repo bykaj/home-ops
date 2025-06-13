@@ -5,10 +5,10 @@ clusterName: kubernetes
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://10.73.3.10:6443
+endpoint: https://10.73.10.1:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "10.73.3.10"
+  - "10.73.10.1"
   - "k8s-vip.home.cetana.net"
 additionalMachineCertSans: *sans
 
@@ -20,8 +20,8 @@ cniConfig:
   name: none
 
 nodes:
-  - hostname: "k8s-server-01"
-    ipAddress: "10.73.3.150"
+  - hostname: "k8s-node-01"
+    ipAddress: "10.73.10.110"
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
@@ -29,18 +29,18 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:49:4f:6b"
+          hardwareAddr: "bc:24:11:9f:e0:7f"
         dhcp: false
         addresses:
-          - "10.73.3.150/24"
+          - "10.73.10.110/24"
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.73.0.254"
         mtu: 1500
         vip:
-          ip: "10.73.3.10"
-  - hostname: "k8s-server-02"
-    ipAddress: "10.73.3.151"
+          ip: "10.73.10.1"
+  - hostname: "k8s-node-02"
+    ipAddress: "10.73.10.111"
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
@@ -48,18 +48,18 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:21:56:f7"
+          hardwareAddr: "bc:24:11:8f:02:81"
         dhcp: false
         addresses:
-          - "10.73.3.151/24"
+          - "10.73.10.111/24"
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.73.0.254"
         mtu: 1500
         vip:
-          ip: "10.73.3.10"
-  - hostname: "k8s-server-03"
-    ipAddress: "10.73.3.152"
+          ip: "10.73.10.1"
+  - hostname: "k8s-node-03"
+    ipAddress: "10.73.10.112"
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
@@ -67,67 +67,16 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:4b:90:e3"
+          hardwareAddr: "bc:24:11:54:c3:fe"
         dhcp: false
         addresses:
-          - "10.73.3.152/24"
+          - "10.73.10.112/24"
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.73.0.254"
         mtu: 1500
         vip:
-          ip: "10.73.3.10"
-  - hostname: "k8s-agent-01"
-    ipAddress: "10.73.3.155"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/0751f1135eff2bc906854a62cc450c94f3dc65428d42110fc7998db8959dd5e5
-    controlPlane: false
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:02:19:f6"
-        dhcp: false
-        addresses:
-          - "10.73.3.155/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
-        mtu: 1500
-  - hostname: "k8s-agent-02"
-    ipAddress: "10.73.3.156"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/0751f1135eff2bc906854a62cc450c94f3dc65428d42110fc7998db8959dd5e5
-    controlPlane: false
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:96:60:4b"
-        dhcp: false
-        addresses:
-          - "10.73.3.156/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
-        mtu: 1500
-  - hostname: "k8s-agent-03"
-    ipAddress: "10.73.3.157"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/0751f1135eff2bc906854a62cc450c94f3dc65428d42110fc7998db8959dd5e5
-    controlPlane: false
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:63:03:0e"
-        dhcp: false
-        addresses:
-          - "10.73.3.157/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
-        mtu: 1500
+          ip: "10.73.10.1"
 
 # Global patches
 patches:
