@@ -15,6 +15,24 @@ spec:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "proxy.home.${DOMAIN_NET}"
   listeners:
+    - name: http-net
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-net
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_NET/./-}-production-tls
     - name: http-app-apps
       protocol: HTTP
       port: 80

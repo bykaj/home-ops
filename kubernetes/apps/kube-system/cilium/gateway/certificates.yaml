@@ -68,6 +68,19 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: "${DOMAIN_NET/./-}-production"
+spec:
+  secretName: "${DOMAIN_NET/./-}-production-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_NET}"
+  dnsNames: ["${DOMAIN_NET}", "*.${DOMAIN_NET}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: "home-${DOMAIN_NET/./-}-production"
 spec:
   secretName: "home-${DOMAIN_NET/./-}-production-tls"
