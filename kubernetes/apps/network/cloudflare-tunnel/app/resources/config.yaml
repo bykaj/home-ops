@@ -3,6 +3,10 @@ originRequest:
   originServerName: "proxy.${DOMAIN_NET}"
 
 ingress:
+  - hostname: "${DOMAIN_NET}"
+    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+  - hostname: "*.${DOMAIN_NET}"
+    service: *svc
   - hostname: "${DOMAIN_APP_APPS}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${DOMAIN_APP_APPS}"
