@@ -6,4 +6,5 @@ resources:
   - ./bykaj.yaml
   - ./csi-driver-smb.yaml
   - ./external-dns.yaml
+  - ./external-secrets.yaml
   - ./intel-device-plugins.yaml
