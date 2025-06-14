@@ -9,7 +9,7 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./csi-driver-smb/ks.yaml
-  - ./intel-device-plugin-operator/ks.yaml
+  - ./intel-device-plugins/ks.yaml
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
