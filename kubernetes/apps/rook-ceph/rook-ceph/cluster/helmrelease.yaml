@@ -92,7 +92,7 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
-        deviceFilter: /dev/sdb
+        deviceFilter: sdb
         config:
           osdsPerDevice: "1"
     cephBlockPools:
