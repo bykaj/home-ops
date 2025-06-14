@@ -8,7 +8,7 @@ kubernetesVersion: "${kubernetesVersion}"
 endpoint: https://10.73.10.1:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "k8s-vip.home.cetana.net"
+  - "kube-vip.home.cetana.net"
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.42.0.0/16"]
@@ -19,7 +19,7 @@ cniConfig:
   name: none
 
 nodes:
-  - hostname: "k8s-node-01"
+  - hostname: "kube-node-01"
     ipAddress: "10.73.10.110"
     installDisk: "/dev/sda"
     machineSpec:
@@ -28,7 +28,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:b3:0c:a6"
+          hardwareAddr: "bc:24:11:71:02:e7"
         dhcp: false
         addresses:
           - "10.73.10.110/24"
@@ -38,7 +38,7 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.73.10.1"
-  - hostname: "k8s-node-02"
+  - hostname: "kube-node-02"
     ipAddress: "10.73.10.111"
     installDisk: "/dev/sda"
     machineSpec:
@@ -47,7 +47,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:c8:c3:0d"
+          hardwareAddr: "bc:24:11:75:21:c1"
         dhcp: false
         addresses:
           - "10.73.10.111/24"
@@ -57,7 +57,7 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.73.10.1"
-  - hostname: "k8s-node-03"
+  - hostname: "kube-node-03"
     ipAddress: "10.73.10.112"
     installDisk: "/dev/sda"
     machineSpec:
@@ -66,7 +66,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:7a:75:45"
+          hardwareAddr: "bc:24:11:d2:e2:08"
         dhcp: false
         addresses:
           - "10.73.10.112/24"
@@ -90,4 +90,3 @@ controlPlane:
   patches:
     - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
-
