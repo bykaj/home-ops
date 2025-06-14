@@ -8,4 +8,4 @@ spec:
   endpoints:
     - dnsName: "proxy.${DOMAIN_NET}"
       recordType: CNAME
-      targets: ["46521281-909d-47c1-ada4-6970544f7abc.cfargotunnel.com"]
+      targets: ["fafb1c13-9081-44a4-9db0-ef89d27679e7.cfargotunnel.com"]
