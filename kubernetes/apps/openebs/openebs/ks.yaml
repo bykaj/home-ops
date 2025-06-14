@@ -9,7 +9,7 @@ spec:
   targetNamespace: *namespace
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *appn
+      app.kubernetes.io/name: *app
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/openebs/openebs/app
