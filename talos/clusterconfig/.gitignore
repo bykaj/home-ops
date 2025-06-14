@@ -5,3 +5,6 @@ kubernetes-k8s-node-03.yaml
 k8s-home-k8s-node-01.yaml
 k8s-home-k8s-node-02.yaml
 k8s-home-k8s-node-03.yaml
+homelab-k8s-node-01.yaml
+homelab-k8s-node-02.yaml
+homelab-k8s-node-03.yaml
