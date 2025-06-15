@@ -7,7 +7,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_APP_APPS/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_APP_APPS}"
   dnsNames: ["${DOMAIN_APP_APPS}", "*.${DOMAIN_APP_APPS}"]
@@ -20,7 +20,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_APP_INFRA/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_APP_INFRA}"
   dnsNames: ["${DOMAIN_APP_INFRA}", "*.${DOMAIN_APP_INFRA}"]
@@ -33,7 +33,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_DEV/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_DEV}"
   dnsNames: ["${DOMAIN_DEV}", "*.${DOMAIN_DEV}"]
@@ -46,7 +46,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_ID/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_ID}"
   dnsNames: ["${DOMAIN_ID}", "*.${DOMAIN_ID}"]
@@ -59,7 +59,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_CLOUD/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_CLOUD}"
   dnsNames: ["${DOMAIN_CLOUD}", "*.${DOMAIN_CLOUD}"]
@@ -72,7 +72,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_NET}"
   dnsNames: ["${DOMAIN_NET}", "*.${DOMAIN_NET}"]
@@ -85,7 +85,7 @@ metadata:
 spec:
   secretName: "home-${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "home.${DOMAIN_NET}"
   dnsNames: ["home.${DOMAIN_NET}", "*.home.${DOMAIN_NET}"]
@@ -98,7 +98,7 @@ metadata:
 spec:
   secretName: "kvm-home-${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "kvm.home.${DOMAIN_NET}"
   dnsNames: ["kvm.home.${DOMAIN_NET}", "*.kvm.home.${DOMAIN_NET}"]
@@ -111,7 +111,7 @@ metadata:
 spec:
   secretName: "${DOMAIN_ST/./-}-tls"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${DOMAIN_ST}"
   dnsNames: ["${DOMAIN_ST}", "*.${DOMAIN_ST}"]
