@@ -6,39 +6,31 @@ metadata:
   name: &app sonarr
   namespace: &namespace downloads
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
-  interval: 30m
-  timeout: 5m
-  path: "./kubernetes/apps/downloads/sonarr/app"
+  components:
+    - ../../../../components/volsync
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  interval: 1h
+  path: ./kubernetes/apps/downloads/sonarr/app
   postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
       - name: cluster-secrets
         kind: Secret
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
   wait: false
-  dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
-    - name: volsync
-      namespace: system
-    - name: keda
-      namespace: system
-  components:
-    - ../../../../components/volsync
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CLAIM: sonarr-config
