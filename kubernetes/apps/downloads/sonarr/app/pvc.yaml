@@ -9,5 +9,4 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: ceph-block
-  volumeName: sonarr-config-pv
-  
+  #volumeName: sonarr-config-pv
