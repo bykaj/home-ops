@@ -29,6 +29,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               SONARR__APP__INSTANCENAME: Sonarr
+              SONARR__APP__THEME: auto
               SONARR__AUTH__METHOD: External
               SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
               SONARR__LOG__DBENABLED: "False"
@@ -80,6 +81,10 @@ spec:
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
       media:
         enabled: true
         existingClaim: downloads-smb-media-pvc
