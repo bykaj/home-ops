@@ -24,11 +24,11 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/nocloud-installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:71:02:e7"
+          hardwareAddr: "bc:24:11:6a:24:d1"
         dhcp: false
         addresses:
           - "10.73.10.110/24"
@@ -43,11 +43,11 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/nocloud-installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:75:21:c1"
+          hardwareAddr: "bc:24:11:e7:b2:03"
         dhcp: false
         addresses:
           - "10.73.10.111/24"
@@ -62,11 +62,11 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/nocloud-installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:d2:e2:08"
+          hardwareAddr: "bc:24:11:a7:a4:f2"
         dhcp: false
         addresses:
           - "10.73.10.112/24"
