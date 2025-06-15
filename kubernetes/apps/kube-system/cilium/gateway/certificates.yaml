@@ -3,11 +3,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_APP_APPS/./-}-production"
+  name: "${DOMAIN_APP_APPS/./-}"
 spec:
-  secretName: "${DOMAIN_APP_APPS/./-}-production-tls"
+  secretName: "${DOMAIN_APP_APPS/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_APP_APPS}"
   dnsNames: ["${DOMAIN_APP_APPS}", "*.${DOMAIN_APP_APPS}"]
@@ -16,11 +16,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_APP_INFRA/./-}-production"
+  name: "${DOMAIN_APP_INFRA/./-}"
 spec:
-  secretName: "${DOMAIN_APP_INFRA/./-}-production-tls"
+  secretName: "${DOMAIN_APP_INFRA/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_APP_INFRA}"
   dnsNames: ["${DOMAIN_APP_INFRA}", "*.${DOMAIN_APP_INFRA}"]
@@ -29,11 +29,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_DEV/./-}-production"
+  name: "${DOMAIN_DEV/./-}"
 spec:
-  secretName: "${DOMAIN_DEV/./-}-production-tls"
+  secretName: "${DOMAIN_DEV/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_DEV}"
   dnsNames: ["${DOMAIN_DEV}", "*.${DOMAIN_DEV}"]
@@ -42,11 +42,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_ID/./-}-production"
+  name: "${DOMAIN_ID/./-}"
 spec:
-  secretName: "${DOMAIN_ID/./-}-production-tls"
+  secretName: "${DOMAIN_ID/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_ID}"
   dnsNames: ["${DOMAIN_ID}", "*.${DOMAIN_ID}"]
@@ -55,11 +55,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_CLOUD/./-}-production"
+  name: "${DOMAIN_CLOUD/./-}"
 spec:
-  secretName: "${DOMAIN_CLOUD/./-}-production-tls"
+  secretName: "${DOMAIN_CLOUD/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_CLOUD}"
   dnsNames: ["${DOMAIN_CLOUD}", "*.${DOMAIN_CLOUD}"]
@@ -68,11 +68,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_NET/./-}-production"
+  name: "${DOMAIN_NET/./-}"
 spec:
-  secretName: "${DOMAIN_NET/./-}-production-tls"
+  secretName: "${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_NET}"
   dnsNames: ["${DOMAIN_NET}", "*.${DOMAIN_NET}"]
@@ -81,11 +81,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "home-${DOMAIN_NET/./-}-production"
+  name: "home-${DOMAIN_NET/./-}"
 spec:
-  secretName: "home-${DOMAIN_NET/./-}-production-tls"
+  secretName: "home-${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "home.${DOMAIN_NET}"
   dnsNames: ["home.${DOMAIN_NET}", "*.home.${DOMAIN_NET}"]
@@ -94,11 +94,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "kvm-home-${DOMAIN_NET/./-}-production"
+  name: "kvm-home-${DOMAIN_NET/./-}"
 spec:
-  secretName: "kvm-home-${DOMAIN_NET/./-}-production-tls"
+  secretName: "kvm-home-${DOMAIN_NET/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "kvm.home.${DOMAIN_NET}"
   dnsNames: ["kvm.home.${DOMAIN_NET}", "*.kvm.home.${DOMAIN_NET}"]
@@ -107,11 +107,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_ST/./-}-production"
+  name: "${DOMAIN_ST/./-}"
 spec:
-  secretName: "${DOMAIN_ST/./-}-production-tls"
+  secretName: "${DOMAIN_ST/./-}-tls"
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt
     kind: ClusterIssuer
   commonName: "${DOMAIN_ST}"
   dnsNames: ["${DOMAIN_ST}", "*.${DOMAIN_ST}"]
