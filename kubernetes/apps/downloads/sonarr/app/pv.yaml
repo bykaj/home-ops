@@ -9,12 +9,13 @@ spec:
   csi:
     driver: rook-ceph.rbd.csi.ceph.com
     # volumeHandle: 0001-0009-rook-ceph-0000000000000002-99204b86-f151-49a5-a16e-1fae2232e3f2
+    volumeHandle: &volume sonarr-config
     fsType: ext4
     volumeAttributes:
       clusterID: rook-ceph
       imageFeatures: layering
       imageFormat: '2'
-      imageName: sonarr-config
+      imageName: *volume
       journalPool: ceph-blockpool
       pool: ceph-blockpool
       # storage.kubernetes.io/csiProvisionerIdentity: 1750007663679-1026-rook-ceph.rbd.csi.ceph.com
