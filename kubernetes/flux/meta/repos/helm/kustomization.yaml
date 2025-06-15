@@ -10,3 +10,4 @@ resources:
   - ./external-dns.yaml
   - ./external-secrets.yaml
   - ./intel-device-plugins.yaml
+  - ./jetstack.yaml
