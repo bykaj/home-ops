@@ -14,11 +14,6 @@ spec:
         kind: HelmRepository
         name: backube
       interval: 30m
-  dependsOn:
-    - name: openebs
-      namespace: openebs
-    - name: snapshot-controller
-      namespace: kube-system
   install:
     remediation:
       retries: -1
@@ -28,7 +23,7 @@ spec:
       retries: 3
   values:
     manageCRDs: true
-    replicaCount: 3
+    replicaCount: 2
     metrics:
       disableAuth: true
     podSecurityContext:
