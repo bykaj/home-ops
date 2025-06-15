@@ -10,3 +10,4 @@ spec:
       storage: 5Gi
   storageClassName: ceph-block
   volumeName: sonarr-config-pv
+  volumeMode: Block
