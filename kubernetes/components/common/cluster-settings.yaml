@@ -5,3 +5,4 @@ metadata:
   name: cluster-settings
 data:
   TIMEZONE: Europe/Amsterdam
+  CEPH_CLUSTER_ID: 1d7eeaad-8972-4cd4-9d50-22b1ab5adaa8
