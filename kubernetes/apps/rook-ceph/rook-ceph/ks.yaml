@@ -10,10 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *appname
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
@@ -39,10 +35,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *appname
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
