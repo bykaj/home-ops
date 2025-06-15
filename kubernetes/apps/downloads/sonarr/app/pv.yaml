@@ -18,10 +18,11 @@ spec:
     #   namespace: default
     volumeAttributes:
       # Required options from storageclass parameters need to be added in volumeAttributes
-      clusterID: "${CEPH_CLUSTER_ID}"
-      pool: "ceph-blockpool"
-      staticVolume: "true"
-      imageFeatures: "layering"
+      #clusterID: "${CEPH_CLUSTER_ID}"
+      clusterID: rook-ceph
+      pool: ceph-blockpool
+      staticVolume: true
+      imageFeatures: layering
     # volumeHandle should be same as rbd image name
     volumeHandle: sonarr-config
   persistentVolumeReclaimPolicy: Retain
