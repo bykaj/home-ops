@@ -25,5 +25,6 @@ spec:
     # volumeHandle should be same as rbd image name
     volumeHandle: sonarr-config
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ceph-block
   # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
   volumeMode: Block
