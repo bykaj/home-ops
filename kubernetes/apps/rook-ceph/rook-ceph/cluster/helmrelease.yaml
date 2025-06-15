@@ -94,16 +94,17 @@ spec:
         useAllDevices: false
         config:
           osdsPerDevice: "1"
-        nodes:
-          - name: kube-node-01
-            devices:
-              - name: /dev/sdb
-          - name: kube-node-02
-            devices:
-              - name: /dev/sdb
-          - name: kube-node-03
-            devices:
-              - name: /dev/sdb
+        devicePathFilter: sdb
+        # nodes:
+        #   - name: kube-node-01
+        #     devices:
+        #       - name: /dev/sdb
+        #   - name: kube-node-02
+        #     devices:
+        #       - name: /dev/sdb
+        #   - name: kube-node-03
+        #     devices:
+        #       - name: /dev/sdb
     cephBlockPools:
       - name: ceph-blockpool
         spec:
