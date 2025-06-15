@@ -7,4 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./persistence/ks.yaml
-  # - ./sonarr/ks.yaml
+  - ./sonarr/ks.yaml
