@@ -48,8 +48,6 @@ spec:
                 memory: 32Mi
             securityContext:
               privileged: true
-            serviceAccount:
-              name: rook-ceph-default
     defaultPodOptions:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
@@ -89,3 +87,5 @@ spec:
       app:
         controller: *app
         enabled: false
+    serviceAccount:
+      rook-ceph-default: {}
