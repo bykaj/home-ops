@@ -72,14 +72,14 @@ spec:
           - path: /config
       backups:
         enabled: true
-        existingClaim: downloads-smb-backups-pvc
+        existingClaim: media-smb-backups-pvc
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Jellyfin
       media:
         enabled: true
-        existingClaim: downloads-smb-media-pvc
+        existingClaim: media-smb-media-pvc
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/media
