@@ -70,10 +70,6 @@ spec:
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/log
       backups:
         enabled: true
         existingClaim: downloads-smb-backups-pvc
