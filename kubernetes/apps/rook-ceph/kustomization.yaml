@@ -6,6 +6,6 @@ namespace: rook-ceph
 components:
   - ../../components/common
 resources:
-  #- ./persistence/ks.yaml
+  - ./persistence/ks.yaml
   - ./rook-ceph/ks.yaml
-  #- ./rook-direct-mount/ks.yaml
+  - ./rook-direct-mount/ks.yaml
