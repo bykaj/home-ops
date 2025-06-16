@@ -21,7 +21,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: rook-ceph-smb-transfer
     volumeAttributes:
-      source: //${SMB_SERVER}/Media
+      source: //${SMB_SERVER}/Transfer
     nodeStageSecretRef:
       name: smb-credentials
       namespace: kube-system
