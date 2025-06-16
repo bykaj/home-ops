@@ -85,18 +85,25 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/logs
-      media:
+      backups:
         enabled: true
-        existingClaim: downloads-smb-media-pvc
+        existingClaim: downloads-smb-backups-pvc
         type: persistentVolumeClaim
         globalMounts:
-          - path: /mnt/media
+          - path: /mnt/backups
+            subPath: Apps/Sonarr
       downloads:
         enabled: true
         existingClaim: downloads-smb-downloads-pvc
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/downloads
+      media:
+        enabled: true
+        existingClaim: downloads-smb-media-pvc
+        type: persistentVolumeClaim
+        globalMounts:
+          - path: /mnt/media
       tmpfs:
         type: emptyDir
         globalMounts:
