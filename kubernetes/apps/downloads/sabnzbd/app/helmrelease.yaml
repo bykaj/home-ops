@@ -90,6 +90,7 @@ spec:
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
+            subPath: Apps/SABnzbd
       downloads:
         enabled: true
         existingClaim: downloads-smb-downloads-pvc
