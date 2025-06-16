@@ -19,7 +19,7 @@ spec:
   values:
     controllers:
       rook-direct-mount:
-        replicas: 3
+        replicas: 1
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -44,8 +44,6 @@ spec:
             resources:
               requests:
                 cpu: 5m
-              limits:
-                memory: 32Mi
             securityContext:
               privileged: true
     defaultPodOptions:
@@ -83,6 +81,11 @@ spec:
         hostPath: /sys/bus
         globalMounts:
           - path: /sys/bus
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
     service:
       app:
         controller: *app
