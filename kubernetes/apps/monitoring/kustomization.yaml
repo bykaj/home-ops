@@ -6,4 +6,4 @@ namespace: monitoring
 components:
   - ../../components/common
 resources:
-  - ./loki/ks.yaml
+  #- ./loki/ks.yaml
