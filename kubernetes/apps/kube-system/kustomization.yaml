@@ -12,7 +12,7 @@ resources:
   - ./csi-driver-smb/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./openebs/ks.yaml
+  #- ./openebs/ks.yaml
   - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./spegel/ks.yaml
