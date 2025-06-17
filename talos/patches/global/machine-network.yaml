@@ -3,3 +3,7 @@ machine:
     disableSearchDomain: true
     nameservers:
       - 10.73.0.254
+    extraHostEntries:
+      - ip: 10.73.10.1
+        aliases:
+          - kube-vip.home.cetana.net

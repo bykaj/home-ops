@@ -1,14 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
 ---
-clusterName: homelab
+clusterName: &clusterName homelab
 
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
 endpoint: https://10.73.10.1:6443
 additionalApiServerCertSans: &sans
-  - "127.0.0.1"
-  - "kube-vip.home.cetana.net"
+  - 127.0.0.1
+  - kube-vip.home.cetana.net
+  - &controlplaneVip 10.73.10.1
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.42.0.0/16"]
@@ -19,74 +20,89 @@ cniConfig:
   name: none
 
 nodes:
-  - hostname: "kube-node-01"
-    ipAddress: "10.73.10.110"
-    installDisk: "/dev/sda"
+  - hostname: kube-node-01
+    ipAddress: 10.73.10.110
+    installDisk: /dev/sda
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
+    nodeLabels:
+      topology.kubernetes.io/region: *clusterName
+      topology.kubernetes.io/zone: m
+      intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:6a:24:d1"
         dhcp: false
         addresses:
-          - "10.73.10.110/24"
+          - 10.73.10.110/20
         routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
+          - network: 0.0.0.0/0
+            gateway: 10.73.0.254
         mtu: 1500
         vip:
-          ip: "10.73.10.1"
-  - hostname: "kube-node-02"
-    ipAddress: "10.73.10.111"
-    installDisk: "/dev/sda"
+          ip: *controlplaneVip
+  - hostname: kube-node-02
+    ipAddress: 10.73.10.111
+    installDisk: /dev/sda
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
+    nodeLabels:
+      topology.kubernetes.io/region: *clusterName
+      topology.kubernetes.io/zone: m
+      intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:e7:b2:03"
         dhcp: false
         addresses:
-          - "10.73.10.111/24"
+          - 10.73.10.111/20
         routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
+          - network: 0.0.0.0/0
+            gateway: 10.73.0.254
         mtu: 1500
         vip:
-          ip: "10.73.10.1"
-  - hostname: "kube-node-03"
-    ipAddress: "10.73.10.112"
-    installDisk: "/dev/sda"
+          ip: *controlplaneVip
+  - hostname: kube-node-03
+    ipAddress: 10.73.10.112
+    installDisk: /dev/sda
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
     controlPlane: true
+    nodeLabels:
+      topology.kubernetes.io/region: *clusterName
+      topology.kubernetes.io/zone: m
+      intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:a7:a4:f2"
         dhcp: false
         addresses:
-          - "10.73.10.112/24"
+          - 10.73.10.112/20
         routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.73.0.254"
+          - network: 0.0.0.0/0
+            gateway: 10.73.0.254
         mtu: 1500
         vip:
-          ip: "10.73.10.1"
+          ip: *controlplaneVip
 
 # Global patches
 patches:
+  - "@./patches/global/machine-features.yaml"
   - "@./patches/global/machine-files.yaml"
   - "@./patches/global/machine-kubelet.yaml"
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
+  - "@./patches/global/machine-udev.yaml"
 
 # Controller patches
 controlPlane:
   patches:
     - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
+    - "@./patches/controller/machine-features.yaml"
