@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: it-tools
+  name: &app it-tools
 spec:
   interval: 30m
   chartRef:
@@ -16,9 +16,6 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: cloudflare-tunnel
-      namespace: network
   values:
     controllers:
       it-tools:
@@ -54,25 +51,19 @@ spec:
           http:
             port: &port 8080
     persistence:
+      config:
+        existingClaim: *app
+      media:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Media
+        globalMounts:
+          - path: /mnt/media
       tmpfs:
         type: emptyDir
         globalMounts:
           - path: /tmp
             subPath: tmp
-      # media:
-      #   enabled: true
-      #   existingClaim: tools-smb-media-pvc
-      #   type: persistentVolumeClaim
-      #   advancedMounts:
-      #     it-tools:
-      #       app:
-      #         - path: /series
-      #           subPath: Series
-    serviceMonitor:
-      app:
-        serviceName: it-tools
-        endpoints:
-          - port: http
     route:
       app:
         hostnames: ["tools.${DOMAIN_APP_APPS}"]
