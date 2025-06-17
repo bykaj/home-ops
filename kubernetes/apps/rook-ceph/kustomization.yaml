@@ -8,4 +8,4 @@ components:
 resources:
   - ./persistence/ks.yaml
   - ./rook-ceph/ks.yaml
-  - ./rook-direct-mount/ks.yaml
+  - ./toolbox/ks.yaml
