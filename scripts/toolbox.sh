@@ -5,5 +5,5 @@ if [ -n "$pod" ]; then
     echo "Pod '${pod}' found; starting Rook Ceph Toolbox."
     kubectl -n rook-ceph exec -it $pod -- bash
 else
-    echo "Cannot start Rook Ceph Toolbox; no pods found."ß
+    echo "Cannot start Rook Ceph Toolbox; no pods found."
 fi
