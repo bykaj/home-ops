@@ -26,7 +26,7 @@ spec:
       runAsUser: ${APP_UID:=1000}
       runAsGroup: ${APP_GID:=1000}
       fsGroup: ${APP_GID:=1000}
-    repository: "${APP}-volsync"
+    repository: "${APP}-volsync-secret"
     storageClassName: "${VOLSYNC_STORAGECLASS:=ceph-block}"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=csi-ceph-blockpool}"
     

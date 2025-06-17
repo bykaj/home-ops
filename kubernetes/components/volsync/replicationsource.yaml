@@ -22,7 +22,7 @@ spec:
       runAsGroup: ${APP_GID:=1000}
       fsGroup: ${APP_GID:=1000}
     pruneIntervalDays: 7
-    repository: ${APP}-volsync
+    repository: ${APP}-volsync-secret
     retain:
       hourly: 24
       daily: 7
