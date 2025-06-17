@@ -3,20 +3,25 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app it-tools
+  name: &appname it-tools
   namespace: &namespace tools
 spec:
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
+      app.kubernetes.io/name: *appname
   components:
     - ../../../../components/volsync
+  dependsOn:
+    - name: onepassword-store
+      namespace: external-secrets
+    - name: volsync
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/tools/it-tools/app
   postBuild:
     substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      APP: *appname
+      VOLSYNC_CLAIM: it-tools-config
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

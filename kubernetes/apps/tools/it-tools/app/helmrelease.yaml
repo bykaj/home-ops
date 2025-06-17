@@ -52,7 +52,7 @@ spec:
             port: &port 8080
     persistence:
       test:
-        existingClaim: *app
+        existingClaim: it-tools-config
       media:
         type: nfs
         server: "${NFS_SERVER}"
