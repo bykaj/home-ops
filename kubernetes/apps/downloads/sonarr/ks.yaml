@@ -9,8 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # components:
-  #   - ../../../../components/volsync
+  components:
+    - ../../../../components/volsync
   dependsOn:
     - name: prowlarr
       namespace: downloads
@@ -21,10 +21,10 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/downloads/sonarr/app
   postBuild:
-    # substitute:
-    #   APP: *app
-    #   VOLSYNC_CLAIM: sonarr-config
-    #   VOLSYNC_CAPACITY: 5Gi
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: sonarr-config-pvc
+      VOLSYNC_CAPACITY: 5Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
