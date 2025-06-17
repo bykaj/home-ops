@@ -6,4 +6,4 @@ namespace: tools
 components:
   - ../../components/common
 resources: []
-  #- ./it-tools/ks.yaml
+  - ./it-tools/ks.yaml
