@@ -46,13 +46,13 @@ spec:
         runAsGroup: 65534
     service:
       app:
-        controller: it-tools
+        controller: *app
         ports:
           http:
             port: &port 8080
     persistence:
-      config:
-        existingClaim: *app
+      # config:
+      #   existingClaim: *app
       media:
         type: nfs
         server: "${NFS_SERVER}"
