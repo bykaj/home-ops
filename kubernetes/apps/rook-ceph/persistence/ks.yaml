@@ -13,7 +13,7 @@ spec:
     - name: csi-driver-smb
       namespace: kube-system
   interval: 1h
-  path: ./kubernetes/apps/media/persistence/smb-volumes
+  path: ./kubernetes/apps/rook-ceph/persistence/smb-volumes
   prune: true
   retryInterval: 2m
   postBuild:
