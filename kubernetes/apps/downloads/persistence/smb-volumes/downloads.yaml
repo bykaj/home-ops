@@ -5,7 +5,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: downloads-smb-downloads-pv
+  name: downloads-smb-downloads
 spec:
   capacity:
     storage: 2T
@@ -30,12 +30,12 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: downloads-smb-downloads-pvc
+  name: smb-downloads
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2T
-  volumeName: downloads-smb-downloads-pv
+  volumeName: downloads-smb-downloads
   storageClassName: smb

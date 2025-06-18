@@ -68,20 +68,20 @@ spec:
         supplementalGroups: [44]
     persistence:
       config:
-        existingClaim: plex-config-pvc
+        existingClaim: plex-config
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
       backups:
         enabled: true
-        existingClaim: media-smb-backups-pvc
+        existingClaim: smb-backups
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Plex
       media:
         enabled: true
-        existingClaim: media-smb-media-pvc
+        existingClaim: smb-media
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/media

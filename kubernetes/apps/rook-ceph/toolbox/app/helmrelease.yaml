@@ -54,9 +54,9 @@ spec:
         runAsGroup: 0
     persistence:
       transfer:
-        enabled: true
-        existingClaim: rook-ceph-smb-transfer-pvc
-        type: persistentVolumeClaim
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Transfer
         globalMounts:
           - path: /mnt/transfer
       dev:

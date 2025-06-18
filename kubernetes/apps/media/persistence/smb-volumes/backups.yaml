@@ -5,7 +5,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: media-smb-backups-pv
+  name: media-smb-backups
 spec:
   capacity:
     storage: 2T
@@ -30,12 +30,12 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: media-smb-backups-pvc
+  name: smb-backups
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2T
-  volumeName: media-smb-backups-pv
+  volumeName: media-smb-backups
   storageClassName: smb

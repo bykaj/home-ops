@@ -76,7 +76,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: sabnzbd-config-pvc
+        existingClaim: sabnzbd-config
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
@@ -86,14 +86,14 @@ spec:
           - path: /config/logs
       backups:
         enabled: true
-        existingClaim: downloads-smb-backups-pvc
+        existingClaim: smb-backups
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/SABnzbd
       downloads:
         enabled: true
-        existingClaim: downloads-smb-downloads-pvc
+        existingClaim: smb-downloads
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/downloads

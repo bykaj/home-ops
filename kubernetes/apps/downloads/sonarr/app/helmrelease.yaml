@@ -77,7 +77,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: sonarr-config-pvc
+        existingClaim: sonarr-config
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
@@ -87,20 +87,20 @@ spec:
           - path: /config/logs
       backups:
         enabled: true
-        existingClaim: downloads-smb-backups-pvc
+        existingClaim: smb-backups
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Sonarr
       downloads:
         enabled: true
-        existingClaim: downloads-smb-downloads-pvc
+        existingClaim: smb-downloads
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/downloads
       media:
         enabled: true
-        existingClaim: downloads-smb-media-pvc
+        existingClaim: smb-media
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/media

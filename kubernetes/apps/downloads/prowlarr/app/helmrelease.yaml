@@ -75,7 +75,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: prowlarr-config-pvc
+        existingClaim: prowlarr-config
         type: persistentVolumeClaim
         globalMounts:
           - path: /config
@@ -86,7 +86,7 @@ spec:
             subPath: logs
       backups:
         enabled: true
-        existingClaim: downloads-smb-backups-pvc
+        existingClaim: smb-backups
         type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups

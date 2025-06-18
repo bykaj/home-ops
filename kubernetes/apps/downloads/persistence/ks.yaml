@@ -9,6 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: csi-driver-smb
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/downloads/persistence/smb-volumes
   prune: true
