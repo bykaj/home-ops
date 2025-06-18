@@ -48,15 +48,11 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
+        runAsUser: 0
+        runAsGroup: 0
     persistence:
       transfer:
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Transfer
+        existingClaim: smb-transfer
         globalMounts:
           - path: /mnt/transfer
       dev:
