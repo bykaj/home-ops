@@ -20,9 +20,9 @@ spec:
     enableFileDeletion: true
     copyMethod: "${VOLSYNC_COPYMETHOD:-Snapshot}"
     moverSecurityContext:
-      runAsUser: ${APP_UID:-1000}
-      runAsGroup: ${APP_GID:-1000}
-      fsGroup: ${APP_GID:-1000}
+      runAsUser: ${APP_UID:-4000}
+      runAsGroup: ${APP_GID:-4000}
+      fsGroup: ${APP_GID:-4000}
     repository: "${APP}-volsync"
     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
