@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: "${VOLSYNC_CLAIM:-${APP}}-pvc"
+  name: "${VOLSYNC_CLAIM:-${APP}}"
 spec:
   accessModes:
     - "${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"
@@ -14,4 +14,4 @@ spec:
     requests:
       storage: "${VOLSYNC_CAPACITY:-1Gi}"
   storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-  #volumeName: "${VOLSYNC_CLAIM:-${APP}}-pv"
+  volumeName: "${VOLSYNC_CLAIM:-${APP}}"
