@@ -52,7 +52,7 @@ spec:
             port: &port 8080
     persistence:
       test:
-        existingClaim: it-tools-config
+        existingClaim: it-tools-config-pvc
       tmpfs:
         type: emptyDir
         globalMounts:
