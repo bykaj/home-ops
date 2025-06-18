@@ -9,7 +9,6 @@ endpoint: https://10.73.10.1:6443
 additionalApiServerCertSans: &sans
   - 127.0.0.1
   - kube-vip.home.cetana.net
-  - &controlplaneVip 10.73.10.1
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.42.0.0/16"]
@@ -33,7 +32,7 @@ nodes:
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:6a:24:d1"
+          hardwareAddr: "bc:24:11:28:d6:2c"
         dhcp: false
         addresses:
           - 10.73.10.110/20
@@ -42,7 +41,7 @@ nodes:
             gateway: 10.73.0.254
         mtu: 1500
         vip:
-          ip: *controlplaneVip
+          ip: &controlplaneVip 10.73.10.1
   - hostname: kube-node-02
     ipAddress: 10.73.10.111
     installDisk: /dev/sda
@@ -56,7 +55,7 @@ nodes:
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:e7:b2:03"
+          hardwareAddr: "bc:24:11:2f:69:26"
         dhcp: false
         addresses:
           - 10.73.10.111/20
@@ -79,7 +78,7 @@ nodes:
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:a7:a4:f2"
+          hardwareAddr: "bc:24:11:ae:0c:56"
         dhcp: false
         addresses:
           - 10.73.10.112/20
