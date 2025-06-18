@@ -51,6 +51,8 @@ spec:
           http:
             port: &port 8080
     persistence:
+      test:
+        existingClaim: it-tools-config
       tmpfs:
         type: emptyDir
         globalMounts:
