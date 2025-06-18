@@ -7,7 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./persistence/ks.yaml
-  - ./prowlarr/ks.yaml
-  - ./radarr/ks.yaml
-  - ./sabnzbd/ks.yaml
-  - ./sonarr/ks.yaml
+  #- ./prowlarr/ks.yaml
+  #- ./radarr/ks.yaml
+  #- ./sabnzbd/ks.yaml
+  #- ./sonarr/ks.yaml
