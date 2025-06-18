@@ -42,8 +42,9 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
     service:
       app:
         controller: *app
