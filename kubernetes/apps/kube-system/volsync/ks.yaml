@@ -9,13 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   dependsOn:
-    # - name: openebs
-    #   namespace: kube-system
+    - name: openebs
+      namespace: kube-system
     - name: snapshot-controller
       namespace: kube-system
   healthChecks:
