@@ -77,24 +77,17 @@ spec:
     persistence:
       config:
         existingClaim: sabnzbd-config
-        type: persistentVolumeClaim
         globalMounts:
           - path: /config
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/logs
       backups:
         enabled: true
         existingClaim: smb-backups
-        type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/SABnzbd
       downloads:
         enabled: true
         existingClaim: smb-downloads
-        type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/downloads
       tmpfs:
@@ -102,6 +95,8 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+          - path: /config/logs
+            subPath: logs
     route:
       app:
         hostnames:

@@ -76,18 +76,11 @@ spec:
     persistence:
       config:
         existingClaim: prowlarr-config
-        type: persistentVolumeClaim
         globalMounts:
           - path: /config
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/logs
-            subPath: logs
       backups:
         enabled: true
         existingClaim: smb-backups
-        type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Prowlarr
@@ -96,6 +89,8 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+          - path: /config/logs
+            subPath: logs
     route:
       app:
         hostnames:
