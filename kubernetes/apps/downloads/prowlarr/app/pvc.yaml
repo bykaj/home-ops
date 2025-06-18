@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: prowlarr-config-pvc
+  name: prowlarr-config
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 1Gi
   storageClassName: ceph-block
-  volumeName: prowlarr-config-pv
+  volumeName: prowlarr-config

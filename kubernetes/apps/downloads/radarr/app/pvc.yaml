@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: radarr-config-pvc
+  name: radarr-config
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 5Gi
   storageClassName: ceph-block
-  volumeName: radarr-config-pv
+  volumeName: radarr-config

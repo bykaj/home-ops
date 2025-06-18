@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-config-pvc
+  name: sonarr-config
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 5Gi
   storageClassName: ceph-block
-  volumeName: sonarr-config-pv
+  volumeName: sonarr-config
