@@ -50,7 +50,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: true
         runAsUser: 4000
         runAsGroup: 4000
         fsGroup: 4000
