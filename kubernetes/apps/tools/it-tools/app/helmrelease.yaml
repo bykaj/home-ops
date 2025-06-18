@@ -51,14 +51,6 @@ spec:
           http:
             port: &port 8080
     persistence:
-      test:
-        existingClaim: it-tools-config
-      media:
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Media
-        globalMounts:
-          - path: /mnt/media
       tmpfs:
         type: emptyDir
         globalMounts:
