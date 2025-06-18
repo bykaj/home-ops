@@ -18,9 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      rook-direct-mount:
-        replicas: 1
-        strategy: RollingUpdate
+      toolbox:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
