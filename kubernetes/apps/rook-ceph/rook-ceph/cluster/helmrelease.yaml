@@ -90,21 +90,22 @@ spec:
           limits:
             memory: 256Mi
       storage:
-        useAllNodes: true
+        #useAllNodes: true
+        useAllNodes: false
         useAllDevices: false
         config:
           osdsPerDevice: "1"
-        devicePathFilter: sdb
-        # nodes:
-        #   - name: kube-node-01
-        #     devices:
-        #       - name: /dev/sdb
-        #   - name: kube-node-02
-        #     devices:
-        #       - name: /dev/sdb
-        #   - name: kube-node-03
-        #     devices:
-        #       - name: /dev/sdb
+        #devicePathFilter: sdb
+        nodes:
+          - name: kube-node-01
+            devices:
+              - name: /dev/sdb
+          - name: kube-node-02
+            devices:
+              - name: /dev/sdb
+          - name: kube-node-03
+            devices:
+              - name: /dev/sdb
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -115,32 +116,22 @@ spec:
           enabled: true
           name: ceph-block
           isDefault: true
-          reclaimPolicy: Retain
+          reclaimPolicy: Delete
           allowVolumeExpansion: true
           volumeBindingMode: Immediate
+          mountOptions: ["discard"]
           parameters:
+            compression_mode: aggressive
+            compression_algorithm: zstd
             imageFormat: "2"
-            imageFeatures: layering
+            imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+            csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/fstype: ext4
-          # mountOptions: ["discard"]
-          # parameters:
-          #   compression_mode: aggressive
-          #   compression_algorithm: zstd
-          #   imageFormat: "2"
-          #   imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
-          #   csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-          #   csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
-          #   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-          #   csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
-          #   csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-          #   csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
-          #   csi.storage.k8s.io/fstype: ext4
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
