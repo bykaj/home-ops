@@ -69,20 +69,17 @@ spec:
     persistence:
       config:
         existingClaim: plex-config
-        type: persistentVolumeClaim
         globalMounts:
           - path: /config
       backups:
         enabled: true
         existingClaim: smb-backups
-        type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Plex
       media:
         enabled: true
         existingClaim: smb-media
-        type: persistentVolumeClaim
         globalMounts:
           - path: /mnt/media
       tmpfs:
