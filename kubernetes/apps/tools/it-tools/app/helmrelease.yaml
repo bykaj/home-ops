@@ -54,7 +54,7 @@ spec:
             port: &port 8080
     persistence:
       test:
-        existingClaim: it-tools-config-pvc
+        existingClaim: it-tools-config
       transfer:
         type: nfs
         server: "${NFS_SERVER}"
