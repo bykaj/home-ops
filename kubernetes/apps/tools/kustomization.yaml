@@ -5,5 +5,6 @@ kind: Kustomization
 namespace: tools
 components:
   - ../../components/common
-resources: []
-  #- ./it-tools/ks.yaml
+  - ../../components/namespace
+resources:
+  - ./it-tools/ks.yaml
