@@ -90,7 +90,6 @@ spec:
           limits:
             memory: 256Mi
       storage:
-        #useAllNodes: true
         useAllNodes: false
         useAllDevices: false
         config:
