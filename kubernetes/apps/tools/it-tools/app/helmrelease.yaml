@@ -54,6 +54,12 @@ spec:
     persistence:
       test:
         existingClaim: it-tools-config-pvc
+      transfer:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Transfer
+        globalMounts:
+          - path: /mnt/transfer
       tmpfs:
         type: emptyDir
         globalMounts:
