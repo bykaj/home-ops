@@ -89,7 +89,7 @@ spec:
       tmpfs:
         type: emptyDir
         advancedMounts:
-          plex:
+          stash:
             app:
               - path: /cache
                 subPath: cache
