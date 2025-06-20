@@ -14,4 +14,4 @@ spec:
     requests:
       storage: "${VOLSYNC_CAPACITY:-1Gi}"
   storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-  #volumeName: "${VOLSYNC_CLAIM:-${APP}}"   # Snapshots don't work with static volumes
+  
