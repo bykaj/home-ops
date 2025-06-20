@@ -1,0 +1,113 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app stash
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      plex:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: stashapp/stash
+              tag: v0.28.1@ssha256:645f6c15b079410d50d488dbeb247c92f25534094dad4e15d886e47648b897f7
+            env:
+              TZ: "${TIMEZONE}"
+              STASH_STASH: "/mnt/private"
+              STASH_GENERATED: "/generated"
+              STASH_METADATA: "/metadata"
+              STASH_CACHE: "/cache"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 9999
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 8Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [44]
+    persistence:
+      config:
+        existingClaim: stash-config
+        globalMounts:
+          - path: /root/.stash
+      backups:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/Stash
+      media:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-beta/Private
+        globalMounts:
+          - path: /mnt/private
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          plex:
+            app:
+              - path: /cache
+                subPath: cache
+              - path: /root/.stash/logs
+                subPath: logs
+              - path: /tmp
+                subPath: tmp
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app-apps
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port

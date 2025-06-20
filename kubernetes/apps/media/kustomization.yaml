@@ -6,7 +6,7 @@ namespace: media
 components:
   - ../../components/common
 resources:
-  # - ./persistence/ks.yaml
   - ./jellyfin/ks.yaml
   - ./plex/ks.yaml
+  - ./stash/ks.yaml
   - ./tautulli/ks.yaml
