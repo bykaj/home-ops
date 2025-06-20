@@ -9,4 +9,4 @@ resources:
   # - ./persistence/ks.yaml
   - ./jellyfin/ks.yaml
   - ./plex/ks.yaml
-  #- ./tautulli/ks.yaml
+  - ./tautulli/ks.yaml
