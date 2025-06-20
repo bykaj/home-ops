@@ -59,9 +59,9 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44]
     persistence:
@@ -69,15 +69,21 @@ spec:
         existingClaim: jellyfin-config
         globalMounts:
           - path: /config
+      # config-cache:
+      #   existingClaim: jellyfin-cache
+      #   globalMounts:
+      #     - path: /config/metadata
       backups:
-        enabled: true
-        existingClaim: smb-backups
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Jellyfin
       media:
-        enabled: true
-        existingClaim: smb-media
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:

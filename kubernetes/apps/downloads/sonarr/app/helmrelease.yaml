@@ -81,19 +81,22 @@ spec:
         globalMounts:
           - path: /config
       backups:
-        enabled: true
-        existingClaim: smb-backups
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Sonarr
       downloads:
-        enabled: true
-        existingClaim: smb-downloads
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Downloads
         globalMounts:
           - path: /mnt/downloads
       media:
-        enabled: true
-        existingClaim: smb-media
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:

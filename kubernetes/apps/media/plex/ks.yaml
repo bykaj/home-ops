@@ -9,8 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # components:
-  #   - ../../../../components/volsync
+  components:
+    - ../../../../components/volsync
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
@@ -19,10 +19,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
   postBuild:
-    # substitute:
-    #   APP: *app
-    #   VOLSYNC_CACHE_CAPACITY: 25Gi
-    #   VOLSYNC_CAPACITY: 50Gi
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: plex-config
+      VOLSYNC_CACHE_CAPACITY: 25Gi
+      VOLSYNC_CAPACITY: 50Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

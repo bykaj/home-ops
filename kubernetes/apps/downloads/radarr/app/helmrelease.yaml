@@ -63,9 +63,9 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
@@ -79,19 +79,22 @@ spec:
         globalMounts:
           - path: /config
       backups:
-        enabled: true
-        existingClaim: smb-backups
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Radarr
       downloads:
-        enabled: true
-        existingClaim: smb-downloads
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Downloads
         globalMounts:
           - path: /mnt/downloads
       media:
-        enabled: true
-        existingClaim: smb-media
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:

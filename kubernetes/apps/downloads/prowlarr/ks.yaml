@@ -9,14 +9,16 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # components:
-  #   - ../../../../components/volsync
+  components:
+    - ../../../../components/volsync
   interval: 1h
   path: ./kubernetes/apps/downloads/prowlarr/app
   postBuild:
-    # substitute:
-    #   APP: *app
-    #   VOLSYNC_CAPACITY: 5Gi
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: prowlarr-config
+      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CACHE_CAPACITY: 1Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

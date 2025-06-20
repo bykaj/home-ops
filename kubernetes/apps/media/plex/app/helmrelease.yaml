@@ -57,13 +57,13 @@ spec:
                 cpu: 100m
               limits:
                 gpu.intel.com/i915: 1
-                memory: 12Gi
+                memory: 8Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44]
     persistence:
@@ -71,15 +71,21 @@ spec:
         existingClaim: plex-config
         globalMounts:
           - path: /config
+      config-cache:
+        existingClaim: plex-cache
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Cache
       backups:
-        enabled: true
-        existingClaim: smb-backups
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Plex
       media:
-        enabled: true
-        existingClaim: smb-media
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:
