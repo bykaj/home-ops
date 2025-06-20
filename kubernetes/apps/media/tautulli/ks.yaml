@@ -30,7 +30,6 @@ spec:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
