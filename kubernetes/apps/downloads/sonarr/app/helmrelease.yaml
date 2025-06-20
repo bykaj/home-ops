@@ -90,7 +90,7 @@ spec:
       downloads:
         type: nfs
         server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Downloads
+        path: /mnt/vault-beta/Downloads
         globalMounts:
           - path: /mnt/downloads
       media:
