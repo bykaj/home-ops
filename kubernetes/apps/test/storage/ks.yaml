@@ -9,19 +9,19 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
+  # components:
+  #   - ../../../../components/volsync
   dependsOn:
     - name: volsync
       namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/test/storage/app
   postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CLAIM: storage-config
-      VOLSYNC_CAPACITY: 1Gi
-      VOLSYNC_CACHE_CAPACITY: 1Gi
+    # substitute:
+    #   APP: *app
+    #   VOLSYNC_CLAIM: storage-config
+    #   VOLSYNC_CAPACITY: 1Gi
+    #   VOLSYNC_CACHE_CAPACITY: 1Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
