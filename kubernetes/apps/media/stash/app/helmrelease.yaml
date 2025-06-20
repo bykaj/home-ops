@@ -62,9 +62,9 @@ spec:
                 memory: 8Gi
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44]
