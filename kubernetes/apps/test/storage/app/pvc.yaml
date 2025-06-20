@@ -9,4 +9,3 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: ceph-block
-  volumeName: storage-config
