@@ -9,21 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
-  dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
-    - name: volsync
-      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/tools/it-tools/app
   postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CLAIM: it-tools-config
-      VOLSYNC_CAPACITY: 1Gi
-      VOLSYNC_CACHE_CAPACITY: 1Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
