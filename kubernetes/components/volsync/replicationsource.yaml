@@ -7,7 +7,7 @@ metadata:
 spec:
   sourcePVC: "${VOLSYNC_CLAIM:-${APP}}"
   trigger:
-    schedule: "*/15 * * * *"
+    schedule: "0 * * * *"
   restic:
     accessModes:
       - "${VOLSYNC_SNAP_ACCESSMODES:-ReadWriteOnce}"
