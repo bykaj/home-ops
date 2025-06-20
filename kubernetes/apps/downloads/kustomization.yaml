@@ -6,6 +6,7 @@ namespace: downloads
 components:
   - ../../components/common
 resources:
+  - ./bazarr/ks.yaml
   # - ./persistence/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
