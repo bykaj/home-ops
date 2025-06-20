@@ -8,5 +8,5 @@ components:
 resources:
   - ./jellyfin/ks.yaml
   - ./plex/ks.yaml
-  #- ./stash/ks.yaml
+  - ./stash/ks.yaml
   - ./tautulli/ks.yaml
