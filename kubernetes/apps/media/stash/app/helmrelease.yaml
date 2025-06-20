@@ -72,8 +72,14 @@ spec:
       config:
         existingClaim: stash-config
         globalMounts:
+          - path: /blobs
+            subPath: blobs
           - path: /root/.stash
             subPath: config
+          - path: /generated
+            subPath: generated
+          - path: /metadata
+            subPath: metadata
       backups:
         type: nfs
         server: "${NFS_SERVER}"
