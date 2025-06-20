@@ -73,6 +73,7 @@ spec:
         existingClaim: stash-config
         globalMounts:
           - path: /root/.stash
+            subPath: config
       backups:
         type: nfs
         server: "${NFS_SERVER}"
