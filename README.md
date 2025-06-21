@@ -34,7 +34,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a [Proxmox VE](https://www.proxmox.com) cluster with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with ZFS for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed on a [Proxmox VE](https://www.proxmox.com) cluster with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template over at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
@@ -129,6 +129,6 @@ A lot of inspiration for my cluster comes from the people that have shared their
 
 ---
 
-## 🔏 License
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="20" height="20"> License
 
 See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: Do with it as you please, but if it becomes sentient, you're responsible for teaching it manners.
