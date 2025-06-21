@@ -10,6 +10,14 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
+  timeout: 5m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -51,7 +59,7 @@ spec:
     persistence:
       config:
         type: configMap
-        name: alertmanager-config
+        name: alertmanager
         globalMounts:
           - path: /etc/alertmanager
       secrets:
