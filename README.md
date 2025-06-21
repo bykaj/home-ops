@@ -89,14 +89,14 @@ graph TD
 
 While most of my infrastructure and workloads are self-hosted I do rely upon the cloud for certain key parts of my setup. This saves me from having to worry about three things. (1) Dealing with chicken/egg scenarios, (2) services I critically need whether my cluster is online or not and (3) The "hit by a bus factor" - what happens to critical apps (e.g. Email, Password Manager, Photos) that my family relies on when I no longer around.
 
-Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and more costly.
+Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and even more costly.
 
 - [1Password](https://1password.com/): Secrets with [External Secrets](https://external-secrets.io/);
-- [Cloudflare](https://www.cloudflare.com/): External DNS and Argo tunnel;
+- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust Argo tunnel;
 - [Fastmail](https://fastmail.com/): Email hosting;
 - [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments;
 - [Pushover](https://pushover.net/): Kubernetes Alerts and application notifications;
-- [StorJ](https://storj.io/): S3 object storage for applications and backups;
+- [Storj](https://storj.io/): S3 object storage for applications and backups;
 - [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
                                                       
 ---
