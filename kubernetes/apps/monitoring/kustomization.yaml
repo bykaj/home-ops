@@ -8,5 +8,5 @@ components:
 resources:
   - ./alertmanager/ks.yaml
   - ./grafana/ks.yaml
-  - ./kromgo/ks.yaml
+  #- ./kromgo/ks.yaml
   #- ./loki/ks.yaml
