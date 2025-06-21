@@ -26,7 +26,7 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 
 ### Core Components
 
-- [actions-runner-controller](https://github.com/actions/actions-runner-controller): Self-hosted Github runners;
+- [actions-runner-controller](https://github.com/actions/actions-runner-controller): Self-hosted GitHub runners;
 - [cert-manager](https://github.com/cert-manager/cert-manager): Creates SSL certificates for services in my cluster;
 - [cilium](https://github.com/cilium/cilium): eBPF-based networking for my workloads;
 - [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my routes;
