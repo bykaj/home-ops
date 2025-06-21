@@ -7,7 +7,6 @@
 _... managed with Flux, Renovate, and GitHub Actions_
 
 [![Renovate](https://img.shields.io/badge/powered_by-Renovate-blue?style=for-the-badge&logo=renovate)](https://www.mend.io/renovate/)
-Kubernetes cluster stats:
 
 </div>
 
