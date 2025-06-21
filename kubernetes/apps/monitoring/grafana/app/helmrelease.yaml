@@ -314,6 +314,7 @@ spec:
 
     route:
       main:
+        enabled: true
         hostnames:
           - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
         parentRefs:
