@@ -8,7 +8,7 @@ resources:
 configMapGenerator:
   - name: alertmanager-values
     files:
-      - ./helm/values.yml
+      - ./helm/values.yaml
 generatorOptions:
   annotations:
     kustomize.toolkit.fluxcd.io/substitute: disabled
