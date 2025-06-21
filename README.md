@@ -112,7 +112,7 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 | Device                      | Num | OS Disk Size | Data Disk Size                  | Ram  | OS            | Function                |
 |-----------------------------|-----|--------------|---------------------------------|------|---------------|-------------------------|
 | Lenovo M920q, i5-8500T      | 2   | 1TB SSD      |                                 | 64GB | Proxmox VE    | VM Host                 |
-| Self-build 2U, i7-6700K     | 1   | 512MB SSD    | 1x1TB SSD, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | Proxmox VE    | VM Host, SMB/NFS + Backup Server |
+| Self-build 2U, i7-6700K     | 1   | 512GB SSD    | 1x1TB SSD, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | Proxmox VE    | VM Host, SMB/NFS + Backup Server |
 | PiKVM V4 Plus               | 1   | 32GB eMMC    | -                               | 8GB  | PiKVM         | KVM                     |
 | JetKVM                      | 3   | -            | -                               | -    | JetKVM        | KVM                     |
 | UniFi UDM Pro Max           | 1   | -            | 8TB HDD                         | -    | -             | Router & NVR            |
