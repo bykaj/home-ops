@@ -97,7 +97,7 @@ Alternative solutions to the first two of these problems would be to host a Kube
 - [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments;
 - [Pushover](https://pushover.net/): Kubernetes Alerts and application notifications;
 - [StorJ](https://storj.io/): S3 object storage for applications and backups;
-- [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications
+- [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
                                                       
 ---
 
