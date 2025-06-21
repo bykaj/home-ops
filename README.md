@@ -119,4 +119,4 @@ A lot of inspiration for my cluster comes from the people that have shared their
 
 ## 🔏 License
 
-See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). TL;DR: do with it what you want.
+See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: Do with it as you please, but if it becomes sentient, you're responsible for teaching it manners.
