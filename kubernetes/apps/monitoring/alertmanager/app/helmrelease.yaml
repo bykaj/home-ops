@@ -1,0 +1,74 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app alertmanager
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      alertmanager:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          alertmanager:
+            image:
+              repository: quay.io/prometheus/alertmanager
+              tag: v0.28.1
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 11m
+                memory: 50M
+              limits:
+                memory: 99M
+        statefulset:
+          volumeClaimTemplates:
+            - name: alertmanager-config
+              accessMode: ReadWriteOnce
+              size: 50Mi
+              storageClass: ceph-block
+              globalMounts:
+                - path: /alertmanager
+    persistence:
+      config:
+        type: configMap
+        name: alertmanager-values
+        globalMounts:
+          - path: /etc/alertmanager
+      secrets:
+        type: secret
+        name: alertmanager-secret
+        globalMounts:
+          - path: /etc/secrets
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app-apps
+    service:
+      app:
+        ports:
+          http:
+            port: 9093
