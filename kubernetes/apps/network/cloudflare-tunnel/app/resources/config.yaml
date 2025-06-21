@@ -23,6 +23,10 @@ ingress:
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${DOMAIN_ID}"
     service: *svc
+  - hostname: "${DOMAIN_IO}"
+    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+  - hostname: "*.${DOMAIN_IO}"
+    service: *svc
   - hostname: "${DOMAIN_CLOUD}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${DOMAIN_CLOUD}"

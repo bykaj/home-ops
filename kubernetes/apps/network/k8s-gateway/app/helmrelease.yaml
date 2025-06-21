@@ -32,7 +32,7 @@ spec:
       retries: 3
   values:
     fullnameOverride: k8s-gateway
-    domain: "${DOMAIN_APP_APPS},${DOMAIN_APP_INFRA},${DOMAIN_DEV},${DOMAIN_ID},${DOMAIN_CLOUD},${DOMAIN_NET},home.${DOMAIN_NET},kvm.home.${DOMAIN_NET},${DOMAIN_ST}"
+    domain: "${DOMAIN_APP_APPS},${DOMAIN_APP_INFRA},${DOMAIN_DEV},${DOMAIN_ID},${DOMAIN_IO},${DOMAIN_CLOUD},${DOMAIN_NET},home.${DOMAIN_NET},kvm.home.${DOMAIN_NET},${DOMAIN_ST}"
     ttl: 1
     service:
       type: LoadBalancer
