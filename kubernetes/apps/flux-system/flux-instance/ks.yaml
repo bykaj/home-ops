@@ -9,10 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+  dependsOn:
+    - name: onepassword-store
+      namespace: external-secrets
   dependsOn:
     - name: flux-operator
       namespace: *namespace
@@ -20,8 +19,11 @@ spec:
   path: ./kubernetes/apps/flux-system/flux-instance/app
   postBuild:
     substituteFrom:
+      - name: cluster-settings
+        kind: ConfigMap
       - name: cluster-secrets
         kind: Secret
+  prune: true
   prune: true
   retryInterval: 2m
   sourceRef:
