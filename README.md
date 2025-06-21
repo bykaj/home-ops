@@ -57,15 +57,15 @@ This Git repository contains the following directories under [Kubernetes](./kube
 
 ### Flux Workflow
 
-This is a high-level look how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `atuin` won't be deployed or upgrade until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
+This is a high-level look how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `paperless-ngx` won't be deployed or upgrade until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
 
 ```mermaid
 graph TD
     A>Kustomization: rook-ceph] -->|Creates| B[HelmRelease: rook-ceph]
     A>Kustomization: rook-ceph] -->|Creates| C[HelmRelease: rook-ceph-cluster]
     C>HelmRelease: rook-ceph-cluster] -->|Depends on| B>HelmRelease: rook-ceph]
-    D>Kustomization: atuin] -->|Creates| E(HelmRelease: atuin)
-    E>HelmRelease: atuin] -->|Depends on| C>HelmRelease: rook-ceph-cluster]
+    D>Kustomization: paperless-ngx] -->|Creates| E(HelmRelease: paperless-ngx)
+    E>HelmRelease: paperless-ngx] -->|Depends on| C>HelmRelease: rook-ceph-cluster]
 ```
 
 ---
