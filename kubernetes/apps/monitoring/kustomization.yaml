@@ -6,7 +6,7 @@ namespace: monitoring
 components:
   - ../../components/common
 resources:
-  - ./alertmanager/ks.yaml
+  #- ./alertmanager/ks.yaml
   - ./grafana/ks.yaml
   - ./kromgo/ks.yaml
   #- ./loki/ks.yaml
