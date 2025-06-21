@@ -52,7 +52,9 @@ spec:
         runAsGroup: 0
     persistence:
       transfer:
-        existingClaim: smb-transfer
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Transfer
         globalMounts:
           - path: /mnt/transfer
       dev:

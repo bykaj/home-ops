@@ -6,6 +6,5 @@ namespace: rook-ceph
 components:
   - ../../components/common
 resources:
-  - ./persistence/ks.yaml
   - ./rook-ceph/ks.yaml
   - ./toolbox/ks.yaml
