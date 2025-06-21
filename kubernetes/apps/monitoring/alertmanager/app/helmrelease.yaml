@@ -51,7 +51,7 @@ spec:
     persistence:
       config:
         type: configMap
-        name: alertmanager-values
+        name: alertmanager-config
         globalMounts:
           - path: /etc/alertmanager
       secrets:

@@ -6,11 +6,11 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: alertmanager-values
+  - name: alertmanager-config
     files:
-      - ./helm/values.yaml
+      - ./config/alertmanager.yml
 generatorOptions:
   annotations:
     kustomize.toolkit.fluxcd.io/substitute: disabled
 configurations:
-  - ./helm/kustomizeconfig.yaml
+  - ./config/kustomizeconfig.yaml
