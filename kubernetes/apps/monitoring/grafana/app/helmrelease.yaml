@@ -24,7 +24,16 @@ spec:
     name: grafana
   interval: 30m
   timeout: 20m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
+    deploymentStrategy:
+      type: Recreate
     admin:
       existingSecret: grafana-secret
 
@@ -304,7 +313,7 @@ spec:
         memory: 128Mi
 
     route:
-      app:
+      main:
         hostnames:
           - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
         parentRefs:
