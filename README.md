@@ -61,7 +61,7 @@ The way Flux works for me here is it will recursively search the `kubernetes/app
 
 ### Directories
 
-This Git repository contains the following directories under [Kubernetes](./kubernetes/).
+This Git repository contains the following directories under [Kubernetes](./kubernetes/):
 
 ```sh
 📁 kubernetes
