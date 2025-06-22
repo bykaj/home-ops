@@ -42,11 +42,11 @@ spec:
           matchType: =
   receivers:
     - name: "null"
-    - name: heartbeat
-      webhookConfigs:
-        - urlSecret:
-            name: &secret alertmanager-secret
-            key: ALERTMANAGER_HEARTBEAT_URL
+    # - name: heartbeat
+    #   webhookConfigs:
+    #     - urlSecret:
+    #         name: &secret alertmanager-secret
+    #         key: ALERTMANAGER_HEARTBEAT_URL
     - name: pushover
       pushoverConfigs:
         - html: true
@@ -78,7 +78,7 @@ spec:
             {{ .CommonLabels.alertname }}
           ttl: 86400s
           token:
-            name: *secret
+            name: &secret alertmanager-secret
             key: ALERTMANAGER_PUSHOVER_TOKEN
           userKey:
             name: *secret
