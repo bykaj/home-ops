@@ -34,21 +34,21 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a 3 node [Proxmox VE](https://www.proxmox.com) cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template over at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
 ### Core Components
 
-- [actions-runner-controller](https://github.com/actions/actions-runner-controller): Self-hosted GitHub runners;
-- [cert-manager](https://github.com/cert-manager/cert-manager): Creates SSL certificates for services in my cluster;
-- [cilium](https://github.com/cilium/cilium): eBPF-based networking for my workloads;
-- [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my routes;
-- [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider;
-- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect);
-- [rook](https://github.com/rook/rook): Distributed block storage with Ceph for persistent storage;
-- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes and Ansible which are commited to Git;
-- [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror;
+- [actions-runner-controller](https://github.com/actions/actions-runner-controller): Self-hosted GitHub runners.
+- [cert-manager](https://github.com/cert-manager/cert-manager): Creates SSL certificates for services in my cluster.
+- [cilium](https://github.com/cilium/cilium): eBPF-based networking for my workloads.
+- [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my routes.
+- [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider.
+- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
+- [rook](https://github.com/rook/rook): Distributed block storage with Ceph for persistent storage.
+- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes and Ansible which are commited to Git.
+- [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
 - [volsync](https://github.com/backube/volsync): Backup and recovery of persistent volume claims.
 
 ### GitOps
@@ -91,19 +91,19 @@ While most of my infrastructure and workloads are self-hosted I do rely upon the
 
 Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and even more costly.
 
-- [1Password](https://1password.com/): Secrets with [External Secrets](https://external-secrets.io/);
-- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust Argo tunnel;
-- [Fastmail](https://fastmail.com/): Email hosting;
-- [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments;
-- [Pushover](https://pushover.net/): Kubernetes Alerts and application notifications;
-- [Storj](https://storj.io/): S3 object storage for applications and backups;
+- [1Password](https://1password.com/): Secrets with [External Secrets](https://external-secrets.io/).
+- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust Argo tunnel.
+- [Fastmail](https://fastmail.com/): Email hosting.
+- [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments.
+- [Pushover](https://pushover.net/): Kubernetes Alerts and application notifications.
+- [Storj](https://storj.io/): S3 object storage for applications and backups.
 - [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
                                                       
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30e/512.gif" alt="🌎" width="20" height="20"> DNS
 
-In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my `UDM Pro Max` using [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook), while another instance syncs public DNS to `Cloudflare`. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
+In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my UniFi UDM Pro Max using [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook), while another instance syncs public DNS to Cloudflare. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
 
 ---
 
@@ -125,17 +125,20 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
 
-- **Upgrading to more powerful hardware** – I'm considering three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units to replace my current Lenovo M920q units and self-built server as Proxmox VE hosts.
-- **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, making it truly HA. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
+- **Upgrading to more powerful hardware** – I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.
+- **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
 - **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
-- **Optimizing inter-node connectivity** – The plan includes enabling 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to connect directly to the aggregation switch.
-- **Dedicated NAS hardware** – Currently, TrueNAS runs virtualized with hardware passthrough on one of the Proxmox VE hosts. In the new setup, TrueNAS will run bare-metal on dedicated hardware (my self-built 2U server).
+- **Optimizing inter-node connectivity** – I'm implementing 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
+- **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 2U server.
+- **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f64f/512.gif" alt="🙏" width="20" height="20"> Gratitude and Thanks
 
 A lot of inspiration for my cluster comes from the people that have shared their clusters using the [k8s-at-home](https://github.com/topics/k8s-at-home) GitHub topic. Be sure to check out the awesome [Kubesearch](http://kubesearch.dev) tool for ideas on how to deploy applications or get ideas on what you can deploy.
+
+For learning the basics of running and maintaining a Kubernetes cluster, particularly [K3s](https://k3s.io/), I highly recommend starting with [Jim's Garage](https://youtube.com/@jims-garage) excellent [Kubernetes at Home](https://youtube.com/playlist?list=PLXHMZDvOn5sVXjb88kYXSI7UMx4rhQwOj&si=E6qRPZ915IXQYGL0) series. Once you're comfortable with the basics and ready to automate your deployments, [Techno Tim's](https://www.youtube.com/@TechnoTim) [K3s Ansible guide](https://github.com/techno-tim/k3s-ansible) provides a great foundation for automated cluster rollouts. Thanks to both @JamesTurland and @timothystewart6 for these great resources!
 
 ---
 
