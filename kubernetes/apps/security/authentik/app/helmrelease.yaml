@@ -302,7 +302,7 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      app:
+      server:
         hostnames:
           - "auth.${DOMAIN_ID}"
         parentRefs:
