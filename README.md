@@ -163,6 +163,8 @@ A lot of inspiration for my cluster comes from the people that have shared their
 
 For learning the basics of running and maintaining a Kubernetes cluster, particularly [K3s](https://k3s.io/), I highly recommend starting with [Jim's Garage](https://youtube.com/@jims-garage) excellent [Kubernetes at Home](https://youtube.com/playlist?list=PLXHMZDvOn5sVXjb88kYXSI7UMx4rhQwOj&si=E6qRPZ915IXQYGL0) series. Once you're comfortable with the basics and ready to automate your deployments, [Techno Tim's](https://www.youtube.com/@TechnoTim) [K3s Ansible guide](https://github.com/techno-tim/k3s-ansible) provides a great foundation for automated cluster rollouts. Thanks to both [@JamesTurland](https://github.com/JamesTurland) and [@timothystewart6](https://github.com/timothystewart6) for these great resources!
 
+And of course, shoutout to [@QNimbus](https://github.com/QNimbus) for his bash scripts that are more engineered than a Swiss watch—but hey, they actually work!
+
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="20" height="20"> License
