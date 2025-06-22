@@ -168,7 +168,7 @@ spec:
                   failureThreshold: 3
                   httpGet:
                     path: /-/health/live/
-                    port: &port 9000
+                    port: *port
                   initialDelaySeconds: 5
                   periodSeconds: 10
                   successThreshold: 1
