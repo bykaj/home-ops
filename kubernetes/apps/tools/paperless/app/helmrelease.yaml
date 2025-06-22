@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      db:
+      paperless:
         annotations:
           rsecret.reloader.stakater.com/reload: &secret paperless-secret
         containers:
@@ -64,74 +64,13 @@ spec:
             resources:
               requests:
                 cpu: 5m
+                memory: 128Mi
               limits:
                 memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
-      paperless:
-        annotations:
-          rsecret.reloader.stakater.com/reload: *secret
-        containers:
-          paperless:
-            image:
-              repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 2.17.1
-            env:
-              # OIDC integration
-              PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
-              PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
-              PAPERLESS_REDIRECT_LOGIN_TO_SSO: "true"
-              # Configure application
-              PAPERLESS_FILENAME_FORMAT: "{ created }-{ correspondent }-{ title }"
-              PAPERLESS_PORT: &port 8000
-              PAPERLESS_TASK_WORKERS: "2"
-              PAPERLESS_TIME_ZONE: "${TIMEZONE}"
-              PAPERLESS_URL: "https://archive.${DOMAIN_APP_APPS}"
-              PAPERLESS_WEBSERVER_WORKERS: "2"
-              # Configure folder importer
-              PAPERLESS_CONSUMER_POLLING: "15"
-              PAPERLESS_CONSUMER_RECURSIVE: "true"
-              PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
-              # Configure OCR
-              PAPERLESS_OCR_LANGUAGE: nld+eng
-              PAPERLESS_OCR_LANGUAGES: nld
-              # Configure database
-              PAPERLESS_DBHOST: paperless-db.tools.svc.cluster.local
-              # Configure Redis integration
-              PAPERLESS_REDIS: redis://paperless-redis.tools.svc.cluster.local:6379
-              # Configure user permissions
-              # USERMAP_UID: "4000"
-              # USERMAP_GID: "4000"
-            envFrom:
-              - secretRef:
-                  name: *secret
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 20m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-      redis:
-        containers:
           redis:
             image:
               repository: redis
@@ -164,6 +103,65 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+          app:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 2.17.1
+            dependsOn:
+              - db
+              - redis
+            env:
+              # OIDC integration
+              PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
+              PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
+              PAPERLESS_REDIRECT_LOGIN_TO_SSO: "true"
+              # Configure application
+              PAPERLESS_FILENAME_FORMAT: "{ created }-{ correspondent }-{ title }"
+              PAPERLESS_PORT: &port 8000
+              PAPERLESS_TASK_WORKERS: "2"
+              PAPERLESS_TIME_ZONE: "${TIMEZONE}"
+              PAPERLESS_URL: "https://archive.${DOMAIN_APP_APPS}"
+              PAPERLESS_WEBSERVER_WORKERS: "2"
+              # Configure folder importer
+              PAPERLESS_CONSUMER_POLLING: "15"
+              PAPERLESS_CONSUMER_RECURSIVE: "true"
+              PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
+              # Configure OCR
+              PAPERLESS_OCR_LANGUAGE: nld+eng
+              PAPERLESS_OCR_LANGUAGES: nld
+              # Configure database
+              PAPERLESS_DBHOST: localhost
+              # Configure Redis integration
+              PAPERLESS_REDIS: redis://localhost:6379
+              # Configure user permissions
+              # USERMAP_UID: "4000"
+              # USERMAP_GID: "4000"
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -175,18 +173,16 @@ spec:
       config:
         existingClaim: paperless-config
         advancedMounts:
-          db:
+          paperless:
             db:
               - path: /var/lib/postgresql/data
                 readOnly: false
                 subPath: postgresql
-          redis:
             redis:
               - path: /data
                 readOnly: false
                 subPath: redis
-          paperless:
-            paperless:
+            app:
               - path: /usr/src/paperless/data
                 readOnly: false
                 subPath: paperless
@@ -196,7 +192,7 @@ spec:
         path: /mnt/vault-alpha/Archive
         advancedMounts:
           paperless:
-            paperless:
+            app:
               - path: /usr/src/paperless/consume
                 subPath: consume
               - path: /usr/src/paperless/export
@@ -216,7 +212,7 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      paperless:
+      app:
         hostnames:
           - "archive.${DOMAIN_APP_APPS}"
         parentRefs:
@@ -228,19 +224,9 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      paperless:
+      app:
         primary: true
         controller: *app
         ports:
           http:
             port: *port
-      redis:
-        controller: redis
-        ports:
-          http:
-            port: 6379
-      db:
-        controller: db
-        ports:
-          http:
-            port: 5432
