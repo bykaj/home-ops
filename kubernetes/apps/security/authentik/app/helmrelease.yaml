@@ -47,17 +47,20 @@ spec:
                     key: POSTGRES_PASSWORD
             probes:
               liveness: &probes
-                exec:
-                  command:
-                    - pg_isready
-                    - -U
-                    - *dbUser
-                    - -d
-                    - *dbName
-                initialDelaySeconds: 15
-                periodSeconds: 10
-                timeoutSeconds: 5
-                failureThreshold: 3
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - pg_isready
+                      - -U
+                      - *dbUser
+                      - -d
+                      - *dbName
+                  initialDelaySeconds: 15
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
               readiness: *probes
             resources:
               requests:
@@ -78,15 +81,18 @@ spec:
               - "--loglevel warning"
             probes:
               liveness: &probes
-                exec:
-                  command:
-                    - sh
-                    - -c
-                    - redis-cli ping
-                initialDelaySeconds: 5
-                periodSeconds: 5
-                timeoutSeconds: 5
-                failureThreshold: 3
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - redis-cli ping
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 3
               readiness: *probes
             resources:
               requests:
@@ -105,8 +111,8 @@ spec:
             args:
               - server
             dependsOn:
-              - name: authentik-db
-              - name: authentik-redis
+              - authentik-db
+              - authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -153,8 +159,8 @@ spec:
             args:
               - worker
             dependsOn:
-              - name: authentik-db
-              - name: authentik-redis
+              - authentik-db
+              - authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -200,14 +206,17 @@ spec:
               tag: "v7.1"
             probes:
               liveness: &probes
-                exec:
-                  command:
-                    - sh
-                    - -c
-                    - test -s /usr/share/GeoIP/GeoLite2-City.mmdb
-                initialDelaySeconds: 30
-                periodSeconds: 60
-                failureThreshold: 3
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - test -s /usr/share/GeoIP/GeoLite2-City.mmdb
+                  initialDelaySeconds: 30
+                  periodSeconds: 60
+                  failureThreshold: 3
               readiness: *probes
             resources:
               requests:
