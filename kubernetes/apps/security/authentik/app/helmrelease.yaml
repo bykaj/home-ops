@@ -249,26 +249,35 @@ spec:
           authentik:
             db:
               - path: /var/lib/postgresql/data
+                readOnly: false
                 subPath: postgresql
             redis:
               - path: /data
+                readOnly: false
                 subPath: redis
             server:
               - path: /media
+                readOnly: false
                 subPath: authentik/media
               - path: /templates
+                readOnly: false
                 subPath: authentik/templates
               - path: /geoip
+                readOnly: false
                 subPath: geoip
             worker:
               - path: /media
+                readOnly: false
                 subPath: authentik/media
               - path: /templates
+                readOnly: false
                 subPath: authentik/templates
               - path: /geoip
+                readOnly: false
                 subPath: geoip
             geoip:
               - path: /usr/share/GeoIP
+                readOnly: false
                 subPath: geoip
       backups:
         type: nfs
