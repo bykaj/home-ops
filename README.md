@@ -24,6 +24,8 @@ Kubernetes cluster stats:
 
 </div>
 
+---
+
 <details>
 <summary><strong>Table of Contents</strong> (click to expand)</summary>
 
