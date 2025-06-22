@@ -11,6 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
+  dependsOn:
+    - name: onepassword
+      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/downloads/prowlarr/app
   postBuild:

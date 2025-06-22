@@ -104,9 +104,9 @@ spec:
               tag: "2025.6.2"
             args:
               - server
-            # dependsOn:
-            #   - name: authentik-db
-            #   - name: authentik-redis
+            dependsOn:
+              - name: authentik-db
+              - name: authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -152,9 +152,9 @@ spec:
               tag: "2025.6.2"
             args:
               - worker
-            # dependsOn:
-            #   - name: authentik-db
-            #   - name: authentik-redis
+            dependsOn:
+              - name: authentik-db
+              - name: authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
