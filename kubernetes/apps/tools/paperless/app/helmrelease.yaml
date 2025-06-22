@@ -68,9 +68,9 @@ spec:
               limits:
                 memory: 256Mi
             securityContext:
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
               readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+              capabilities: {}
           redis:
             image:
               repository: redis
@@ -165,14 +165,14 @@ spec:
                 memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: {}
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
-        runAsGroup: 4000
-        fsGroup: 4000
+        runAsGroup: 1000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
@@ -216,13 +216,13 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-      # s6 overlay fixes
-      # Ref: https://github.com/just-containers/s6-overlay/issues/600
-      run:
-        type: emptyDir
         advancedMounts:
           paperless:
             paperless:
+              - path: /usr/src/paperless/data/log
+                subPath: log
+              # s6 overlay fixes
+              # Ref: https://github.com/just-containers/s6-overlay/issues/600
               - path: /run
                 subPath: run
     route:
