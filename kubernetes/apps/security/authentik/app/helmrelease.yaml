@@ -1,0 +1,274 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app authentik
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      authentik:
+        annotations:
+          rsecret.reloader.stakater.com/reload: &secret authentik-secret
+        containers:
+          db:
+            image:
+              repository: postgres
+              tag: "16"
+            env:
+              - name: PG_TZ
+                value: "${TIMEZONE}"
+              - name: POSTGRES_DB
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: &dbName POSTGRES_DB
+              - name: POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: &dbUser POSTGRES_USER
+              - name: POSTGRES_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: POSTGRES_PASSWORD
+            probes:
+              liveness: &probes
+                exec:
+                  command:
+                    - pg_isready
+                    - -U
+                    - *dbUser
+                    - -d
+                    - *dbName
+                initialDelaySeconds: 15
+                periodSeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 20m
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          redis:
+            repository: redis
+            tag: "8.0.2"
+            args:
+              - "--save 60 1"
+              - "--loglevel warning"
+            probes:
+              liveness: &probes
+                exec:
+                  command:
+                    - sh
+                    - -c
+                    - redis-cli ping
+                initialDelaySeconds: 5
+                periodSeconds: 5
+                timeoutSeconds: 5
+                failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          server:
+            image:
+              repository: ghcr.io/goauthentik/server
+              tag: "2025.6.2"
+            args:
+              - server
+            dependsOn:
+              - name: db
+              - name: redis
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health/live/
+                    port: &port 9000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health/ready/
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          worker:
+            image:
+              repository: ghcr.io/goauthentik/server
+              tag: "2025.6.2"
+            args:
+              - worker
+            dependsOn:
+              - name: db
+              - name: redis
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health/live/
+                    port: &port 9000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health/ready/
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          geoip:
+            repository: ghcr.io/maxmind/geoipupdate
+            tag: "v7.1"
+            probes:
+              liveness: &probes
+                exec:
+                  command:
+                    - sh
+                    - -c
+                    - test -s /usr/share/GeoIP/GeoLite2-City.mmdb
+                initialDelaySeconds: 30
+                periodSeconds: 60
+                failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 5m
+              limits:
+                memory: 32Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: authentik-config
+        advancedMounts:
+          authentik:
+            db:
+              - path: /var/lib/postgresql/data
+                subPath: postgresql
+            redis:
+              - path: /data
+                subPath: redis
+            server:
+              - path: /media
+                subPath: authentik/media
+              - path: /templates
+                subPath: authentik/templates
+              - path: /geoip
+                subPath: geoip
+            worker:
+              - path: /media
+                subPath: authentik/media
+              - path: /templates
+                subPath: authentik/templates
+              - path: /geoip
+                subPath: geoip
+            geoip:
+              - path: /usr/share/GeoIP
+                subPath: geoip
+      backups:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/Authentik
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+    route:
+      app:
+        hostnames:
+          - "auth.${DOMAIN_ID}"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https-id
+    service:
+      server:
+        controller: *app
+        ports:
+          http:
+            port: *port
