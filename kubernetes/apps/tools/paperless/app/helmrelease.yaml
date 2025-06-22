@@ -64,13 +64,9 @@ spec:
             resources:
               requests:
                 cpu: 5m
-                memory: 128Mi
-              limits:
                 memory: 256Mi
-            # securityContext:
-            #   allowPrivilegeEscalation: true
-            #   readOnlyRootFilesystem: false
-            #   capabilities: {}
+              limits:
+                memory: 512Mi
           redis:
             image:
               repository: redis
@@ -99,10 +95,6 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 128Mi
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   readOnlyRootFilesystem: true
-            #   capabilities: { drop: ["ALL"] }
           paperless:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
@@ -159,21 +151,10 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 10m
-                memory: 256Mi
-              limits:
+                cpu: 25m
                 memory: 1Gi
-            # securityContext:
-            #   allowPrivilegeEscalation: true
-            #   readOnlyRootFilesystem: false
-            #   capabilities: {}
-    # defaultPodOptions:
-    #   securityContext:
-    #     runAsNonRoot: true
-    #     runAsUser: 1000
-    #     runAsGroup: 1000
-    #     fsGroup: 1000
-    #     fsGroupChangePolicy: OnRootMismatch
+              limits:
+                memory: 3Gi
     persistence:
       config:
         existingClaim: paperless-config
