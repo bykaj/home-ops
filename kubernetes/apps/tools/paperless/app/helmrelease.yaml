@@ -66,6 +66,10 @@ spec:
                 cpu: 5m
               limits:
                 memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
       paperless:
         annotations:
           rsecret.reloader.stakater.com/reload: *secret
@@ -98,8 +102,8 @@ spec:
               # Configure Redis integration
               PAPERLESS_REDIS: redis://paperless-redis.tools.svc.cluster.local:6379
               # Configure user permissions
-              # USERMAP_UID: "4000"
-              # USERMAP_GID: "4000"
+              USERMAP_UID: "4000"
+              USERMAP_GID: "4000"
             envFrom:
               - secretRef:
                   name: *secret
@@ -122,6 +126,10 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
       redis:
         containers:
           redis:
@@ -152,6 +160,17 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         existingClaim: paperless-config
