@@ -129,16 +129,16 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="20" height="20"> Hardware
 
-| Device                      | Num | Disks                  | Ram  | Network       | Function                |
+| Device                      | Num | Disks                  | RAM  | Network       | Function                |
 |-----------------------------|-----|------------------------|------|---------------|-------------------------|
-| Lenovo M920q, i5-8500T      | 2   | 1TB SSD                | 64GB | 10Gb          | Proxmox VE Host         |
-| Self-built 2U, i7-6700K     | 1   | 512GB SSD, 1TB SSD, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
-| UniFi UDM Pro Max           | 1   | 8TB HDD                | -    | 10Gb          | Router & NVR            |
+| Lenovo M920q, i5-8500T      | 2   | 1TB NVMe               | 64GB | 10Gb          | Proxmox VE Host         |
+| Self-built 2U, i7-6700K     | 1   | 512GB SSD, 1TB NVMe, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
+| UniFi UDM Pro Max           | 1   | 8TB SATA               | -    | 10Gb          | Router & NVR            |
 | UniFi USW Pro HD 24 PoE     | 1   |                        | -    | 2.5Gb/10Gb    | PoE Core Switch         |
 | UniFi USW Flex 2.5G 5       | 1   |                        | -    | 2.5Gb         | Switch                  |
-| Home Assistant Yellow       | 1   | 8GB eMMC, 256GB SSD    | 4GB  | 1Gb           | Home Automation         |
+| Home Assistant Yellow       | 1   | 8GB eMMC, 256GB NVMe   | 4GB  | 1Gb           | Home Automation         |
 | PiKVM V4 Plus               | 1   | 32GB eMMC              | 8GB  | 1Gb           | KVM                     |
-| JetKVM                      | 3   | -                      | -    | 100Mb         | KVM                     |
+| JetKVM                      | 3   | 8GB eMMC               | -    | 100Mb         | KVM                     |
 | Eaton Ellipse Pro 650 2U    | 1   | -                      | -    | -             | UPS                     |
 
 ---
