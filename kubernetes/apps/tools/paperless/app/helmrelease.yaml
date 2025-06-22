@@ -202,6 +202,8 @@ spec:
                 subPath: export
               - path: /usr/src/paperless/media
                 subPath: media
+            redis:
+              - path: /test
       backups:
         existingClaim: smb-backups
         globalMounts:
