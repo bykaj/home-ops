@@ -33,12 +33,12 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
-                    key: &dbName POSTGRES_DB
+                    key: POSTGRES_DB
               - name: POSTGRES_USER
                 valueFrom:
                   secretKeyRef:
                     name: *secret
-                    key: &dbUser POSTGRES_USER
+                    key: POSTGRES_USER
               - name: POSTGRES_PASSWORD
                 valueFrom:
                   secretKeyRef:
@@ -53,9 +53,9 @@ spec:
                     command:
                       - pg_isready
                       - -U
-                      - *dbUser
+                      - ${POSTGRES_USER}
                       - -d
-                      - *dbName
+                      - ${POSTGRES_DB}
                   initialDelaySeconds: 15
                   periodSeconds: 10
                   timeoutSeconds: 5
