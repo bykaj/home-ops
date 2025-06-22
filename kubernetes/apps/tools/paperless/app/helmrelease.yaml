@@ -140,6 +140,7 @@ spec:
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
               S6_READ_ONLY_ROOT: "1"
+              S6_VERBOSITY: "2"
             envFrom:
               - secretRef:
                   name: *secret
@@ -163,7 +164,7 @@ spec:
               limits:
                 memory: 1Gi
             securityContext:
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
