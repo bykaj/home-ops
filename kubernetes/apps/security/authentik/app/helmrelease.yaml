@@ -120,7 +120,7 @@ spec:
                 spec:
                   failureThreshold: 3
                   httpGet:
-                    path: /health/live/
+                    path: /-/health/live/
                     port: &port 9000
                   initialDelaySeconds: 5
                   periodSeconds: 10
@@ -132,7 +132,7 @@ spec:
                 spec:
                   failureThreshold: 3
                   httpGet:
-                    path: /health/ready/
+                    path: /-/health/ready/
                     port: *port
                   initialDelaySeconds: 5
                   periodSeconds: 10
