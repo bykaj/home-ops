@@ -23,7 +23,6 @@ spec:
           rsecret.reloader.stakater.com/reload: &secret authentik-secret
         containers:
           db:
-            nameOverride: authentik-db
             image:
               repository: postgres
               tag: "16"
@@ -72,7 +71,6 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           redis:
-            nameOverride: authentik-redis
             image:
               repository: redis
               tag: "8.0.2"
@@ -104,15 +102,14 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           server:
-            nameOverride: authentik-server
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - server
             dependsOn:
-              - authentik-db
-              - authentik-redis
+              - db
+              - redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -152,15 +149,14 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           worker:
-            nameOverride: authentik-worker
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - worker
             dependsOn:
-              - authentik-db
-              - authentik-redis
+              - db
+              - redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -200,7 +196,6 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           geoip:
-            nameOverride: authentik-geoip
             image:
               repository: ghcr.io/maxmind/geoipupdate
               tag: "v7.1"
