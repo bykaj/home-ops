@@ -103,7 +103,7 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-          app:
+          paperless:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
               tag: 2.17.1
@@ -212,7 +212,7 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      app:
+      paperless:
         hostnames:
           - "archive.${DOMAIN_APP_APPS}"
         parentRefs:
@@ -224,7 +224,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      app:
+      paperless:
         primary: true
         controller: *app
         ports:
