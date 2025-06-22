@@ -23,6 +23,7 @@ spec:
           rsecret.reloader.stakater.com/reload: &secret authentik-secret
         containers:
           db:
+            nameOverride: authentik-db
             image:
               repository: postgres
               tag: "16"
@@ -68,8 +69,10 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           redis:
-            repository: redis
-            tag: "8.0.2"
+            nameOverride: authentik-redis
+            image:
+              repository: redis
+              tag: "8.0.2"
             args:
               - "--save 60 1"
               - "--loglevel warning"
@@ -95,14 +98,15 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           server:
+            nameOverride: authentik-server
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - server
             dependsOn:
-              - name: db
-              - name: redis
+              - name: authentik-db
+              - name: authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -142,14 +146,15 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           worker:
+            nameOverride: authentik-worker
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - worker
             dependsOn:
-              - name: db
-              - name: redis
+              - name: authentik-db
+              - name: authentik-redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -189,8 +194,10 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
           geoip:
-            repository: ghcr.io/maxmind/geoipupdate
-            tag: "v7.1"
+            nameOverride: authentik-geoip
+            image:
+              repository: ghcr.io/maxmind/geoipupdate
+              tag: "v7.1"
             probes:
               liveness: &probes
                 exec:
