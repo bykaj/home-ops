@@ -66,14 +66,17 @@ There is a template available at [onedr0p/cluster-template](https://github.com/o
 - [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my routes.
 - [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider.
 - [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
+- [flux](https://github.com/fluxcd/flux2): Syncs Kubernetes configuration in Git to the cluster.
+- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack): Kubernetes cluster monitoring.
+- [openebs](https://github.com/openebs/openebs): Local container-attached storage for caching.
 - [rook](https://github.com/rook/rook): Distributed block storage with Ceph for persistent storage.
 - [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes and Ansible which are commited to Git.
-- [spegel](https://github.com/spegel-org/spegel): Stateless cluster local OCI registry mirror.
+- [spegel](https://github.com/spegel-org/spegel): Stateless local OCI registry mirror to bypass rate limiting from container registries.
 - [volsync](https://github.com/backube/volsync): Backup and recovery of persistent volume claims.
 
 ### GitOps
 
-[Flux](https://github.com/fluxcd/flux2) watches the clusters in my [kubernetes](./kubernetes/) folder (see [Folder Structure](#folder-structure) below) and makes the changes to my clusters based on the state of my Git repository.
+Flux watches the clusters in my [kubernetes](./kubernetes/) folder (see [Folder Structure](#folder-structure) below) and makes the changes to my clusters based on the state of my Git repository.
 
 The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
 
