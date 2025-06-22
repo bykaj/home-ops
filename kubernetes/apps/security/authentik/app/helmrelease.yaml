@@ -53,9 +53,9 @@ spec:
                     command:
                       - pg_isready
                       - -U
-                      - $${POSTGRES_USER}
+                      - authentik_user
                       - -d
-                      - $${POSTGRES_DB}
+                      - authentik
                   initialDelaySeconds: 15
                   periodSeconds: 10
                   timeoutSeconds: 5
@@ -202,6 +202,16 @@ spec:
             env:
               - name: TZ
                 value: "${TIMEZONE}"
+              - name: GEOIPUPDATE_EDITION_IDS
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: GEOIPUPDATE_EDITION_IDS
+              - name: GEOIPUPDATE_FREQUENCY
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: GEOIPUPDATE_FREQUENCY
               - name: GEOIPUPDATE_ACCOUNT_ID
                 valueFrom:
                   secretKeyRef:
