@@ -34,7 +34,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a [Proxmox VE](https://www.proxmox.com) cluster with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed on a 3 node [Proxmox VE](https://www.proxmox.com) cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template over at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
@@ -109,17 +109,27 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="20" height="20"> Hardware
 
-| Device                      | Num | OS Disk Size | Data Disk Size                  | Ram  | OS            | Function                |
+| Device                      | Num | OS Disk Size | Data Disk Size                  | Ram  | Network       | Function                |
 |-----------------------------|-----|--------------|---------------------------------|------|---------------|-------------------------|
-| Lenovo M920q, i5-8500T      | 2   | 1TB SSD      |                                 | 64GB | Proxmox VE    | VM Host                 |
-| Self-build 2U, i7-6700K     | 1   | 512GB SSD    | 1x1TB SSD, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | Proxmox VE    | VM Host, SMB/NFS + Backup Server |
-| PiKVM V4 Plus               | 1   | 32GB eMMC    | -                               | 8GB  | PiKVM         | KVM                     |
-| JetKVM                      | 3   | -            | -                               | -    | JetKVM        | KVM                     |
+| Lenovo M920q, i5-8500T      | 2   | 1TB SSD      |                                 | 64GB | 10Gb.         | Proxmox VE Host         |
+| Self-built 2U, i7-6700K     | 1   | 512GB SSD    | 1x1TB SSD, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
+| PiKVM V4 Plus               | 1   | 32GB eMMC    | -                               | 8GB  | 1Gb           | KVM                     |
+| JetKVM                      | 3   | -            | -                               | -    | 100Mb         | KVM                     |
 | UniFi UDM Pro Max           | 1   | -            | 8TB HDD                         | -    | -             | Router & NVR            |
 | UniFi USW Pro HD 24 PoE     | 1   | -            | -                               | -    | -             | 2.5Gb/10Gb PoE Core Switch |
 | UniFi USW Flex 2.5G 5       | 1   | -            | -                               | -    | -             | 2.5Gb Switch            |
-| Home Assistant Yellow       | 1   | 8GB eMMC     | 256GB SSD                       | 4GB  | Home Asssitant OS | Home Automation         |
+| Home Assistant Yellow       | 1   | 8GB eMMC     | 256GB SSD                       | 4GB  | 1Gb           | Home Automation         |
 | Eaton Ellipse Pro 650 2U    | 1   | -            | -                               | -    | -             | UPS                     |
+
+---
+
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
+
+- **Upgrading to more powerful hardware** – I'm considering three [Minisforum MS-01s](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) to replace my current Lenovo M920q units and self-built server as Proxmox VE hosts.
+- **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, making it truly HA. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
+- **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
+- **Optimizing inter-node connectivity** – The plan includes enabling 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to connect directly to the aggregation switch.
+- **Dedicated NAS hardware** – Currently, TrueNAS runs virtualized with hardware passthrough on one of the Proxmox VE hosts. In the new setup, TrueNAS will run bare-metal on dedicated hardware (my self-built 2U server).
 
 ---
 
