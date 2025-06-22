@@ -67,10 +67,10 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 256Mi
-            securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: false
-              capabilities: {}
+            # securityContext:
+            #   allowPrivilegeEscalation: true
+            #   readOnlyRootFilesystem: false
+            #   capabilities: {}
           redis:
             image:
               repository: redis
@@ -99,10 +99,10 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 128Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: true
+            #   capabilities: { drop: ["ALL"] }
           paperless:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
@@ -134,7 +134,7 @@ spec:
               # Configure Redis integration
               PAPERLESS_REDIS: redis://localhost:6379
               # Configure user permissions
-              USERMAP_UID: "1000"
+              # USERMAP_UID: "4000"
               # USERMAP_GID: "4000"
               # s6 overlay fixes
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
@@ -163,17 +163,17 @@ spec:
                 memory: 256Mi
               limits:
                 memory: 1Gi
-            securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: false
-              capabilities: {}
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
+            # securityContext:
+            #   allowPrivilegeEscalation: true
+            #   readOnlyRootFilesystem: false
+            #   capabilities: {}
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsNonRoot: true
+    #     runAsUser: 1000
+    #     runAsGroup: 1000
+    #     fsGroup: 1000
+    #     fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         existingClaim: paperless-config
@@ -202,8 +202,6 @@ spec:
                 subPath: export
               - path: /usr/src/paperless/media
                 subPath: media
-            redis:
-              - path: /test
       backups:
         existingClaim: smb-backups
         globalMounts:
