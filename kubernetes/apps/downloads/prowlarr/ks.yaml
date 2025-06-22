@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: onepassword
+    - name: onepassword-connect
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/downloads/prowlarr/app
