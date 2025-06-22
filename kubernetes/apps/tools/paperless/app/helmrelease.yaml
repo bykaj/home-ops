@@ -68,7 +68,7 @@ spec:
                 memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
       paperless:
         annotations:
@@ -102,8 +102,8 @@ spec:
               # Configure Redis integration
               PAPERLESS_REDIS: redis://paperless-redis.tools.svc.cluster.local:6379
               # Configure user permissions
-              USERMAP_UID: "4000"
-              USERMAP_GID: "4000"
+              # USERMAP_UID: "4000"
+              # USERMAP_GID: "4000"
             envFrom:
               - secretRef:
                   name: *secret
