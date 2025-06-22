@@ -209,7 +209,7 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      paperless:
+      paperless-ngx:
         hostnames:
           - "archive.${DOMAIN_APP_APPS}"
         parentRefs:
@@ -221,7 +221,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      paperless:
+      paperless-ngx:
         primary: true
         controller: *app
         ports:
