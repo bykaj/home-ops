@@ -24,6 +24,24 @@ Kubernetes cluster stats:
 
 </div>
 
+<details>
+<summary><strong>Table of Contents</strong> (click to expand)</summary>
+
+1. [Overview](#-overview)
+2. [Kubernetes](#-kubernetes)
+    - [Core Components](#core-components)
+    - [GitOps](#gitops)
+    - [Folder Structure](#folder-structure)
+    - [Flux Workflow](#flux-workflow)
+3. [Cloud Dependencies](#-cloud-dependencies)
+4. [DNS](#-dns)
+5. [Hardware](#-hardware)
+6. [Future Plans](#-future-plans)
+7. [Gratitude and Thanks](#-gratitude-and-thanks)
+8. [License](#-license)
+
+</details>
+
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"> Overview 
@@ -34,7 +52,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate virtualized [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template available at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
@@ -53,13 +71,13 @@ There is a template available at [onedr0p/cluster-template](https://github.com/o
 
 ### GitOps
 
-[Flux](https://github.com/fluxcd/flux2) watches the clusters in my [kubernetes](./kubernetes/) folder (see [Directories](#directories) below) and makes the changes to my clusters based on the state of my Git repository.
+[Flux](https://github.com/fluxcd/flux2) watches the clusters in my [kubernetes](./kubernetes/) folder (see [Folder Structure](#folder-structure) below) and makes the changes to my clusters based on the state of my Git repository.
 
 The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
 
 [Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged Flux applies the changes to my cluster.
 
-### Directories
+### Folder Structure
 
 This Git repository contains the following directories under [Kubernetes](./kubernetes/):
 
@@ -87,15 +105,15 @@ graph TD
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f636_200d_1f32b_fe0f/512.gif" alt="😶" width="20" height="20"> Cloud Dependencies
 
-While most of my infrastructure and workloads are self-hosted I do rely upon the cloud for certain key parts of my setup. This saves me from having to worry about three things. (1) Dealing with chicken/egg scenarios, (2) services I critically need whether my cluster is online or not and (3) The "hit by a bus factor" - what happens to critical apps (e.g. Email, Password Manager, Photos) that my family relies on when I no longer around.
+While most of my infrastructure and workloads are self-hosted I do rely upon the cloud for certain key parts of my setup. This saves me from having to worry about three things. (1) Dealing with chicken/egg scenarios, (2) services I critically need whether my cluster is online or not and (3) The "hit by a bus factor" - what happens to critical apps (e.g. Email, Password Manager, Photos) that my family relies on when I'm no longer around.
 
-Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and even more costly.
+Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and even more costly. Something about free time...
 
-- [1Password](https://1password.com/): Secrets with [External Secrets](https://external-secrets.io/).
-- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust Argo tunnel.
+- [1Password](https://1password.com/): Password management and Kubernetes secrets with [External Secrets](https://external-secrets.io/).
+- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust tunnel.
 - [Fastmail](https://fastmail.com/): Email hosting.
 - [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments.
-- [Pushover](https://pushover.net/): Kubernetes Alerts and application notifications.
+- [Pushover](https://pushover.net/): Kubernetes alerts and application notifications.
 - [Storj](https://storj.io/): S3 object storage for applications and backups.
 - [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
                                                       
