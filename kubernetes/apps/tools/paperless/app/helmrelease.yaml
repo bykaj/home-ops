@@ -134,8 +134,8 @@ spec:
               # Configure Redis integration
               PAPERLESS_REDIS: redis://localhost:6379
               # Configure user permissions
-              USERMAP_UID: "4000"
-              USERMAP_GID: "4000"
+              USERMAP_UID: "1000"
+              # USERMAP_GID: "4000"
               # s6 overlay fixes
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
@@ -170,7 +170,7 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 4000
+        runAsUser: 1000
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
