@@ -5,7 +5,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: downloads-smb-media
+  name: tools-smb-backups
 spec:
   capacity:
     storage: 2T
@@ -19,9 +19,9 @@ spec:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: downloads-smb-media
+    volumeHandle: tools-smb-backups
     volumeAttributes:
-      source: //${SMB_SERVER}/Media
+      source: //${SMB_SERVER}/Backups
     nodeStageSecretRef:
       name: smb-credentials
       namespace: kube-system
@@ -30,12 +30,12 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: smb-media
+  name: smb-backups
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2T
-  volumeName: downloads-smb-media
+  volumeName: tools-smb-backups
   storageClassName: smb

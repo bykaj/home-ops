@@ -192,9 +192,7 @@ spec:
                 readOnly: false
                 subPath: paperless
       archive:
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Archive
+        existingClaim: smb-archive
         advancedMounts:
           paperless:
             paperless:
@@ -205,9 +203,7 @@ spec:
               - path: /usr/src/paperless/media
                 subPath: media
       backups:
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Backups
+        existingClaim: smb-backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Paperless

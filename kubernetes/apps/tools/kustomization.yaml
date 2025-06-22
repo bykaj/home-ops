@@ -8,3 +8,4 @@ components:
 resources:
   - ./it-tools/ks.yaml
   - ./paperless/ks.yaml
+  - ./persistence/ks.yaml
