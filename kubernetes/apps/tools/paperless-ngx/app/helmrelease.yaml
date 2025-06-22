@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app paperless-ngx
+  name: &app paperless
 spec:
   interval: 1h
   chartRef:
@@ -20,7 +20,7 @@ spec:
     controllers:
       db:
         annotations:
-          rsecret.reloader.stakater.com/reload: &secret paperless-ngx-secret
+          rsecret.reloader.stakater.com/reload: &secret paperless-secret
         containers:
           db:
             image:
@@ -70,11 +70,11 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
-      paperless-ngx:
+      paperless:
         annotations:
           rsecret.reloader.stakater.com/reload: *secret
         containers:
-          paperless-ngx:
+          paperless:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
               tag: 2.17.1
@@ -98,12 +98,12 @@ spec:
               PAPERLESS_OCR_LANGUAGE: nld+eng
               PAPERLESS_OCR_LANGUAGES: nld
               # Configure database
-              PAPERLESS_DBHOST: paperless-ngx-db.tools.svc.cluster.local
+              PAPERLESS_DBHOST: paperless-db.tools.svc.cluster.local
               # Configure Redis integration
-              PAPERLESS_REDIS: redis://paperless-ngx-redis.tools.svc.cluster.local:6379
+              PAPERLESS_REDIS: redis://paperless-redis.tools.svc.cluster.local:6379
               # Configure user permissions
-              USERMAP_UID: "4000"
-              USERMAP_GID: "4000"
+              # USERMAP_UID: "4000"
+              # USERMAP_GID: "4000"
             envFrom:
               - secretRef:
                   name: *secret
@@ -122,7 +122,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 25m
+                cpu: 20m
                 memory: 512Mi
               limits:
                 memory: 2Gi
@@ -166,7 +166,7 @@ spec:
               capabilities: { drop: ["ALL"] }
     persistence:
       config:
-        existingClaim: paperless-ngx-config
+        existingClaim: paperless-config
         advancedMounts:
           db:
             db:
@@ -178,8 +178,8 @@ spec:
               - path: /data
                 readOnly: false
                 subPath: redis
-          paperless-ngx:
-            paperless-ngx:
+          paperless:
+            paperless:
               - path: /usr/src/paperless/data
                 readOnly: false
                 subPath: paperless
@@ -188,8 +188,8 @@ spec:
         server: "${NFS_SERVER}"
         path: /mnt/vault-alpha/Archive
         advancedMounts:
-          paperless-ngx:
-            paperless-ngx:
+          paperless:
+            paperless:
               - path: /usr/src/paperless/consume
                 subPath: consume
               - path: /usr/src/paperless/export
@@ -209,7 +209,7 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      paperless-ngx:
+      paperless:
         hostnames:
           - "archive.${DOMAIN_APP_APPS}"
         parentRefs:
@@ -221,7 +221,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      paperless-ngx:
+      paperless:
         primary: true
         controller: *app
         ports:
