@@ -125,7 +125,7 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
 
-- **Upgrading to more powerful hardware** – I'm considering three [Minisforum MS-01s](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) to replace my current Lenovo M920q units and self-built server as Proxmox VE hosts.
+- **Upgrading to more powerful hardware** – I'm considering three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units to replace my current Lenovo M920q units and self-built server as Proxmox VE hosts.
 - **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, making it truly HA. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
 - **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
 - **Optimizing inter-node connectivity** – The plan includes enabling 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to connect directly to the aggregation switch.
