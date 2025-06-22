@@ -29,12 +29,12 @@ spec:
             env:
               - name: PG_TZ
                 value: "${TIMEZONE}"
-              - name: POSTGRES_DB
+              - name: &dbName POSTGRES_DB
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: POSTGRES_DB
-              - name: POSTGRES_USER
+              - name: &dbUser POSTGRES_USER
                 valueFrom:
                   secretKeyRef:
                     name: *secret
@@ -53,9 +53,9 @@ spec:
                     command:
                       - pg_isready
                       - -U
-                      - ${POSTGRES_USER}
+                      - *dbUser
                       - -d
-                      - ${POSTGRES_DB}
+                      - *dbName
                   initialDelaySeconds: 15
                   periodSeconds: 10
                   timeoutSeconds: 5
