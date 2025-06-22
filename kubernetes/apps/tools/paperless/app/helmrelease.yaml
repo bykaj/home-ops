@@ -20,7 +20,7 @@ spec:
     controllers:
       paperless:
         annotations:
-          rsecret.reloader.stakater.com/reload: &secret paperless-secret
+          reloader.stakater.com/reload: &secret paperless-secret
         containers:
           db:
             image:
