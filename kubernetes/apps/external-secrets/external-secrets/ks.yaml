@@ -10,10 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/external-secrets/external-secrets/app
@@ -39,10 +35,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/external-secrets/external-secrets/stores/onepassword

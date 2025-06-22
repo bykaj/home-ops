@@ -12,7 +12,6 @@ spec:
   dependsOn:
     - name: onepassword-connect
       namespace: external-secrets
-  dependsOn:
     - name: flux-operator
       namespace: *namespace
   interval: 1h
@@ -23,7 +22,6 @@ spec:
         kind: ConfigMap
       - name: cluster-secrets
         kind: Secret
-  prune: true
   prune: true
   retryInterval: 2m
   sourceRef:
