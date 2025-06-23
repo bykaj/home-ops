@@ -134,6 +134,8 @@ spec:
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
               - path: /run
                 subPath: run
+              - path: /run/nginx
+                subPath: nginx
     route:
       app:
         hostnames:
