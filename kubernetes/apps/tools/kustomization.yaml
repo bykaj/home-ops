@@ -6,6 +6,7 @@ namespace: tools
 components:
   - ../../components/common
 resources:
+  - ./dsmr-reader/ks.yaml
   - ./it-tools/ks.yaml
   - ./mosquitto/ks.yaml
   - ./paperless/ks.yaml
