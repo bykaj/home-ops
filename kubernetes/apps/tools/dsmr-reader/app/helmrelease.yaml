@@ -78,7 +78,7 @@ spec:
               DJANGO_DATABASE_HOST: "localhost"
               DJANGO_DATABASE_PORT: "5432"
               DJANGO_TIME_ZONE: "${TIMEZONE}"
-              DSMRREADER_LOGLEVEL: "error"
+              DSMRREADER_LOGLEVEL: "ERROR"
               DSMRREADER_OPERATION_MODE: "api_server"
               # s6 overlay fixes
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
