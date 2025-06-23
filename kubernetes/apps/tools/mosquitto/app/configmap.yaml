@@ -6,8 +6,6 @@ metadata:
 data:
   mosquitto-0.conf: |
     listener 1883 0.0.0.0
-    listener 8883 0.0.0.0
-    protocol mqtt
     log_type subscribe
     log_type unsubscribe
     log_type websockets
@@ -22,13 +20,8 @@ data:
     allow_anonymous true
     password_file /mosquitto/auth/passwd_file
     acl_file /mosquitto/auth/acl_file
-    cafile /etc/ssl/certs/ca-certificates.crt
-    keyfile /mosquitto/certs/tls.key
-    certfile /mosquitto/certs/tls.crt
   mosquitto-1.conf: |
     listener 1883 0.0.0.0
-    listener 8883 0.0.0.0
-    protocol mqtt
     log_type subscribe
     log_type unsubscribe
     log_type websockets
@@ -47,6 +40,3 @@ data:
     address mosquitto-0.mosquitto.tools.svc.cluster.local:1883
     clientid mosquitto-bridge
     topic # both 0
-    cafile /etc/ssl/certs/ca-certificates.crt
-    keyfile /mosquitto/certs/tls.key
-    certfile /mosquitto/certs/tls.crt

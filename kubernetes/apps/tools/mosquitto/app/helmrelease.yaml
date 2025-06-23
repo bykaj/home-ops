@@ -19,6 +19,8 @@ spec:
   values:
     controllers:
       mosquitto:
+        annotations:
+          reloader.stakater.com/auto: "true"
         type: statefulset
         replicas: 2
         pod:
@@ -63,7 +65,7 @@ spec:
     persistence:
       config:
         type: configMap
-        identifier: mosquitto-config
+        name: mosquitto-config
         globalMounts:
           - path: /mosquitto/config
       auth:
@@ -71,11 +73,6 @@ spec:
         name: mosquitto-secret
         globalMounts:
           - path: /mosquitto/auth
-      certs:
-        type: secret
-        identifier: "kube-system/${DOMAIN_IO/./-}-tls"
-        globalMounts:
-          - path: /mosquitto/certs
       tmpfs:
         type: emptyDir
         globalMounts:
@@ -83,21 +80,13 @@ spec:
             subPath: log
           - path: /tmp
             subPath: tmp
-    route:
-      mosquitto:
-        kind: TCPRoute
-        hostnames: ["mqtt.${DOMAIN_IO}"]
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: mqtts
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: &port 8883
     service:
-      app:
+      mosquitto:
         controller: *app
+        type: LoadBalancer
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
+          lbipam.cilium.io/ips: 10.73.10.200
         ports:
-          mqtt:
-            port: *port
+          mqtts:
+            port: &port 1883
