@@ -74,8 +74,8 @@ spec:
             dependsOn:
               - db
             env:
-              # DUID: "4000"
-              # DGID: "4000"
+              DUID: "4000"
+              DGID: "4000"
               DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
               DJANGO_DATABASE_HOST: "localhost"
               DJANGO_DATABASE_PORT: "5432"
@@ -113,10 +113,10 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-              runAsUser: 65534
-              runAsGroup: 65534
+              runAsUser: 4000
+              runAsGroup: 4000
               runAsNonRoot: true
-              fsGroup: 65534
+              fsGroup: 4000
               fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
