@@ -17,45 +17,6 @@ spec:
     remediation:
       retries: 3
   values:
-    configMaps:
-      mosquitto-config:
-        data:
-          mosquitto-0.conf: |
-            listener 1883 0.0.0.0
-            log_type subscribe
-            log_type unsubscribe
-            log_type websockets
-            log_type error
-            log_type warning
-            log_type notice
-            log_type information
-            log_timestamp true
-            log_dest file /mosquitto/log/mosquitto.log
-            log_dest stdout
-            connection_messages true
-            allow_anonymous false
-            password_file /mosquitto/config/passwd_file
-            acl_file /mosquitto/config/acl_file
-          mosquitto-1.conf: |
-            listener 1883 0.0.0.0
-            log_type subscribe
-            log_type unsubscribe
-            log_type websockets
-            log_type error
-            log_type warning
-            log_type notice
-            log_type information
-            log_timestamp true
-            log_dest file /mosquitto/log/mosquitto.log
-            log_dest stdout
-            connection_messages true
-            allow_anonymous false
-            password_file /mosquitto/config/passwd_file
-            acl_file /mosquitto/config/acl_file
-            connection mosquitto-bridge
-            address mosquitto-0.mosquitto.tools.svc.cluster.local:1883
-            clientid mosquitto-bridge
-            topic # both 0
     controllers:
       mosquitto:
         type: statefulset
@@ -105,11 +66,16 @@ spec:
         identifier: mosquitto-config
         globalMounts:
           - path: /mosquitto/config
-      secrets:
+      auth:
         type: secret
         identifier: mosquitto-secret
         globalMounts:
-          - path: /mosquitto/config
+          - path: /mosquitto/auth
+      certs:
+        type: secret
+        identifier: "kube-system/${DOMAIN_IO/./-}-tls"
+        globalMounts:
+          - path: /mosquitto/certs
       tmpfs:
         type: emptyDir
         globalMounts:
@@ -118,17 +84,17 @@ spec:
           - path: /tmp
             subPath: tmp
     route:
-      app:
+      mosquitto:
         kind: TCPRoute
         hostnames: ["mqtt.${DOMAIN_IO}"]
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: mqtts-io
+            sectionName: mqtts
         rules:
           - backendRefs:
               - identifier: app
-                port: &port 1883
+                port: &port 8883
     service:
       app:
         controller: *app
