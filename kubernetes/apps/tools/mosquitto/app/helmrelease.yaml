@@ -68,7 +68,7 @@ spec:
           - path: /mosquitto/config
       auth:
         type: secret
-        identifier: mosquitto-secret
+        identifier: tools/mosquitto-secret
         globalMounts:
           - path: /mosquitto/auth
       certs:
