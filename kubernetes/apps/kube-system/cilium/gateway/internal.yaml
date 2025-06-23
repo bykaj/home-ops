@@ -197,3 +197,21 @@ spec:
         certificateRefs:
           - kind: Secret
             name: kvm-home-${DOMAIN_NET/./-}-tls
+    - name: mqtt-io
+      protocol: TCP
+      port: 1883
+      hostname: "*.${DOMAIN_IO}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: mqtts-io
+      protocol: TCP
+      port: 8883
+      hostname: "*.${DOMAIN_IO}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_IO/./-}-tls
