@@ -56,7 +56,7 @@ spec:
                       - /bin/sh
                       - -c
                       - >-
-                        /usr/bin/mosquitto_pub -h localhost -p 1883 -t mosquitto/healthcheck/$(hostname)/liveness -m "ok $(date)" -r -q 0 -i healthcheck
+                        /usr/bin/mosquitto_pub -h localhost -p 1884 -t mosquitto/healthcheck/$(hostname)/liveness -m "ok $(date)" -r -q 0 -i healthcheck
               readiness:
                 enabled: true
             resources:
