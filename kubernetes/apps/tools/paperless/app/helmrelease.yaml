@@ -22,51 +22,51 @@ spec:
         annotations:
           reloader.stakater.com/reload: &secret paperless-secret
         containers:
-          db:
-            image:
-              repository: postgres
-              tag: "16"
-            env:
-              - name: PG_TZ
-                value: "${TIMEZONE}"
-              - name: POSTGRES_DB
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_DB
-              - name: POSTGRES_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_USER
-              - name: POSTGRES_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_PASSWORD
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - pg_isready
-                      - -U
-                      - paperless
-                      - -d
-                      - paperless
-                  initialDelaySeconds: 15
-                  periodSeconds: 10
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 5m
-                memory: 256Mi
-              limits:
-                memory: 512Mi
+          # db:
+          #   image:
+          #     repository: postgres
+          #     tag: "16"
+          #   env:
+          #     - name: PG_TZ
+          #       value: "${TIMEZONE}"
+          #     - name: POSTGRES_DB
+          #       valueFrom:
+          #         secretKeyRef:
+          #           name: *secret
+          #           key: POSTGRES_DB
+          #     - name: POSTGRES_USER
+          #       valueFrom:
+          #         secretKeyRef:
+          #           name: *secret
+          #           key: POSTGRES_USER
+          #     - name: POSTGRES_PASSWORD
+          #       valueFrom:
+          #         secretKeyRef:
+          #           name: *secret
+          #           key: POSTGRES_PASSWORD
+          #   probes:
+          #     liveness: &probes
+          #       enabled: true
+          #       custom: true
+          #       spec:
+          #         exec:
+          #           command:
+          #             - pg_isready
+          #             - -U
+          #             - paperless
+          #             - -d
+          #             - paperless
+          #         initialDelaySeconds: 15
+          #         periodSeconds: 10
+          #         timeoutSeconds: 5
+          #         failureThreshold: 3
+          #     readiness: *probes
+          #   resources:
+          #     requests:
+          #       cpu: 5m
+          #       memory: 256Mi
+          #     limits:
+          #       memory: 512Mi
           redis:
             image:
               repository: redis
@@ -100,7 +100,7 @@ spec:
               repository: ghcr.io/paperless-ngx/paperless-ngx
               tag: 2.17.1
             dependsOn:
-              - db
+              # - db
               - redis
             env:
               # OIDC integration
@@ -122,7 +122,7 @@ spec:
               PAPERLESS_OCR_LANGUAGE: nld+eng
               PAPERLESS_OCR_LANGUAGES: nld
               # Configure database
-              PAPERLESS_DBHOST: localhost
+              # PAPERLESS_DBHOST: localhost
               # Configure Redis integration
               PAPERLESS_REDIS: redis://localhost:6379
               # Configure user permissions
@@ -160,10 +160,10 @@ spec:
         existingClaim: paperless-config
         advancedMounts:
           paperless:
-            db:
-              - path: /var/lib/postgresql/data
-                readOnly: false
-                subPath: postgresql
+            # db:
+            #   - path: /var/lib/postgresql/data
+            #     readOnly: false
+            #     subPath: postgresql
             redis:
               - path: /data
                 readOnly: false
