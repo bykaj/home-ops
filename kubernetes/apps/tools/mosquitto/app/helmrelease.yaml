@@ -96,7 +96,7 @@ spec:
               - identifier: app
                 port: &port 8883
     service:
-      app:
+      mosquitto:
         controller: *app
         ports:
           mqtt:
