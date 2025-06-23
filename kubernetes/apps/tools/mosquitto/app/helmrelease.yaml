@@ -23,12 +23,19 @@ spec:
           reloader.stakater.com/auto: "true"
         type: statefulset
         replicas: 2
-        pod:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+        initContainers:
+          init-config:
+            image:
+              repository: public.ecr.aws/docker/library/eclipse-mosquitto
+              tag: 2.0.21
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                cp /tmp/secret/acl_file /mosquitto/auth/;
+                cp /tmp/secret/passwd_file /mosquitto/auth/;
+                chmod 600 /mosquitto/auth/acl_file;
+                chmod 600 /mosquitto/auth/passwd_file;
+                mosquitto_passwd -U /mosquitto/auth/passwd_file;
         containers:
           app:
             image:
@@ -62,6 +69,13 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+        pod:
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         type: configMap
@@ -72,21 +86,23 @@ spec:
         type: secret
         name: mosquitto-secret
         globalMounts:
-          - path: /mosquitto/auth
+          - path: /tmp/secret
       tmpfs:
         type: emptyDir
         globalMounts:
+          - path: /mosquitto/auth
+            subPath: auth
           - path: /mosquitto/log
             subPath: log
           - path: /tmp
             subPath: tmp
     service:
-      mosquitto:
+      app:
         controller: *app
         type: LoadBalancer
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
           lbipam.cilium.io/ips: 10.73.10.200
         ports:
-          mqtts:
-            port: &port 1883
+          mqtt:
+            port: 1883
