@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mosquitto
+  name: &app mosquitto
 spec:
   interval: 1h
   chartRef:
@@ -96,7 +96,7 @@ spec:
               - identifier: app
                 port: &port 8883
     service:
-      mosquitto:
+      app:
         controller: *app
         ports:
           mqtt:
