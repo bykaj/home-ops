@@ -102,7 +102,7 @@ spec:
         type: LoadBalancer
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
-          lbipam.cilium.io/ips: 10.73.10.200
+          lbipam.cilium.io/ips: 10.73.10.201
         ports:
           mqtt:
             port: 1883
