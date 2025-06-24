@@ -71,10 +71,10 @@ spec:
               capabilities: { drop: ["ALL"] }
         pod:
           securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
+            runAsUser: 4000
+            runAsGroup: 4000
             runAsNonRoot: true
-            fsGroup: 65534
+            fsGroup: 4000
             fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
