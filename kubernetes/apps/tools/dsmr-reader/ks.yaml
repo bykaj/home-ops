@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
@@ -21,6 +22,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: DSMR-Reader
+      GATUS_DOMAIN: dsmr.${DOMAIN_APP_APPS}
       VOLSYNC_CLAIM: dsmr-reader-config
       VOLSYNC_CAPACITY: 3Gi
       VOLSYNC_CACHE_CAPACITY: 2Gi

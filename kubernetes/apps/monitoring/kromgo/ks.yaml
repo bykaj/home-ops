@@ -9,9 +9,15 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/public
   interval: 1h
   path: ./kubernetes/apps/monitoring/kromgo/app
   postBuild:
+    substitute:
+      APP: *app
+      GATUS_NAME: Kromgo
+      GATUS_DOMAIN: stats.bykaj.io
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

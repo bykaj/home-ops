@@ -9,9 +9,15 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/public
   interval: 1h
   path: ./kubernetes/apps/tools/it-tools/app
   postBuild:
+    substitute:
+      APP: *app
+      GATUS_NAME: IT-Tools
+      GATUS_DOMAIN: tools.${DOMAIN_APP_APPS}
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

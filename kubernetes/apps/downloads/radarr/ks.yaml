@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: prowlarr
@@ -25,6 +26,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Radarr
       VOLSYNC_CLAIM: radarr-config
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_CACHE_CAPACITY: 2Gi

@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/public
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-connect
@@ -21,6 +22,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Authentik
+      GATUS_DOMAIN: auth.cetana.id
       VOLSYNC_CLAIM: authentik-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

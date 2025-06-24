@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-connect
@@ -19,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Prowlarr
       VOLSYNC_CLAIM: prowlarr-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

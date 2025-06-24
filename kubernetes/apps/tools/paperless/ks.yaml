@@ -10,9 +10,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/public
     - ../../../../components/volsync
   dependsOn:
-    - name: onepassword-connect
+    - name: onepassword-store
       namespace: external-secrets
     - name: persistence-smb-volumes
       namespace: *namespace
@@ -23,6 +24,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Paperless
+      GATUS_DOMAIN: archive.${DOMAIN_APP_APPS}
       VOLSYNC_CLAIM: paperless-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

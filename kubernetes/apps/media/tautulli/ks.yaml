@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: volsync
@@ -21,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Tautulli
       VOLSYNC_CLAIM: tautulli-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

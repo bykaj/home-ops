@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: intel-device-plugin-gpu
@@ -21,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Jellyfin
       VOLSYNC_CLAIM: jellyfin-config
       VOLSYNC_CACHE_CAPACITY: 10Gi
       VOLSYNC_CAPACITY: 20Gi

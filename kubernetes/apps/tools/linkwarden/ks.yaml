@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus/public
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
@@ -21,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Linkwarden
       VOLSYNC_CLAIM: linkwarden-config
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi

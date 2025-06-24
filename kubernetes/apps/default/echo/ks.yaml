@@ -9,14 +9,17 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+  components:
+    - ../../../../components/gatus/public
   interval: 1h
   path: ./kubernetes/apps/default/echo/app
   postBuild:
+    substitute:
+      APP: *app
+      GATUS_NAME: Echo
     substituteFrom:
+      - name: cluster-settings
+        kind: ConfigMap
       - name: cluster-secrets
         kind: Secret
   prune: true
