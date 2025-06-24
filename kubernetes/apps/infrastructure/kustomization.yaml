@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: infrastructure
 components:
   - ../../components/common
-resources: []
-  #- ./mosquitto/ks.yaml
+resources:
+  - ./mosquitto/ks.yaml
