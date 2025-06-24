@@ -18,6 +18,7 @@ spec:
       APP: *app
       GATUS_NAME: Kromgo
       GATUS_DOMAIN: stats.bykaj.io
+      GATUS_PATH: /talos_version
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
