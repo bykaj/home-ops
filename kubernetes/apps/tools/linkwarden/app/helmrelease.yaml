@@ -54,9 +54,9 @@ spec:
                     command:
                       - pg_isready
                       - -U
-                      - &dbUser
+                      - *dbUser
                       - -d
-                      - &dbName
+                      - *dbName
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 5
