@@ -9,7 +9,7 @@ data:
   config.yaml: |
     endpoints:
       - name: Mosquitto
-        group: Infrastructure
+        group: "3. Infrastructure Services"
         url: tcp://mosquitto.infrastructure.svc.cluster.local:1883
         interval: 1m
         ui:

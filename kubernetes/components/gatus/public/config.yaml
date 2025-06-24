@@ -1,6 +1,6 @@
 endpoints:
   - name: "${GATUS_NAME:=${APP}}"
-    group: Public
+    group: "1. Public Applications"
     url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}${GATUS_PATH:=/}"
     interval: 1m
     client:
