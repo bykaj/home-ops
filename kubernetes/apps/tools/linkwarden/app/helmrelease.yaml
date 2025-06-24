@@ -78,7 +78,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               MEILI_NO_ANALYTICS: "true"
-              EILI_ENV: "production"
+              MEILI_ENV: "production"
               MEILI_MASTER_KEY:
                 valueFrom:
                   secretKeyRef:
