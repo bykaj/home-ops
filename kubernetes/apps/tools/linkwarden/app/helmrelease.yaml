@@ -25,7 +25,8 @@ spec:
           # PostgreSQL
           init-db:
             image:
-              repository: ghcr.io/home-operations/postgres-init
+              # repository: ghcr.io/home-operations/postgres-init
+              repository: postgres
               tag: "16"
             env:
               PG_TZ: "${TIMEZONE}"
