@@ -133,8 +133,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 1Gi
               limits:
-                memory: 4Gi
+                memory: 8Gi
             restartPolicy: Always
 
         containers:
