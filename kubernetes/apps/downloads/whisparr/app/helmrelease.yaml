@@ -28,8 +28,6 @@ spec:
               tag: v3-3.0.0.1143@sha256:7e92b5fd84d609ea8377f5d4fea10f444a76fb253f5e629f2c118faf6f6dfe7e
             env:
               TZ: "${TIMEZONE}"
-              PUID: "4000"
-              PGID: "4000"
               WHISPARR__ANALYTICS_ENABLED: "False"
               WHISPARR__AUTHENTICATION_METHOD: "External"
               WHISPARR__AUTHENTICATION_REQUIRED: "DisabledForLocalAddresses"
@@ -38,6 +36,11 @@ spec:
               WHISPARR__LOG__DBENABLED: "False"
               WHISPARR__LOG_LEVEL: "info"
               WHISPARR__PORT: &port 6969
+              # s6 overlay fixes
+              # Ref: https://github.com/just-containers/s6-overlay/issues/600
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+              S6_READ_ONLY_ROOT: "1"
+              S6_VERBOSITY: "2"
             envFrom:
               - secretRef:
                   name: *secret
@@ -54,23 +57,12 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
                 memory: 256Mi
               limits:
                 memory: 1Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         existingClaim: whisparr-config
@@ -102,6 +94,15 @@ spec:
             subPath: tmp
           - path: /config/logs
             subPath: logs
+        advancedMounts:
+          whisparr:
+            app:
+              # s6 overlay fixes
+              # Ref: https://github.com/just-containers/s6-overlay/issues/600
+              - path: /run
+                subPath: run
+              - path: /run/nginx
+                subPath: nginx
     route:
       app:
         hostnames:
