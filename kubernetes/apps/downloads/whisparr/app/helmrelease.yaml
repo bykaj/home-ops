@@ -24,10 +24,12 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/whisparr
-              tag: 2.0.0.1112@sha256:03dc55e2450ba96253a1624380ac0468c052c1756f2faffe98e22a9fb0edbdf2
+              repository: ghcr.io/hotio/whisparr
+              tag: v3-3.0.0.1143@sha256:7e92b5fd84d609ea8377f5d4fea10f444a76fb253f5e629f2c118faf6f6dfe7e
             env:
               TZ: "${TIMEZONE}"
+              PUID: "4000"
+              PGID: "4000"
               WHISPARR__ANALYTICS_ENABLED: "False"
               WHISPARR__AUTHENTICATION_METHOD: "External"
               WHISPARR__AUTHENTICATION_REQUIRED: "DisabledForLocalAddresses"
@@ -35,23 +37,23 @@ spec:
               WHISPARR__INSTANCE_NAME: "Whisparr"
               WHISPARR__LOG__DBENABLED: "False"
               WHISPARR__LOG_LEVEL: "info"
-              WHISPARR__PORT: &port 80
+              WHISPARR__PORT: &port 6969
             envFrom:
               - secretRef:
                   name: *secret
-            # probes:
-            #   liveness: &probes
-            #     enabled: true
-            #     custom: true
-            #     spec:
-            #       httpGet:
-            #         path: /
-            #         port: *port
-            #       initialDelaySeconds: 0
-            #       periodSeconds: 10
-            #       timeoutSeconds: 1
-            #       failureThreshold: 3
-            #   readiness: *probes
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
