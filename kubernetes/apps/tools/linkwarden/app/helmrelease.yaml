@@ -183,15 +183,6 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-              runAsNonRoot: true
-              runAsUser: 4000
-              runAsGroup: 4000
-              fsGroup: 4000
-              fsGroupChangePolicy: OnRootMismatch
             resources:
               requests:
                 cpu: 10m
