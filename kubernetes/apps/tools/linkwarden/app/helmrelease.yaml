@@ -225,11 +225,6 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-        advancedMounts:
-          linkwarden:
-            app:
-              - path: /data/.next/cache
-                subPath: cache
 
     route:
       app:
