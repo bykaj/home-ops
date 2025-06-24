@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app whisparr
+  namespace: &namespace downloads
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
+  dependsOn:
+    - name: onepassword-store
+      namespace: external-secrets
+    - name: prowlarr
+      namespace: downloads
+    - name: sabnzbd
+      namespace: downloads
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  interval: 1h
+  path: ./kubernetes/apps/downloads/whisparr/app
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: whisparr-config
+      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CACHE_CAPACITY: 1Gi
+    substituteFrom:
+      - name: cluster-settings
+        kind: ConfigMap
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
