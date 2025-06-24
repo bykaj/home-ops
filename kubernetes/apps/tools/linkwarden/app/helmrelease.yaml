@@ -90,7 +90,7 @@ spec:
                 spec:
                   httpGet:
                     path: /health
-                    port: *port
+                    port: 7700
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
