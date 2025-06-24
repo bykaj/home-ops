@@ -19,8 +19,8 @@ connectivity:
     target: 1.1.1.1:53
     interval: 1m
 endpoints:
-  - name: flux-webhook
-    group: external
+  - name: "Flux Webhook"
+    group: Public
     url: https://flux-webhook.bykaj.io
     interval: 1m
     client:
