@@ -45,8 +45,8 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: false
               capabilities:
                 add:
                   - SYS_ADMIN 
