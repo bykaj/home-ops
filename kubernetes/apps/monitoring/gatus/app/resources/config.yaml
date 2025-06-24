@@ -20,7 +20,7 @@ connectivity:
     interval: 1m
 endpoints:
   - name: "Flux Webhook"
-    group: Public
+    group: 1. Public
     url: https://flux-webhook.bykaj.io
     interval: 1m
     client:
