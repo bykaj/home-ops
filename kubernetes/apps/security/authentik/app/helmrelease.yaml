@@ -21,25 +21,24 @@ spec:
       authentik:
         annotations:
           reloader.stakater.com/reload: &secret authentik-secret
-        containers:
-          db:
+        initContainers:
+          init-db:
             image:
               repository: postgres
               tag: "16"
             env:
-              - name: PG_TZ
-                value: "${TIMEZONE}"
-              - name: &dbName POSTGRES_DB
+              PG_TZ: "${TIMEZONE}"
+              POSTGRES_DB:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: POSTGRES_DB
-              - name: &dbUser POSTGRES_USER
+              POSTGRES_USER:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: POSTGRES_USER
-              - name: POSTGRES_PASSWORD
+              POSTGRES_PASSWORD:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
@@ -70,7 +69,10 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
-          redis:
+            restartPolicy: Always
+
+          # Redis
+          init-redis:
             image:
               repository: redis
               tag: "8.0.2"
@@ -101,15 +103,16 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
+            restartPolicy: Always
+
+        containers:
+          # Authentik (Server)
           server:
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - server
-            dependsOn:
-              - db
-              - redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -148,15 +151,14 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
+
+          # Authentik (Worker)
           worker:
             image:
               repository: ghcr.io/goauthentik/server
               tag: "2025.6.2"
             args:
               - worker
-            dependsOn:
-              - db
-              - redis
             envFrom:
               - secretRef:
                   name: *secret
@@ -195,29 +197,30 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
+          
+          # GeoIP Updater
           geoip:
             image:
               repository: ghcr.io/maxmind/geoipupdate
               tag: "v7.1"
             env:
-              - name: TZ
-                value: "${TIMEZONE}"
-              - name: GEOIPUPDATE_EDITION_IDS
+              TZ: "${TIMEZONE}"
+              GEOIPUPDATE_EDITION_IDS:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: GEOIPUPDATE_EDITION_IDS
-              - name: GEOIPUPDATE_FREQUENCY
+              GEOIPUPDATE_FREQUENCY:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: GEOIPUPDATE_FREQUENCY
-              - name: GEOIPUPDATE_ACCOUNT_ID
+              GEOIPUPDATE_ACCOUNT_ID:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: GEOIPUPDATE_ACCOUNT_ID
-              - name: GEOIPUPDATE_LICENSE_KEY
+              GEOIPUPDATE_LICENSE_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
@@ -239,12 +242,14 @@ spec:
             resources:
               requests:
                 cpu: 5m
+                memory: 128Mi
               limits:
-                memory: 32Mi
+                memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
+
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -252,16 +257,17 @@ spec:
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
+        
     persistence:
       config:
         existingClaim: authentik-config
         advancedMounts:
           authentik:
-            db:
+            init-db:
               - path: /var/lib/postgresql/data
                 readOnly: false
                 subPath: postgresql
-            redis:
+            init-redis:
               - path: /data
                 readOnly: false
                 subPath: redis
@@ -301,6 +307,7 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+
     route:
       server:
         hostnames:
@@ -309,6 +316,7 @@ spec:
           - name: external
             namespace: kube-system
             sectionName: https-id
+
     service:
       server:
         controller: *app
