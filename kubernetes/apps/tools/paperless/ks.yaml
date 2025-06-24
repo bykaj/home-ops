@@ -25,7 +25,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Paperless
-      GATUS_DOMAIN: archive.${DOMAIN_APP_APPS}
+      GATUS_SUBDOMAIN: archive
       VOLSYNC_CLAIM: paperless-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

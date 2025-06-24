@@ -17,7 +17,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: IT-Tools
-      GATUS_DOMAIN: tools.${DOMAIN_APP_APPS}
+      GATUS_SUBDOMAIN: tools
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
