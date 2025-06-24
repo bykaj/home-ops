@@ -9,7 +9,7 @@ resources:
   - ./atuin/ks.yaml
   - ./dsmr-reader/ks.yaml
   - ./it-tools/ks.yaml
-  - ./linkwarden/ks.yaml
+  #- ./linkwarden/ks.yaml
   - ./mosquitto/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
