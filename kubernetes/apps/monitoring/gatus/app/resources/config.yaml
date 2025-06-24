@@ -1,0 +1,29 @@
+---
+web:
+  port: ${WEB_PORT}
+storage:
+  type: sqlite
+  path: /config/sqlite.db
+  caching: true
+metrics: true
+debug: false
+ui:
+  title: Health Dashboard | ByKaj Apps
+  header: Health Dashboard
+  logo: https://github.com/bykaj/home-ops/blob/main/assets/images/home-ops-logo.png?raw=true
+  description: |
+    If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
+  link: https://github.com/bykaj/home-ops
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+endpoints:
+  - name: flux-webhook
+    group: external
+    url: https://flux-webhook.${DOMAIN_IO}
+    interval: 1m
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 404"

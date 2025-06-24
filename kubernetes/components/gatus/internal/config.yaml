@@ -1,0 +1,13 @@
+endpoints:
+  - name: "${GATUS_NAME:=${APP}}"
+    group: Internal
+    url: 1.1.1.1
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    dns:
+      query-name: "${GATUS_DOMAIN:=${APP}.${DOMAIN_APP_APPS}}"
+      query-type: A
+    conditions:
+      - "len([BODY]) == 0"
