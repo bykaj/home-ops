@@ -16,6 +16,9 @@ endpoints:
     group: Internal
     url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}${GATUS_PATH:=/}"
     interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
     client:
       dns-resolver: tcp://10.43.0.10:53
     conditions:
