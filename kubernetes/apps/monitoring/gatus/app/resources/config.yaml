@@ -20,9 +20,12 @@ connectivity:
     interval: 1m
 endpoints:
   - name: "Flux Webhook"
-    group: "1. Public Applications"
+    group: "3. Infrastructure Services"
     url: https://flux-webhook.bykaj.io
     interval: 1m
+    ui:
+      hide-url: true
+      hide-hostname: true
     client:
       dns-resolver: tcp://1.1.1.1:53
     conditions:
