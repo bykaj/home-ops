@@ -1,0 +1,252 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app linkwarden
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      linkwarden:
+        annotations:
+          reloader.stakater.com/reload: &secret linkwarden-secret
+        initContainers:
+          # PostgreSQL
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: "16"
+            env:
+              PG_TZ: "${TIMEZONE}"
+              POSTGRES_DB: &dbName
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: POSTGRES_DB
+              POSTGRES_USER: &dbUser
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: POSTGRES_USER
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: POSTGRES_PASSWORD
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - pg_isready
+                      - -U
+                      - &dbUser
+                      - -d
+                      - &dbName
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 5m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            restartPolicy: Always
+          
+          # Meilisearch
+          init-meilisearch:
+            image:
+              repository: getmeili/meilisearch
+              tag: "v1.15.2"
+            env:
+              TZ: "${TIMEZONE}"
+              MEILI_NO_ANALYTICS: "true"
+              EILI_ENV: "production"
+              MEILI_MASTER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: MEILI_MASTER_KEY
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+              runAsNonRoot: true
+              runAsUser: 4000
+              runAsGroup: 4000
+              fsGroup: 4000
+              fsGroupChangePolicy: OnRootMismatch
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+            restartPolicy: Always
+
+          # Ollama
+          init-ollama:
+            image:
+              repository: ollama/ollama
+              tag: "v0.9.2"
+            env:
+              TZ: "${TIMEZONE}"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: false
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 4Gi
+            restartPolicy: Always
+
+        containers:
+          # Linkwarden
+          app:
+            image:
+              repository: ghcr.io/linkwarden/linkwarden
+              tag: "v2.10.2"
+            env:
+              ARCHIVE_TAKE_COUNT: "5"
+              AUTOSCROLL_TIMEOUT: "30"
+              BASE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+              DISABLE_NEW_SSO_USERS: "false"
+              IGNORE_URL_SIZE_LIMIT: "true"
+              MEILI_HOST: http://localhost:7700
+              MONOLITH_CUSTOM_OPTIONS: "--timeout 60000"
+              MONOLITH_MAX_BUFFER: "2048"
+              NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
+              NEXT_PUBLIC_CREDENTIALS_ENABLED: "false"
+              NEXT_PUBLIC_DISABLE_REGISTRATION: "true"
+              NEXT_PUBLIC_EMAIL_PROVIDER: "true"
+              NEXT_PUBLIC_MAX_FILE_BUFFER: "1024"
+              NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: http://localhost:11434
+              NEXTAUTH_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}/api/v1/auth"
+              OLLAMA_MODEL: "phi3:mini-4k"
+              PAGINATION_TAKE_COUNT: "50"
+              PDF_MAX_BUFFER: "4096"
+              PREVIEW_MAX_BUFFER: "2048"
+              RE_ARCHIVE_LIMIT: "5"
+              READABILITY_MAX_BUFFER: "1024"
+              SCREENSHOT_MAX_BUFFER: "1024"
+              SPACES_FORCE_PATH_STYLE: "true"
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 3000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+              runAsNonRoot: true
+              runAsUser: 4000
+              runAsGroup: 4000
+              fsGroup: 4000
+              fsGroupChangePolicy: OnRootMismatch
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+    persistence:
+      config:
+        existingClaim: linkwarden-config
+        advancedMounts:
+          linkwarden:
+            init-db:
+              - path: /var/lib/postgresql/data
+                subPath: postgresql
+            init-meilisearch:
+              - path: /meili_data
+                subPath: meilisearch
+            init-ollama:
+              - path: /root/.ollama
+                subPath: ollama
+      backups:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/Linkwarden
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+        advancedMounts:
+          linkwarden:
+            app:
+              - path: /data/.next/cache
+                subPath: cache
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https-app-apps
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    service:
+      app:
+        primary: true
+        controller: *app
+        ports:
+          http:
+            port: *port
