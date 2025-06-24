@@ -23,7 +23,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: DSMR-Reader
-      GATUS_DOMAIN: dsmr.${DOMAIN_APP_APPS}
+      GATUS_SUBDOMAIN: dsmr
       VOLSYNC_CLAIM: dsmr-reader-config
       VOLSYNC_CAPACITY: 3Gi
       VOLSYNC_CACHE_CAPACITY: 2Gi

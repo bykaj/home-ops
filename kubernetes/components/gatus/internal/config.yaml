@@ -1,13 +1,22 @@
+# endpoints:
+#   - name: "${GATUS_NAME:=${APP}}"
+#     group: Internal
+#     url: 1.1.1.1
+#     interval: 1m
+#     ui:
+#       hide-hostname: true
+#       hide-url: true
+#     dns:
+#       query-name: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+#       query-type: A
+#     conditions:
+#       - "len([BODY]) == 0"
 endpoints:
   - name: "${GATUS_NAME:=${APP}}"
     group: Internal
-    url: 1.1.1.1
+    url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}${GATUS_PATH:=/}"
     interval: 1m
-    ui:
-      hide-hostname: true
-      hide-url: true
-    dns:
-      query-name: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
-      query-type: A
+    client:
+      dns-resolver: tcp://10.43.0.10:53
     conditions:
-      - "len([BODY]) == 0"
+      - "[STATUS] == ${GATUS_STATUS:=200}"
