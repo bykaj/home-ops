@@ -28,7 +28,7 @@ spec:
               tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
             env:
               TZ: "${TIMEZONE}"
-              PLEX_ADVERTISE_URL: "https://plex.${DOMAIN_APP_APPS},http://10.73.10.200:32400"
+              PLEX_ADVERTISE_URL: "https://plex.${DOMAIN_APP_APPS}:443,http://10.73.10.200:32400"
               PLEX_NO_AUTH_NETWORKS: "10.73.0.0/20"
             probes:
               liveness: &probes
@@ -48,10 +48,6 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 50m
@@ -59,6 +55,10 @@ spec:
               limits:
                 gpu.intel.com/i915: 1
                 memory: 4Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
