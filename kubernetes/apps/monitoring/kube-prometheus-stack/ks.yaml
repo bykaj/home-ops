@@ -22,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_NAME: Prometheus
       GATUS_SUBDOMAIN: prometheus
     substituteFrom:
       - name: cluster-settings
