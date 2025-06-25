@@ -23,7 +23,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: PrivateBin
-      GATUS_DOMAIN: drup.lol
+      GATUS_DOMAIN: www.drup.lol
       VOLSYNC_CLAIM: privatebin-data
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi

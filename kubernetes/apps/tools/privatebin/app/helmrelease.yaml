@@ -64,7 +64,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${DOMAIN_LOL}"
+          - "www.${DOMAIN_LOL}"
         parentRefs:
           - name: external
             namespace: kube-system
