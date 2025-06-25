@@ -128,3 +128,16 @@ spec:
     kind: ClusterIssuer
   commonName: "${DOMAIN_ST}"
   dnsNames: ["${DOMAIN_ST}", "*.${DOMAIN_ST}"]
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DOMAIN_LOL/./-}"
+spec:
+  secretName: "${DOMAIN_LOL/./-}-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_LOL}"
+  dnsNames: ["${DOMAIN_LOL}", "*.${DOMAIN_LOL}"]
