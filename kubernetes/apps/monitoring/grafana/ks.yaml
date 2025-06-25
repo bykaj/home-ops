@@ -9,13 +9,18 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/internal
   dependsOn:
-    - name: onepassword-connect
+    - name: onepassword-store
       namespace: external-secrets
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/monitoring/grafana/app
   postBuild:
+    substitute:
+      APP: *app
+      GATUS_NAME: Grafana
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
