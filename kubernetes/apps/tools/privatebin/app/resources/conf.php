@@ -249,13 +249,13 @@ batchsize = 10
 ; example of S3 configuration for Rados gateway / CEPH
 class = S3Storage
 [model_options]
-region = "${S3_REGION}"
+;region = "${S3_REGION}"
 ;version = "2006-03-01"
-endpoint = "${S3_ENDPOINT}"
+;endpoint = "${S3_ENDPOINT}"
 use_path_style_endpoint = true
-bucket = "${S3_BUCKET}"
-accesskey = "${S3_ACCESS_KEY}"
-secretkey = "${S3_SECRET_KEY}"
+;bucket = ""
+;accesskey = "${S3_ACCESS_KEY}"
+;secretkey = "${S3_SECRET_KEY}"
 
 ;[model]
 ; example of S3 configuration for AWS
