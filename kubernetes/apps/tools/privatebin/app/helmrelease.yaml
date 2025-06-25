@@ -28,6 +28,7 @@ spec:
               tag: 1.7.6@sha256:c526b2ff7901f5d2dcb196bd25e7a36056db743918943e703efd57c0299e8e8f
             env:
               TZ: "${TIMEZONE}"
+              PRIVATEBIN_MAIN_NAME: "Test"
             envFrom:
               - secretRef:
                   name: privatebin-secret
