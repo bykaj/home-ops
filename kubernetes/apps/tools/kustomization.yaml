@@ -13,3 +13,4 @@ resources:
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
+  - ./privatebin/ks.yaml
