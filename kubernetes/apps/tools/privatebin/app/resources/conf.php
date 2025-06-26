@@ -213,10 +213,10 @@ batchsize = 10
 [model_options] 
   region = "eu1" 
   ;version = "what"
-  endpoint = $_ENV["STORAGE_HOST"]
-  bucket = $_ENV["STORAGE_CONTAINER"]
-  accesskey = $_ENV["STORAGE_LOGIN"]
-  secretkey = $_ENV["STORAGE_PASSWORD"]
+  endpoint = env[STORAGE_HOST]
+  bucket = env[STORAGE_CONTAINER]
+  accesskey = env[STORAGE_LOGIN]
+  secretkey = env[STORAGE_PASSWORD]
 
 ;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
