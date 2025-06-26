@@ -24,11 +24,10 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/privatebin/s3
-              tag: 1.7.6@sha256:c526b2ff7901f5d2dcb196bd25e7a36056db743918943e703efd57c0299e8e8f
+              repository: ghcr.io/privatebin/nginx-fpm-alpine
+              tag: 1.7.6@sha256:c1132f6ba88e7c5b9ccfb12757fa2988bb552c5a16a60e588a42696049b45761
             env:
               TZ: "${TIMEZONE}"
-              PRIVATEBIN_MAIN_NAME: "Test"
             envFrom:
               - secretRef:
                   name: privatebin-secret
