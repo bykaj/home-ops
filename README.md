@@ -135,7 +135,7 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 | Device                      | Num | Disks                  | RAM  | Network       | Function                |
 |-----------------------------|-----|------------------------|------|---------------|-------------------------|
 | Lenovo M920q, i5-8500T      | 2   | 1TB NVMe               | 64GB | 10Gb          | Proxmox VE Host         |
-| Self-built 2U, i7-6700K     | 1   | 512GB SSD, 1TB NVMe, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
+| Self-built 3U, i7-6700K     | 1   | 512GB SSD, 1TB NVMe, 5x14TB SATA (ZFS), 5x4TB SAS (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
 | UniFi UDM Pro Max           | 1   | 8TB SATA               | -    | 10Gb          | Router & NVR            |
 | UniFi USW Pro HD 24 PoE     | 1   | -                      | -    | 2.5Gb/10Gb    | PoE Core Switch         |
 | UniFi USW Flex 2.5G 5       | 1   | -                      | -    | 2.5Gb         | Switch                  |
@@ -152,7 +152,7 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 - **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
 - **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
 - **Optimizing inter-node connectivity** – I'm implementing 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
-- **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 2U server.
+- **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
 - **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
 
 ---
