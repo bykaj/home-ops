@@ -208,77 +208,15 @@ batchsize = 10
 ;[model_options]
 ;dir = PATH "data"
 
-;[model]
-; example of a Google Cloud Storage configuration
-;class = GoogleCloudStorage
-;[model_options]
-;bucket = "my-private-bin"
-;prefix = "pastes"
-;uniformacl = false
-
-;[model]
-; example of DB configuration for MySQL
-;class = Database
-;[model_options]
-;dsn = "mysql:host=localhost;dbname=privatebin;charset=UTF8"
-;tbl = "privatebin_"	; table prefix
-;usr = "privatebin"
-;pwd = "Z3r0P4ss"
-;opt[12] = true	  ; PDO::ATTR_PERSISTENT
-
-;[model]
-; example of DB configuration for SQLite
-;class = Database
-;[model_options]
-;dsn = "sqlite:" PATH "data/db.sq3"
-;usr = null
-;pwd = null
-;opt[12] = true	; PDO::ATTR_PERSISTENT
-
-;[model]
-; example of DB configuration for PostgreSQL
-;class = Database
-;[model_options]
-;dsn = "pgsql:host=localhost;dbname=privatebin"
-;tbl = "privatebin_"     ; table prefix
-;usr = "privatebin"
-;pwd = "Z3r0P4ss"
-;opt[12] = true    ; PDO::ATTR_PERSISTENT
-
-[model]
-; example of S3 configuration for Rados gateway / CEPH
-class = S3Storage
-[model_options]
-;region = "${S3_REGION}"
-;version = "2006-03-01"
-;endpoint = "${S3_ENDPOINT}"
-use_path_style_endpoint = true
-;bucket = ""
-;accesskey = "${S3_ACCESS_KEY}"
-;secretkey = "${S3_SECRET_KEY}"
-
-;[model]
-; example of S3 configuration for AWS
-;class = S3Storage
-;[model_options]
-;region = ""
-;version = "latest"
-;bucket = ""
-;accesskey = ""
-;secretkey = ""
-
-;[model]
-; example of S3 configuration for AWS using its SDK default credential provider chain
-; if relying on environment variables, the AWS SDK will look for the following:
-; - AWS_ACCESS_KEY_ID
-; - AWS_SECRET_ACCESS_KEY
-; - AWS_SESSION_TOKEN (if needed)
-; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
-;class = S3Storage
-;[model_options]
-;region = "eu-central-1"
-;version = "latest"
-;bucket = "my-bucket"
+[model] 
+  class = S3Storage 
+[model_options] 
+  region = "eu1" 
+  ;version = "what"
+  endpoint = "${STORAGE_HOST}"
+  bucket = "${STORAGE_CONTAINER}"
+  accesskey = "${STORAGE_LOGIN}"
+  secretkey = "${STORAGE_PASSWORD}"
 
 ;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
