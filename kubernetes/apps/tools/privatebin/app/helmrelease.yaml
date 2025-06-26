@@ -72,10 +72,6 @@ spec:
             namespace: kube-system
             sectionName: https-lol
     persistence:
-      data:
-        existingClaim: privatebin-data
-        globalMounts:
-          - path: /srv/data
       config:
         type: configMap
         name: privatebin-config
@@ -86,6 +82,8 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
+          - path: /srv/data
+            subPath: data
           - path: /tmp
             subPath: tmp
           - path: /var/tmp

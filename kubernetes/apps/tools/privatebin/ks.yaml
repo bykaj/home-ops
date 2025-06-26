@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/public
-    - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
@@ -24,9 +23,6 @@ spec:
       APP: *app
       GATUS_NAME: PrivateBin
       GATUS_DOMAIN: www.drup.lol
-      VOLSYNC_CLAIM: privatebin-data
-      VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_CACHE_CAPACITY: 5Gi
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap
