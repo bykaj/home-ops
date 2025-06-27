@@ -65,7 +65,7 @@ spec:
     route:
       app:
         hostnames:
-          - "@.${DOMAIN_LOL}"       # Manually add to DNS servers
+          - "${DOMAIN_LOL}"       # Manually add to DNS servers
           - "www.${DOMAIN_LOL}"
         parentRefs:
           - name: external
