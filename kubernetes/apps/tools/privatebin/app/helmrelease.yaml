@@ -66,11 +66,10 @@ spec:
       app:
         hostnames:
           - "${DOMAIN_LOL}"       # Manually add to DNS servers
-          - "www.${DOMAIN_LOL}"
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-lol
+            sectionName: https-lol-apex
     persistence:
       config:
         type: configMap
