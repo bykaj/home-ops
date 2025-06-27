@@ -14,15 +14,13 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/tools/privatebin/app
   postBuild:
     substitute:
       APP: *app
       GATUS_NAME: PrivateBin
-      GATUS_DOMAIN: www.drup.lol
+      GATUS_DOMAIN: drup.lol
     substituteFrom:
       - name: cluster-settings
         kind: ConfigMap

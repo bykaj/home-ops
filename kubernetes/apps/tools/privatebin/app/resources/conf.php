@@ -5,12 +5,12 @@
 
 [main]
 ; (optional) set a project name to be displayed on the website
-name = "drup.lol"
+name = "DrupLOL"
 
 ; The full URL, with the domain name and directories that point to the
 ; PrivateBin files, including an ending slash (/). This URL is essential to
 ; allow Opengraph images to be displayed on social networks.
-basepath = "https://www.drup.lol/"
+basepath = "https://drup.lol/"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
@@ -211,8 +211,7 @@ batchsize = 10
 [model] 
 class = S3Storage 
 [model_options] 
-region = "eu1" 
-;version = "what"
+region = "eu1"
 endpoint = ${STORAGE_HOST}
 bucket = ${STORAGE_CONTAINER}
 accesskey = ${STORAGE_LOGIN}

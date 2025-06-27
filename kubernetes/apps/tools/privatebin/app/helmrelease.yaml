@@ -65,7 +65,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${DOMAIN_LOL}"
+          - "@.${DOMAIN_LOL}"       # Manually add to DNS servers
           - "www.${DOMAIN_LOL}"
         parentRefs:
           - name: external
@@ -87,9 +87,9 @@ spec:
           - path: /tmp
             subPath: tmp
           - path: /var/tmp
-            subPath: vartmp
+            subPath: var-tmp
           - path: /var/run
-            subPath: varrun
+            subPath: var-run
     service:
       app:
         ports:
