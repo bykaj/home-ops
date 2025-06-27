@@ -197,14 +197,14 @@ spec:
         certificateRefs:
           - kind: Secret
             name: kvm-home-${DOMAIN_NET/./-}-tls
-    - name: http-lol
+    - name: http-lol-apex
       protocol: HTTP
       port: 80
       hostname: "${DOMAIN_LOL}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-lol
+    - name: https-lol-apex
       protocol: HTTPS
       port: 443
       hostname: "${DOMAIN_LOL}"
