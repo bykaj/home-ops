@@ -66,6 +66,7 @@ spec:
       app:
         hostnames:
           - "${DOMAIN_LOL}"
+          - "www.${DOMAIN_LOL}"
         parentRefs:
           - name: external
             namespace: kube-system
@@ -91,8 +92,6 @@ spec:
             subPath: varrun
     service:
       app:
-        annotations:
-          external-dns.alpha.kubernetes.io/hostname: "@"
         ports:
           http:
             port: *port

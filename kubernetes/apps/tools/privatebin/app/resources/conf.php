@@ -213,10 +213,10 @@ class = S3Storage
 [model_options] 
 region = "eu1" 
 ;version = "what"
-endpoint = ${{STORAGE_HOST}}
-bucket = ${{STORAGE_CONTAINER}}
-accesskey = ${{STORAGE_LOGIN}}
-secretkey = ${{STORAGE_PASSWORD}}
+endpoint = ${STORAGE_HOST}
+bucket = ${STORAGE_CONTAINER}
+accesskey = ${STORAGE_LOGIN}
+secretkey = ${STORAGE_PASSWORD}
 
 ;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
