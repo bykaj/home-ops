@@ -24,7 +24,7 @@ nodes:
     installDisk: /dev/sda
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
       topology.kubernetes.io/region: *clusterName
@@ -47,7 +47,7 @@ nodes:
     installDisk: /dev/sda
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
       topology.kubernetes.io/region: *clusterName
@@ -70,7 +70,7 @@ nodes:
     installDisk: /dev/sda
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e
+    talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
       topology.kubernetes.io/region: *clusterName
