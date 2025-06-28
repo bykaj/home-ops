@@ -110,7 +110,7 @@ spec:
           server:
             image:
               repository: ghcr.io/goauthentik/server
-              tag: "2025.6.2"
+              tag: "2025.6.3"
             args:
               - server
             envFrom:
@@ -156,7 +156,7 @@ spec:
           worker:
             image:
               repository: ghcr.io/goauthentik/server
-              tag: "2025.6.2"
+              tag: "2025.6.3"
             args:
               - worker
             envFrom:
