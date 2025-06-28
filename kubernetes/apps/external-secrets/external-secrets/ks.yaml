@@ -27,11 +27,12 @@ metadata:
   name: &app onepassword-store
   namespace: &namespace external-secrets
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: external-secrets
+      namespace: *namespace
     - name: onepassword-connect
       namespace: *namespace
   interval: 30m
@@ -42,9 +43,5 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: true
-  dependsOn:
-    - name: external-secrets
-      namespace: external-secrets
-    - name: onepassword-connect
-      namespace: external-secrets
