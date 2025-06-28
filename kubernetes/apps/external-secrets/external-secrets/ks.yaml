@@ -13,10 +13,6 @@ spec:
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/external-secrets/external-secrets/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
@@ -35,13 +31,12 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: onepassword-connect
+      namespace: *namespace
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/external-secrets/external-secrets/stores/onepassword
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

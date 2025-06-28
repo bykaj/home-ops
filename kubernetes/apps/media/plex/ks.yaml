@@ -20,6 +20,8 @@ spec:
       namespace: monitoring
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: volsync
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
   postBuild:
@@ -30,11 +32,6 @@ spec:
       VOLSYNC_CLAIM: plex-config
       VOLSYNC_CACHE_CAPACITY: 30Gi
       VOLSYNC_CAPACITY: 60Gi
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

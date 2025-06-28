@@ -15,12 +15,6 @@ spec:
   interval: 1h
   timeout: 5m
   path: ./kubernetes/apps/rook-ceph/toolbox/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

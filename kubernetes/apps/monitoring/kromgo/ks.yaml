@@ -19,11 +19,6 @@ spec:
       GATUS_NAME: Kromgo
       GATUS_DOMAIN: stats.bykaj.io
       GATUS_PATH: /talos_version
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

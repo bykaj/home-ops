@@ -16,6 +16,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/media/tautulli/app
@@ -26,11 +28,6 @@ spec:
       VOLSYNC_CLAIM: tautulli-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

@@ -25,11 +25,6 @@ spec:
       VOLSYNC_CLAIM: atuin-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

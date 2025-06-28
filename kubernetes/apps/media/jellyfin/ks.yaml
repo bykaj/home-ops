@@ -17,6 +17,8 @@ spec:
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: volsync
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/jellyfin/app
   postBuild:
@@ -26,11 +28,6 @@ spec:
       VOLSYNC_CLAIM: jellyfin-config
       VOLSYNC_CACHE_CAPACITY: 10Gi
       VOLSYNC_CAPACITY: 20Gi
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

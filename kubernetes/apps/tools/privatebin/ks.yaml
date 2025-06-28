@@ -21,11 +21,6 @@ spec:
       APP: *app
       GATUS_NAME: PrivateBin
       GATUS_DOMAIN: drup.lol
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

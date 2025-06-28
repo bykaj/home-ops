@@ -10,16 +10,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: onepassword-connect
+    - name: onepassword-store
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/unifi-dns/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

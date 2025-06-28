@@ -15,11 +15,13 @@ spec:
     - name: onepassword-store
       namespace: external-secrets
     - name: prowlarr
-      namespace: downloads
+      namespace: *namespace
     - name: sabnzbd
-      namespace: downloads
+      namespace: *namespace
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: volsync
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/downloads/whisparr/app
   postBuild:
@@ -28,11 +30,6 @@ spec:
       VOLSYNC_CLAIM: whisparr-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

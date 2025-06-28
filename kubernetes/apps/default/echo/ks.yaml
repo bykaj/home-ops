@@ -17,11 +17,6 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Echo
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

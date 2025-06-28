@@ -32,6 +32,7 @@ metadata:
   name: &app system-upgrade-controller-plans
   namespace: &namespace system-upgrade
   labels:
+    # Disable default patch for Kustomizations 
     substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:

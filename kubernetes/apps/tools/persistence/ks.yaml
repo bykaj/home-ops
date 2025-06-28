@@ -16,12 +16,6 @@ spec:
   path: ./kubernetes/apps/tools/persistence/smb-volumes
   prune: true
   retryInterval: 2m
-  postBuild:
-    substituteFrom:
-      - name: cluster-settings
-        kind: ConfigMap
-      - name: cluster-secrets
-        kind: Secret
   sourceRef:
     kind: GitRepository
     name: flux-system
