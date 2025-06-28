@@ -20,8 +20,6 @@ spec:
       namespace: monitoring
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
   postBuild:

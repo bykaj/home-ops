@@ -14,8 +14,6 @@ spec:
     - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
-    - name: volsync
-      namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 30m

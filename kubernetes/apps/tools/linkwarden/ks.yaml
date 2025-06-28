@@ -17,8 +17,6 @@ spec:
       namespace: external-secrets
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/tools/linkwarden/app
   postBuild:
