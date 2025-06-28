@@ -25,7 +25,7 @@ spec:
           db:
             image:
               repository: postgres
-              tag: "16"
+              tag: "17"
             env:
               - name: PG_TZ
                 value: "${TIMEZONE}"
