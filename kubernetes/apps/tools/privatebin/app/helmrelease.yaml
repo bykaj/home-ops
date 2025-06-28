@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/privatebin/s3
-              tag: 1.7.6@sha256:c526b2ff7901f5d2dcb196bd25e7a36056db743918943e703efd57c0299e8e8f
+              tag: 1.7.7@sha256:31f6508571c557d26109ae475096ed048c76732ec334c408666023f18b49ad26
             env:
               TZ: "${TIMEZONE}"
               PHP_TZ: "${TIMEZONE}"
