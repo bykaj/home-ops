@@ -144,7 +144,7 @@ spec:
           app:
             image:
               repository: ghcr.io/linkwarden/linkwarden
-              tag: "v2.11.1"
+              tag: "v2.11.2"
             env:
               ARCHIVE_TAKE_COUNT: "5"
               AUTOSCROLL_TIMEOUT: "30"
