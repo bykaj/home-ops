@@ -27,8 +27,8 @@ nodes:
     talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
-      topology.kubernetes.io/region: *clusterName
-      topology.kubernetes.io/zone: m
+      topology.kubernetes.io/region: &region eu-west
+      topology.kubernetes.io/zone: &zone home
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
@@ -50,8 +50,8 @@ nodes:
     talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
-      topology.kubernetes.io/region: *clusterName
-      topology.kubernetes.io/zone: m
+      topology.kubernetes.io/region: *region
+      topology.kubernetes.io/zone: *zone
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
@@ -73,8 +73,8 @@ nodes:
     talosImageURL: factory.talos.dev/installer/36c7b8d9bee9e5d6a1e2eb50d892ad39b780ad8bed147cf1a901f373a42a8b52
     controlPlane: true
     nodeLabels:
-      topology.kubernetes.io/region: *clusterName
-      topology.kubernetes.io/zone: m
+      topology.kubernetes.io/region: *region
+      topology.kubernetes.io/zone: *zone
       intel.feature.node.kubernetes.io/gpu: "true"
     networkInterfaces:
       - deviceSelector:
