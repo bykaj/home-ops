@@ -11,9 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: openebs
-      namespace: kube-system
+      namespace: *namespace
     - name: snapshot-controller
-      namespace: kube-system
+      namespace: *namespace
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
