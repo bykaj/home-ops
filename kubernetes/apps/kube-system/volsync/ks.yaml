@@ -14,8 +14,6 @@ spec:
       namespace: kube-system
     - name: snapshot-controller
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
