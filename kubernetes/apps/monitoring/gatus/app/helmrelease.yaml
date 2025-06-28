@@ -36,7 +36,8 @@ spec:
             restartPolicy: Always
             resources:
               requests:
-                cpu: 10m
+                cpu: 2m
+                memory: 64Mi
               limits:
                 memory: 128Mi
         containers:
@@ -68,7 +69,8 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 100m
+                cpu: 5m
+                memory: 160Mi
               limits:
                 memory: 256Mi
     defaultPodOptions:

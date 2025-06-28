@@ -64,7 +64,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 5m
+                cpu: 20m
                 memory: 256Mi
               limits:
                 memory: 512Mi
@@ -109,6 +109,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                mameory: 
               limits:
                 memory: 2Gi
             restartPolicy: Always
@@ -186,8 +187,8 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 10m
-                memory: 256Mi
+                cpu: 20m
+                memory: 512Mi
               limits:
                 memory: 2Gi
 

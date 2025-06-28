@@ -50,11 +50,11 @@ spec:
                   periodSeconds: 10
             resources:
               requests:
-                cpu: 50m
-                memory: 2Gi
+                cpu: 20m
+                memory: 3Gi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 4Gi
+                memory: 5Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
