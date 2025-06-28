@@ -35,7 +35,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-      substitution.flux.home.arpa/disabled: true
+      substitution.flux.home.arpa/disabled: "true"
   dependsOn:
     - name: system-upgrade-controller
       namespace: system-upgrade
