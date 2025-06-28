@@ -12,9 +12,9 @@
 #              Uses external libraries for utility and Proxmox functions.
 #
 # Author:      B. van Wetten <git@bvw.email>
-# Version:     1.2.6
+# Version:     1.3.8
 # Created:     2025-06-18
-# Updated:     2025-06-19
+# Updated:     2025-06-27
 #
 # Features:    - Automated VM creation with configurable resources (CPU, RAM, Disks)
 #              - Custom ISO mounting and storage selection
@@ -28,12 +28,18 @@
 #              - Robust error trapping and reporting
 #              - Self-update mechanism for main script and libraries
 #              - Modular design with functions in ./lib/
+#              - Cluster-aware VM management (automatically detects VM location)
+#              - Cross-node VM operations via SSH
+#              - Dependency checking including jq for JSON parsing
 #
-# Usage:       ./vm.sh <action> [VMID] [options]
+# Usage:       ./vm.sh <action> [VMID[,VMID,...]] [options]
 #
 # Examples:    ./vm.sh create 1001 server-1 --iso=talos-v1.7.0-amd64.iso --cores=2 --ram=4096
 #              ./vm.sh create 1002 worker-1 --vlan=100 --force
 #              ./vm.sh destroy 1001
+#              ./vm.sh destroy 1001,1002,1003
+#              ./vm.sh start 1001,1002
+#              ./vm.sh stop 1001,1002,1003
 #              ./vm.sh list-iso
 #              ./vm.sh update
 #
@@ -175,6 +181,198 @@ set -- "${temp_args[@]}"; ACTION="${1:-}"
 log_verbose "Script directory: $SCRIPT_DIR"; log_verbose "Libraries directory: $LIB_DIR"
 for lib_key in "${!LIBRARIES_CONFIG[@]}"; do ensure_library_loaded "$lib_key"; done
 
+# --- VMID Parsing and Multi-VM Functions ---
+parse_vmids() {
+    local vmid_string="$1"
+    local vmids=()
+
+    # Split by comma and validate each VMID
+    IFS=',' read -ra vmid_array <<< "$vmid_string"
+    for vmid in "${vmid_array[@]}"; do
+        # Trim whitespace
+        vmid=$(echo "$vmid" | xargs)
+        if ! [[ "$vmid" =~ ^[0-9]+$ ]]; then
+            log_error "Invalid VMID: '$vmid' (must be numeric)"
+            return 1
+        fi
+        vmids+=("$vmid")
+    done
+
+    # Return array as space-separated string
+    echo "${vmids[@]}"
+}
+
+execute_multi_vm_action() {
+    local action="$1"
+    local vmids=("${@:2}")
+    local success_count=0
+    local failure_count=0
+    local total_count=${#vmids[@]}
+
+    # Temporarily disable error exit to handle failures gracefully
+    set +e
+
+    if [[ $total_count -gt 1 ]]; then
+        log_info "Executing '$action' on $total_count VMs: ${vmids[*]}"
+        echo
+    fi
+
+    for vmid in "${vmids[@]}"; do
+        if [[ $total_count -gt 1 ]]; then
+            echo "--- Processing VM $vmid ---"
+        fi
+
+        case "$action" in
+            create)
+                # For create action, use the first (and only) VMID since we validated it's single
+                create_vm "$vmid" "$VM_NAME_SUFFIX"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            destroy)
+                destroy_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            start)
+                start_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            stop)
+                stop_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            shutdown)
+                shutdown_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            restart)
+                restart_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            reboot)
+                reboot_vm "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            mount)
+                mount_iso "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            unmount)
+                unmount_iso "$vmid"
+                local result=$?
+                if [[ $result -eq 0 ]]; then
+                    ((success_count++))
+                else
+                    ((failure_count++))
+                fi
+                ;;
+            *)
+                log_error "Unknown action: $action"
+                set -e  # Re-enable error exit before returning
+                return 1
+                ;;
+        esac
+
+        if [[ $total_count -gt 1 ]]; then
+            echo
+        fi
+    done
+
+    if [[ $total_count -gt 1 ]]; then
+        echo "--- Summary ---"
+        log_info "Action '$action' completed on $total_count VMs"
+        if [[ $success_count -gt 0 ]]; then
+            log_success "Successful: $success_count"
+        fi
+        if [[ $failure_count -gt 0 ]]; then
+            log_error "Failed: $failure_count"
+        fi
+    fi
+
+    # Re-enable error exit
+    set -e
+
+    # Return success only if all operations succeeded
+    if [[ $failure_count -eq 0 ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# --- Preflight Checks ---
+check_dependencies() {
+    log_verbose "Performing preflight dependency checks..."
+    local missing_deps=()
+
+    # Check for required commands
+    local required_commands=("qm" "pvesh" "pvesm" "jq" "ssh" "curl")
+    for cmd in "${required_commands[@]}"; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            missing_deps+=("$cmd")
+        fi
+    done
+
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        log_error "Missing required dependencies: ${missing_deps[*]}"
+        log_error "Please install the missing dependencies and try again."
+        return 1
+    fi
+
+    log_verbose "All required dependencies are available."
+    return 0
+}
+
+# Run preflight checks for all actions except update and version
+case "$ACTION" in
+    update|version|--version|""|"-h"|"--help") ;;
+    *)
+        if ! check_dependencies; then
+            log_error "Preflight checks failed. Exiting."
+            exit 1
+        fi
+        ;;
+esac
+
 DEFAULT_VM_NAME_PREFIX="talos-k8s"; CORES=4; SOCKETS=1; RAM_MB=32768
 DISK_OS_SIZE_GB=128; DISK_DATA_SIZE_GB=256; TALOS_ISO_PATH="local:iso/metal-amd64.iso"
 STORAGE_POOL_EFI="local-lvm"; STORAGE_POOL_OS="local-lvm"; STORAGE_POOL_DATA="local-lvm"
@@ -281,7 +479,7 @@ perform_library_update() {
     return 0
 }
 
-VMID=""; VM_NAME_SUFFIX=""
+VMID_STRING=""; VMIDS=(); VM_NAME_SUFFIX=""
 CORES_OPT=""; SOCKETS_OPT=""; RAM_MB_OPT=""; ISO_NAME_OPT=""
 STORAGE_ISO_OPT=""; STORAGE_OS_OPT=""; STORAGE_EFI_OPT=""; STORAGE_DATA_OPT=""
 VLAN_TAG_OPT=""; MAC_ADDRESS_OPT=""; FORCE_FLAG_OPT="false"; START_FLAG_OPT="false"
@@ -304,11 +502,27 @@ case "$ACTION" in
 esac
 
 case "$ACTION" in
-    create|destroy|start|stop|shutdown|restart|reboot)
-        if [[ -z "${2:-}" ]]; then log_error "Action '$ACTION' needs VMID."; usage; exit 1; fi
-        VMID="$2"; if ! [[ "$VMID" =~ ^[0-9]+$ ]]; then log_error "VMID must be number: '$VMID'"; usage; exit 1; fi ;;
+    create|destroy|start|stop|shutdown|restart|reboot|mount|unmount)
+        if [[ -z "${2:-}" ]]; then log_error "Action '$ACTION' needs VMID(s)."; usage; exit 1; fi
+        VMID_STRING="$2"
+        if ! VMIDS=($(parse_vmids "$VMID_STRING")); then
+            log_error "Invalid VMID format: '$VMID_STRING'"
+            log_error "Use single VMID (e.g., '1001') or comma-separated list (e.g., '1001,1002,1003')"
+            usage
+            exit 1
+        fi
+        ;;
     *) log_error "Invalid action '$ACTION'."; usage; exit 1 ;;
 esac
+
+# Validate that create action only accepts single VMID
+if [[ "$ACTION" == "create" ]]; then
+    if [[ ${#VMIDS[@]} -gt 1 ]]; then
+        log_error "Action '$ACTION' only supports a single VMID, got: $VMID_STRING"
+        usage
+        exit 1
+    fi
+fi
 
 param_offset=2
 if [[ "$ACTION" == "create" ]]; then
@@ -316,7 +530,7 @@ if [[ "$ACTION" == "create" ]]; then
 fi
 shift "$param_offset"
 
-if [[ "$ACTION" != "create" && -n "$@" ]]; then log_warning "Action '$ACTION' ignores extra options: '$@'"; fi
+if [[ "$ACTION" != "create" && "$ACTION" != "mount" && -n "$@" ]]; then log_warning "Action '$ACTION' ignores extra options: '$@'"; fi
 
 if [[ "$ACTION" == "create" ]]; then
     for arg in "$@"; do
@@ -337,14 +551,33 @@ if [[ "$ACTION" == "create" ]]; then
     done
 fi
 
+if [[ "$ACTION" == "mount" ]]; then
+    for arg in "$@"; do
+        case "$arg" in
+            --iso=*) ISO_NAME_OPT="${arg#--iso=}";;
+            --storage-iso=*) STORAGE_ISO_OPT="${arg#--storage-iso=}";;
+            *) if [[ "$arg" != "--verbose" ]]; then log_warning "Unknown param '$arg' for 'mount'."; fi;;
+        esac
+    done
+
+    # Validate that --iso is provided for mount action
+    if [[ -z "${ISO_NAME_OPT:-}" ]]; then
+        log_error "Mount action requires --iso option to specify ISO file to mount."
+        usage
+        exit 1
+    fi
+fi
+
 case "$ACTION" in
-    create) create_vm "$VMID" "$VM_NAME_SUFFIX"; exit $?;;
-    destroy) destroy_vm "$VMID"; exit $?;;
-    start) start_vm "$VMID"; exit $?;;
-    stop) stop_vm "$VMID"; exit $?;;
-    shutdown) shutdown_vm "$VMID"; exit $?;;
-    restart) restart_vm "$VMID"; exit $?;;
-    reboot) reboot_vm "$VMID"; exit $?;;
+    create) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    destroy) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    start) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    stop) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    shutdown) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    restart) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    reboot) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    mount) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
+    unmount) execute_multi_vm_action "$ACTION" "${VMIDS[@]}"; exit $?;;
     *) log_error "Internal error: Unhandled action '$ACTION'."; usage; exit 1;;
 esac
 
