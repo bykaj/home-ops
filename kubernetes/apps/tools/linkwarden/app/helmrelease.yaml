@@ -109,7 +109,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                mameory: 
+                memory: 256Mi
               limits:
                 memory: 2Gi
             restartPolicy: Always
