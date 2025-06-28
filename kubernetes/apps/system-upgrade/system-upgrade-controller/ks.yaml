@@ -31,11 +31,12 @@ kind: Kustomization
 metadata:
   name: &app system-upgrade-controller-plans
   namespace: &namespace system-upgrade
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-      substitution.flux.home.arpa/disabled: "true"
   dependsOn:
     - name: system-upgrade-controller
       namespace: system-upgrade
