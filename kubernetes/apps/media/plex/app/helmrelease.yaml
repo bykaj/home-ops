@@ -12,10 +12,12 @@ spec:
   install:
     remediation:
       retries: -1
+    timeout: 15m
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: 3
+    timeout: 15m
   values:
     controllers:
       plex:
