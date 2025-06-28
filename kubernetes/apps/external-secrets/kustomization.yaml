@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: external-secrets
 components:
   - ../../components/common
-resources:
-  - ./external-secrets/ks.yaml
-  - ./onepassword-connect/ks.yaml
+resources: []
+  #- ./external-secrets/ks.yaml
+  #- ./onepassword-connect/ks.yaml
   
