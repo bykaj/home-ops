@@ -11,12 +11,15 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/internal
+    - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
     - name: sonarr
       namespace: *namespace
     - name: radarr
       namespace: *namespace
+    - name: keda
+      namespace: monitoring
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h

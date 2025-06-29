@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
@@ -18,6 +19,8 @@ spec:
       namespace: *namespace
     - name: sabnzbd
       namespace: *namespace
+    - name: keda
+      namespace: monitoring
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
