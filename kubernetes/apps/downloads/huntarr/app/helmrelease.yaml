@@ -73,8 +73,8 @@ spec:
         advancedMounts:
           huntarr:
             app:
-              - path: /config/log
-                subPath: log
+              - path: /config/logs
+                subPath: logs
               - path: /tmp
                 subPath: tmp
     route:
