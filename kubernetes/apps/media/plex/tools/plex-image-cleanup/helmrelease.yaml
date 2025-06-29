@@ -20,7 +20,7 @@ spec:
           reloader.stakater.com/auto: "true"
         type: cronjob
         cronjob:
-          schedule: "0 6 * * 0"
+          schedule: "0 6 * * 1"
           backoffLimit: 0
           concurrencyPolicy: Forbid
           failedJobsHistory: 1
