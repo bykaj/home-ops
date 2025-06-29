@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: devices
+spec:
+  module: icmp
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - dsmr-logger.home.${DOMAIN_NET}
+        - gw-adam.home.${DOMAIN_NET}
+        - gw-anna.home.${DOMAIN_NET}
+        - gw-hue.home.${DOMAIN_NET}
+        - gw-sip.home.${DOMAIN_NET}
+        - homeassistant.home.${DOMAIN_NET}
+        - icarus.home.${DOMAIN_NET}
+        - leonis.home.${DOMAIN_NET}
+        - nas.home.${DOMAIN_NET}
+        - netatmo.home.${DOMAIN_NET}
+        - pikvm.home.${DOMAIN_NET}
+        - security_system.home.${DOMAIN_NET}
+        - zeus.home.${DOMAIN_NET}
+---
+# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: nfs
+spec:
+  module: tcp_connect
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+      - ${NFS_SERVER}:2049

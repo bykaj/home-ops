@@ -6,6 +6,7 @@ namespace: monitoring
 components:
   - ../../components/common
 resources:
+  - ./blackbox-exporter/ks.yaml
   - ./gatus/ks.yaml
   - ./grafana/ks.yaml
   - ./keda/ks.yaml
