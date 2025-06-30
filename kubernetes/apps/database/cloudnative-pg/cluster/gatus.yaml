@@ -10,7 +10,7 @@ data:
     endpoints:
       - name: CloudNativePG
         group: "3. Infrastructure Services"
-        url: tcp://postgres-v17.database.svc.cluster.local:5432
+        url: tcp://postgres-v17-rw.database.svc.cluster.local:5432
         interval: 1m
         ui:
           hide-url: true
