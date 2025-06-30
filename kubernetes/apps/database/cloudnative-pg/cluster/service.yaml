@@ -3,10 +3,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-v17
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "db.${DOMAIN_IO}"
+    lbipam.cilium.io/ips: 10.73.10.202
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  loadBalancerIP: 10.73.10.202
+  # loadBalancerIP: 10.73.10.202
   ports:
     - name: postgres
       port: 5432
