@@ -16,6 +16,7 @@ spec:
         apiGroup: ""
         name: cloudnative-pg-config
         kind: PersistentVolumeClaim
+    size: 20Gi
   enableSuperuserAccess: true
   superuserSecret:
     name: &secret cloudnative-pg-secret
