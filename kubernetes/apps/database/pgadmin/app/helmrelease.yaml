@@ -30,7 +30,7 @@ spec:
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
               PGADMIN_DISABLE_POSTFIX: "true"
-              PGADMIN_LISTEN_PORT: &port 80
+              PGADMIN_LISTEN_PORT: &port 5050
               PGADMIN_DEFAULT_EMAIL:
                 valueFrom:
                   secretKeyRef:
