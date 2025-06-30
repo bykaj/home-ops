@@ -87,10 +87,14 @@ The way Flux works for me here is it will recursively search the `kubernetes/app
 This Git repository contains the following directories under [kubernetes](./kubernetes/):
 
 ```sh
-📁 kubernetes
-├── 📁 apps       # applications
-├── 📁 components # re-useable kustomize components
-└── 📁 flux       # flux system configuration
+📁 /
+├── 📁 kubernetes/
+│   ├── 📁 apps/        # Application deployments (organized by namespace)
+│   ├── 📁 components/  # Re-useable kustomize components
+│   └── 📁 flux/        # Flux system configuration
+├── 📁 talos/           # Talos cluster configuration
+├── 📁 bootstrap/       # Initial cluster bootstrap (Helmfile)
+└── 📁 scripts/         # Utility scripts
 ```
 
 ### Flux Workflow
