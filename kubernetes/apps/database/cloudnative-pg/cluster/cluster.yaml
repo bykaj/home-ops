@@ -12,7 +12,8 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     pvcTemplate:
-      dataSource:
+      dataSourceRef:
+        apiGroup: ""
         name: cloudnative-pg-config
         kind: PersistentVolumeClaim
   enableSuperuserAccess: true
