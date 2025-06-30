@@ -1,0 +1,88 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: &clusterName postgres-v17
+spec:
+  # using only 1 replica: very difficult to drain the node where postgres is running
+  # using more than 1 replica: write amplification issues when leveraging replicated storage (e.g. ceph)
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-202506300806-standard-bullseye
+  primaryUpdateStrategy: unsupervised
+  storage:
+    pvcTemplate:
+      dataSource:
+        name: cloudnative-pg-config
+        kind: PersistentVolumeClaim
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: &secret cloudnative-pg-secret
+  postgresql:
+    parameters:
+      max_connections: "300"
+      shared_buffers: 512MB
+      pg_stat_statements.max: "10000"
+      pg_stat_statements.track: all
+  monitoring:
+    enablePodMonitor: true
+  # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2570
+  enablePDB: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 4Gi
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore:
+      wal:
+        compression: bzip2
+        maxParallel: 8
+      destinationPath:
+        valueFrom:
+          secretKeyRef:
+            name: *secret
+            key: DESTINATION_PATH
+      endpointURL:
+        valueFrom:
+          secretKeyRef:
+            name: *secret
+            key: S3_ENDPOINT
+      serverName: *clusterName
+      s3Credentials:
+        accessKeyId:
+          name: *secret
+          key: S3_ACCESS_KEY
+        secretAccessKey:
+          name: *secret
+          key: S3_SECRET_KEY
+
+  bootstrap: {}
+  # use this to recover a net-new cluster from a backup
+  #   recovery:
+  #     source: postgres-backup # TODO: fix this to the real name of the backup when on the new cluster
+
+    # # use this to 'migrate' from an existing cnpg cluster (e.g. "postgres-v15") to the new cluster
+    # initdb:
+    #   import:
+    #     type: monolith
+    #     databases:
+    #       - "*"
+    #     roles:
+    #       - "*"
+    #     source:
+    #       externalCluster: postgres-v15
+
+  externalClusters: []
+    # # this represents an existing cnpg cluster to migrate from (e.g. upgrading from postgres v14 to postgres v15)
+    # - name: postgres-v15
+    #   connectionParameters:
+    #     host: postgres-v15-rw.default.svc.cluster.local
+    #     user: postgres
+    #     dbname: postgres
+    #     sslmode: require
+    #   password:
+    #     name: cloudnative-pg-secret
+    #     key: password

@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: cloudnative-pg
-      version: 0.22.1
+      version: 0.24.0
       sourceRef:
         kind: HelmRepository
-        name: cnpg
+        name: cloudnative-pg
         namespace: flux-system
   install:
     remediation:
