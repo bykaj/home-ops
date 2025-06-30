@@ -61,11 +61,6 @@ spec:
         ports:
           http:
             port: *port
-    serviceMonitor:
-      app:
-        serviceName: whoami
-        endpoints:
-          - port: http
     route:
       app:
         hostnames: ["{{ .Release.Name }}.${DOMAIN_APP_APPS}"]
