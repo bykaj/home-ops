@@ -40,16 +40,8 @@ spec:
       wal:
         compression: bzip2
         maxParallel: 8
-      destinationPath:
-        valueFrom:
-          secretKeyRef:
-            name: *secret
-            key: DESTINATION_PATH
-      endpointURL:
-        valueFrom:
-          secretKeyRef:
-            name: *secret
-            key: S3_ENDPOINT
+      destinationPath: "s3://cloudnative-pg/"
+      endpointURL: "https://gateway.storjshare.io"
       serverName: *clusterName
       s3Credentials:
         accessKeyId:
