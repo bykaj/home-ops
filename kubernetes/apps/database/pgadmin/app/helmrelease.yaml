@@ -28,6 +28,7 @@ spec:
               tag: 9.5.0@sha256:2a830466aafd9cbc2aea0f76ff81a80dbbba819f2f5db7e69cb40e9cbdb6bc7b
             env:
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
+              PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
               PGADMIN_DISABLE_POSTFIX: "true"
               PGADMIN_LISTEN_PORT: &port 80
               PGADMIN_DEFAULT_EMAIL:
