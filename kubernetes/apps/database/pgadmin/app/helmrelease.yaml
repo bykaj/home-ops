@@ -93,9 +93,11 @@ spec:
         type: nfs
         server: "${NFS_SERVER}"
         path: /mnt/vault-alpha/Backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/pgAdmin
+        advancedMounts:
+          pgadmin:
+            app:
+              - path: /var/lib/pgadmin/storage
+                subPath: Apps/pgAdmin
     route:
       app:
         hostnames:
