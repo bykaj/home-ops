@@ -21,55 +21,7 @@ spec:
       linkwarden:
         annotations:
           reloader.stakater.com/reload: &secret linkwarden-secret
-        initContainers:
-          # PostgreSQL
-          init-db:
-            image:
-              # repository: ghcr.io/home-operations/postgres-init
-              repository: postgres
-              tag: "16"
-            env:
-              PG_TZ: "${TIMEZONE}"
-              POSTGRES_DB:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_DB
-              POSTGRES_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_USER
-              POSTGRES_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_PASSWORD
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - pg_isready
-                      - -U
-                      - linkwarden
-                      - -d
-                      - linkwarden
-                  initialDelaySeconds: 10
-                  periodSeconds: 10
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 20m
-                memory: 256Mi
-              limits:
-                memory: 512Mi
-            restartPolicy: Always
-          
+        initContainers:          
           # Meilisearch
           init-meilisearch:
             image:
@@ -197,9 +149,6 @@ spec:
         existingClaim: linkwarden-config
         advancedMounts:
           linkwarden:
-            init-db:
-              - path: /var/lib/postgresql/data
-                subPath: postgresql
             init-meilisearch:
               - path: /meili_data
                 subPath: meilisearch
@@ -231,6 +180,7 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
+                
     service:
       app:
         primary: true
@@ -238,8 +188,3 @@ spec:
         ports:
           http:
             port: *port
-      db:
-        controller: *app
-        ports:
-          postgres:
-            port: 5432
