@@ -5,8 +5,6 @@ kind: Cluster
 metadata:
   name: &clusterName postgres-v17
 spec:
-  # using only 1 replica: very difficult to drain the node where postgres is running
-  # using more than 1 replica: write amplification issues when leveraging replicated storage (e.g. ceph)
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   primaryUpdateStrategy: unsupervised
@@ -32,7 +30,7 @@ spec:
   enablePDB: false
   resources:
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 512Mi
     limits:
       memory: 4Gi
@@ -53,30 +51,11 @@ spec:
           name: *secret
           key: S3_SECRET_KEY
 
-  bootstrap: {}
-  # use this to recover a net-new cluster from a backup
-  #   recovery:
-  #     source: postgres-backup # TODO: fix this to the real name of the backup when on the new cluster
-
-    # # use this to 'migrate' from an existing cnpg cluster (e.g. "postgres-v15") to the new cluster
-    # initdb:
-    #   import:
-    #     type: monolith
-    #     databases:
-    #       - "*"
-    #     roles:
-    #       - "*"
-    #     source:
-    #       externalCluster: postgres-v15
-
+  bootstrap:
+    initdb:
+      database: app
+      owner: app
+      secret:
+        name: cloudnative-pg-bootstrap-secret
+        
   externalClusters: []
-    # # this represents an existing cnpg cluster to migrate from (e.g. upgrading from postgres v14 to postgres v15)
-    # - name: postgres-v15
-    #   connectionParameters:
-    #     host: postgres-v15-rw.default.svc.cluster.local
-    #     user: postgres
-    #     dbname: postgres
-    #     sslmode: require
-    #   password:
-    #     name: cloudnative-pg-secret
-    #     key: password
