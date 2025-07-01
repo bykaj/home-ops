@@ -96,7 +96,7 @@ spec:
         advancedMounts:
           pgadmin:
             app:
-              - path: /var/lib/pgadmin/storage
+              - path: /mnt/backups
                 subPath: Apps/pgAdmin
     route:
       app:
