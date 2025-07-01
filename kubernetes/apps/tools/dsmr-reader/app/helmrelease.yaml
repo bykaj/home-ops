@@ -26,8 +26,6 @@ spec:
             image:
               repository: ghcr.io/xirixiz/dsmr-reader-docker
               tag: "5.11.0-2025.01.03"
-            dependsOn:
-              - db
             env:
               DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
               DJANGO_DATABASE_HOST: "postgres-v17-rw.database.svc.cluster.local"
