@@ -22,99 +22,47 @@ spec:
         annotations:
           reloader.stakater.com/reload: &secret dsmr-reader-secret
         containers:
-          db:
+          app:
             image:
-              repository: postgres
-              tag: "16"
+              repository: ghcr.io/xirixiz/dsmr-reader-docker
+              tag: "5.11.0-2025.01.03"
+            dependsOn:
+              - db
             env:
-              - name: PG_TZ
-                value: "${TIMEZONE}"
-              - name: POSTGRES_DB
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_DB
-              - name: POSTGRES_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_USER
-              - name: POSTGRES_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_PASSWORD
+              DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
+              DJANGO_DATABASE_HOST: "postgres-v17-rw.database.svc.cluster.local"
+              DJANGO_DATABASE_PORT: "5432"
+              DJANGO_TIME_ZONE: "${TIMEZONE}"
+              DSMRREADER_LOGLEVEL: "ERROR"
+              DSMRREADER_OPERATION_MODE: "api_server"
+              # s6 overlay fixes
+              # Ref: https://github.com/just-containers/s6-overlay/issues/600
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+              S6_READ_ONLY_ROOT: "1"
+              S6_VERBOSITY: "2"
+            envFrom:
+              - secretRef:
+                  name: *secret
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
-                  exec:
-                    command:
-                      - pg_isready
-                      - -U
-                      - dsmrreader
-                      - -d
-                      - dsmrreader
-                  initialDelaySeconds: 15
+                  httpGet:
+                    path: /
+                    port: &port 80
+                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 5
+                  timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
             resources:
               requests:
                 cpu: 50m
-                memory: 256Mi
+                memory: 384Mi
               limits:
-                memory: 512Mi
-          # app:
-          #   image:
-          #     repository: ghcr.io/xirixiz/dsmr-reader-docker
-          #     tag: "5.11.0-2025.01.03"
-          #   dependsOn:
-          #     - db
-          #   env:
-          #     DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
-          #     DJANGO_DATABASE_HOST: "localhost"
-          #     DJANGO_DATABASE_PORT: "5432"
-          #     DJANGO_TIME_ZONE: "${TIMEZONE}"
-          #     DSMRREADER_LOGLEVEL: "ERROR"
-          #     DSMRREADER_OPERATION_MODE: "api_server"
-          #     # s6 overlay fixes
-          #     # Ref: https://github.com/just-containers/s6-overlay/issues/600
-          #     S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
-          #     S6_READ_ONLY_ROOT: "1"
-          #     S6_VERBOSITY: "2"
-          #   envFrom:
-          #     - secretRef:
-          #         name: *secret
-          #   probes:
-          #     liveness: &probes
-          #       enabled: true
-          #       custom: true
-          #       spec:
-          #         httpGet:
-          #           path: /
-          #           port: &port 80
-          #         initialDelaySeconds: 0
-          #         periodSeconds: 10
-          #         timeoutSeconds: 1
-          #         failureThreshold: 3
-          #     readiness: *probes
-          #   resources:
-          #     requests:
-          #       cpu: 50m
-          #       memory: 384Mi
-          #     limits:
-          #       memory: 1Gi
+                memory: 1Gi
     persistence:
-      config:
-        existingClaim: dsmr-reader-config
-        advancedMounts:
-          dsmr-reader:
-            db:
-              - path: /var/lib/postgresql/data
-                subPath: postgresql
       backups:
         type: nfs
         server: "${NFS_SERVER}"
@@ -124,39 +72,33 @@ spec:
             subPath: Apps/DSMR-Reader
       tmpfs:
         type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
-        # advancedMounts:
-        #   dsmr-reader:
-        #     app:
-        #       # s6 overlay fixes
-        #       # Ref: https://github.com/just-containers/s6-overlay/issues/600
-        #       - path: /run
-        #         subPath: run
-        #       - path: /run/nginx
-        #         subPath: nginx
-    # route:
-    #   app:
-    #     hostnames:
-    #       - "dsmr.${DOMAIN_APP_APPS}"
-    #     parentRefs:
-    #       - name: internal
-    #         namespace: kube-system
-    #         sectionName: https-app-apps
-    #     rules:
-    #       - backendRefs:
-    #           - identifier: app
-    #             port: *port
+        advancedMounts:
+          dsmr-reader:
+            app:
+              - path: /tmp
+                subPath: tmp
+              # s6 overlay fixes
+              # Ref: https://github.com/just-containers/s6-overlay/issues/600
+              - path: /run
+                subPath: run
+              - path: /run/nginx
+                subPath: nginx
+    route:
+      app:
+        hostnames:
+          - "dsmr.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app-apps
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     service:
-      # app:
-      #   primary: true
-      #   controller: *app
-      #   ports:
-      #     http:
-      #       port: *port
-      db:
+      app:
+        primary: true
         controller: *app
         ports:
-          postgres:
-            port: 5432
+          http:
+            port: *port
