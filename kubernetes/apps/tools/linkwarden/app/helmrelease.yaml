@@ -238,3 +238,8 @@ spec:
         ports:
           http:
             port: *port
+      db:
+        controller: *app
+        ports:
+          postgres:
+            port: 5432
