@@ -75,6 +75,8 @@ spec:
               # Configure OCR
               PAPERLESS_OCR_LANGUAGE: nld+eng
               PAPERLESS_OCR_LANGUAGES: nld
+              # Configure database
+              PAPERLESS_DBHOST: "${DB_SERVER}"
               # Configure Redis integration
               PAPERLESS_REDIS: redis://localhost:6379
               # s6 overlay fixes
