@@ -67,7 +67,7 @@ spec:
             restartPolicy: Always
 
           # Redis
-          redis:
+          init-redis:
             image:
               repository: redis
               tag: "8.0.2"
