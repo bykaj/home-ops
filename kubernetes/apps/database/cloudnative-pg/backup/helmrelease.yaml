@@ -1,0 +1,67 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app cloudnative-pg-backup
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      cloudnative-pg-backup:
+        type: cronjob
+        cronjob:
+          schedule: "@daily"
+          ttlSecondsAfterFinished: 43200
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 4000
+            runAsGroup: 4000
+            runAsNonRoot: true
+            fsGroup: 4000
+            fsGroupChangePolicy: OnRootMismatch
+          enableServiceLinks: false
+        containers:
+          app:
+            image:
+              repository: docker.io/prodrigestivill/postgres-backup-local
+              tag: 17@sha256:483fa15ecd998302bd312fc380cb1b3683a940881d9099d6dfe65bcc1e2714e8
+            command: ["/backup.sh"]
+            env:
+              BACKUP_DIR: "/mnt/backups"
+              BACKUP_KEEP_DAYS: "7"
+              BACKUP_KEEP_MINS: "7200"
+              BACKUP_KEEP_MONTHS: "6"
+              BACKUP_KEEP_WEEKS: "4"
+              BACKUP_LATEST_TYPE: "symlink"
+              POSTGRES_EXTRA_OPTS: "-b -C -c -Z6"
+              POSTGRES_HOST: "${DB_SERVER}"
+              SCHEDULE: "@daily"
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: &secret cloudnative-pg-backup-secret
+    persistence:
+      backups:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Database

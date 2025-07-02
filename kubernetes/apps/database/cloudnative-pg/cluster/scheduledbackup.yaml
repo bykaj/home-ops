@@ -4,7 +4,7 @@ kind: ScheduledBackup
 metadata:
   name: postgres-v17
 spec:
-  # daily, 2:00 UTC
+  # Daily, 2:00 UTC
   schedule: "0 0 2 * * *"
   immediate: true
   backupOwnerReference: self

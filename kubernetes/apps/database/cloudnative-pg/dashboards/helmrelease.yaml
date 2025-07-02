@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: cloudnative-pg-dashboards
-        namespace: flux-system
   interval: 1h
   values:
     grafanaDashboard:

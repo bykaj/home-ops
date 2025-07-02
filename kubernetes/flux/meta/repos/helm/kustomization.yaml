@@ -7,7 +7,6 @@ resources:
   - ./backube.yaml
   - ./bjw-s-labs.yaml
   - ./bykaj.yaml
-  - ./cloudnative-pg.yaml
   - ./csi-driver-smb.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
