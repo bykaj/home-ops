@@ -129,7 +129,7 @@ spec:
               MAIL_PORT: "587"
               MEILISEARCH_HOST: http://localhost:7700
               MFA_ENABLED: "true"
-              QUEUE_CONNECTION: "redis"
+              QUEUE_CONNECTION: "sync"
               RATE_LIMIT_PER_MINUTE_API: "60"
               RATE_LIMIT_PER_MINUTE_OAUTH: "5"
               REDIS_HOST: "localhost"
