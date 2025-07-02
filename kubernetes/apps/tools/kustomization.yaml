@@ -14,3 +14,4 @@ resources:
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
   #- ./privatebin/ks.yaml
+  - ./wastebin/ks.yaml
