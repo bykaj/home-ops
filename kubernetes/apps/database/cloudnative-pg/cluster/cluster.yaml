@@ -3,11 +3,15 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: &clusterName postgres-v17
+  name: &currentCluster postgres-v17
 spec:
-  instances: 1
+  instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   primaryUpdateStrategy: unsupervised
+  replicationSlots:
+    highAvailability:
+      enabled: true
+    updateInterval: 300
   storage:
     pvcTemplate:
       dataSourceRef:
@@ -24,6 +28,9 @@ spec:
       shared_buffers: 512MB
       pg_stat_statements.max: "10000"
       pg_stat_statements.track: all
+    synchronous:
+      method: any
+      number: 1
   monitoring:
     enablePodMonitor: true
   # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2570
@@ -36,13 +43,15 @@ spec:
       memory: 4Gi
   backup:
     retentionPolicy: 30d
-    barmanObjectStore:
+    barmanObjectStore: &barmanObjectStore
+      data:
+        compression: bzip2
       wal:
         compression: bzip2
         maxParallel: 8
       destinationPath: "s3://cloudnative-pg"
       endpointURL: "https://gateway.storjshare.io"
-      serverName: *clusterName
+      serverName: *currentCluster
       s3Credentials:
         accessKeyId:
           name: *secret
@@ -52,10 +61,19 @@ spec:
           key: S3_SECRET_KEY
 
   bootstrap:
-    initdb:
-      database: app
-      owner: app
-      secret:
-        name: cloudnative-pg-bootstrap-secret
+    # Creates an empty/new cluster
+    # initdb:
+    #   database: app
+    #   owner: app
+    #   secret:
+    #     name: cloudnative-pg-bootstrap-secret
+    
+    # Recovers from the latest S3 backup
+    recovery:
+      source: &previousCluster postgres-v17
 
-  externalClusters: []
+  externalClusters:
+    - name: *previousCluster
+      barmanObjectStore:
+        <<: *barmanObjectStore
+        serverName: *previousCluster
