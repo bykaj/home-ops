@@ -28,7 +28,7 @@ spec:
               tag: "5.11.0-2025.01.03"
             env:
               DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
-              DJANGO_DATABASE_HOST: "postgres-v17-rw.database.svc.cluster.local"
+              DJANGO_DATABASE_HOST: "${DB_SERVER}"
               DJANGO_DATABASE_PORT: "5432"
               DJANGO_TIME_ZONE: "${TIMEZONE}"
               DSMRREADER_LOGLEVEL: "ERROR"
