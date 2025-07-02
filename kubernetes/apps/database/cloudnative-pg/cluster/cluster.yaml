@@ -13,11 +13,6 @@ spec:
       enabled: true
     updateInterval: 30
   storage:
-    pvcTemplate:
-      dataSourceRef:
-        apiGroup: ""
-        name: cloudnative-pg-config
-        kind: PersistentVolumeClaim
     size: 20Gi
   enableSuperuserAccess: true
   superuserSecret:

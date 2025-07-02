@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cloudnative-pg-gatus-endpoint
+  name: cloudnative-pg-cluster-gatus-endpoint
   labels:
     gatus.io/enabled: "true"
 data:

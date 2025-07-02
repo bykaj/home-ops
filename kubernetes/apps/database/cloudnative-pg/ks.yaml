@@ -34,8 +34,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: *namespace
@@ -46,9 +44,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: cloudnative-pg-config
-      VOLSYNC_CAPACITY: 20Gi
-      VOLSYNC_CACHE_CAPACITY: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:
