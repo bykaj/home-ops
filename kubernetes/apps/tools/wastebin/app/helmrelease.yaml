@@ -30,7 +30,7 @@ spec:
               TMPDIR: "/tmp"
               TZ: "${TIMEZONE}"
               WASTEBIN_ADDRESS_PORT: "0.0.0.0:8088"
-              WASTEBIN_BASE_URL: "${DOMAIN_LOL}"
+              WASTEBIN_BASE_URL: "https://${DOMAIN_LOL}/"
               WASTEBIN_DATABASE_PATH: "/data/state.db"
               WASTEBIN_MAX_BODY_SIZE: "5242880" # 5Mb
               WASTEBIN_PASTE_EXPIRATIONS: "10m,1h,1d,1w=d,1M,1y"
