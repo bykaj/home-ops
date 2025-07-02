@@ -9,6 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: onepassword-store
+      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/kube-system/csi-driver-smb/app
   prune: true
