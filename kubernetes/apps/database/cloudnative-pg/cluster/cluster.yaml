@@ -11,7 +11,7 @@ spec:
   replicationSlots:
     highAvailability:
       enabled: true
-    updateInterval: 300
+    updateInterval: 30
   storage:
     pvcTemplate:
       dataSourceRef:
