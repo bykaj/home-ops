@@ -95,6 +95,7 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 128Mi
+            restartPolicy: Always
 
         containers:
           # Monica
