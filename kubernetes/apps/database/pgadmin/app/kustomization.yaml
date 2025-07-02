@@ -6,8 +6,8 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: servers-json
+  - name: pgadmin-config
     files:
-      - ./resources/servers.json
+      - servers.json=./config/servers.json
 generatorOptions:
   disableNameSuffixHash: true

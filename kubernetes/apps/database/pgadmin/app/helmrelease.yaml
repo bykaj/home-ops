@@ -83,7 +83,7 @@ spec:
                 subPath: pgpass
       servers-json:
         type: configMap
-        name: servers-json
+        name: pgadmin-config
         advancedMounts:
           pgadmin:
             app:
