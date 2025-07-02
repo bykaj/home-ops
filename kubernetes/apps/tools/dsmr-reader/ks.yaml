@@ -15,8 +15,8 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: cloudnative-pg-cluster
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/tools/dsmr-reader/app
   postBuild:
