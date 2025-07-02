@@ -11,6 +11,6 @@ resources:
   - ./it-tools/ks.yaml
   - ./linkwarden/ks.yaml
   - ./nutify/ks.yaml
-  #- ./paperless/ks.yaml
+  - ./paperless/ks.yaml
   - ./persistence/ks.yaml
   - ./privatebin/ks.yaml
