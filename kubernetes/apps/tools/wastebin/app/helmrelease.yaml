@@ -34,7 +34,7 @@ spec:
               WASTEBIN_DATABASE_PATH: "/data/state.db"
               WASTEBIN_MAX_BODY_SIZE: "5242880" # 5Mb
               WASTEBIN_PASTE_EXPIRATIONS: "10m,1h,1d,1w=d,1M,1y"
-              WASTEBIN_THEME: "solarized"
+              WASTEBIN_THEME: "onehalf"
               WASTEBIN_TITLE: "drupLOL"
             envFrom:
               - secretRef:
