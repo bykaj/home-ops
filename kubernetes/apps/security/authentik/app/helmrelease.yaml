@@ -20,57 +20,8 @@ spec:
     controllers:
       authentik:
         annotations:
-          reloader.stakater.com/reload: &secret authentik-secret
+          reloader.stakater.com/auto: "true"
         initContainers:
-          init-db:
-            image:
-              repository: postgres
-              tag: "16"
-            env:
-              PG_TZ: "${TIMEZONE}"
-              POSTGRES_DB:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_DB
-              POSTGRES_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_USER
-              POSTGRES_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: POSTGRES_PASSWORD
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - pg_isready
-                      - -U
-                      - authentik_user
-                      - -d
-                      - authentik
-                  initialDelaySeconds: 15
-                  periodSeconds: 10
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 20m
-              limits:
-                memory: 256Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-            restartPolicy: Always
-
           # Redis
           init-redis:
             image:
@@ -106,97 +57,112 @@ spec:
             restartPolicy: Always
 
         containers:
-          # # Authentik (Server)
-          # server:
-          #   image:
-          #     repository: ghcr.io/goauthentik/server
-          #     tag: "2025.6.3"
-          #   args:
-          #     - server
-          #   envFrom:
-          #     - secretRef:
-          #         name: *secret
-          #   probes:
-          #     liveness: &probes
-          #       enabled: true
-          #       custom: true
-          #       spec:
-          #         failureThreshold: 3
-          #         httpGet:
-          #           path: /-/health/live/
-          #           port: &port 9000
-          #         initialDelaySeconds: 5
-          #         periodSeconds: 10
-          #         successThreshold: 1
-          #         timeoutSeconds: 1
-          #     readiness:
-          #       enabled: true
-          #       custom: true
-          #       spec:
-          #         failureThreshold: 3
-          #         httpGet:
-          #           path: /-/health/ready/
-          #           port: *port
-          #         initialDelaySeconds: 5
-          #         periodSeconds: 10
-          #         successThreshold: 1
-          #         timeoutSeconds: 1
-          #   resources:
-          #     requests:
-          #       cpu: 100m
-          #       memory: 512Mi
-          #     limits:
-          #       memory: 2Gi
-          #   securityContext:
-          #     allowPrivilegeEscalation: false
-          #     readOnlyRootFilesystem: false
-          #     capabilities: { drop: ["ALL"] }
+          # Authentik (Server)
+          server:
+            image:
+              repository: ghcr.io/goauthentik/server
+              tag: "2025.6.3"
+            args:
+              - server
+            env: &env
+              AUTHENTIK_COOKIE_DOMAIN: "${DOMAIN_ID}"
+              AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+              AUTHENTIK_DISABLE_UPDATE_CHECK: "false"
+              AUTHENTIK_EMAIL__PORT: "587"
+              AUTHENTIK_EMAIL__TIMEOUT: "10"
+              AUTHENTIK_EMAIL__USE_SSL: "false"
+              AUTHENTIK_EMAIL__USE_TLS: "true"
+              AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+              AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS: "127.0.0.1/32,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
+              AUTHENTIK_LOG_LEVEL: "info"
+              AUTHENTIK_POSTGRESQL__HOST: "${DB_SERVER}"
+              AUTHENTIK_REDIS__HOST: "localhost"
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: &secret authentik-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /-/health/live/
+                    port: &port 9000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /-/health/ready/
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
 
-          # # Authentik (Worker)
-          # worker:
-          #   image:
-          #     repository: ghcr.io/goauthentik/server
-          #     tag: "2025.6.3"
-          #   args:
-          #     - worker
-          #   envFrom:
-          #     - secretRef:
-          #         name: *secret
-          #   probes:
-          #     liveness: &probes
-          #       enabled: true
-          #       custom: true
-          #       spec:
-          #         failureThreshold: 3
-          #         httpGet:
-          #           path: /-/health/live/
-          #           port: *port
-          #         initialDelaySeconds: 5
-          #         periodSeconds: 10
-          #         successThreshold: 1
-          #         timeoutSeconds: 1
-          #     readiness:
-          #       enabled: true
-          #       custom: true
-          #       spec:
-          #         failureThreshold: 3
-          #         httpGet:
-          #           path: /-/health/ready/
-          #           port: *port
-          #         initialDelaySeconds: 5
-          #         periodSeconds: 10
-          #         successThreshold: 1
-          #         timeoutSeconds: 1
-          #   resources:
-          #     requests:
-          #       cpu: 100m
-          #       memory: 512Mi
-          #     limits:
-          #       memory: 2Gi
-          #   securityContext:
-          #     allowPrivilegeEscalation: false
-          #     readOnlyRootFilesystem: false
-          #     capabilities: { drop: ["ALL"] }
+          # Authentik (Worker)
+          worker:
+            image:
+              repository: ghcr.io/goauthentik/server
+              tag: "2025.6.3"
+            args:
+              - worker
+            env: *env
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /-/health/live/
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /-/health/ready/
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
           
           # GeoIP Updater
           geoip:
@@ -204,27 +170,19 @@ spec:
               repository: ghcr.io/maxmind/geoipupdate
               tag: "v7.1"
             env:
-              TZ: "${TIMEZONE}"
-              GEOIPUPDATE_EDITION_IDS:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: GEOIPUPDATE_EDITION_IDS
-              GEOIPUPDATE_FREQUENCY:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: GEOIPUPDATE_FREQUENCY
               GEOIPUPDATE_ACCOUNT_ID:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: GEOIPUPDATE_ACCOUNT_ID
+              GEOIPUPDATE_EDITION_IDS: "GeoLite2-City GeoLite2-ASN"
+              GEOIPUPDATE_FREQUENCY: "8"
               GEOIPUPDATE_LICENSE_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: GEOIPUPDATE_LICENSE_KEY
+              TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true
@@ -244,7 +202,7 @@ spec:
                 cpu: 5m
                 memory: 128Mi
               limits:
-                memory: 512Mi
+                memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
@@ -263,34 +221,21 @@ spec:
         existingClaim: authentik-config
         advancedMounts:
           authentik:
-            init-db:
-              - path: /var/lib/postgresql/data
-                readOnly: false
-                subPath: postgresql
             init-redis:
               - path: /data
                 readOnly: false
                 subPath: redis
-            # server:
-            #   - path: /media
-            #     readOnly: false
-            #     subPath: authentik/media
-            #   - path: /templates
-            #     readOnly: false
-            #     subPath: authentik/templates
-            #   - path: /geoip
-            #     readOnly: false
-            #     subPath: geoip
-            # worker:
-            #   - path: /media
-            #     readOnly: false
-            #     subPath: authentik/media
-            #   - path: /templates
-            #     readOnly: false
-            #     subPath: authentik/templates
-            #   - path: /geoip
-            #     readOnly: false
-            #     subPath: geoip
+            server: &mounts
+              - path: /media
+                readOnly: false
+                subPath: authentik/media
+              - path: /templates
+                readOnly: false
+                subPath: authentik/templates
+              - path: /geoip
+                readOnly: false
+                subPath: geoip
+            worker: *mounts
             geoip:
               - path: /usr/share/GeoIP
                 readOnly: false
@@ -308,23 +253,18 @@ spec:
           - path: /tmp
             subPath: tmp
 
-    # route:
-    #   server:
-    #     hostnames:
-    #       - "auth.${DOMAIN_ID}"
-    #     parentRefs:
-    #       - name: external
-    #         namespace: kube-system
-    #         sectionName: https-id
+    route:
+      server:
+        hostnames:
+          - "auth.${DOMAIN_ID}"
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https-id
 
     service:
-      # server:
-      #   controller: *app
-      #   ports:
-      #     http:
-      #       port: *port
-      init-db:
+      server:
         controller: *app
         ports:
-          postgres:
-            port: 5432
+          http:
+            port: *port
