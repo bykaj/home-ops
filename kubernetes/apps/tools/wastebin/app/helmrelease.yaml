@@ -82,7 +82,6 @@ spec:
         existingClaim: wastebin-config
         globalMounts:
           - path: /data
-
       tmpfs:
         type: emptyDir
         globalMounts:
