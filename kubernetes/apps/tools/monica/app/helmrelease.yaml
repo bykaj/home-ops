@@ -161,10 +161,22 @@ spec:
             <<: *app
             command:
               - cron.sh
+            resources:
+              requests:
+                cpu: 5m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
           queue:
             <<: *app
             command:
               - queue.sh
+            resources:
+              requests:
+                cpu: 5m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
 
     persistence:
       config:
