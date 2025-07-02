@@ -106,97 +106,97 @@ spec:
             restartPolicy: Always
 
         containers:
-          # Authentik (Server)
-          server:
-            image:
-              repository: ghcr.io/goauthentik/server
-              tag: "2025.6.3"
-            args:
-              - server
-            envFrom:
-              - secretRef:
-                  name: *secret
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/live/
-                    port: &port 9000
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/ready/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-            resources:
-              requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+          # # Authentik (Server)
+          # server:
+          #   image:
+          #     repository: ghcr.io/goauthentik/server
+          #     tag: "2025.6.3"
+          #   args:
+          #     - server
+          #   envFrom:
+          #     - secretRef:
+          #         name: *secret
+          #   probes:
+          #     liveness: &probes
+          #       enabled: true
+          #       custom: true
+          #       spec:
+          #         failureThreshold: 3
+          #         httpGet:
+          #           path: /-/health/live/
+          #           port: &port 9000
+          #         initialDelaySeconds: 5
+          #         periodSeconds: 10
+          #         successThreshold: 1
+          #         timeoutSeconds: 1
+          #     readiness:
+          #       enabled: true
+          #       custom: true
+          #       spec:
+          #         failureThreshold: 3
+          #         httpGet:
+          #           path: /-/health/ready/
+          #           port: *port
+          #         initialDelaySeconds: 5
+          #         periodSeconds: 10
+          #         successThreshold: 1
+          #         timeoutSeconds: 1
+          #   resources:
+          #     requests:
+          #       cpu: 100m
+          #       memory: 512Mi
+          #     limits:
+          #       memory: 2Gi
+          #   securityContext:
+          #     allowPrivilegeEscalation: false
+          #     readOnlyRootFilesystem: false
+          #     capabilities: { drop: ["ALL"] }
 
-          # Authentik (Worker)
-          worker:
-            image:
-              repository: ghcr.io/goauthentik/server
-              tag: "2025.6.3"
-            args:
-              - worker
-            envFrom:
-              - secretRef:
-                  name: *secret
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/live/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/ready/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-            resources:
-              requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+          # # Authentik (Worker)
+          # worker:
+          #   image:
+          #     repository: ghcr.io/goauthentik/server
+          #     tag: "2025.6.3"
+          #   args:
+          #     - worker
+          #   envFrom:
+          #     - secretRef:
+          #         name: *secret
+          #   probes:
+          #     liveness: &probes
+          #       enabled: true
+          #       custom: true
+          #       spec:
+          #         failureThreshold: 3
+          #         httpGet:
+          #           path: /-/health/live/
+          #           port: *port
+          #         initialDelaySeconds: 5
+          #         periodSeconds: 10
+          #         successThreshold: 1
+          #         timeoutSeconds: 1
+          #     readiness:
+          #       enabled: true
+          #       custom: true
+          #       spec:
+          #         failureThreshold: 3
+          #         httpGet:
+          #           path: /-/health/ready/
+          #           port: *port
+          #         initialDelaySeconds: 5
+          #         periodSeconds: 10
+          #         successThreshold: 1
+          #         timeoutSeconds: 1
+          #   resources:
+          #     requests:
+          #       cpu: 100m
+          #       memory: 512Mi
+          #     limits:
+          #       memory: 2Gi
+          #   securityContext:
+          #     allowPrivilegeEscalation: false
+          #     readOnlyRootFilesystem: false
+          #     capabilities: { drop: ["ALL"] }
           
           # GeoIP Updater
           geoip:
@@ -271,26 +271,26 @@ spec:
               - path: /data
                 readOnly: false
                 subPath: redis
-            server:
-              - path: /media
-                readOnly: false
-                subPath: authentik/media
-              - path: /templates
-                readOnly: false
-                subPath: authentik/templates
-              - path: /geoip
-                readOnly: false
-                subPath: geoip
-            worker:
-              - path: /media
-                readOnly: false
-                subPath: authentik/media
-              - path: /templates
-                readOnly: false
-                subPath: authentik/templates
-              - path: /geoip
-                readOnly: false
-                subPath: geoip
+            # server:
+            #   - path: /media
+            #     readOnly: false
+            #     subPath: authentik/media
+            #   - path: /templates
+            #     readOnly: false
+            #     subPath: authentik/templates
+            #   - path: /geoip
+            #     readOnly: false
+            #     subPath: geoip
+            # worker:
+            #   - path: /media
+            #     readOnly: false
+            #     subPath: authentik/media
+            #   - path: /templates
+            #     readOnly: false
+            #     subPath: authentik/templates
+            #   - path: /geoip
+            #     readOnly: false
+            #     subPath: geoip
             geoip:
               - path: /usr/share/GeoIP
                 readOnly: false
@@ -308,18 +308,23 @@ spec:
           - path: /tmp
             subPath: tmp
 
-    route:
-      server:
-        hostnames:
-          - "auth.${DOMAIN_ID}"
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https-id
+    # route:
+    #   server:
+    #     hostnames:
+    #       - "auth.${DOMAIN_ID}"
+    #     parentRefs:
+    #       - name: external
+    #         namespace: kube-system
+    #         sectionName: https-id
 
     service:
-      server:
+      # server:
+      #   controller: *app
+      #   ports:
+      #     http:
+      #       port: *port
+      init-db:
         controller: *app
         ports:
-          http:
-            port: *port
+          postgres:
+            port: 5432
