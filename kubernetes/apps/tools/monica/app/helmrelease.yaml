@@ -1,0 +1,206 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app monica
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      monica:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:          
+          # Meilisearch
+          init-meilisearch:
+            image:
+              repository: getmeili/meilisearch
+              tag: v1.15.2@sha256:fe500cf9cca05cb9f027981583f28eccf17d35d94499c1f8b7b844e7418152fc
+            env:
+              TZ: "${TIMEZONE}"
+              MEILI_NO_ANALYTICS: "true"
+              MEILI_ENV: "production"
+              MEILI_MASTER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: &secret monica-secret
+                    key: MEILISEARCH_KEY
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 7700
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+              runAsNonRoot: true
+              runAsUser: 4000
+              runAsGroup: 4000
+              fsGroup: 4000
+              fsGroupChangePolicy: OnRootMismatch
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+            restartPolicy: Always
+
+          # Redis
+          redis:
+            image:
+              repository: redis
+              tag: "8.0.2"
+            args:
+              - "--save 60 1"
+              - "--loglevel warning"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - redis-cli ping
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+
+        containers:
+          # Monica
+          app:
+            image:
+              repository: monica
+              tag: 5.0-fpm@sha256:6ec4f3989d34b8d5591aeaa05babac5b9c18d886f2075ca9a29992c6df71c93c
+            env:
+              # Ref: https://github.com/monicahq/monica/blob/4.x/.env.example
+              ALLOW_STATISTICS_THROUGH_PUBLIC_API_ACCESS: "false"
+              APP_DISABLE_SIGNUP: "false"
+              APP_ENV: "production"
+              APP_SIGNUP_DOUBLE_OPTIN: "true"
+              APP_TRUSTED_CLOUDFLARE: "true"
+              APP_TRUSTED_PROXIES: "127.0.0.1/32,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
+              APP_URL: "https://monica.${DOMAIN_APP_APPS}"
+              CACHE_DRIVER: "redis"
+              DAV_ENABLED: "true"
+              DB_CONNECTION: "pgsql"
+              DB_HOST: "${DB_SERVER}"
+              DB_PORT: "5432"
+              DEFAULT_MAX_STORAGE_SIZE: "1024" # 1024MB
+              DEFAULT_MAX_UPLOAD_SIZE: "10240" # 10MB
+              ENABLE_GEOLOCATION: "true"
+              ENABLE_WEATHER: "true"
+              FILESYSTEM_DISK: "s3"
+              HASH_LENGTH: "32"
+              LOG_CHANNEL: "daily"
+              MAIL_ENCRYPTION: "tls"
+              MAIL_MAILER: "smtp"
+              MAIL_PORT: "587"
+              MEILISEARCH_HOST: http://localhost:7700
+              MFA_ENABLED: "true"
+              QUEUE_CONNECTION: "redis"
+              RATE_LIMIT_PER_MINUTE_API: "60"
+              RATE_LIMIT_PER_MINUTE_OAUTH: "5"
+              REDIS_HOST: "localhost"
+              S3_PATH_STYLE: "true"
+              SESSION_DRIVER: "redis"
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 3000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 20m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+    persistence:
+      config:
+        existingClaim: monica-config
+        advancedMounts:
+          monica:
+            init-meilisearch:
+              - path: /meili_data
+                subPath: meilisearch
+            init-redis:
+              - path: /data
+                subPath: redis
+            app:
+              - path: /var/www/html/storage
+                subPath: monica
+      backups:
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/Monica
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app-apps
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+                
+    service:
+      app:
+        primary: true
+        controller: *app
+        ports:
+          http:
+            port: *port

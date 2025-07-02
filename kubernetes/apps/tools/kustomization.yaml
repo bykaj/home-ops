@@ -10,6 +10,7 @@ resources:
   - ./dsmr-reader/ks.yaml
   - ./it-tools/ks.yaml
   - ./linkwarden/ks.yaml
+  - ./monica/ks.yaml
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
