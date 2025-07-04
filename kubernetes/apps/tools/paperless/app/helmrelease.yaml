@@ -20,42 +20,12 @@ spec:
     controllers:
       paperless:
         annotations:
-          reloader.stakater.com/reload: &secret paperless-secret
+          reloader.stakater.com/auto: "true"
         containers:
-          redis:
-            image:
-              repository: redis
-              tag: "8.0.2"
-            args:
-              - "--save 60 1"
-              - "--loglevel warning"
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - sh
-                      - -c
-                      - redis-cli ping
-                  initialDelaySeconds: 5
-                  periodSeconds: 5
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 5m
-                memory: 32Mi
-              limits:
-                memory: 128Mi
-          paperless:
+          app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 2.17.1
-            dependsOn:
-              - redis
+              tag: 2.17.1@sha256:ab72a0ab42a792228cdbe83342b99a48acd49f7890ae54b1ae8e04401fba24ee
             env:
               # OIDC integration
               PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
@@ -77,8 +47,6 @@ spec:
               PAPERLESS_OCR_LANGUAGES: nld
               # Configure database
               PAPERLESS_DBHOST: "${DB_SERVER}"
-              # Configure Redis integration
-              PAPERLESS_REDIS: redis://localhost:6379
               # s6 overlay fixes
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
@@ -86,7 +54,7 @@ spec:
               S6_VERBOSITY: "2"
             envFrom:
               - secretRef:
-                  name: *secret
+                  name: &secret paperless-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -109,27 +77,17 @@ spec:
     persistence:
       config:
         existingClaim: paperless-config
-        advancedMounts:
-          paperless:
-            redis:
-              - path: /data
-                readOnly: false
-                subPath: redis
-            paperless:
-              - path: /usr/src/paperless/data
-                readOnly: false
-                subPath: paperless
+        globalMounts:
+          - path: /usr/src/paperless/data
       archive:
         existingClaim: smb-archive
-        advancedMounts:
-          paperless:
-            paperless:
-              - path: /usr/src/paperless/consume
-                subPath: consume
-              - path: /usr/src/paperless/export
-                subPath: export
-              - path: /usr/src/paperless/media
-                subPath: media
+        globalMounts:
+          - path: /usr/src/paperless/consume
+            subPath: consume
+          - path: /usr/src/paperless/export
+            subPath: export
+          - path: /usr/src/paperless/media
+            subPath: media
       backups:
         existingClaim: smb-backups
         globalMounts:
@@ -140,17 +98,14 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-        advancedMounts:
-          paperless:
-            paperless:
-              - path: /usr/src/paperless/data/log
-                subPath: log
-              # s6 overlay fixes
-              # Ref: https://github.com/just-containers/s6-overlay/issues/600
-              - path: /run
-                subPath: run
+          - path: /usr/src/paperless/data/log
+            subPath: log
+          # s6 overlay fixes
+          # Ref: https://github.com/just-containers/s6-overlay/issues/600
+          - path: /run
+            subPath: run
     route:
-      paperless:
+      app:
         hostnames:
           - "archive.${DOMAIN_APP_APPS}"
         parentRefs:
@@ -162,7 +117,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      paperless:
+      app:
         primary: true
         controller: *app
         ports:
