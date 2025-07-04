@@ -21,11 +21,13 @@ spec:
     controllers:
       dragonfly-operator:
         strategy: RollingUpdate
+        serviceAccount:
+          identifier: *app
         containers:
           app:
             image:
               repository: ghcr.io/dragonflydb/operator
-              tag: v1.1.7
+              tag: v1.1.11@sha256:11cef45ec1079b9d97930fc99ecd08ba29d4eca55cdb45887cb0ac40ee4e4d24
             command: ["/manager"]
             args:
               - --health-probe-bind-address=:8081
@@ -93,5 +95,15 @@ spec:
             interval: 1m
             scrapeTimeout: 10s
     serviceAccount:
-      create: true
-      name: *app
+      dragonfly-operator: {}
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |-
+              apiVersion: monitoring.coreos.com/v1
+              kind: ServiceMonitor
+              metadata:
+                name: dragonfly-operator
+                namespace: database
+              spec:
+                fallbackScrapeProtocol: PrometheusText1.0.0
