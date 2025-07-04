@@ -34,6 +34,8 @@ spec:
       env:
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: "${DOMAIN_ID}"
+        - name: AUTHENTIK_REDIS__DB
+          value: "1"
         - name: TZ
           value: "${TIMEZONE}"
       envFrom:
