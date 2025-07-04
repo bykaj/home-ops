@@ -1,222 +1,151 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app authentik
+  name: authentik
 spec:
   interval: 1h
-  chartRef:
-    kind: OCIRepository
-    name: app-template
+  chart:
+    spec:
+      chart: authentik
+      version: 2025.6.3
+      sourceRef:
+        kind: HelmRepository
+        name: authentik
+        namespace: flux-system
+      interval: 5m
   install:
     remediation:
-      retries: -1
+      retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   values:
-    controllers:
-      authentik:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        containers:
-          # Authentik (Server)
-          server:
-            image:
-              repository: ghcr.io/goauthentik/server
-              tag: "2025.6.3"
-            args:
-              - server
-            env: &env
-              AUTHENTIK_COOKIE_DOMAIN: "${DOMAIN_ID}"
-              AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
-              AUTHENTIK_DISABLE_UPDATE_CHECK: "false"
-              AUTHENTIK_EMAIL__PORT: "587"
-              AUTHENTIK_EMAIL__TIMEOUT: "10"
-              AUTHENTIK_EMAIL__USE_SSL: "false"
-              AUTHENTIK_EMAIL__USE_TLS: "true"
-              AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
-              AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS: "127.0.0.1/32,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-              AUTHENTIK_LOG_LEVEL: "info"
-              AUTHENTIK_POSTGRESQL__HOST: "${DB_SERVER}"
-              TZ: "${TIMEZONE}"
-            envFrom:
-              - secretRef:
-                  name: &secret authentik-secret
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/live/
-                    port: &port 9000
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/ready/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-            resources:
-              requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+    # Global configuration
+    global:
+      priorityClassName: system-cluster-critical
+      podAnnotations:
+        reloader.stakater.com/auto: "true"
+      deploymentStrategy:
+        type: RollingUpdate
+      env:
+        AUTHENTIK_COOKIE_DOMAIN: "${DOMAIN_ID}"
+        TZ: "${TIMEZONE}"
+      envFrom:
+        - secretRef:
+            name: &secret authentik-secret
+      volumeMounts:
+        - name: config
+          mountPath: /media
+          subPath: authentik/media
+        - name: config
+          mountPath: /templates
+          subPath: authentik/templates
+        - name: config
+          mountPath: /geoip
+          subPath: geoip
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: authentik-config
 
-          # Authentik (Worker)
-          worker:
-            image:
-              repository: ghcr.io/goauthentik/server
-              tag: "2025.6.3"
-            args:
-              - worker
-            env: *env
-            envFrom:
-              - secretRef:
-                  name: *secret
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/live/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /-/health/ready/
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-            resources:
-              requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-          
-          # GeoIP Updater
-          geoip:
-            image:
-              repository: ghcr.io/maxmind/geoipupdate
-              tag: "v7.1"
-            env:
-              GEOIPUPDATE_ACCOUNT_ID:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: GEOIPUPDATE_ACCOUNT_ID
-              GEOIPUPDATE_EDITION_IDS: "GeoLite2-City GeoLite2-ASN"
-              GEOIPUPDATE_FREQUENCY: "8"
-              GEOIPUPDATE_LICENSE_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: GEOIPUPDATE_LICENSE_KEY
-              TZ: "${TIMEZONE}"
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - sh
-                      - -c
-                      - test -s /usr/share/GeoIP/GeoLite2-City.mmdb
-                  initialDelaySeconds: 30
-                  periodSeconds: 60
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 5m
-                memory: 128Mi
-              limits:
-                memory: 256Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+    # Authentik configuration
+    authentik:
+      disable_startup_analytics: true
+      disable_update_check: false
+      email:
+        port: 587
+        timeout: 30
+        use_tls: true
+      error_reporting:
+        enabled: false
+      events:
+        context_processors:
+          geoip: "/geoip/GeoLite2-City.mmdb"
+          asn: "/geoip/GeoLite2-ASN.mmdb"
+      log_level: "info"
+      postgresql:
+        host: "${DB_SERVER}"
+      redis:
+        host: "${REDIS_SERVER}"
 
-    persistence:
-      config:
-        existingClaim: authentik-config
-        advancedMounts:
-          authentik:
-            server: &mounts
-              - path: /media
-                readOnly: false
-                subPath: authentik/media
-              - path: /templates
-                readOnly: false
-                subPath: authentik/templates
-              - path: /geoip
-                readOnly: false
-                subPath: geoip
-            worker: *mounts
-            geoip:
-              - path: /usr/share/GeoIP
-                readOnly: false
-                subPath: geoip
-      backups:
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: /mnt/vault-alpha/Backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/Authentik
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
+    # GeoIP Updater
+    geoip:
+      enabled: true
+      editionIds: "GeoLite2-City GeoLite2-ASN"
+      existingSecret:
+        secretName: *secret
+        accountId: "GEOIPUPDATE_ACCOUNT_ID"
+        licenseKey: "GEOIPUPDATE_LICENSE_KEY"
+      updateInterval: 8
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+      resources:
+        requests:
+          cpu: 5m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+      volumeMounts:
+        - name: config
+          mountPath: /usr/share/GeoIP
+          subPath: geoip
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: authentik-config
 
-    route:
-      server:
-        hostnames:
-          - "auth.${DOMAIN_ID}"
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https-id
+    # Authentik Server
+    server:
+      replicas: 1
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          interval: 1m
+      resources:
+        requests:
+          cpu: 50m
+          memory: 512Mi
+        limits:
+          memory: 2Gi
+      volumeMounts:
+        - name: custom-assets
+          mountPath: /web/dist/custom.css
+          subPath: custom.css
+      volumes:
+        - name: custom-assets
+          configMap:
+            name: authentik-custom-assets
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - "auth.${DOMAIN_ID}"
+          parentRefs:
+            - name: external
+              namespace: kube-system
+              sectionName: https-id
 
-    service:
-      server:
-        controller: *app
-        ports:
-          http:
-            port: *port
+    # Authentik Worker
+    worker:
+      replicas: 1
+      containerSecurityContext:
+        readOnlyRootFilesystem: true  
+      resources:
+        requests:
+          cpu: 20m
+          memory: 256Mi
+        limits:
+          memory: 512Mi
+    
+    # Prometheus
+    prometheus:
+      rules:
+        enabled: true
+        namespace: security

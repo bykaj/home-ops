@@ -6,6 +6,6 @@ metadata:
   name: authentik
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   url: https://charts.goauthentik.io/
-  timeout: 3m
+  timeout: 5m

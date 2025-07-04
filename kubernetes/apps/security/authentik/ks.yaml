@@ -22,6 +22,8 @@ spec:
       namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
+    - name: dragonfly-cluster
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/security/authentik/app
   postBuild:
