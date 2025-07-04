@@ -12,8 +12,8 @@ spec:
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        namespace: authentik
         name: authentik
+        namespace: flux-system
   interval: 1h
   driftDetection:
     mode: enabled
