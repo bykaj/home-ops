@@ -38,10 +38,10 @@ spec:
       volumeMounts:
         - name: config
           mountPath: /media
-          subPath: authentik/media
+          subPath: media
         - name: config
           mountPath: /templates
-          subPath: authentik/templates
+          subPath: templates
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -93,7 +93,7 @@ spec:
           interval: 1m
       resources:
         requests:
-          cpu: 50m
+          cpu: 100m
           memory: 512Mi
         limits:
           memory: 2Gi
@@ -124,7 +124,7 @@ spec:
         readOnlyRootFilesystem: true  
       resources:
         requests:
-          cpu: 20m
+          cpu: 50m
           memory: 512Mi
         limits:
           memory: 1Gi
