@@ -172,14 +172,6 @@ spec:
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
 
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
-        
     persistence:
       config:
         existingClaim: authentik-config
