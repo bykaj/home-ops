@@ -5,24 +5,18 @@ kind: HelmRelease
 metadata:
   name: authentik
 spec:
-  interval: 1h
   chart:
     spec:
       chart: authentik
       version: 2025.6.3
+      reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
+        namespace: authentik
         name: authentik
-        namespace: flux-system
-      interval: 5m
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
+  interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     # Global configuration
     global:
