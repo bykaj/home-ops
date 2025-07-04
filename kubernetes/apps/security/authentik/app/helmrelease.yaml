@@ -80,8 +80,6 @@ spec:
         accountId: "GEOIPUPDATE_ACCOUNT_ID"
         licenseKey: "GEOIPUPDATE_LICENSE_KEY"
       updateInterval: 8
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
       resources:
         requests:
           cpu: 5m
