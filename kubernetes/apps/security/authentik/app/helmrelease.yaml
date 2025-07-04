@@ -46,9 +46,6 @@ spec:
         - name: config
           mountPath: /templates
           subPath: authentik/templates
-        - name: config
-          mountPath: /geoip
-          subPath: geoip
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -91,14 +88,6 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
-      volumeMounts:
-        - name: config
-          mountPath: /usr/share/GeoIP
-          subPath: geoip
-      volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: authentik-config
 
     # Authentik Server
     server:
