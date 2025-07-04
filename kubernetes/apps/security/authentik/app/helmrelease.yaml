@@ -32,8 +32,10 @@ spec:
       deploymentStrategy:
         type: RollingUpdate
       env:
-        AUTHENTIK_COOKIE_DOMAIN: "${DOMAIN_ID}"
-        TZ: "${TIMEZONE}"
+        - name: AUTHENTIK_COOKIE_DOMAIN
+          value: "${DOMAIN_ID}"
+        - name: TZ
+          value: "${TIMEZONE}"
       envFrom:
         - secretRef:
             name: &secret authentik-secret
