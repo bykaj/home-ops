@@ -117,7 +117,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      app:
+      paperless:
         primary: true
         controller: *app
         ports:
