@@ -36,24 +36,24 @@ spec:
       memory: 512Mi
     limits:
       memory: 4Gi
-  backup:
-    retentionPolicy: 30d
-    barmanObjectStore: &barmanObjectStore
-      data:
-        compression: bzip2
-      wal:
-        compression: bzip2
-        maxParallel: 8
-      destinationPath: "s3://cloudnative-pg"
-      endpointURL: "https://gateway.storjshare.io"
-      serverName: *currentCluster
-      s3Credentials:
-        accessKeyId:
-          name: *secret
-          key: S3_ACCESS_KEY
-        secretAccessKey:
-          name: *secret
-          key: S3_SECRET_KEY
+  # backup:
+  #   retentionPolicy: 30d
+  #   barmanObjectStore: &barmanObjectStore
+  #     data:
+  #       compression: bzip2
+  #     wal:
+  #       compression: bzip2
+  #       maxParallel: 8
+  #     destinationPath: "s3://cloudnative-pg"
+  #     endpointURL: "https://gateway.storjshare.io"
+  #     serverName: *currentCluster
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: *secret
+  #         key: S3_ACCESS_KEY
+  #       secretAccessKey:
+  #         name: *secret
+  #         key: S3_SECRET_KEY
 
   bootstrap:
     # Creates an empty/new cluster
@@ -69,6 +69,22 @@ spec:
 
   externalClusters:
     - name: *previousCluster
+      # barmanObjectStore:
+      #   <<: *barmanObjectStore
+      #   serverName: *previousCluster
       barmanObjectStore:
-        <<: *barmanObjectStore
+        data:
+          compression: bzip2
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: "s3://cloudnative-pg"
+        endpointURL: "https://gateway.storjshare.io"
         serverName: *previousCluster
+        s3Credentials:
+          accessKeyId:
+            name: *secret
+            key: S3_ACCESS_KEY
+          secretAccessKey:
+            name: *secret
+            key: S3_SECRET_KEY
