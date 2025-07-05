@@ -26,8 +26,6 @@ spec:
       deploymentStrategy:
         type: RollingUpdate
       env:
-        - name: AUTHENTIK_COOKIE_DOMAIN
-          value: "${DOMAIN_ID}"
         - name: AUTHENTIK_REDIS__DB
           value: "1"
         - name: TZ
@@ -69,7 +67,7 @@ spec:
 
     # GeoIP Updater
     geoip:
-      enabled: true
+      enabled: false
       editionIds: "GeoLite2-City GeoLite2-ASN"
       existingSecret:
         secretName: *secret
