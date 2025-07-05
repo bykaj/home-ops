@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app loki
-  namespace: &namespace monitoring
+  name: &app blackbox-exporter
+  namespace: &namespace observability
 spec:
   targetNamespace: *namespace
   commonMetadata:
@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   interval: 30m
   timeout: 5m
-  path: ./kubernetes/apps/monitoring/loki/app
+  path: ./kubernetes/apps/observability/blackbox-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository

@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app grafana
-  namespace: &namespace monitoring
+  name: &app kube-prometheus-stack
+  namespace: &namespace observability
 spec:
   commonMetadata:
     labels:
@@ -14,13 +14,16 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 30m
   timeout: 5m
-  path: ./kubernetes/apps/monitoring/grafana/app
+  path: ./kubernetes/apps/observability/kube-prometheus-stack/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Grafana
+      GATUS_NAME: Prometheus
+      GATUS_SUBDOMAIN: prometheus
   prune: true
   sourceRef:
     kind: GitRepository
@@ -28,4 +31,3 @@ spec:
     namespace: flux-system
   targetNamespace: *namespace
   wait: false
-
