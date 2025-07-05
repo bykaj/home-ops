@@ -27,7 +27,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: monica
+      GATUS_NAME: Monica
       VOLSYNC_CLAIM: monica-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
