@@ -6,6 +6,8 @@ metadata:
   name: &currentCluster postgres-v17
 spec:
   instances: 3
+  # WARNING: newer versions of the Postgres image have an incompatible version of the AWS S3 SDK (in Barman) for non-AWS S3 storage!
+  # Ref: https://forum.storj.io/t/s3-put-stopped-working-with-missing-content-length-http-header/30176
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   primaryUpdateStrategy: unsupervised
   replicationSlots:
