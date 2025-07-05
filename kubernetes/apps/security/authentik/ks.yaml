@@ -28,7 +28,7 @@ spec:
   path: ./kubernetes/apps/security/authentik/app
   postBuild:
     substitute:
-      APP: *app
+      APP: authentik-server
       GATUS_NAME: Authentik
       GATUS_DOMAIN: auth.cetana.id
       VOLSYNC_CLAIM: authentik-config
