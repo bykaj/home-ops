@@ -102,7 +102,7 @@ spec:
           app: &app
             image:
               repository: monica
-              tag: 5.0-apache@sha256:ea8b088f82328fc65228ec8577576886690f48ba9425cc590fd115bd1856ed78
+              tag: 5.0-apache@sha256:ddb2e67b1e91ed69b200cdb12a6c6a7dde09bdec89e25f55aa89f3db31188a5a
             env:
               # Ref: https://github.com/monicahq/monica/blob/4.x/.env.example
               ALLOW_STATISTICS_THROUGH_PUBLIC_API_ACCESS: "false"
