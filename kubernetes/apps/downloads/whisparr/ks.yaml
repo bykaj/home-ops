@@ -29,8 +29,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CLAIM: whisparr-config
-      VOLSYNC_CAPACITY: 1Gi
-      VOLSYNC_CACHE_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_CACHE_CAPACITY: 2Gi
   prune: true
   retryInterval: 2m
   sourceRef:
