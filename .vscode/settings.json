@@ -24,6 +24,7 @@
         ".github/workflows": "ci",
         ".private": "archive",
         ".renovate": "robot",
+        "home-ops": "git",
         "bootstrap": "seeders",
         "flux": "pipe",
         "talos": "linux",
