@@ -66,43 +66,12 @@ spec:
                 memory: 2Gi
             restartPolicy: Always
 
-          # Redis
-          init-redis:
-            image:
-              repository: redis
-              tag: "8.0.2"
-            args:
-              - "--save 60 1"
-              - "--loglevel warning"
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - sh
-                      - -c
-                      - redis-cli ping
-                  initialDelaySeconds: 5
-                  periodSeconds: 5
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 5m
-                memory: 32Mi
-              limits:
-                memory: 128Mi
-            restartPolicy: Always
-
         containers:
           # Monica
           app: &app
             image:
               repository: monica
-              tag: 5.0-apache@sha256:ddb2e67b1e91ed69b200cdb12a6c6a7dde09bdec89e25f55aa89f3db31188a5a
+              tag: 5.0.0-beta.5-apache@sha256:ddb2e67b1e91ed69b200cdb12a6c6a7dde09bdec89e25f55aa89f3db31188a5a
             env:
               # Ref: https://github.com/monicahq/monica/blob/4.x/.env.example
               ALLOW_STATISTICS_THROUGH_PUBLIC_API_ACCESS: "false"
@@ -119,6 +88,7 @@ spec:
               DB_PORT: "5432"
               DEFAULT_MAX_STORAGE_SIZE: "1024" # 1024MB
               DEFAULT_MAX_UPLOAD_SIZE: "10240" # 10MB
+              DEFAULT_STORAGE_LIMIT: "1024" # 1024MB
               ENABLE_GEOLOCATION: "true"
               ENABLE_WEATHER: "true"
               FILESYSTEM_DISK: "s3"
@@ -132,9 +102,10 @@ spec:
               QUEUE_CONNECTION: "redis"
               RATE_LIMIT_PER_MINUTE_API: "60"
               RATE_LIMIT_PER_MINUTE_OAUTH: "5"
-              REDIS_HOST: "localhost"
+              REDIS_HOST: "${REDIS_SERVER}"
               S3_PATH_STYLE: "true"
               SESSION_DRIVER: "redis"
+              TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
                   name: *secret
