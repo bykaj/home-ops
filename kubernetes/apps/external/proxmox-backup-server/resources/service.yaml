@@ -4,7 +4,9 @@ kind: Service
 metadata:
   name: proxmox-backup-server
 spec:
+  externalName: 10.73.2.10
+  type: ExternalName
   ports:
-    - name: https
-      port: 8007
-      targetPort: 8007
+  - name: https
+    port: 8007
+    targetPort: 8007
