@@ -33,6 +33,15 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_APP_APPS/./-}-tls
+    - name: https-app-apps-tls
+      protocol: TLS
+      port: 443
+      hostname: "*.${DOMAIN_APP_APPS}"
+      tls:
+        mode: Passthrough
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: http-io
       protocol: HTTP
       port: 80
