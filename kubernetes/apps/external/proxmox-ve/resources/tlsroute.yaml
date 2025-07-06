@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TLSRoute
 metadata:
-  name: proxmox-ve
+  name: &app proxmox-ve
 spec:
   hostnames: ["pve.${DOMAIN_APP_APPS}"]
   parentRefs:
@@ -11,12 +11,5 @@ spec:
       sectionName: tls-app-apps
   rules:
     - backendRefs:
-        - name: proxmox-ve-icarus
+        - name: *app
           port: 443
-          weight: 10
-        - name: proxmox-ve-leonis
-          port: 443
-          weight: 10
-        - name: proxmox-ve-zeus
-          port: 443
-          weight: 10

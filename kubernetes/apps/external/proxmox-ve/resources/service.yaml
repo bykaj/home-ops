@@ -2,27 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxmox-ve-icarus
-spec:
-  ports:
-  - name: https
-    port: 443
-    targetPort: 8006
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: proxmox-ve-leonis
-spec:
-  ports:
-  - name: https
-    port: 443
-    targetPort: 8006
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: proxmox-ve-zeus
+  name: proxmox-ve
 spec:
   ports:
   - name: https
