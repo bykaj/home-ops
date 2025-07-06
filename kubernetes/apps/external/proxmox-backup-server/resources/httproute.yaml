@@ -7,7 +7,7 @@ metadata:
 spec:
   hostnames: ["pbs.${DOMAIN_APP_APPS}"]
   parentRefs:
-    - name: internal
+    - name: services
       namespace: kube-system
       sectionName: https-app-apps
   rules:
@@ -17,4 +17,4 @@ spec:
             value: /
       backendRefs:
         - name: *app
-          port: 443
+          port: 8007
