@@ -1,0 +1,17 @@
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: &app proxmox-backup-server
+  labels:
+    kubernetes.io/service-name: *app
+    endpointslice.kubernetes.io/managed-by: cluster-admins
+addressType: FQDN
+endpoints:
+  - addresses:
+      - "${NFS_SERVER}"
+    conditions:
+      ready: true
+ports:
+  - name: https
+    port: 8007
