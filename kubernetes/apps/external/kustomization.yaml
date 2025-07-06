@@ -6,5 +6,5 @@ namespace: external
 components:
   - ../../components/common
 resources:
-  - ./icarus-kvm/ks.yaml
+  - ./kvm-icarus/ks.yaml
   - ./proxmox-backup-server/ks.yaml
