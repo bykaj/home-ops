@@ -10,7 +10,13 @@ addressType: IPv4
 endpoints:
   - addresses:
       - 10.73.1.10
+    conditions:
+      ready: true
+  - addresses:
       - 10.73.1.20
+    conditions:
+      ready: true
+  - addresses:
       - 10.73.1.30
     conditions:
       ready: true
