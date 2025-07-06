@@ -7,4 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./kvm-icarus/ks.yaml
-  - ./proxmox-backup-server/ks.yaml
+  #- ./proxmox-backup-server/ks.yaml
