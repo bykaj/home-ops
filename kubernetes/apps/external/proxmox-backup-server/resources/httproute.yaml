@@ -17,4 +17,4 @@ spec:
             value: /
       backendRefs:
         - name: *app
-          port: 8007
+          port: 443
