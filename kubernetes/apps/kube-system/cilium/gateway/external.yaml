@@ -4,10 +4,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: external
-  labels:
-    app.kubernetes.io/changed-on: 20250615T185600
   annotations:
-    external-dns.alpha.kubernetes.io/target: "proxy.${DOMAIN_NET}"
+    external-dns.alpha.kubernetes.io/target: "external.${DOMAIN_NET}"
 spec:
   gatewayClassName: cilium
   addresses:
@@ -15,7 +13,7 @@ spec:
       value: "10.73.10.20"
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "proxy.${DOMAIN_NET}"
+      external-dns.alpha.kubernetes.io/hostname: "external.${DOMAIN_NET}"
   listeners:
     - name: http-net
       protocol: HTTP

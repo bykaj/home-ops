@@ -4,10 +4,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: internal
-  labels:
-    app.kubernetes.io/changed-on: 20250615T185600
   annotations:
-    external-dns.alpha.kubernetes.io/target: "proxy.home.${DOMAIN_NET}"
+    external-dns.alpha.kubernetes.io/target: "internal.home.${DOMAIN_NET}"
 spec:
   gatewayClassName: cilium
   addresses:
@@ -15,7 +13,7 @@ spec:
       value: "10.73.10.10"
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "proxy.home.${DOMAIN_NET}"
+      external-dns.alpha.kubernetes.io/hostname: "internal.home.${DOMAIN_NET}"
   listeners:
     - name: http-net
       protocol: HTTP
@@ -161,42 +159,6 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_ST/./-}-tls
-    - name: http-net-home
-      protocol: HTTP
-      port: 80
-      hostname: "*.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: https-net-home
-      protocol: HTTPS
-      port: 443
-      hostname: "*.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: home-${DOMAIN_NET/./-}-tls
-    - name: http-net-home-kvm
-      protocol: HTTP
-      port: 80
-      hostname: "*.kvm.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: https-net-home-kvm
-      protocol: HTTPS
-      port: 443
-      hostname: "*.kvm.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: kvm-home-${DOMAIN_NET/./-}-tls
     - name: http-lol-apex
       protocol: HTTP
       port: 80
@@ -233,5 +195,3 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_LOL/./-}-tls
-
-
