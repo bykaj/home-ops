@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: external
 components:
   - ../../components/common
-resources: []
-  #- ./proxmox-backup-server/ks.yaml
+resources:
+  - ./proxmox-backup-server/ks.yaml
