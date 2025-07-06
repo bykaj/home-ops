@@ -9,7 +9,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - 10.73.1.11
+      - 10.73.1.21
     conditions:
       ready: true
 ports:
