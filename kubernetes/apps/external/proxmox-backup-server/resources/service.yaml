@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: proxmox-backup-server
 spec:
-  externalName: 10.73.2.10
+  externalName: "${NFS_SERVER}"
   type: ExternalName
   ports:
   - name: https
