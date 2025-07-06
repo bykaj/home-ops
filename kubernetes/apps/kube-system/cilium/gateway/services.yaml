@@ -33,7 +33,7 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_APP_APPS/./-}-tls
-    - name: https-app-apps-tls
+    - name: tls-app-apps
       protocol: TLS
       port: 443
       hostname: "*.${DOMAIN_APP_APPS}"
