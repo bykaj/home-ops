@@ -1,0 +1,17 @@
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: &app kvm-icarus
+  labels:
+    kubernetes.io/service-name: *app
+    endpointslice.kubernetes.io/managed-by: *app
+addressType: IPv4
+endpoints:
+  - addresses:
+      - 10.73.1.11
+    conditions:
+      ready: true
+ports:
+  - name: http
+    port: 80
