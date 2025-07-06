@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: proxmox-ve
 spec:
+  sessionAffinity: ClientIP
   ports:
   - name: https
     port: 443
