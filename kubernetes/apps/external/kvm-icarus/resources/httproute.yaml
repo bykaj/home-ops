@@ -9,7 +9,7 @@ spec:
   parentRefs:
     - name: services
       namespace: kube-system
-      sectionName: http-net-home-kvm
+      sectionName: https-net-home-kvm
   rules:
     - matches:
         - path:
