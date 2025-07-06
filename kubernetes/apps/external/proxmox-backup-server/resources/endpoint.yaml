@@ -5,11 +5,11 @@ metadata:
   name: &app proxmox-backup-server
   labels:
     kubernetes.io/service-name: *app
-    endpointslice.kubernetes.io/managed-by: cluster-admins
-addressType: FQDN
+    endpointslice.kubernetes.io/managed-by: *app
+addressType: IPv4
 endpoints:
   - addresses:
-      - "${NFS_SERVER}"
+      - 10.73.2.10
     conditions:
       ready: true
 ports:
