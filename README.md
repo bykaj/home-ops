@@ -111,7 +111,7 @@ graph TD
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f636_200d_1f32b_fe0f/512.gif" alt="😶" width="20" height="20"> Cloud Dependencies
 
 While most of my infrastructure and workloads are self-hosted, I do rely on the cloud for certain key parts:
-- [1Password](https://1password.com/) – Password management and Kubernetes secrets with [External Secrets](https://external-secrets.io/).
+- [1Password](https://1password.com/) – Password management and Kubernetes secrets injection with [External Secrets](https://external-secrets.io/).
 - [Cloudflare](https://www.cloudflare.com/) – Public DNS, Zero Trust tunnel and hosting Kubernetes schemas.
 - [Fastmail](https://fastmail.com/) – Email hosting.
 - [GitHub](https://github.com/) – Hosting this repository and continuous integration/deployments.
