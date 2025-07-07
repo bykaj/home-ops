@@ -131,7 +131,7 @@ I could tackle the first two problems by spinning up another Kubernetes cluster 
 
 My cluster implements a split-horizon DNS configuration using two [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) instances, each handling different DNS zones. This setup allows me to maintain separate private and public DNS records while orchestrating them through distinct ingress classes.
 
-The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class — `internal` for private DNS management and `external` for public DNS synchronization — ensuring precise control over which DNS platform receives updates.
+The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class—`internal` for private DNS management and `external` for public DNS synchronization—ensuring precise control over which DNS platform receives updates.
 
 To complete the setup, I've configured a third ingress class called `services` that serves as a reverse proxy for [external services](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external) running outside the cluster but within my private network.
 
