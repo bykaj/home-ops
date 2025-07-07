@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -12,7 +12,7 @@ spec:
   commonName: "${DOMAIN_APP_APPS}"
   dnsNames: ["${DOMAIN_APP_APPS}", "*.${DOMAIN_APP_APPS}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -25,7 +25,7 @@ spec:
   commonName: "${DOMAIN_APP_INFRA}"
   dnsNames: ["${DOMAIN_APP_INFRA}", "*.${DOMAIN_APP_INFRA}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -38,7 +38,7 @@ spec:
   commonName: "${DOMAIN_DEV}"
   dnsNames: ["${DOMAIN_DEV}", "*.${DOMAIN_DEV}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -51,7 +51,7 @@ spec:
   commonName: "${DOMAIN_ID}"
   dnsNames: ["${DOMAIN_ID}", "*.${DOMAIN_ID}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -64,7 +64,7 @@ spec:
   commonName: "${DOMAIN_IO}"
   dnsNames: ["${DOMAIN_IO}", "*.${DOMAIN_IO}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -77,7 +77,7 @@ spec:
   commonName: "${DOMAIN_CLOUD}"
   dnsNames: ["${DOMAIN_CLOUD}", "*.${DOMAIN_CLOUD}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -90,7 +90,7 @@ spec:
   commonName: "${DOMAIN_NET}"
   dnsNames: ["${DOMAIN_NET}", "*.${DOMAIN_NET}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -103,7 +103,7 @@ spec:
   commonName: "home.${DOMAIN_NET}"
   dnsNames: ["home.${DOMAIN_NET}", "*.home.${DOMAIN_NET}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -116,7 +116,7 @@ spec:
   commonName: "kvm.home.${DOMAIN_NET}"
   dnsNames: ["kvm.home.${DOMAIN_NET}", "*.kvm.home.${DOMAIN_NET}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -129,7 +129,7 @@ spec:
   commonName: "${DOMAIN_ST}"
   dnsNames: ["${DOMAIN_ST}", "*.${DOMAIN_ST}"]
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

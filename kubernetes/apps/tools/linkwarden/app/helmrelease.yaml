@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -21,7 +21,7 @@ spec:
       linkwarden:
         annotations:
           reloader.stakater.com/reload: &secret linkwarden-secret
-        initContainers:          
+        initContainers:
           # Meilisearch
           init-meilisearch:
             image:
@@ -180,7 +180,7 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
-                
+
     service:
       app:
         primary: true

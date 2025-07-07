@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -25,7 +25,7 @@ spec:
         - security_system.home.${DOMAIN_NET}
         - zeus.home.${DOMAIN_NET}
 ---
-# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -39,7 +39,7 @@ spec:
       static:
         - ${NFS_SERVER}:2049
 ---
-# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -53,7 +53,7 @@ spec:
       static:
         - ${SMB_SERVER}:445
 ---
-# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -67,7 +67,7 @@ spec:
       static:
         - ${DB_SERVER}:5432
 ---
-# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/monitoring.coreos.com/probe_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:

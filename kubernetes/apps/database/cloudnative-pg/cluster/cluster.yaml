@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/postgresql.cnpg.io/cluster_v1.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/postgresql.cnpg.io/cluster_v1.json
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -64,7 +64,7 @@ spec:
     #   owner: app
     #   secret:
     #     name: cloudnative-pg-bootstrap-secret
-    
+
     # Recovers from the latest S3 backup (after moving/renaming the 'currentCluster' folder to 'previousCluster' in the bucket!)
     recovery:
       source: &previousCluster postgres-v17-backup

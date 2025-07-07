@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -119,14 +119,14 @@ spec:
     worker:
       replicas: 1
       containerSecurityContext:
-        readOnlyRootFilesystem: true  
+        readOnlyRootFilesystem: true
       resources:
         requests:
           cpu: 50m
           memory: 512Mi
         limits:
           memory: 1Gi
-    
+
     # Prometheus
     prometheus:
       rules:
