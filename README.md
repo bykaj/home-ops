@@ -50,25 +50,25 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) VM on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate virtualized [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) virtual machine on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate virtualized [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template available at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
 ### Core Components
 
-- [actions-runner-controller](https://github.com/actions/actions-runner-controller): Self-hosted GitHub runners.
-- [cert-manager](https://github.com/cert-manager/cert-manager): Creates SSL certificates for services in my cluster.
-- [cilium](https://github.com/cilium/cilium): eBPF-based networking for my workloads.
-- [cloudflared](https://github.com/cloudflare/cloudflared): Enables Cloudflare secure access to my routes.
-- [external-dns](https://github.com/kubernetes-sigs/external-dns): Automatically syncs ingress DNS records to a DNS provider.
-- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
-- [flux](https://github.com/fluxcd/flux2): Syncs Kubernetes configuration in Git to the cluster.
-- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack): Kubernetes cluster monitoring.
-- [openebs](https://github.com/openebs/openebs): Local container-attached storage for caching.
-- [rook](https://github.com/rook/rook): Distributed block storage with Ceph for persistent storage.
-- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes and Ansible which are commited to Git.
-- [spegel](https://github.com/spegel-org/spegel): Stateless local OCI registry mirror to bypass rate limiting from container registries.
-- [volsync](https://github.com/backube/volsync): Backup and recovery of persistent volume claims.
+- [actions-runner-controller](https://github.com/actions/actions-runner-controller) – Self-hosted GitHub runners.
+- [cert-manager](https://github.com/cert-manager/cert-manager) – Creates SSL certificates for services in my cluster.
+- [cilium](https://github.com/cilium/cilium) – eBPF-based networking for my workloads.
+- [cloudflared](https://github.com/cloudflare/cloudflared) – Enables Cloudflare secure access to my routes.
+- [external-dns](https://github.com/kubernetes-sigs/external-dns) – Automatically syncs ingress DNS records to a DNS provider (see [DNS](#-dns) below).
+- [external-secrets](https://github.com/external-secrets/external-secrets) – Kubernetes secrets injection using [1Password Connect](https://github.com/1Password/connect).
+- [flux](https://github.com/fluxcd/flux2) – Syncs Kubernetes configuration in Git to the cluster.
+- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) – Kubernetes cluster monitoring and alerting.
+- [openebs](https://github.com/openebs/openebs) – Local container-attached storage for caching.
+- [rook](https://github.com/rook/rook) – Distributed block storage with Ceph for persistent storage.
+- [sops](https://github.com/getsops/sops) – Managed secrets using AGE encryption for Kubernetes and Ansible which are commited to Git.
+- [spegel](https://github.com/spegel-org/spegel) – Stateless local OCI registry mirror to bypass rate limiting from container registries.
+- [volsync](https://github.com/backube/volsync) – Backup and recovery of persistent volume claims.
 
 ### GitOps
 
@@ -95,7 +95,7 @@ This Git repository contains the following directories:
 
 ### Flux Workflow
 
-This is a high-level look how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `plex` won't be deployed or upgrade until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
+This is a high-level look how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `plex` won't be deployed or upgraded until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
 
 ```mermaid
 graph TD
@@ -110,23 +110,30 @@ graph TD
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f636_200d_1f32b_fe0f/512.gif" alt="😶" width="20" height="20"> Cloud Dependencies
 
-While most of my infrastructure and workloads are self-hosted I do rely upon the cloud for certain key parts of my setup. This saves me from having to worry about three things. (1) Dealing with chicken/egg scenarios, (2) services I critically need whether my cluster is online or not and (3) The "hit by a bus factor" - what happens to critical apps (e.g. Email, Password Manager, Photos) that my family and friends relies on when I'm no longer around.
+While most of my infrastructure and workloads are self-hosted, I do rely on the cloud for certain key parts:
+- [1Password](https://1password.com/) – Password management and Kubernetes secrets with [External Secrets](https://external-secrets.io/).
+- [Cloudflare](https://www.cloudflare.com/) – Public DNS, Zero Trust tunnel and hosting Kubernetes schemas.
+- [Fastmail](https://fastmail.com/) – Email hosting.
+- [GitHub](https://github.com/) – Hosting this repository and continuous integration/deployments.
+- [Pushover](https://pushover.net/) – Kubernetes alerts and application notifications.
+- [Storj](https://storj.io/) – S3 object storage for applications and backups.
 
-Alternative solutions to the first two of these problems would be to host a Kubernetes cluster in the cloud and deploy applications like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/); however, maintaining another cluster and monitoring additional workloads would definitely be more work and even more costly. Something about free time...
+This helps me avoid three major headaches:
+1. **Chicken-and-egg scenarios** – Dependencies that prevent initial system bootstrapping.
+2. **Critical service availability** – Services I need whether my cluster is up or not.
+3. **The "hit by a bus" factor** – Making sure critical apps like email, password management, and photo storage stay accessible to my family and friends when I'm no longer around.
 
-- [1Password](https://1password.com/): Password management and Kubernetes secrets with [External Secrets](https://external-secrets.io/).
-- [Cloudflare](https://www.cloudflare.com/): Public DNS and Zero Trust tunnel.
-- [Fastmail](https://fastmail.com/): Email hosting.
-- [GitHub](https://github.com/): Hosting this repository and continuous integration/deployments.
-- [Pushover](https://pushover.net/): Kubernetes alerts and application notifications.
-- [Storj](https://storj.io/): S3 object storage for applications and backups.
-- [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
+I could tackle the first two problems by spinning up another Kubernetes cluster in the cloud and deploying alternative apps like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/). But honestly, maintaining another cluster and babysitting more workloads would be way more work and cost. Something about free time.
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30e/512.gif" alt="🌎" width="20" height="20"> DNS
 
-In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my UniFi UDM Pro Max using [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook), while another instance syncs public DNS to Cloudflare. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
+My cluster implements a split-horizon DNS configuration using two [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) instances, each handling different DNS zones. This setup allows me to maintain separate private and public DNS records while orchestrating them through distinct ingress classes.
+
+The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [ExternalDNS webhook provider for UniFi](https://github.com/kashalls/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class — `internal` for private DNS management and `external` for public DNS synchronization — ensuring precise control over which DNS platform receives updates.
+
+To complete the setup, I've configured a third ingress class called `services` that serves as a reverse proxy for [external services](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external) running outside the cluster but within my private network.
 
 ---
 
@@ -159,7 +166,7 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f64f/512.gif" alt="🙏" width="20" height="20"> Gratitude and Thanks
 
-A lot of inspiration for my cluster comes from the people that have shared their clusters using the [k8s-at-home](https://github.com/topics/k8s-at-home) GitHub topic. Be sure to check out the awesome [Kubesearch](http://kubesearch.dev) tool for ideas on how to deploy applications or get ideas on what you can deploy.
+A lot of inspiration for my cluster comes from the people that have shared their clusters using the [k8s-at-home](https://github.com/topics/k8s-at-home) GitHub topic. Be sure to check out the [Kubesearch](http://kubesearch.dev) tool for ideas on how to deploy applications or get ideas on what you can deploy.
 
 For learning the basics of running and maintaining a Kubernetes cluster, particularly [K3s](https://k3s.io/), I highly recommend starting with [Jim's Garage](https://youtube.com/@jims-garage) excellent [Kubernetes at Home](https://youtube.com/playlist?list=PLXHMZDvOn5sVXjb88kYXSI7UMx4rhQwOj&si=E6qRPZ915IXQYGL0) series. Once you're comfortable with the basics and ready to automate your deployments, [Techno Tim's](https://www.youtube.com/@TechnoTim) [K3s Ansible guide](https://github.com/techno-tim/k3s-ansible) provides a great foundation for automated cluster rollouts. Thanks to both [@JamesTurland](https://github.com/JamesTurland) and [@timothystewart6](https://github.com/timothystewart6) for these great resources!
 
