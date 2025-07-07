@@ -2,25 +2,21 @@
 
 <img src="https://github.com/bykaj/home-ops/blob/main/assets/images/home-ops-logo.png?raw=true" align="center" width="144px" height="144px"/>
 
-## Home Operations Repository
+## HOME OPERATIONS REPOSITORY
 
 _Managed with Flux, Renovate, and GitHub Actions_
 
-[![Renovate](https://img.shields.io/badge/powered_by-Renovate-blue?style=for-the-badge&logo=renovate)](https://www.mend.io/renovate/)
-
-Kubernetes cluster stats:
-
-[![Talos](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Ftalos_version&style=for-the-badge&logo=talos&logoColor=white&color=orange&label=talos)](https://talos.dev)&nbsp;
+[![Talos](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Ftalos_version&style=for-the-badge&logo=talos&logoColor=white&color=blue&label=talos)](https://talos.dev)&nbsp;
 [![Kubernetes](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fkubernetes_version&style=for-the-badge&logo=kubernetes&logoColor=white&color=blue&label=k8s)](https://kubernetes.io)&nbsp;
 [![Flux](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fflux_version&style=for-the-badge&logo=flux&logoColor=white&color=blue&label=flux)](https://fluxcd.io)
+[![Renovate](https://img.shields.io/github/actions/workflow/status/bykaj/home-ops/renovate.yaml?branch=main&label=renovate&logo=renovate&logoColor=white&style=for-the-badge&color=blue)](https://github.com/bykaj/home-ops/actions/workflows/renovate.yaml)
 
 [![Age-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_age_days&style=for-the-badge&label=Age)](https://github.com/kashalls/kromgo)&nbsp;
 [![Uptime-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_uptime_days&style=for-the-badge&label=Uptime)](https://github.com/kashalls/kromgo)&nbsp;
 [![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_node_count&style=for-the-badge&label=Nodes)](https://github.com/kashalls/kromgo)&nbsp;
 [![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_pod_count&style=for-the-badge&label=Pods)](https://github.com/kashalls/kromgo)&nbsp;
 [![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_cpu_usage&style=for-the-badge&label=CPU)](https://github.com/kashalls/kromgo)&nbsp;
-[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_memory_usage&style=for-the-badge&label=Memory)](https://github.com/kashalls/kromgo)&nbsp;
-[![Alerts](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_alert_count&style=for-the-badge&label=Alerts)](https://github.com/kashalls/kromgo)
+[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_memory_usage&style=for-the-badge&label=Memory)](https://github.com/kashalls/kromgo)
 
 </div>
 
@@ -46,7 +42,7 @@ Kubernetes cluster stats:
 
 ---
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"> Overview 
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"> Overview
 
 This is a mono repository for my wildly over-engineered home infrastructure and Kubernetes cluster, because apparently I hate free time. I try to follow Infrastructure as Code (IaC) and GitOps practices using enterprise-grade tools like [Ansible](https://www.ansible.com/), [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)—you know, the same stack Netflix uses, except mine just runs my Plex server and some smart lightbulbs. Ok, I also use some trusty [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts held together by duct tape and prayer.
 
@@ -125,7 +121,7 @@ Alternative solutions to the first two of these problems would be to host a Kube
 - [Pushover](https://pushover.net/): Kubernetes alerts and application notifications.
 - [Storj](https://storj.io/): S3 object storage for applications and backups.
 - [UptimeRobot](https://uptimerobot.com/): Monitoring internet connectivity and external facing applications.
-                                                      
+
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30e/512.gif" alt="🌎" width="20" height="20"> DNS
