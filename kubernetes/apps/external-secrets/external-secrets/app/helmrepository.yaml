@@ -3,8 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: backube
-  namespace: flux-system
+  name: external-secrets
 spec:
-  interval: 30m
-  url: https://backube.github.io/helm-charts/
+  interval: 2h
+  url: https://charts.external-secrets.io
