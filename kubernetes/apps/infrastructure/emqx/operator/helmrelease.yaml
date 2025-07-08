@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: emqx-operator
-      version: 2.2.29@sha256:b74d07b1294b5477c6d86eb503479fabdfe73ca71ae0e06b2dbfaf2885a2bf65
+      version: 2.2.29
       sourceRef:
         kind: HelmRepository
         name: emqx
