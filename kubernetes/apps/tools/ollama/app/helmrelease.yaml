@@ -32,7 +32,6 @@ spec:
               OLLAMA_MODELS: "/root/.ollama/models"
               OLLAMA_KEEP_ALIVE: "24h"
               OLLAMA_LOAD_TIMEOUT: "600"
-              OLLAMA_INTEL_GPU: "true"
               TZ: "${TIMEZONE}"
             probes:
               liveness:
@@ -49,7 +48,6 @@ spec:
                 cpu: 100m
                 memory: 2Gi
               limits:
-                gpu.intel.com/i915: 1
                 memory: 16Gi
     persistence:
       config:
