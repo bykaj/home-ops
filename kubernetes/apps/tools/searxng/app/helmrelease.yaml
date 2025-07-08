@@ -79,8 +79,8 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /etc/searxng
-            subPath: etc
+          - path: /tmp
+            subPath: tmp
     route:
       app:
         hostnames:
