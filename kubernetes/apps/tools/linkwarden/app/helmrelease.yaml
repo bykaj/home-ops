@@ -20,13 +20,13 @@ spec:
     controllers:
       linkwarden:
         annotations:
-          reloader.stakater.com/reload: &secret linkwarden-secret
+          reloader.stakater.com/auto: "true"
         initContainers:
           # Meilisearch
           init-meilisearch:
             image:
               repository: getmeili/meilisearch
-              tag: "v1.15.2"
+              tag: v1.15.2@sha256:fe500cf9cca05cb9f027981583f28eccf17d35d94499c1f8b7b844e7418152fc
             env:
               TZ: "${TIMEZONE}"
               MEILI_NO_ANALYTICS: "true"
@@ -34,7 +34,7 @@ spec:
               MEILI_MASTER_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: *secret
+                    name: &secret linkwarden-secret
                     key: MEILI_MASTER_KEY
             probes:
               liveness: &probes
@@ -63,7 +63,7 @@ spec:
                 cpu: 10m
                 memory: 256Mi
               limits:
-                memory: 2Gi
+                memory: 1Gi
             restartPolicy: Always
 
         containers:
@@ -71,7 +71,7 @@ spec:
           app:
             image:
               repository: ghcr.io/linkwarden/linkwarden
-              tag: "v2.11.3"
+              tag: v2.11.3@sha256:1ad4225684bcd084d71d0ee5c6b3f118f3ba1e8468ff490d9e3429e30c6a8fd5
             env:
               ARCHIVE_TAKE_COUNT: "5"
               AUTOSCROLL_TIMEOUT: "30"
