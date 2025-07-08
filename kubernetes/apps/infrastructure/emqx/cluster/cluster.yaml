@@ -30,7 +30,6 @@ spec:
       listeners.ssl.default {
         bind = "0.0.0.0:8883"
         ssl_options {
-          # cacertfile = "/secret/cert/ca.crt"
           certfile = "/secret/cert/tls.crt"
           keyfile = "/secret/cert/tls.key"
           gc_after_handshake = true
@@ -45,7 +44,7 @@ spec:
       replicas: 3
       envFrom:
         - secretRef:
-            name: &secret emqx-secret
+            name: emqx-dashboard-secret
       extraVolumeMounts:
         - name: init-user
           mountPath: /opt/init-user.json
@@ -57,7 +56,7 @@ spec:
       extraVolumes:
         - name: init-user
           secret:
-            secretName: *secret
+            secretName: emqx-init-user-secret
         - name: emqx-tls
           secret:
             secretName: "${DOMAIN_IO/./-}-tls"
