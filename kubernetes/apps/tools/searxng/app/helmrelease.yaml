@@ -19,7 +19,6 @@ spec:
   values:
     controllers:
       searxng:
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -31,7 +30,6 @@ spec:
               SEARXNG_BASE_URL: "https://search.${DOMAIN_APP_APPS}"
               SEARXNG_URL: "https://search.${DOMAIN_APP_APPS}"
               SEARXNG_PORT: &port 8080
-              SEARXNG_REDIS_URL: redis://${REDIS_SERVER}:6379
             envFrom:
               - secretRef:
                   name: searxng-secret

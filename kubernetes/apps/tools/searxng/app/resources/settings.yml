@@ -16,6 +16,9 @@ search:
     - en-US
     - nl
     - nl-NL
+  formats:
+    - html
+    - json
 
 general:
   instance_name: ByKaj Search

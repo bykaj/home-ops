@@ -17,5 +17,5 @@ resources:
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
   - ./pgadmin/ks.yaml
-  #- ./searxng/ks.yaml
+  - ./searxng/ks.yaml
   - ./wastebin/ks.yaml
