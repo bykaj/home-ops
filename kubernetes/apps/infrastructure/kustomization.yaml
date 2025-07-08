@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: infrastructure
 components:
   - ../../components/common
-resources: []
-  #- ./emqx/ks.yaml
+resources:
+  - ./emqx/ks.yaml
