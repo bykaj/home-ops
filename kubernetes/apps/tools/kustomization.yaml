@@ -12,6 +12,7 @@ resources:
   - ./linkwarden/ks.yaml
   - ./monica/ks.yaml
   - ./nutify/ks.yaml
+  - ./ollama/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
   - ./pgadmin/ks.yaml

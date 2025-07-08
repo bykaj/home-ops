@@ -1,0 +1,65 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ollama
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      ollama:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/ollama/ollama
+              tag: 0.9.5@sha256:64fcc2a7c48ae920f5317264031d86414e30417269631822858c6d23f61100b0
+            env:
+              OLLAMA_HOST: "0.0.0.0"
+              OLLAMA_ORIGINS: "*"
+              OLLAMA_MODELS: "/root/.ollama/models"
+              OLLAMA_KEEP_ALIVE: "24h"
+              OLLAMA_LOAD_TIMEOUT: "600"
+              TZ: "${TIMEZONE}"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: false
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 100m
+                memory: 2Gi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 16Gi
+    persistence:
+      config:
+        existingClaim: ollama-config
+        advancedMounts:
+          ollama:
+            app:
+              - path: /root/.ollama
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 11434
