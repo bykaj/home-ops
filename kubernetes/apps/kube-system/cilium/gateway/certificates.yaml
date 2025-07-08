@@ -57,6 +57,11 @@ kind: Certificate
 metadata:
   name: "${DOMAIN_IO/./-}"
 spec:
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "infrastructure"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
   secretName: "${DOMAIN_IO/./-}-tls"
   issuerRef:
     name: letsencrypt-production
