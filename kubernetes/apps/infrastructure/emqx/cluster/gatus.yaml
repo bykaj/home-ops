@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: emqx-gatus-endpoint
+  name: emqx-cluster-gatus-endpoint
   labels:
     gatus.io/enabled: "true"
 data:

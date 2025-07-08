@@ -60,18 +60,6 @@ spec:
         - name: emqx-tls
           secret:
             secretName: "${DOMAIN_IO/./-}-tls"
-  replicantTemplate:
-    metadata:
-      annotations:
-        reloader.stakater.com/auto: "true"
-      extraVolumeMounts:
-        - name: emqx-tls
-          mountPath: /secret/cert
-          readOnly: true
-      extraVolumes:
-        - name: emqx-tls
-          secret:
-            secretName: "${DOMAIN_IO/./-}-tls"
   listenersServiceTemplate:
     metadata:
       annotations:
