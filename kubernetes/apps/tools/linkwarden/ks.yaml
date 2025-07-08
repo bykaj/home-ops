@@ -22,6 +22,8 @@ spec:
       namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
+    - name: ollama
+      namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/tools/linkwarden/app
   postBuild:
@@ -29,8 +31,8 @@ spec:
       APP: *app
       GATUS_NAME: Linkwarden
       VOLSYNC_CLAIM: linkwarden-config
-      VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_CACHE_CAPACITY: 5Gi
+      VOLSYNC_CAPACITY: 512Mi
+      VOLSYNC_CACHE_CAPACITY: 256Mi
   prune: true
   retryInterval: 2m
   sourceRef:

@@ -66,31 +66,6 @@ spec:
                 memory: 2Gi
             restartPolicy: Always
 
-          # Ollama
-          init-ollama:
-            image:
-              repository: ollama/ollama
-              tag: "0.9.5"
-            env:
-              TZ: "${TIMEZONE}"
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: false
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-            resources:
-              requests:
-                cpu: 10m
-                memory: 1Gi
-              limits:
-                memory: 8Gi
-            restartPolicy: Always
-
         containers:
           # Linkwarden
           app:
@@ -111,9 +86,9 @@ spec:
               NEXT_PUBLIC_DISABLE_REGISTRATION: "true"
               NEXT_PUBLIC_EMAIL_PROVIDER: "true"
               NEXT_PUBLIC_MAX_FILE_BUFFER: "1024"
-              NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: http://localhost:11434
+              NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: http://ollama.tools.svc.cluster.local:11434
               NEXTAUTH_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}/api/v1/auth"
-              OLLAMA_MODEL: "phi3:mini-4k"
+              OLLAMA_MODEL: "phi4-mini"
               PAGINATION_TAKE_COUNT: "50"
               PDF_MAX_BUFFER: "4096"
               PREVIEW_MAX_BUFFER: "2048"
@@ -152,9 +127,6 @@ spec:
             init-meilisearch:
               - path: /meili_data
                 subPath: meilisearch
-            init-ollama:
-              - path: /root/.ollama
-                subPath: ollama
       backups:
         type: nfs
         server: "${NFS_SERVER}"
