@@ -32,6 +32,7 @@ spec:
               OLLAMA_MODELS: "/root/.ollama/models"
               OLLAMA_KEEP_ALIVE: "24h"
               OLLAMA_LOAD_TIMEOUT: "600"
+              OLLAMA_INTEL_GPU: "true"
               TZ: "${TIMEZONE}"
             probes:
               liveness:
