@@ -2,9 +2,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: infrastructure
-components:
-  - ../../components/common
 resources:
-  - ./emqx/ks.yaml
-  #- ./mosquitto/ks.yaml
+  - ./cluster.yaml
+  - ./httproute.yaml
+  - ./gatus.yaml
+  - ./podmonitor.yaml

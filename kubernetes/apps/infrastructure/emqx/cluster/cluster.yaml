@@ -1,0 +1,81 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/apps.emqx.io/emqx_v2beta1.json
+apiVersion: apps.emqx.io/v2beta1
+kind: EMQX
+metadata:
+  name: emqx
+spec:
+  image: emqx/emqx:5.8.7@sha256:556aea6d62134524ecd1fcca53380b460b52995344dce571d484f042d9b15e7d
+  config:
+    data: |
+      authentication {
+        backend = "built_in_database"
+        mechanism = "password_based"
+        password_hash_algorithm {
+            name = "bcrypt"
+        }
+        user_id_type = "username"
+        bootstrap_file = "/opt/init-user.json"
+        bootstrap_type = "plain"
+      }
+      authorization {
+        sources = [
+          {
+            type = built_in_database
+            enable = true
+          }
+        ]
+        no_match: "deny"
+      }
+      listeners.ssl.default {
+        bind = "0.0.0.0:8883"
+        ssl_options {
+          # cacertfile = "/secret/cert/ca.crt"
+          certfile = "/secret/cert/tls.crt"
+          keyfile = "/secret/cert/tls.key"
+          gc_after_handshake = true
+          handshake_timeout = 5s
+        }
+  coreTemplate:
+    metadata:
+      annotations:
+        reloader.stakater.com/auto: "true"
+    spec:
+      replicas: 3
+      envFrom:
+        - secretRef:
+            name: &secret emqx-secret
+      extraVolumeMounts:
+        - name: init-user
+          mountPath: /opt/init-user.json
+          subPath: init-user.json
+          readOnly: true
+        - name: emqx-tls
+          mountPath: /secret/cert
+          readOnly: true
+      extraVolumes:
+        - name: init-user
+          secret:
+            secretName: *secret
+        - name: emqx-tls
+          secret:
+            secretName: "${DOMAIN_IO/./-}-tls"
+  replicantTemplate:
+    metadata:
+      annotations:
+        reloader.stakater.com/auto: "true"
+      extraVolumeMounts:
+        - name: emqx-tls
+          mountPath: /secret/cert
+          readOnly: true
+      extraVolumes:
+        - name: emqx-tls
+          secret:
+            secretName: "${DOMAIN_IO/./-}-tls"
+  listenersServiceTemplate:
+    metadata:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
+        lbipam.cilium.io/ips: 10.73.10.201
+    spec:
+      type: LoadBalancer
