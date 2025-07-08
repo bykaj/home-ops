@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/source.toolkit.fluxcd.io/helmrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: emberstack
+spec:
+  interval: 30m
+  url: https://emberstack.github.io/helm-charts/
+  timeout: 3m
