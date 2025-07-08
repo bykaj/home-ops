@@ -13,16 +13,18 @@ spec:
         mechanism = "password_based"
         password_hash_algorithm {
             name = "bcrypt"
+            salt_rounds = 10
         }
         user_id_type = "username"
-        bootstrap_file = "/opt/init-user.json"
+        bootstrap_file = "/secret/bootstrap/users.json"
         bootstrap_type = "plain"
       }
       authorization {
         sources = [
           {
-            type = built_in_database
             enable = true
+            type = "file"
+            path = "/secret/bootstrap/acl_file"
           }
         ]
         no_match: "deny"
@@ -46,17 +48,16 @@ spec:
         - secretRef:
             name: emqx-dashboard-secret
       extraVolumeMounts:
-        - name: init-user
-          mountPath: /opt/init-user.json
-          subPath: init-user.json
+        - name: bootstrap
+          mountPath: /secret/bootstrap
           readOnly: true
         - name: emqx-tls
           mountPath: /secret/cert
           readOnly: true
       extraVolumes:
-        - name: init-user
+        - name: bootstrap
           secret:
-            secretName: emqx-init-user-secret
+            secretName: emqx-bootstrap-secret
         - name: emqx-tls
           secret:
             secretName: "${DOMAIN_IO/./-}-tls"
