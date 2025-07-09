@@ -21,6 +21,14 @@ spec:
       linkwarden:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.5.0@sha256:e0c87ce7df39d06b93f27cf2cc6a056611f13faaa88cc07ab4dc8bf7a85d0b11
+            envFrom: &envFrom
+              - secretRef:
+                  name: linkwarden-secret
         containers:
           app:
             image:
@@ -32,7 +40,7 @@ spec:
               BASE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}"
               DISABLE_NEW_SSO_USERS: "false"
               IGNORE_URL_SIZE_LIMIT: "true"
-              MEILI_HOST: http://meilisearch.database.svc.cluster.local:7700
+              MEILI_HOST: "http://meilisearch.database.svc.cluster.local:7700"
               MONOLITH_CUSTOM_OPTIONS: "--timeout 60000"
               MONOLITH_MAX_BUFFER: "2048"
               NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
@@ -40,7 +48,7 @@ spec:
               NEXT_PUBLIC_DISABLE_REGISTRATION: "true"
               NEXT_PUBLIC_EMAIL_PROVIDER: "true"
               NEXT_PUBLIC_MAX_FILE_BUFFER: "1024"
-              NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: http://ollama.tools.svc.cluster.local:11434
+              NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: "http://ollama.tools.svc.cluster.local:11434"
               NEXTAUTH_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}/api/v1/auth"
               OLLAMA_MODEL: "phi4-mini"
               PAGINATION_TAKE_COUNT: "50"
@@ -50,9 +58,7 @@ spec:
               READABILITY_MAX_BUFFER: "1024"
               SCREENSHOT_MAX_BUFFER: "1024"
               SPACES_FORCE_PATH_STYLE: "true"
-            envFrom:
-              - secretRef:
-                  name: linkwarden-secret
+            envFrom: *envFrom
             probes:
               liveness: &probes
                 enabled: true
