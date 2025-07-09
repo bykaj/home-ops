@@ -78,7 +78,7 @@ spec:
     route:
       app:
         hostnames:
-          - ${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP:={{ .Release.Name }}}}.${DOMAIN_APP_APPS}}
+          - ${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}
         parentRefs:
           - name: internal
             namespace: kube-system
