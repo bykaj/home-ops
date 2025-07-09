@@ -62,7 +62,7 @@ spec:
               TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
-                  name: *secret
+                  name: monica-secret
             probes:
               liveness: &probes
                 enabled: true
