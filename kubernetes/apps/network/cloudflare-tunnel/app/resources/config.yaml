@@ -1,6 +1,6 @@
 ---
 originRequest:
-  originServerName: "proxy.${DOMAIN_NET}"
+  originServerName: "external.${DOMAIN_NET}"
 
 ingress:
   - hostname: "${DOMAIN_NET}"
