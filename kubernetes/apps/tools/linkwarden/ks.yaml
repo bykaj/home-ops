@@ -21,6 +21,8 @@ spec:
       namespace: database
     - name: ollama
       namespace: *namespace
+    - name: meilisearch
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/tools/linkwarden/app
   postBuild:
