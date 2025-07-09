@@ -2,15 +2,15 @@
 *.pub
 *.key
 *.decrypted~*.yaml
-/age.key
-/cloudflare-tunnel.json
-/github-deploy.key
-/github-deploy.key.pub
-/github-push-token.txt
-/1password-credentials.json
+age.key
+cloudflare-tunnel.json
+github-deploy.key
+github-deploy.key.pub
+github-push-token.txt
+1password-credentials.json
 # Template config files
-/cluster.yaml
-/nodes.yaml
+cluster.yaml
+nodes.yaml
 # Kubernetes
 kubeconfig
 talosconfig
