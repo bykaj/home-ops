@@ -56,9 +56,21 @@ spec:
           ollama:
             app:
               - path: /root/.ollama
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app-apps
+        rules:
+          - backendRefs:
+              - name: *app
+                port: &port 11434
     service:
       app:
         controller: *app
         ports:
           http:
-            port: 11434
+            port: *port
