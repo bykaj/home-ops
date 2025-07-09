@@ -98,6 +98,9 @@ spec:
       namespace: observability
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/backup
+  postBuild:
+    substitute:
+      APP: *app
   prune: true
   retryInterval: 2m
   sourceRef:
