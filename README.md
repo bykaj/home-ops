@@ -37,6 +37,7 @@ _Managed with Flux, Renovate, and GitHub Actions_
 6. [Future Plans](#-future-plans)
 7. [Gratitude and Thanks](#-gratitude-and-thanks)
 8. [License](#-license)
+9. [Stargazers](#-stargazers)
 
 </details>
 
@@ -177,3 +178,19 @@ And of course, shoutout to [@QNimbus](https://github.com/QNimbus) for his bash s
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="20" height="20"> License
 
 See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: Do with it as you please, but if it becomes sentient, you're responsible for teaching it manners.
+
+---
+
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="20" height="20"> Stargazers
+
+<div align="center">
+
+<a href="https://star-history.com/#bykaj/home-ops&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date" />
+  </picture>
+</a>
+
+</div>
