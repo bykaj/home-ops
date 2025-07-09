@@ -9,6 +9,6 @@ resources:
   - ./system-upgrade-controller/ks.yaml
 configMapGenerator:
   - name: versions
-    env: ./versions.env
+    env: ./resources/versions.env
 configurations:
-  - ./kustomizeconfig.yaml
+  - ./resources/kustomizeconfig.yaml
