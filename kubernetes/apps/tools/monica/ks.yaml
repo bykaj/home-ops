@@ -22,6 +22,8 @@ spec:
       namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
+    - name: meilisearch
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/tools/monica/app
   postBuild:
