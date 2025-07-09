@@ -12,14 +12,11 @@ spec:
   components:
     - ../../../../components/gatus/public
     - ../../../../components/keda/postgres-scaler
-    - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
     - name: keda
       namespace: observability
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
     - name: ollama
@@ -30,9 +27,6 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Linkwarden
-      VOLSYNC_CLAIM: linkwarden-config
-      VOLSYNC_CAPACITY: 512Mi
-      VOLSYNC_CACHE_CAPACITY: 256Mi
   prune: true
   retryInterval: 2m
   sourceRef:

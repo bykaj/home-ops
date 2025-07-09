@@ -21,53 +21,7 @@ spec:
       linkwarden:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          # Meilisearch
-          init-meilisearch:
-            image:
-              repository: getmeili/meilisearch
-              tag: v1.15.2@sha256:fe500cf9cca05cb9f027981583f28eccf17d35d94499c1f8b7b844e7418152fc
-            env:
-              TZ: "${TIMEZONE}"
-              MEILI_NO_ANALYTICS: "true"
-              MEILI_ENV: "production"
-              MEILI_MASTER_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: &secret linkwarden-secret
-                    key: MEILI_MASTER_KEY
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: 7700
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-              runAsNonRoot: true
-              runAsUser: 4000
-              runAsGroup: 4000
-              fsGroup: 4000
-              fsGroupChangePolicy: OnRootMismatch
-            resources:
-              requests:
-                cpu: 10m
-                memory: 256Mi
-              limits:
-                memory: 2Gi
-            restartPolicy: Always
-
         containers:
-          # Linkwarden
           app:
             image:
               repository: ghcr.io/linkwarden/linkwarden
@@ -78,7 +32,7 @@ spec:
               BASE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}"
               DISABLE_NEW_SSO_USERS: "false"
               IGNORE_URL_SIZE_LIMIT: "true"
-              MEILI_HOST: http://localhost:7700
+              MEILI_HOST: http://meilisearch.database.svc.cluster.local:7700
               MONOLITH_CUSTOM_OPTIONS: "--timeout 60000"
               MONOLITH_MAX_BUFFER: "2048"
               NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
@@ -118,15 +72,7 @@ spec:
                 memory: 768Mi
               limits:
                 memory: 1280Mi
-
     persistence:
-      config:
-        existingClaim: linkwarden-config
-        advancedMounts:
-          linkwarden:
-            init-meilisearch:
-              - path: /meili_data
-                subPath: meilisearch
       backups:
         type: nfs
         server: "${NFS_SERVER}"
@@ -139,7 +85,6 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-
     route:
       app:
         hostnames:
@@ -152,7 +97,6 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
-
     service:
       app:
         primary: true
