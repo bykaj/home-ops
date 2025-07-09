@@ -20,17 +20,17 @@ spec:
     controllers:
       nutify:
         annotations:
-          reloader.stakater.com/reload: &secret nutify-secret
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
               repository: dartsteven/nutify
-              tag: amd64-0.1.6
+              tag: amd64-0.1.7@sha256:9ba50751b8776f0bb3046650369ae2dab4788098ba1aca34fbef2f361164a41d
             env:
               TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
-                  name: *secret
+                  name: nutify-secret
             probes:
               liveness: &probes
                 enabled: true
