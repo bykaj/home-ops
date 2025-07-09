@@ -27,20 +27,16 @@ spec:
               repository: dpage/pgadmin4
               tag: 9.4.0@sha256:6b1c0db09695758c72abcd5160b7c4cc6d0847ab0c90a2403bdbf951f0defb5a
             env:
-              PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
-              PGADMIN_DISABLE_POSTFIX: "true"
+              PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
+              PGADMIN_CONFIG_MAIL_PORT: "587"
+              PGADMIN_CONFIG_MAIL_USE_TLS: "True"
+              PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
+              PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
-              PGADMIN_DEFAULT_EMAIL:
-                valueFrom:
-                  secretKeyRef:
-                    name: &secret pgadmin-secret
-                    key: PGADMIN_DEFAULT_EMAIL
-              PGADMIN_DEFAULT_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: PGADMIN_DEFAULT_PASSWORD
+            envFrom:
+              - secretRef:
+                  name: pgadmin-secret
             probes:
               liveness: &probes
                 enabled: true
