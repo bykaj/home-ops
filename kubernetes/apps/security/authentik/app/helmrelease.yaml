@@ -121,7 +121,7 @@ spec:
         readOnlyRootFilesystem: true
       resources:
         requests:
-          cpu: 50m
+          cpu: 80m
           memory: 512Mi
         limits:
           memory: 1Gi
