@@ -36,8 +36,8 @@ _Managed with Flux, Renovate, and GitHub Actions_
 5. [Hardware](#-hardware)
 6. [Future Plans](#-future-plans)
 7. [Gratitude and Thanks](#-gratitude-and-thanks)
-8. [License](#-license)
-9. [Stargazers](#-stargazers)
+8. [Stargazers](#-stargazers)
+9. [License](#-license)
 
 </details>
 
@@ -175,12 +175,6 @@ And of course, shoutout to [@QNimbus](https://github.com/QNimbus) for his bash s
 
 ---
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="20" height="20"> License
-
-See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: Do with it as you please, but if it becomes sentient, you're responsible for teaching it manners.
-
----
-
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="20" height="20"> Stargazers
 
 <div align="center">
@@ -194,3 +188,9 @@ See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: D
 </a>
 
 </div>
+
+---
+
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f512/512.gif" alt="🔒" width="20" height="20"> License
+
+See [LICENSE](https://github.com/bykaj/home-ops/blob/main/LICENSE). **TL;DR**: Do with it as you please, but if it becomes sentient, you're responsible for teaching it manners.
