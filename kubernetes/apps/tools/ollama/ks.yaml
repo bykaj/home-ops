@@ -21,6 +21,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Ollama
+      GATUS_DOMAIN: ollama.tools.svc.cluster.local
       VOLSYNC_CLAIM: ollama-config
       VOLSYNC_CAPACITY: 40Gi
       VOLSYNC_CACHE_CAPACITY: 20Gi
