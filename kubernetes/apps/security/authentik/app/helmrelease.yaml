@@ -5,6 +5,7 @@ kind: HelmRelease
 metadata:
   name: authentik
 spec:
+  interval: 1h
   chart:
     spec:
       chart: authentik
@@ -13,7 +14,14 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: authentik
-  interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
   driftDetection:
     mode: enabled
   values:
@@ -66,13 +74,13 @@ spec:
 
     # GeoIP Updater
     geoip:
-      enabled: false
+      enabled: true
       editionIds: "GeoLite2-City GeoLite2-ASN"
       existingSecret:
         secretName: *secret
         accountId: "GEOIPUPDATE_ACCOUNT_ID"
         licenseKey: "GEOIPUPDATE_LICENSE_KEY"
-      updateInterval: 8
+      updateInterval: 24
       resources:
         requests:
           cpu: 5m
@@ -82,12 +90,17 @@ spec:
 
     # Authentik Server
     server:
+      initContainers:
+        - name: init-db
+          image: ghcr.io/home-operations/postgres-init:17.5.0@sha256:e0c87ce7df39d06b93f27cf2cc6a056611f13faaa88cc07ab4dc8bf7a85d0b11
+          envFrom:
+            - secretRef:
+                name: *secret
       replicas: 1
       metrics:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-          interval: 1m
+        prometheus:
+          serviceMonitor:
+            enabled: true
       resources:
         requests:
           cpu: 100m
