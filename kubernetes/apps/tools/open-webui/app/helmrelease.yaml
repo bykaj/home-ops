@@ -65,9 +65,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 2Gi
+                memory: 1Gi
               limits:
-                memory: 4Gi
+                memory: 2Gi
     persistence:
       config:
         existingClaim: open-webui-config
@@ -77,7 +77,8 @@ spec:
               - path: /app/backend/data
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${DOMAIN_APP_APPS}"]
+        hostnames:
+          - ${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP:={{ .Release.Name }}}}.${DOMAIN_APP_APPS}}
         parentRefs:
           - name: internal
             namespace: kube-system

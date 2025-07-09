@@ -32,6 +32,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: "Open WebUI"
+      GATUS_SUBDOMAIN: "chat"
       VOLSYNC_CLAIM: open-webui-config
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
