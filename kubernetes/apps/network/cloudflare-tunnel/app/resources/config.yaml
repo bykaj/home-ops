@@ -8,31 +8,31 @@ ingress:
   - hostname: "*.${DOMAIN_NET}"
     service: *svc
   - hostname: "${DOMAIN_APP_APPS}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_APP_APPS}"
     service: *svc
   - hostname: "${DOMAIN_APP_INFRA}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_APP_INFRA}"
     service: *svc
   - hostname: "${DOMAIN_DEV}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_DEV}"
     service: *svc
   - hostname: "${DOMAIN_ID}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_ID}"
     service: *svc
   - hostname: "${DOMAIN_IO}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_IO}"
     service: *svc
   - hostname: "${DOMAIN_CLOUD}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_CLOUD}"
     service: *svc
   - hostname: "${DOMAIN_LOL}"
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: *svc
   - hostname: "*.${DOMAIN_LOL}"
     service: *svc
   - service: http_status:404
