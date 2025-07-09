@@ -57,6 +57,7 @@ spec:
               HASH_LENGTH: "32"
               LOG_CHANNEL: "daily"
               MAIL_ENCRYPTION: "tls"
+              MAIL_FROM_NAME: "Monica"
               MAIL_MAILER: "smtp"
               MAIL_PORT: "587"
               MEILISEARCH_HOST: http://meilisearch.database.svc.cluster.local:7700
