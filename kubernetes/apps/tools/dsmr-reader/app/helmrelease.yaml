@@ -20,12 +20,20 @@ spec:
     controllers:
       dsmr-reader:
         annotations:
-          reloader.stakater.com/reload: &secret dsmr-reader-secret
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.5.0@sha256:e0c87ce7df39d06b93f27cf2cc6a056611f13faaa88cc07ab4dc8bf7a85d0b11
+            envFrom: &envFrom
+              - secretRef:
+                  name: dsmr-reader-secret
         containers:
           app:
             image:
               repository: ghcr.io/xirixiz/dsmr-reader-docker
-              tag: "5.11.0-2025.01.03"
+              tag: 5.11.0-2025.01.03@sha256:eb16b3979c4d8a84a1cfe1500a9978e1ca5fe3a0c203d486a03378d6338853cc
             env:
               DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
               DJANGO_DATABASE_HOST: "${DB_SERVER}"
@@ -38,9 +46,7 @@ spec:
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
               S6_READ_ONLY_ROOT: "1"
               S6_VERBOSITY: "2"
-            envFrom:
-              - secretRef:
-                  name: *secret
+            envFrom: *envFrom
             probes:
               liveness: &probes
                 enabled: true
