@@ -21,6 +21,14 @@ spec:
       monica:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.5.0@sha256:e0c87ce7df39d06b93f27cf2cc6a056611f13faaa88cc07ab4dc8bf7a85d0b11
+            envFrom: &envFrom
+              - secretRef:
+                  name: monica-secret
         containers:
           app: &app
             image:
@@ -60,9 +68,7 @@ spec:
               S3_PATH_STYLE: "true"
               SESSION_DRIVER: "redis"
               TZ: "${TIMEZONE}"
-            envFrom:
-              - secretRef:
-                  name: monica-secret
+            envFrom: *envFrom
             probes:
               liveness: &probes
                 enabled: true
