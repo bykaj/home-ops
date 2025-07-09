@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/source.toolkit.fluxcd.io/helmrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: meilisearch
+spec:
+  interval: 1h
+  url: https://meilisearch.github.io/meilisearch-kubernetes
+  timeout: 2m

@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: meilisearch
+spec:
+  chart:
+    spec:
+      chart: meilisearch
+      version: 0.14.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: meilisearch
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    # command:
+    #   - tini
+    #   - --
+    #   - /bin/meilisearch
+    #   - --experimental-dumpless-upgrade
+    environment:
+      MEILI_NO_ANALYTICS: true
+      MEILI_ENV: "production"
+    auth:
+      existingMasterKeySecret: meilisearch-secret
+    persistence:
+      enabled: true
+      existingClaim: meilisearch-config
+    resources:
+      requests:
+        cpu: 10m
+        memory: 256Mi
+      limits:
+        memory: 2Gi
+    serviceMonitor:
+      enabled: true
