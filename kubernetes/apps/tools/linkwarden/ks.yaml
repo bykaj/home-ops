@@ -19,6 +19,8 @@ spec:
       namespace: observability
     - name: cloudnative-pg-cluster
       namespace: database
+    - name: dragonfly-cluster
+      namespace: database
     - name: ollama
       namespace: *namespace
     - name: meilisearch
