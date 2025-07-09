@@ -52,7 +52,7 @@ spec:
               SPACES_FORCE_PATH_STYLE: "true"
             envFrom:
               - secretRef:
-                  name: *secret
+                  name: linkwarden-secret
             probes:
               liveness: &probes
                 enabled: true
