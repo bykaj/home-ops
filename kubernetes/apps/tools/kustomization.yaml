@@ -13,7 +13,7 @@ resources:
   - ./monica/ks.yaml
   - ./nutify/ks.yaml
   - ./ollama/ks.yaml
-  #- ./open-webui/ks.yaml
+  - ./open-webui/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
   - ./pgadmin/ks.yaml

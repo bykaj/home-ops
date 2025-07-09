@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app open-webui
+  namespace: &namespace tools
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/internal
+    - ../../../../components/volsync
+  dependsOn:
+    - name: searxng
+      namespace: *namespace
+    - name: ollama
+      namespace: *namespace
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: cloudnative-pg-cluster
+      namespace: database
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: open-webui
+      namespace: *namespace
+  interval: 1h
+  path: ./kubernetes/apps/tools/open-webui/app
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_NAME: "Open WebUI"
+      VOLSYNC_CLAIM: open-webui-config
+      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CACHE_CAPACITY: 1Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
