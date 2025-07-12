@@ -87,7 +87,7 @@
         # description: This is my service
         widget:
             type: truenas
-            url: https://{{NAS_HOST}}
+            url: https://${NAS_HOST}
             # username:
             # password:
             key: {{HOMEPAGE_VAR_TRUENAS_API_KEY}}
