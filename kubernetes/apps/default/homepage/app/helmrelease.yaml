@@ -21,7 +21,7 @@ spec:
       *app :
         strategy: Recreate
         annotations:
-          reloader.stakater.com/search: "true"
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
