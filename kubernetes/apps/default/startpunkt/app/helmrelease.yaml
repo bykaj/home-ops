@@ -28,9 +28,6 @@ spec:
             image:
               repository: ghcr.io/ullbergm/startpunkt
               tag: 1.1.0@sha256:83a7a703a034c425aa4ada0faff362c8be720288291514ce98711510512de841
-            envFrom:
-              - secretRef:
-                  name: &secret startup-secret
             env:
               KUBERNETES_NAMESPACE:
                 valueFrom:
