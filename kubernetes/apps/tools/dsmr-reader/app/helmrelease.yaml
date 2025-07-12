@@ -48,18 +48,15 @@ spec:
               S6_VERBOSITY: "2"
             envFrom: *envFrom
             probes:
-              liveness: &probes
+              startup:
                 enabled: true
-                custom: true
                 spec:
-                  httpGet:
-                    path: /
-                    port: &port 80
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             resources:
               requests:
                 cpu: 80m
