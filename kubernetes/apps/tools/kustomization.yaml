@@ -9,7 +9,7 @@ resources:
   - ./atuin/ks.yaml
   - ./dsmr-reader/ks.yaml
   - ./it-tools/ks.yaml
-  - ./karakeep/ks.yaml
+  #- ./karakeep/ks.yaml
   - ./linkwarden/ks.yaml
   - ./monica/ks.yaml
   - ./nutify/ks.yaml
