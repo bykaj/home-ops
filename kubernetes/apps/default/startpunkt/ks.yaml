@@ -7,9 +7,13 @@ metadata:
   namespace: &namespace default
 spec:
   commonMetadata:
+    annotations:
+      app.quarkus.io/quarkus-version: "3.12.3"
+      app.quarkus.io/vcs-uri: https://github.com/ullbergm/startpunkt.git
     labels:
       app.kubernetes.io/name: *app
       app.kubernetes.io/part-of: *app
+      app.kubernetes.io/managed-by: quarkus
   components:
     - ../../../../components/gatus/internal
   interval: 1h
