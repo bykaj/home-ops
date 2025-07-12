@@ -65,10 +65,6 @@ spec:
                 cpu: 10m
               limits:
                 memory: 1Gi
-            securityContext:
-              runAsNonRoot: true
-              allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
 
       browserless:
         annotations:
@@ -109,6 +105,7 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
+        runAsNonRoot: true
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
 
