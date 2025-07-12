@@ -1,0 +1,110 @@
+---
+- Apps & Services:
+    - HomeAssistant:
+        href: https://homeassistant.home.${DOMAIN_NET}
+        icon: home-assistant.png
+        description: Smart Home Automation
+    - Karakeep:
+        href: https://links.${DOMAIN_APP_APPS}
+        icon: karakeep.png
+        description: Bookmark and link archiving
+    - Homebox:
+        href: https://homebox.${DOMAIN_APP_APPS}
+        icon: homebox.png
+        description: A simple home inventory system
+    - Mealie:
+        href: https://mealie.${DOMAIN_APP_APPS}
+        icon: mealie.png
+        description: A self-hosted recipe manager and meal planner
+    - Memos:
+        href: https://memos.${DOMAIN_APP_APPS}
+        icon: https://github.com/usememos/memos/blob/35f0861d6eaa15ab13d5ce9c9220553f2a56954d/web/public/logo.png?raw=true
+        description: A privacy-first, lightweight note-taking service
+    - Miniflux:
+        href: https://miniflux.${DOMAIN_APP_APPS}
+        icon: miniflux.png
+        description: A self-hosted rss feed reader
+    - OpenGist:
+        href: https://opengist.${DOMAIN_APP_APPS}
+        icon: opengist.png
+        description: A self-hosted, open-source alternative to Github Gist
+    - PairDrop:
+        href: https://pairdrop.${DOMAIN_APP_APPS}
+        icon: pairdrop.png
+        description: Local file sharing in your browser, inspired by Apple's AirDrop.
+    - PicoShare:
+        href: https://share.${DOMAIN_APP_APPS}
+        icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
+        description: A minimalist service for sharing images and other files
+    - Stirling-PDF:
+        href: https://pdf.${DOMAIN_APP_APPS}
+        icon: stirling-pdf.png
+        description: A self-hosted PDF editing webapp
+    - Syncthing:
+        href: https://sync.${DOMAIN_APP_APPS}
+        icon: syncthing.png
+        description: Continuous P2P (peer to peer) file synchronization between devices
+
+- Infrastructure:
+    - UniFi:
+        href: https://gateway.home.${DOMAIN_NET}
+        icon: unifi.png
+        description: UniFi UDM Pro Max
+    - Cloudflared:
+        href: https://dash.cloudflare.com/
+        icon: cloudflare-zero-trust.png
+        description: Cloudflared Tunnel
+        widget:
+          type: cloudflared
+          accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}
+          tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}
+          key: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_TOKEN}}
+- Monitoring:
+    - Alertmanager:
+        href: https://alertmanager.${DOMAIN_APP_APPS}
+        icon: alertmanager.png
+        description: Alertmanager Dashboard
+    - Grafana:
+        href: https://grafana.${DOMAIN_APP_APPS}
+        icon: grafana.png
+        # description: This is my service
+    - Goldilocks:
+        href: https://goldilocks.${DOMAIN_APP_APPS}
+        icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
+        description: Helps identify a starting point for resource requests and limits
+    - Prometheus:
+        href: https://prometheus.${DOMAIN_APP_APPS}
+        icon: prometheus.png
+        # description: This is my service
+    - Crowdsec:
+        href: https://app.crowdsec.net/
+        icon: crowdsec.png
+        description: Crowd-based cyber security threat detection & mitigation
+- Storage:
+    - TrueNAS:
+        href: https://${NAS_HOST}
+        icon: truenas-scale.png
+        # description: This is my service
+        widget:
+            type: truenas
+            url: https://{{NAS_HOST}}
+            # username:
+            # password:
+            key: {{HOMEPAGE_VAR_TRUENAS_API_KEY}}
+    - Rook-Ceph:
+        href: https://rook.${DOMAIN_APP_APPS}
+        icon: ceph.png
+        # description: This is my service
+    - Scrutiny:
+        href: https://scrutiny.${DOMAIN_APP_APPS}
+        icon: scrutiny.png
+        description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
+- Databases:
+    - pgAdmin:
+        href: https://pgadmin.${DOMAIN_APP_APPS}
+        icon: pgadmin.png
+        # description: This is my service
+    - RedisInsight:
+        href: https://redisinsight.${DOMAIN_APP_APPS}
+        icon: redis.png
+        # description: This is my service

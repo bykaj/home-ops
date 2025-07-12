@@ -1,0 +1,22 @@
+---
+title: Dashboard
+favicon: https://raw.githubusercontent.com/bykaj/home-ops/refs/heads/main/assets/images/home-ops-logo.png
+theme: dark
+color: neutral
+useEqualHeights: true
+layout:
+  Apps & Services:
+    style: row
+    columns: 3
+  Infrastructure:
+    style: row
+    columns: 3
+  Monitoring:
+    style: row
+    columns: 3
+  Storage:
+    style: row
+    columns: 3
+  Databases:
+    style: row
+    columns: 3
