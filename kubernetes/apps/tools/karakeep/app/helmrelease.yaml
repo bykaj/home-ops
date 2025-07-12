@@ -128,9 +128,9 @@ spec:
               limits:
                 memory: 1Gi
             securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
+              capabilities:
+                drop:
+                  - ALL
 
       # browserless:
       #   annotations:
@@ -169,6 +169,14 @@ spec:
       #         runAsGroup: 999
       #         allowPrivilegeEscalation: false
       #         capabilities: {drop: [ALL]}
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:
