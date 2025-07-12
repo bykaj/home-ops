@@ -54,6 +54,7 @@ spec:
               INFERENCE_TEXT_MODEL: "gpt-4.1-mini"
               MEILI_ADDR: "http://meilisearch.database:7700"
               NEXTAUTH_URL: "https://links.${DOMAIN_APP_APPS}"
+              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
               OCR_LANGS: "eng,nld"
