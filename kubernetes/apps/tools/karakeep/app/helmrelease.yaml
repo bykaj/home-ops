@@ -35,7 +35,7 @@ spec:
               - secretRef:
                   name: &secret karakeep-secret
             env:
-              ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
+              # ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
               # BROWSER_CONNECT_ONDEMAND: "true"
               # BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               BROWSER_WEB_URL: http://karakeep-chrome:9222
