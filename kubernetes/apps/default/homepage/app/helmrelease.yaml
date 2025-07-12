@@ -40,9 +40,6 @@ spec:
                 memory: 128M
               limits:
                 memory: 256M
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities: { drop: ["ALL"] }
         serviceAccount:
           identifier: *app
 
