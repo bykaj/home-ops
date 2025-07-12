@@ -40,7 +40,7 @@ spec:
               BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               COREPACK_INTEGRITY_KEYS: "0"
               CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
-              CRAWLER_ENABLE_ADBLOCKER: "false"
+              CRAWLER_ENABLE_ADBLOCKER: "true"
               CRAWLER_FULL_PAGE_ARCHIVE: "true"
               CRAWLER_FULL_PAGE_SCREENSHOT: "true"
               CRAWLER_STORE_SCREENSHOT: "true"
@@ -112,7 +112,8 @@ spec:
               tag: v2.33.0@sha256:a7ef061130e593b2a8e03c3b1c379ef0cbca95f857ae532831d66ba6a933cd72
               pullPolicy: IfNotPresent
             env:
-              DEBUG: "browserless*,-*:trace,-*:verbose"
+              # DEBUG: "browserless*,-*:trace,-*:verbose"
+              DEBUG: "*"
               CONCURRENT: "5"
               ENABLE_DEBUGGER: "false"
               TIMEOUT: "60000"
