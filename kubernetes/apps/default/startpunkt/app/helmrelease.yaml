@@ -55,11 +55,13 @@ spec:
                 spec:
                   httpGet:
                     path: /q/health/ready
+                    port: *port
               startup:
                 <<: *probes
                 spec:
                   httpGet:
                     path: /q/health/started
+                    port: *port
             resources:
               requests:
                 cpu: 5m
