@@ -95,7 +95,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: app
-                port: *port
+                port: &port 80
     service:
       app:
         primary: true
