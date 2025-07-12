@@ -65,6 +65,12 @@ spec:
                 cpu: 10m
               limits:
                 memory: 1Gi
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              runAsNonRoot: true
+              fsGroup: 1000
+              fsGroupChangePolicy: "OnRootMismatch"
 
       browserless:
         annotations:
@@ -97,17 +103,10 @@ spec:
               limits:
                 memory: 1Gi
             securityContext:
-              runAsNonRoot: true
+              runAsUser: 999
+              runAsGroup: 999
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
-
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-        fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:
