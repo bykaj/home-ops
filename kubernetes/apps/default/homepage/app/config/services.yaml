@@ -1,5 +1,4 @@
 ---
-- Tools:
 - Apps & Services:
     - HomeAssistant:
         href: https://homeassistant.home.${DOMAIN_NET}
