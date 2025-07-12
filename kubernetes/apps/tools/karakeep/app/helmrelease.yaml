@@ -22,11 +22,15 @@ spec:
         forceRename: *app
         annotations:
           reloader.stakater.com/auto: "true"
-        containers:
-          app:
+        initContainers:
+          init-migrate: &container
             image:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.25.0@sha256:572076596ea7fdaa189694d31dc8059743773b1f908d68d7c4af3737948ff3b3
+            workingDir: /db_migrations
+            command:
+              - node
+              - index.js
             envFrom:
               - secretRef:
                   name: &secret karakeep-secret
@@ -55,7 +59,23 @@ spec:
               OCR_LANGS: "eng,nld"
               RATE_LIMITING_ENABLED: "true"
               TZ: "${TIMEZONE}"
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+        containers:
+          web:
+            <<: *container
+            workingDir: /app/apps/web
+            command:
+              - node
+              - server.js
             probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
               liveness:
                 enabled: true
               readiness:
@@ -63,14 +83,22 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 256Mi
               limits:
                 memory: 1Gi
-            securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
-              runAsNonRoot: true
-              fsGroup: 1000
-              fsGroupChangePolicy: "OnRootMismatch"
+          worker:
+            <<: *container
+            workingDir: /app/apps/workers
+            command:
+              - npm
+              - run
+              - start:prod
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
 
       browserless:
         annotations:
@@ -100,6 +128,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 512Mi
               limits:
                 memory: 1Gi
             securityContext:
@@ -113,15 +142,19 @@ spec:
         existingClaim: karakeep-config
         advancedMounts:
           karakeep:
-            app:
+            init-migrate: &data
               - path: /data
+            web: *data
+            worker: *data
       tmpfs:
         type: emptyDir
         advancedMounts:
           karakeep:
-            app:
+            init-migrate: &cache
               - path: /app/apps/web/.next/cache
                 subPath: cache
+            web: *cache
+            worker: *cache
         globalMounts:
           - path: /tmp
             subPath: tmp
