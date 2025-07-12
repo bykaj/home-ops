@@ -3,7 +3,7 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: ${APP}-postgres-scaler
+  name: ${KEDA_NAME:=${APP}}-postgres-scaler
 spec:
   advanced:
     restoreToOriginalReplicaCount: true
@@ -13,7 +13,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: ${APP}
+    name: ${KEDA_NAME:=${APP}}
   triggers:
     - type: prometheus
       metadata:
