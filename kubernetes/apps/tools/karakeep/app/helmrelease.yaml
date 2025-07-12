@@ -42,7 +42,7 @@ spec:
               DATA_DIR: "/data"
               DISABLE_NEW_RELEASE_CHECK: "true"
               DISABLE_PASSWORD_AUTH: "true"
-              DISABLE_SIGNUPS: "true"
+              DISABLE_SIGNUPS: "false"
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
               INFERENCE_ENABLE_AUTO_TAGGING: "true"
               INFERENCE_IMAGE_MODEL: "gpt-4o-mini"
