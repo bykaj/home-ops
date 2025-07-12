@@ -1,0 +1,74 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: startpunkt
+    app.kubernetes.io/part-of: startpunkt
+    app.kubernetes.io/version: latest
+  name: startpunkt-role
+  namespace: default
+rules:
+  - apiGroups: ['']
+    resources: [namespaces]
+    verbs: [get, list]
+  - apiGroups: [startpunkt.ullberg.us]
+    resources: [applications, bookmarks]
+    verbs: [get, list, create, update, delete]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    verbs: [get, list]
+  - apiGroups: [route.openshift.io]
+    resources: [routes]
+    verbs: [get, list]
+  - apiGroups: [hajimari.io]
+    resources: [applications, bookmarks]
+    verbs: [get, list]
+  - apiGroups: [traefik.io]
+    resources: [ingressroutes]
+    verbs: [get, list]
+  - apiGroups: [forecastle.stakater.com]
+    resources: [forecastleapps]
+    verbs: [get, list]
+  - apiGroups: [gateway.networking.k8s.io]
+    resources: [httproutes]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: startpunkt
+    app.kubernetes.io/part-of: startpunkt
+    app.kubernetes.io/version: latest
+  name: startpunkt-cluster-role-binding
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: startpunkt-role
+subjects:
+  - kind: ServiceAccount
+    name: startpunkt
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.12.3
+    app.quarkus.io/vcs-uri: https://github.com/ullbergm/startpunkt.git
+  labels:
+    app.kubernetes.io/name: startpunkt
+    app.kubernetes.io/part-of: startpunkt
+    app.kubernetes.io/managed-by: quarkus
+  name: startpunkt
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: startpunkt-role
+subjects:
+  - kind: ServiceAccount
+    name: startpunkt
+    namespace: default
