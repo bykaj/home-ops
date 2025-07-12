@@ -5,6 +5,9 @@ theme: dark
 color: neutral
 useEqualHeights: true
 layout:
+  Tools:
+    style: row
+    columns: 3
   Apps & Services:
     style: row
     columns: 3
