@@ -62,22 +62,9 @@ spec:
             resources:
               requests:
                 cpu: 5m
-                memory: 64Mi
+                memory: 256Mi
               limits:
-                memory: 128Mi
-            securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-        fsGroupChangePolicy: "OnRootMismatch"
-        seccompProfile:
-          type: RuntimeDefault
+                memory: 512Mi
     persistence:
       config:
         type: configMap
