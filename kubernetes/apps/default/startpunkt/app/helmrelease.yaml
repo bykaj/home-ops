@@ -105,7 +105,7 @@ spec:
               - identifier: *app
                 port: *port
     service:
-      app:
+      startpunkt:
         controller: *app
         ports:
           http:
