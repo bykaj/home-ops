@@ -97,7 +97,7 @@ spec:
     serviceAccount:
       startpunkt: {}
     serviceMonitor:
-      app:
+      startpunkt:
         enabled: true
         endpoints:
           - scheme: http
