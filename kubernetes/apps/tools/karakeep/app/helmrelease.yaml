@@ -139,7 +139,7 @@ spec:
             sectionName: https-app-apps
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: &port 3000
 
     service:

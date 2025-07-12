@@ -6,7 +6,6 @@ metadata:
   name: &app karakeep
   namespace: &namespace tools
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -36,4 +35,5 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: false
