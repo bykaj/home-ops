@@ -210,7 +210,7 @@ spec:
           gethomepage.dev/icon: "sh-karakeep.svg"
           gethomepage.dev/widget.type: "karakeep"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_KARAKEEP_API_KEY}}"
+          gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_KARAKEEP_API_KEY}}` }}"
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:

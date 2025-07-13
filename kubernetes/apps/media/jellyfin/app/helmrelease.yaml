@@ -107,7 +107,7 @@ spec:
           gethomepage.dev/icon: "sh-jellyfin.svg"
           gethomepage.dev/widget.type: "jellyfin"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
+          gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}` }}"
           gethomepage.dev/widget.fields: "['movies', 'series', 'episodes', 'songs']"
           gethomepage.dev/widget.enableblocks: "true"
           gethomepage.dev/widget.enablenowplaying: "true"

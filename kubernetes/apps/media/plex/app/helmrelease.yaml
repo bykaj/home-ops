@@ -111,7 +111,7 @@ spec:
           gethomepage.dev/icon: "sh-plex.svg"
           gethomepage.dev/widget.type: "plex"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_PLEX_TOKEN}}"
+          gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_PLEX_TOKEN}}` }}"
           gethomepage.dev/widget.fields: "['streams', 'albums', 'movies', 'tv']"
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
