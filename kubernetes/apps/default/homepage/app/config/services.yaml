@@ -56,8 +56,3 @@
         href: https://scrutiny.${DOMAIN_APP_APPS}
         icon: scrutiny.png
         description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
-- Databases:
-    - RedisInsight:
-        href: https://redisinsight.${DOMAIN_APP_APPS}
-        icon: redis.png
-        # description: This is my service
