@@ -15,7 +15,9 @@
       showLabel: false
 - search:
     provider: custom
+    showSearchSuggestions: true
     url: https://kagi.com/search?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=
+    suggestionUrl: https://kagi.com/api/autosuggest?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=
     target: _blank
     # focus: true # Optional, will set focus to the search bar on page load
 - openmeteo:

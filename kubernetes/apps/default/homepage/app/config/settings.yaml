@@ -3,6 +3,7 @@ title: Dashboard
 favicon: https://raw.githubusercontent.com/bykaj/home-ops/refs/heads/main/assets/images/home-ops-logo.png
 color: slate
 useEqualHeights: true
+statusStyle: dot
 layout:
   Tools:
     tab: Applications
@@ -35,3 +36,13 @@ layout:
   Databases:
     style: row
     columns: 3
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
+  hideVisitURL: true
+  provider: custom
+  url: https://kagi.com/search?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=
+  suggestionUrl: https://kagi.com/api/autosuggest?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=
+  target: _blank
