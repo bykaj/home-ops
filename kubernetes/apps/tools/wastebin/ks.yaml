@@ -23,7 +23,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Wastebin
-      GATUS_DOMAIN: drup.lol
+      GATUS_DOMAIN: drup.lol          # Manually add to DNS servers
       VOLSYNC_CLAIM: wastebin-config
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_CACHE_CAPACITY: 2Gi

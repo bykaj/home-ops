@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: stashapp/stash
-              tag: v0.28.1
+              tag: v0.28.1@sha256:645f6c15b079410d50d488dbeb247c92f25534094dad4e15d886e47648b897f7
             env:
               TZ: "${TIMEZONE}"
               STASH_STASH: "/mnt/private"
@@ -107,8 +107,17 @@ spec:
                 subPath: tmp
     route:
       app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Media"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-stash.svg"
+          gethomepage.dev/widget.type: "stash"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_STASH_API_KEY}}"
+          gethomepage.dev/widget.fields: "['scenes', 'movies', 'performers', 'studios']"
         hostnames:
-          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
           - name: internal
             namespace: kube-system

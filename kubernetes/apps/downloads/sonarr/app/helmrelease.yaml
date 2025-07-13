@@ -108,8 +108,18 @@ spec:
             subPath: logs
     route:
       app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Downloads"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-sonarr.svg"
+          gethomepage.dev/widget.type: "sonarr"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
+          gethomepage.dev/widget.enablequeue: "true"
+          gethomepage.dev/widget.fields: "['wanted', 'queued', 'series']"
         hostnames:
-          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
           - name: internal
             namespace: kube-system

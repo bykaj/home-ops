@@ -105,8 +105,13 @@ spec:
                 subPath: nginx
     route:
       app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Downloads"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-whisparr.svg"
         hostnames:
-          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
           - name: internal
             namespace: kube-system

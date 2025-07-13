@@ -30,7 +30,7 @@ spec:
               tag: 1.41.8.9834@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
             env:
               TZ: "${TIMEZONE}"
-              PLEX_ADVERTISE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}:443,http://10.73.10.200:32400"
+              PLEX_ADVERTISE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}:443,http://10.73.10.200:32400"
               PLEX_NO_AUTH_NETWORKS: "10.73.0.0/20,10.42.0.0/16,10.43.0.0/16"
             probes:
               liveness: &probes
@@ -104,7 +104,17 @@ spec:
                 subPath: tmp
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${DOMAIN_APP_APPS}"]
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Media"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-plex.svg"
+          gethomepage.dev/widget.type: "plex"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_PLEX_TOKEN}}"
+          gethomepage.dev/widget.fields: "['streams', 'albums', 'movies', 'tv']"
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
           - name: external
             namespace: kube-system
