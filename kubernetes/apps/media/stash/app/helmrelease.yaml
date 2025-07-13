@@ -115,7 +115,7 @@ spec:
           gethomepage.dev/widget.type: "stash"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_STASH_API_KEY}}` }}"
-          gethomepage.dev/widget.fields: ["scenes", "movies", "performers", "studios"]
+          gethomepage.dev/widget.fields: '["scenes", "movies", "performers", "studios"]'
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
