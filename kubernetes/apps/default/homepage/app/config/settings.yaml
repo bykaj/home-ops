@@ -5,18 +5,31 @@ color: slate
 useEqualHeights: true
 layout:
   Tools:
+    tab: Applications
+    style: row
+    columns: 3
+  Media:
+    tab: Applications
+    style: row
+    columns: 3
+  Downloads:
+    tab: Applications
     style: row
     columns: 3
   Apps & Services:
+    tab: Applications
     style: row
     columns: 3
   Infrastructure:
+    tab: Observability
     style: row
     columns: 3
   Monitoring:
+    tab: Observability
     style: row
     columns: 3
   Storage:
+    tab: Observability
     style: row
     columns: 3
   Databases:

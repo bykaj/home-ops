@@ -1,59 +1,7 @@
 ---
 - Tools: []
-- Apps & Services:
-    - Paperless:
-        href: https://archive.${DOMAIN_APP_APPS}
-        icon: paperless-ngx.png
-        description: A self-hosted document management system
-        widget:
-          type: paperlessngx
-          url: https://archive.${DOMAIN_APP_APPS}
-          key: {{HOMEPAGE_VAR_PAPERLESS_API_KEY}}
-    - HomeAssistant:
-        href: https://homeassistant.home.${DOMAIN_NET}
-        icon: home-assistant.png
-        description: Smart Home Automation
-    - Karakeep:
-        href: https://links.${DOMAIN_APP_APPS}
-        icon: karakeep.png
-        description: Bookmark and link archiving
-    - Homebox:
-        href: https://homebox.${DOMAIN_APP_APPS}
-        icon: homebox.png
-        description: A simple home inventory system
-    - Mealie:
-        href: https://mealie.${DOMAIN_APP_APPS}
-        icon: mealie.png
-        description: A self-hosted recipe manager and meal planner
-    - Memos:
-        href: https://memos.${DOMAIN_APP_APPS}
-        icon: https://github.com/usememos/memos/blob/35f0861d6eaa15ab13d5ce9c9220553f2a56954d/web/public/logo.png?raw=true
-        description: A privacy-first, lightweight note-taking service
-    - Miniflux:
-        href: https://miniflux.${DOMAIN_APP_APPS}
-        icon: miniflux.png
-        description: A self-hosted rss feed reader
-    - OpenGist:
-        href: https://opengist.${DOMAIN_APP_APPS}
-        icon: opengist.png
-        description: A self-hosted, open-source alternative to Github Gist
-    - PairDrop:
-        href: https://pairdrop.${DOMAIN_APP_APPS}
-        icon: pairdrop.png
-        description: Local file sharing in your browser, inspired by Apple's AirDrop.
-    - PicoShare:
-        href: https://share.${DOMAIN_APP_APPS}
-        icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
-        description: A minimalist service for sharing images and other files
-    - Stirling-PDF:
-        href: https://pdf.${DOMAIN_APP_APPS}
-        icon: stirling-pdf.png
-        description: A self-hosted PDF editing webapp
-    - Syncthing:
-        href: https://sync.${DOMAIN_APP_APPS}
-        icon: syncthing.png
-        description: Continuous P2P (peer to peer) file synchronization between devices
-
+- Media: []
+- Downloads: []
 - Infrastructure:
     - UniFi:
         href: https://gateway.home.${DOMAIN_NET}
@@ -109,10 +57,6 @@
         icon: scrutiny.png
         description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
 - Databases:
-    - pgAdmin:
-        href: https://pgadmin.${DOMAIN_APP_APPS}
-        icon: pgadmin.png
-        # description: This is my service
     - RedisInsight:
         href: https://redisinsight.${DOMAIN_APP_APPS}
         icon: redis.png
