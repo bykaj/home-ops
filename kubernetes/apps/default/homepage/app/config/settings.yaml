@@ -1,8 +1,7 @@
 ---
 title: Dashboard
 favicon: https://raw.githubusercontent.com/bykaj/home-ops/refs/heads/main/assets/images/home-ops-logo.png
-theme: dark
-color: neutral
+color: slate
 useEqualHeights: true
 layout:
   Tools:

@@ -1,8 +1,8 @@
 ---
-# - logo:
+- logo: https://raw.githubusercontent.com/bykaj/home-ops/refs/heads/main/assets/images/home-ops-logo.png
 - kubernetes:
     cluster:
-      show: true
+      show: false
       cpu: true
       memory: true
       showLabel: true
@@ -12,15 +12,9 @@
       cpu: true
       memory: true
       showLabel: true
-- resources:
-    backend: resources
-    expanded: true
-    cpu: true
-    memory: true
-    network: default
 - search:
     provider: custom
-    url: https://search.unlocked.link/search?q=
+    url: https://kagi.com/search?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=
     target: _blank
     # focus: true # Optional, will set focus to the search bar on page load
 - openmeteo:
