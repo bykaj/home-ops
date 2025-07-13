@@ -11,7 +11,7 @@
       show: true
       cpu: true
       memory: true
-      showLabel: true
+      showLabel: false
 - search:
     provider: custom
     url: https://kagi.com/search?token={{HOMEPAGE_VAR_KAGI_SESSION_TOKEN}}&q=

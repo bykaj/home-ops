@@ -119,7 +119,7 @@ spec:
           gethomepage.dev/icon: "paperless-ngx.png"
           gethomepage.dev/widget.type: "paperlessngx"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_PAPERLESS_API_KEY}}"
+          gethomepage.dev/widget.key: {{HOMEPAGE_VAR_PAPERLESS_API_KEY}}
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
