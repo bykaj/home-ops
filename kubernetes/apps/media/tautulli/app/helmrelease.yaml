@@ -97,9 +97,9 @@ spec:
           gethomepage.dev/widget.type: "tautulli"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_TAUTULLI_API_KEY}}` }}"
-          gethomepage.dev/widget.enableuser: "true"
-          gethomepage.dev/widget.showepisodenumber: "true"
-          gethomepage.dev/widget.expandonestreamtotworows: "true"
+          gethomepage.dev/widget.enableUser: "true"
+          gethomepage.dev/widget.showEpisodeNumber: "true"
+          gethomepage.dev/widget.expandOneStreamToTwoRows: "true"
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:

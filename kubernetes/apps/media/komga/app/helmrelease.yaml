@@ -101,7 +101,7 @@ spec:
           gethomepage.dev/widget.type: "komga"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_KOMGA_API_KEY}}` }}"
-          gethomepage.dev/widget.fields: "['libraries', 'series', 'books']"
+          gethomepage.dev/widget.fields: '["libraries", "series", "books"]'
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:

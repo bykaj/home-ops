@@ -110,7 +110,7 @@ spec:
           gethomepage.dev/widget.type: "sabnzbd"
           gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_SABNZBD_API_KEY}}` }}"
-          gethomepage.dev/widget.fields: "['rate', 'queue', 'timeleft']"
+          gethomepage.dev/widget.fields: '["rate", "queue", "timeleft"]'
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
         parentRefs:
