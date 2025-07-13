@@ -1,6 +1,14 @@
 ---
 - Tools: []
 - Apps & Services:
+    - Paperless:
+        href: https://archive.${DOMAIN_APP_APPS}
+        icon: paperless-ngx.png
+        description: A self-hosted document management system
+        widget:
+          type: paperlessngx
+          url: https://archive.${DOMAIN_APP_APPS}
+          key: {{HOMEPAGE_VAR_PAPERLESS_API_KEY}}
     - HomeAssistant:
         href: https://homeassistant.home.${DOMAIN_NET}
         icon: home-assistant.png
@@ -59,7 +67,7 @@
           type: cloudflared
           accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}
           tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}
-          key: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_TOKEN}}
+          key: {{HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN}}
 - Monitoring:
     - Alertmanager:
         href: https://alertmanager.${DOMAIN_APP_APPS}
