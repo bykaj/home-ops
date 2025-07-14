@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/hotio/whisparr
-              tag: v3-3.0.0.1143@sha256:7e92b5fd84d609ea8377f5d4fea10f444a76fb253f5e629f2c118faf6f6dfe7e
+              tag: v3-3.0.0.1163@sha256:832e82aa373f466147cde5dec0a6ba30289eb50cd079d0eb3f0044d9fd8b7422
             env:
               TZ: "${TIMEZONE}"
               WHISPARR__ANALYTICS_ENABLED: "False"
