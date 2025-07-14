@@ -29,7 +29,7 @@ spec:
               tag: v1.3.2@sha256:4f923bf0e9391b3a8bc5527e539b022e92dcc8a3a13e6ab66122ea9ed030e196
             env:
               TZ: "${TIMEZONE}"
-              LOG_LEVEL: "debug"
+              LOG_LEVEL: "info"
               HOMEPAGE_ALLOWED_HOSTS: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
             envFrom:
               - secretRef:
