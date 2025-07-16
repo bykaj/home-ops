@@ -34,7 +34,7 @@ spec:
     - name: alertname
       value: NodeMemoryHighUtilization
     - name: instance
-      value: ${NFS_SERVER}:9100
+      value: ${NAS_HOST}:9100
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/observability.giantswarm.io/silence_v1alpha2.json
 apiVersion: observability.giantswarm.io/v1alpha2

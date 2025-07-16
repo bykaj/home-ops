@@ -74,11 +74,11 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${DOMAIN_APP_APPS}"]
+        hostnames: ["{{ .Release.Name }}.${DOMAIN_APP}"]
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: app

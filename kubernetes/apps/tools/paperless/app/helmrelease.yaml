@@ -44,7 +44,7 @@ spec:
               PAPERLESS_PORT: &port 8000
               PAPERLESS_TASK_WORKERS: "2"
               PAPERLESS_TIME_ZONE: "${TIMEZONE}"
-              PAPERLESS_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+              PAPERLESS_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               PAPERLESS_WEBSERVER_WORKERS: "2"
               # Configure folder importer
               PAPERLESS_CONSUMER_POLLING: "15"
@@ -54,7 +54,7 @@ spec:
               PAPERLESS_OCR_LANGUAGE: nld+eng
               PAPERLESS_OCR_LANGUAGES: nld
               # Configure database
-              PAPERLESS_DBHOST: "${DB_SERVER}"
+              PAPERLESS_DBHOST: "${DB_HOST}"
               # s6 overlay fixes
               # Ref: https://github.com/just-containers/s6-overlay/issues/600
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
@@ -118,15 +118,15 @@ spec:
           gethomepage.dev/name: "Paperless"
           gethomepage.dev/icon: "paperless-ngx.png"
           gethomepage.dev/widget.type: "paperlessngx"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_PAPERLESS_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["total", "inbox"]'
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: *app

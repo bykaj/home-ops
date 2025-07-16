@@ -37,7 +37,7 @@ spec:
             env:
               ARCHIVE_TAKE_COUNT: "5"
               AUTOSCROLL_TIMEOUT: "30"
-              BASE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+              BASE_URL: "https://{{ .Release.Name }}.${DOMAIN_APP}"
               DISABLE_NEW_SSO_USERS: "false"
               IGNORE_URL_SIZE_LIMIT: "true"
               MEILI_HOST: "http://meilisearch.database.svc.cluster.local:7700"
@@ -49,7 +49,7 @@ spec:
               NEXT_PUBLIC_EMAIL_PROVIDER: "true"
               NEXT_PUBLIC_MAX_FILE_BUFFER: "1024"
               NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: "http://ollama.tools.svc.cluster.local:11434"
-              NEXTAUTH_URL: "https://{{ .Release.Name }}.${DOMAIN_APP_APPS}/api/v1/auth"
+              NEXTAUTH_URL: "https://{{ .Release.Name }}.${DOMAIN_APP}/api/v1/auth"
               OLLAMA_MODEL: "phi4-mini"
               PAGINATION_TAKE_COUNT: "50"
               PDF_MAX_BUFFER: "4096"
@@ -81,7 +81,7 @@ spec:
     persistence:
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
@@ -94,11 +94,11 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+          - "{{ .Release.Name }}.${DOMAIN_APP}"
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: app

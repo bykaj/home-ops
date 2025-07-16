@@ -37,7 +37,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${NFS_SERVER}:2049
+        - ${NAS_HOST}:2049
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
@@ -51,7 +51,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${SMB_SERVER}:445
+        - ${NAS_HOST}:445
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
@@ -65,7 +65,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${DB_SERVER}:5432
+        - ${DB_HOST}:5432
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
@@ -79,4 +79,4 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${REDIS_SERVER}:6379
+        - ${REDIS_HOST}:6379

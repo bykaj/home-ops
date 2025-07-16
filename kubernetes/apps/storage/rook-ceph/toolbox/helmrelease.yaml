@@ -53,7 +53,7 @@ spec:
     persistence:
       transfer:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Transfer
         globalMounts:
           - path: /mnt/transfer

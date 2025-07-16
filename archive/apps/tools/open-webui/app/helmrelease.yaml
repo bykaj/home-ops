@@ -78,11 +78,11 @@ spec:
     route:
       app:
         hostnames:
-          - ${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}
+          - ${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - name: *app

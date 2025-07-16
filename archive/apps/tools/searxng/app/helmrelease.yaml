@@ -27,8 +27,8 @@ spec:
               repository: docker.io/searxng/searxng
               tag: 2025.7.8-fe52290@sha256:603b5eda2bdff4bc18aac6967ecdc8a4ad94b647031be58dec1ad220f54e9a7a
             env:
-              SEARXNG_BASE_URL: "https://search.${DOMAIN_APP_APPS}"
-              SEARXNG_URL: "https://search.${DOMAIN_APP_APPS}"
+              SEARXNG_BASE_URL: "https://search.${DOMAIN_APP}"
+              SEARXNG_URL: "https://search.${DOMAIN_APP}"
               SEARXNG_PORT: &port 8080
             envFrom:
               - secretRef:
@@ -82,11 +82,11 @@ spec:
     route:
       app:
         hostnames:
-          - "search.${DOMAIN_APP_APPS}"
+          - "search.${DOMAIN_APP}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - name: *app

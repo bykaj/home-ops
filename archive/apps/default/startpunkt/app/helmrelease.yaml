@@ -79,11 +79,11 @@ spec:
             subPath: tmp
     route:
       app:
-        hostnames: ["home.${DOMAIN_APP_APPS}"]
+        hostnames: ["home.${DOMAIN_APP}"]
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: *app

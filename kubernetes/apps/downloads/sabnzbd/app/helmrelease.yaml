@@ -35,7 +35,7 @@ spec:
                 sabnzbd.downloads.svc,
                 sabnzbd.downloads.svc.cluster,
                 sabnzbd.downloads.svc.cluster.local,
-                sabnzbd.${DOMAIN_APP_APPS}
+                sabnzbd.${DOMAIN_APP}
             envFrom:
               - secretRef:
                   name: sabnzbd-secret
@@ -82,14 +82,14 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/SABnzbd
       downloads:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-beta/Downloads
         globalMounts:
           - path: /mnt/downloads
@@ -108,12 +108,12 @@ spec:
           gethomepage.dev/name: "${GATUS_NAME}"
           gethomepage.dev/icon: "sh-sabnzbd.svg"
           gethomepage.dev/widget.type: "sabnzbd"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_SABNZBD_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["rate", "queue", "timeleft"]'
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app

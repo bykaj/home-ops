@@ -36,7 +36,7 @@ spec:
               tag: 5.11.0-2025.01.03@sha256:eb16b3979c4d8a84a1cfe1500a9978e1ca5fe3a0c203d486a03378d6338853cc
             env:
               DJANGO_DATABASE_ENGINE: "django.db.backends.postgresql"
-              DJANGO_DATABASE_HOST: "${DB_SERVER}"
+              DJANGO_DATABASE_HOST: "${DB_HOST}"
               DJANGO_DATABASE_PORT: "5432"
               DJANGO_TIME_ZONE: "${TIMEZONE}"
               DSMRREADER_LOGLEVEL: "ERROR"
@@ -66,7 +66,7 @@ spec:
     persistence:
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
@@ -92,11 +92,11 @@ spec:
           gethomepage.dev/name: "${GATUS_NAME}"
           gethomepage.dev/icon: "sh-dsmr-reader.png"
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: app

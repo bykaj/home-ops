@@ -10,7 +10,7 @@ data:
     endpoints:
       - name: EMQX
         group: "3. Infrastructure Services"
-        url: tcp://${MQTT_SERVER}:1883
+        url: tcp://${MQTT_HOST}:1883
         interval: 1m
         ui:
           hide-url: true

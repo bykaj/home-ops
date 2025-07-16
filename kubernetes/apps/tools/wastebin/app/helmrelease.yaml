@@ -77,7 +77,7 @@ spec:
           gethomepage.dev/name: "${GATUS_NAME}"
           gethomepage.dev/icon: "sh-wastebin.svg"
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: external
             namespace: kube-system

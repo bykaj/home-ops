@@ -30,7 +30,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               LOG_LEVEL: "info"
-              HOMEPAGE_ALLOWED_HOSTS: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+              HOMEPAGE_ALLOWED_HOSTS: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
             envFrom:
               - secretRef:
                   name: &secret homepage-secret
@@ -117,11 +117,11 @@ spec:
 
     route:
       app:
-        hostnames: ["${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"]
+        hostnames: ["${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"]
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: *app

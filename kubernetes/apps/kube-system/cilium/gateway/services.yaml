@@ -15,28 +15,28 @@ spec:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "services.home.${DOMAIN_NET}"
   listeners:
-    - name: http-app-apps
+    - name: http-app
       protocol: HTTP
       port: 80
-      hostname: "*.${DOMAIN_APP_APPS}"
+      hostname: "*.${DOMAIN_APP}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-app-apps
+    - name: https-app
       protocol: HTTPS
       port: 443
-      hostname: "*.${DOMAIN_APP_APPS}"
+      hostname: "*.${DOMAIN_APP}"
       allowedRoutes:
         namespaces:
           from: All
       tls:
         certificateRefs:
           - kind: Secret
-            name: ${DOMAIN_APP_APPS/./-}-tls
-    - name: tls-app-apps
+            name: ${DOMAIN_APP/./-}-tls
+    - name: tls-app
       protocol: TLS
       port: 443
-      hostname: "*.${DOMAIN_APP_APPS}"
+      hostname: "*.${DOMAIN_APP}"
       tls:
         mode: Passthrough
       allowedRoutes:

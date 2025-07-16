@@ -10,7 +10,7 @@ data:
     endpoints:
       - name: Dragonfly
         group: "3. Infrastructure Services"
-        url: tcp://${REDIS_SERVER}:6379
+        url: tcp://${REDIS_HOST}:6379
         interval: 1m
         ui:
           hide-url: true

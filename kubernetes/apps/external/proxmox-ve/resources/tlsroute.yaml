@@ -5,11 +5,11 @@ kind: TLSRoute
 metadata:
   name: &app proxmox-ve
 spec:
-  hostnames: ["pve.${DOMAIN_APP_APPS}"]
+  hostnames: ["pve.${DOMAIN_APP}"]
   parentRefs:
     - name: services
       namespace: kube-system
-      sectionName: tls-app-apps
+      sectionName: tls-app
   rules:
     - backendRefs:
         - name: *app

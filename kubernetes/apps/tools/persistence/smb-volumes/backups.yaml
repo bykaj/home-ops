@@ -21,7 +21,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: tools-smb-backups
     volumeAttributes:
-      source: //${SMB_SERVER}/Backups
+      source: //${NAS_HOST}/Backups
     nodeStageSecretRef:
       name: smb-credentials
       namespace: kube-system

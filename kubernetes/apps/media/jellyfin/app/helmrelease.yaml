@@ -76,14 +76,14 @@ spec:
       #     - path: /config/metadata
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Jellyfin
       media:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Media
         globalMounts:
           - path: /mnt/media
@@ -106,7 +106,7 @@ spec:
           gethomepage.dev/name: "${GATUS_NAME}"
           gethomepage.dev/icon: "sh-jellyfin.svg"
           gethomepage.dev/widget.type: "jellyfin"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["movies", "series", "episodes", "songs"]'
           gethomepage.dev/widget.enableBlocks: "true"
@@ -115,11 +115,11 @@ spec:
           gethomepage.dev/widget.showEpisodeNumber: "true"
           gethomepage.dev/widget.expandOneStreamToTwoRows: "true"
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP_APPS}}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
     service:
       app:
         controller: *app

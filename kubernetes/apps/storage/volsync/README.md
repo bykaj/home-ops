@@ -147,7 +147,7 @@ volumeMounts:
 volumes:
 - name: repository
   nfs:
-    server: "${NFS_SERVER}"
+    server: "${NAS_HOST}"
     path: "/mnt/vault/cluster/volsync"
 ```
 

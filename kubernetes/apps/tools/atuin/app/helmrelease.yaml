@@ -64,11 +64,11 @@ spec:
     route:
       app:
         hostnames:
-          - "sh.${DOMAIN_APP_APPS}"
+          - "sh.${DOMAIN_APP}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
     persistence:
       config:
         existingClaim: atuin-config

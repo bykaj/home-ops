@@ -27,17 +27,17 @@ spec:
       route:
         main:
           enabled: true
-          hostnames: ["alertmanager.${DOMAIN_APP_APPS}"]
+          hostnames: ["alertmanager.${DOMAIN_APP}"]
           parentRefs:
             - name: internal
               namespace: kube-system
-              sectionName: https-app-apps
+              sectionName: https-app
       alertmanagerSpec:
         alertmanagerConfiguration:
           name: alertmanager
           global:
             resolveTimeout: 5m
-        externalUrl: "https://alertmanager.${DOMAIN_APP_APPS}"
+        externalUrl: "https://alertmanager.${DOMAIN_APP}"
         storage:
           volumeClaimTemplate:
             spec:
@@ -55,11 +55,11 @@ spec:
       route:
         main:
           enabled: true
-          hostnames: ["prometheus.${DOMAIN_APP_APPS}"]
+          hostnames: ["prometheus.${DOMAIN_APP}"]
           parentRefs:
             - name: internal
               namespace: kube-system
-              sectionName: https-app-apps
+              sectionName: https-app
       prometheusSpec:
         image:
           registry: docker.io

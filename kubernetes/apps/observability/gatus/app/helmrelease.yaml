@@ -110,11 +110,11 @@ spec:
     route:
       app:
         hostnames:
-          - "status.${DOMAIN_APP_APPS}"
+          - "status.${DOMAIN_APP}"
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
     serviceAccount:
       gatus: {}
     service:

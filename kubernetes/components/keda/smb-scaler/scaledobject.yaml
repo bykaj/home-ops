@@ -18,6 +18,6 @@ spec:
     - type: prometheus
       metadata:
         serverAddress: http://prometheus-operated.observability.svc.cluster.local:9090
-        query: probe_success{instance=~"${SMB_SERVER}:445"}
+        query: probe_success{instance=~"${NAS_HOST}:445"}
         threshold: "1"
         ignoreNullValues: "0"

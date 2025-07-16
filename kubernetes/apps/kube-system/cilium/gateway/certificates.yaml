@@ -3,40 +3,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${DOMAIN_APP_APPS/./-}"
+  name: "${DOMAIN_APP/./-}"
 spec:
-  secretName: "${DOMAIN_APP_APPS/./-}-tls"
+  secretName: "${DOMAIN_APP/./-}-tls"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${DOMAIN_APP_APPS}"
-  dnsNames: ["${DOMAIN_APP_APPS}", "*.${DOMAIN_APP_APPS}"]
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: "${DOMAIN_APP_INFRA/./-}"
-spec:
-  secretName: "${DOMAIN_APP_INFRA/./-}-tls"
-  issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
-  commonName: "${DOMAIN_APP_INFRA}"
-  dnsNames: ["${DOMAIN_APP_INFRA}", "*.${DOMAIN_APP_INFRA}"]
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: "${DOMAIN_DEV/./-}"
-spec:
-  secretName: "${DOMAIN_DEV/./-}-tls"
-  issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
-  commonName: "${DOMAIN_DEV}"
-  dnsNames: ["${DOMAIN_DEV}", "*.${DOMAIN_DEV}"]
+  commonName: "${DOMAIN_APP}"
+  dnsNames: ["${DOMAIN_APP}", "*.${DOMAIN_APP}"]
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
@@ -68,19 +42,6 @@ spec:
     kind: ClusterIssuer
   commonName: "${DOMAIN_IO}"
   dnsNames: ["${DOMAIN_IO}", "*.${DOMAIN_IO}"]
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: "${DOMAIN_CLOUD/./-}"
-spec:
-  secretName: "${DOMAIN_CLOUD/./-}-tls"
-  issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
-  commonName: "${DOMAIN_CLOUD}"
-  dnsNames: ["${DOMAIN_CLOUD}", "*.${DOMAIN_CLOUD}"]
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1

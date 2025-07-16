@@ -42,11 +42,11 @@ spec:
               APP_SIGNUP_DOUBLE_OPTIN: "true"
               APP_TRUSTED_CLOUDFLARE: "true"
               APP_TRUSTED_PROXIES: "127.0.0.1/32,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-              APP_URL: "https://monica.${DOMAIN_APP_APPS}"
+              APP_URL: "https://monica.${DOMAIN_APP}"
               CACHE_DRIVER: "redis"
               DAV_ENABLED: "true"
               DB_CONNECTION: "pgsql"
-              DB_HOST: "${DB_SERVER}"
+              DB_HOST: "${DB_HOST}"
               DB_PORT: "5432"
               DEFAULT_MAX_STORAGE_SIZE: "1024" # 1024MB
               DEFAULT_MAX_UPLOAD_SIZE: "10240" # 10MB
@@ -65,7 +65,7 @@ spec:
               QUEUE_CONNECTION: "redis"
               RATE_LIMIT_PER_MINUTE_API: "60"
               RATE_LIMIT_PER_MINUTE_OAUTH: "5"
-              REDIS_HOST: "${REDIS_SERVER}"
+              REDIS_HOST: "${REDIS_HOST}"
               S3_PATH_STYLE: "true"
               SESSION_DRIVER: "redis"
               TZ: "${TIMEZONE}"
@@ -117,7 +117,7 @@ spec:
             subPath: monica
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups
@@ -130,11 +130,11 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${DOMAIN_APP_APPS}"
+          - "{{ .Release.Name }}.${DOMAIN_APP}"
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-app-apps
+            sectionName: https-app
         rules:
           - backendRefs:
               - identifier: app

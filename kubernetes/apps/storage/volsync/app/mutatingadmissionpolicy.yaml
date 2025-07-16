@@ -97,7 +97,7 @@ spec:
               value: Object.spec.template.spec.volumes{
                 name: "repository",
                 nfs: Object.spec.template.spec.volumes.nfs{
-                  server: "${NFS_SERVER}",
+                  server: "${NAS_HOST}",
                   path: "/mnt/vault-alpha/Backups/Volsync"
                 }
               }

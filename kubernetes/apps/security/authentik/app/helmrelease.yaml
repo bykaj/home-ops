@@ -67,9 +67,9 @@ spec:
           asn: "/geoip/GeoLite2-ASN.mmdb"
       log_level: "info"
       postgresql:
-        host: "${DB_SERVER}"
+        host: "${DB_HOST}"
       redis:
-        host: "${REDIS_SERVER}"
+        host: "${REDIS_HOST}"
 
     # GeoIP Updater
     geoip:

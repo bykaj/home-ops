@@ -23,7 +23,7 @@ spec:
       create: true
       name: nfs-slow
       parameters:
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         share: /mnt/vault-alpha/Cluster
       mountOptions:
         - nfsvers=4.2

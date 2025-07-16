@@ -51,7 +51,7 @@ spec:
               BACKUP_KEEP_WEEKS: "4"
               BACKUP_LATEST_TYPE: "symlink"
               POSTGRES_EXTRA_OPTS: "-b -C -c -Z6"
-              POSTGRES_HOST: "${DB_SERVER}"
+              POSTGRES_HOST: "${DB_HOST}"
               SCHEDULE: "@daily"
               TZ: "${TIMEZONE}"
             envFrom:
@@ -60,7 +60,7 @@ spec:
     persistence:
       backups:
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
           - path: /mnt/backups

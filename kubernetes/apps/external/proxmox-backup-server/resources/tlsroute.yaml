@@ -5,11 +5,11 @@ kind: TLSRoute
 metadata:
   name: &app proxmox-backup-server
 spec:
-  hostnames: ["pbs.${DOMAIN_APP_APPS}"]
+  hostnames: ["pbs.${DOMAIN_APP}"]
   parentRefs:
     - name: services
       namespace: kube-system
-      sectionName: tls-app-apps
+      sectionName: tls-app
   rules:
     - backendRefs:
         - name: *app
