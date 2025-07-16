@@ -36,25 +36,27 @@ spec:
     enablePlatformPlaybooks: true
     runner:
       sendAdditionalTelemetry: true
-      additional_env_vars:
-        - name: SINK_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: &secret robusta-secret
-              key: SINK_TOKEN
-    enableHolmesGPT: true
-    enabledManagedConfiguration: true
-    holmes:
-      additionalEnvVars:
-        - name: ROBUSTA_AI
-          value: "true"
+      additional_env_vars: &env
         - name: ACCOUNT_ID
           valueFrom:
             secretKeyRef:
-              name: *secret
+              name: &secret robusta-secret
               key: ACCOUNT_ID
         - name: SIGNING_KEY
           valueFrom:
             secretKeyRef:
               name: *secret
               key: SIGNING_KEY
+        - name: SINK_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: *secret
+              key: SINK_TOKEN
+    enableHolmesGPT: true
+    enabledManagedConfiguration: true
+    holmes:
+      additionalEnvVars:
+        - <<: *env
+        - name: ROBUSTA_AI
+          value: "true"
+
