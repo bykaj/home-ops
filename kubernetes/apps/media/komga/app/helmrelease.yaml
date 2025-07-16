@@ -47,16 +47,16 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
+            resources:
+              requests:
+                cpu: 10m
+                memory: 845Mi
+              limits:
+                memory: 845Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 50m
-                memory: 1Gi
-              limits:
-                memory: 4Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true

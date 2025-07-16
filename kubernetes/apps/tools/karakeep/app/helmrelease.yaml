@@ -86,10 +86,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 10m
-                memory: 512Mi
+                cpu: 159m
+                memory: 422Mi
               limits:
-                memory: 1Gi
+                memory: 422Mi
           worker:
             <<: *container
             workingDir: /app/apps/workers
@@ -99,10 +99,10 @@ spec:
               - start:prod
             resources:
               requests:
-                cpu: 10m
-                memory: 512Mi
+                cpu: 513m
+                memory: 651Mi
               limits:
-                memory: 1Gi
+                memory: 651Mi
 
       chrome:
         annotations:
@@ -124,10 +124,10 @@ spec:
               - --hide-scrollbars
             resources:
               requests:
-                cpu: 10m
-                memory: 1Gi
+                cpu: 353m
+                memory: 387Mi
               limits:
-                memory: 4Gi
+                memory: 387Mi
             securityContext:
               capabilities:
                 drop:

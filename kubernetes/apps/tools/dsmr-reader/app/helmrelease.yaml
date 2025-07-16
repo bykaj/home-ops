@@ -59,10 +59,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 80m
-                memory: 384Mi
+                cpu: 230m
+                memory: 281Mi
               limits:
-                memory: 1Gi
+                memory: 281Mi
     persistence:
       backups:
         type: nfs

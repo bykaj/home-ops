@@ -18,3 +18,22 @@ spec:
       retries: 3
   values:
     enableServiceLinks: false
+    resources:
+      operator:
+        requests:
+          cpu: 10m
+          memory: 152Mi
+        limits:
+          memory: 152Mi
+      metricServer:
+        requests:
+          cpu: 10m
+          memory: 100Mi
+        limits:
+          memory: 100Mi
+      webhooks:
+        requests:
+          cpu: 10m
+          memory: 100Mi
+        limits:
+          memory: 100Mi

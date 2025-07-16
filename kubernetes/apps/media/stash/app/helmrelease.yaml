@@ -56,11 +56,11 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 20m
-                memory: 512Mi
+                cpu: 80m
+                memory: 1377Mi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 2Gi
+                memory: 1377Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: false
