@@ -13,6 +13,6 @@ resources:
   - ./kromgo/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
-  #- ./robusta/ks.yaml
+  - ./robusta/ks.yaml
   - ./silence-operator/ks.yaml
   - ./unpoller/ks.yaml
