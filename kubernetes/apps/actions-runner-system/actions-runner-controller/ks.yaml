@@ -41,7 +41,7 @@ spec:
     - name: onepassword-store
       namespace: external-secrets
     - name: openebs
-      namespace: rook-ceph
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/actions-runner-system/actions-runner-controller/runners
   prune: true
