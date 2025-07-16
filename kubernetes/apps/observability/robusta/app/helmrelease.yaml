@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: robusta
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: robusta
+      version: 0.25.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: robusta
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  driftDetection:
+    mode: enabled
+  values:
+    clusterName: homelab
+    globalConfig:
+      signing_key: "{{ env.SIGNING_KEY }}"
+      account_id: "{{ env.ACCOUNT_ID }}"
+    sinksConfig:
+      - robusta_sink:
+          name: robusta_ui_sink
+          token: "{{ env.SINKS_TOKEN }}"
+    enablePrometheusStack: false
+    enablePlatformPlaybooks: true
+    runner:
+      sendAdditionalTelemetry: true
+    enableHolmesGPT: true
+    enabledManagedConfiguration: true
+    holmes:
+      additionalEnvVars:
+        - name: ROBUSTA_AI
+          value: "true"
+        - name: ACCOUNT_ID
+          valueFrom:
+            secretKeyRef:
+              name: robusta-secret
+              key: ACCOUNT_ID
+        - name: SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: robusta-secret
+              key: SIGNING_KEY
+        - name: SINKS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: robusta-secret
+              key: SINKS_TOKEN
