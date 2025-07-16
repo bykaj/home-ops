@@ -18,7 +18,7 @@ spec:
       retries: 3
   dependsOn:
     - name: rook-ceph-cluster
-      namespace: rook-ceph
+      namespace: storage
     - name: plex
       namespace: media
   values:
