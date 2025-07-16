@@ -102,10 +102,10 @@ spec:
             enabled: true
       resources:
         requests:
-          cpu: 84m
-          memory: 626Mi
+          cpu: 100m
+          memory: 512Mi
         limits:
-          memory: 1Gi
+          memory: 2Gi
       volumeMounts:
         - name: custom-assets
           mountPath: /web/dist/custom.css

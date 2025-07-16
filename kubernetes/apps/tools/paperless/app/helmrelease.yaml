@@ -76,10 +76,10 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 851m
-                memory: 1512Mi
+                cpu: 25m
+                memory: 1280Mi
               limits:
-                memory: 1512Mi
+                memory: 3Gi
     persistence:
       config:
         existingClaim: paperless-config

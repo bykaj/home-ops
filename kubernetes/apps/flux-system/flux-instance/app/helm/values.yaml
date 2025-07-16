@@ -44,30 +44,10 @@ instance:
                   - name: manager
                     resources:
                       requests:
-                        cpu: 10m
-                        memory: 100Mi
+                        cpu: 50m
+                        memory: 64Mi
                       limits:
-                        memory: 100Mi
-        target:
-          kind: Deployment
-          name: (notification-controller)
-      - patch: |
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: all
-          spec:
-            template:
-              spec:
-                containers:
-                  - name: manager
-                    resources:
-                      requests:
-                        cpu: 10m
-                        memory: 128Mi
-                      limits:
-                        cpu: 15m
-                        memory: 256Mi
+                        memory: 512Mi
         target:
           kind: Deployment
           name: (kustomize-controller|helm-controller|source-controller)
