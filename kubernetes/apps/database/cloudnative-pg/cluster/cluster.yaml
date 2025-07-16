@@ -3,7 +3,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: postgres-v17
+  name: &currentCluster postgres-v17
 spec:
   instances: 3
   # WARNING: newer versions of the Postgres image have an incompatible version of the AWS S3 SDK (in Barman) for non-AWS S3 storage!
@@ -48,7 +48,7 @@ spec:
         maxParallel: 8
       destinationPath: "s3://cloudnative-pg"
       endpointURL: "https://gateway.storjshare.io"
-      serverName: postgres-v17-20250716
+      serverName: *currentCluster
       s3Credentials:
         accessKeyId:
           name: *secret
@@ -67,7 +67,7 @@ spec:
 
     # Recovers from the latest S3 backup (after moving/renaming the 'currentCluster' folder to 'previousCluster' in the bucket!)
     recovery:
-      source: &previousCluster postgres-v17
+      source: &previousCluster postgres-v17-backup
 
   externalClusters:
     - name: *previousCluster
