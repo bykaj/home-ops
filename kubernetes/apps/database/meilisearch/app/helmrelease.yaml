@@ -35,6 +35,6 @@ spec:
         cpu: 10m
         memory: 256Mi
       limits:
-        memory: 2Gi
+        memory: 1Gi
     serviceMonitor:
       enabled: true
