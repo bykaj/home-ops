@@ -31,7 +31,7 @@ spec:
     sinksConfig:
       - robusta_sink:
           name: robusta_ui_sink
-          token: "{{ env.SINKS_TOKEN }}"
+          token: "{{ env.SINK_TOKEN }}"
     enablePrometheusStack: false
     enablePlatformPlaybooks: true
     runner:
@@ -45,15 +45,15 @@ spec:
         - name: ACCOUNT_ID
           valueFrom:
             secretKeyRef:
-              name: robusta-secret
+              name: &secret robusta-secret
               key: ACCOUNT_ID
         - name: SIGNING_KEY
           valueFrom:
             secretKeyRef:
-              name: robusta-secret
+              name: *secret
               key: SIGNING_KEY
-        - name: SINKS_TOKEN
+        - name: SINK_TOKEN
           valueFrom:
             secretKeyRef:
-              name: robusta-secret
-              key: SINKS_TOKEN
+              name: *secret
+              key: SINK_TOKEN
