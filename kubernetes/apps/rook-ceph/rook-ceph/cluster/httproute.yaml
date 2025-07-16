@@ -13,5 +13,5 @@ spec:
   rules:
     - backendRefs:
         - name: rook-ceph-mgr-dashboard
-          namespace: storage
+          namespace: rook-ceph
           port: 7000

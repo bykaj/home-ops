@@ -19,7 +19,7 @@ spec:
     - name: keda
       namespace: observability
     - name: rook-ceph-cluster
-      namespace: storage
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/downloads/sabnzbd/app
   postBuild:

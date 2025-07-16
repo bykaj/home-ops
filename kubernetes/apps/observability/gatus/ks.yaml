@@ -13,7 +13,7 @@ spec:
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
-      namespace: storage
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/observability/gatus/app
   postBuild:

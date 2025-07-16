@@ -38,7 +38,7 @@ spec:
     - name: cloudnative-pg-operator
       namespace: *namespace
     - name: rook-ceph-cluster
-      namespace: storage
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   postBuild:

@@ -3,17 +3,24 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app csi-driver-smb
-  namespace: &namespace storage
+  name: &app volsync
+  namespace: &namespace kube-system
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
+    - name: openebs
+      namespace: *namespace
+    - name: snapshot-controller
+      namespace: *namespace
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   interval: 1h
-  path: ./kubernetes/apps/storage/csi-driver-smb/app
+  path: ./kubernetes/apps/kube-system/volsync/app
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -22,4 +29,3 @@ spec:
     namespace: flux-system
   targetNamespace: *namespace
   timeout: 5m
-  wait: true

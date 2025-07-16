@@ -18,7 +18,7 @@ spec:
     - name: meilisearch
       namespace: database
     - name: rook-ceph-cluster
-      namespace: storage
+      namespace: rook-ceph
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/tools/karakeep/app
