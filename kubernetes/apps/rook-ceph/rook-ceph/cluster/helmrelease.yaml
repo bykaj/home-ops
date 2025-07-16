@@ -56,37 +56,37 @@ spec:
         provider: host
         connections:
           requireMsgr2: true
-      resources:
-        mgr:
-          requests:
-            cpu: 50m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        mon:
-          requests:
-            cpu: 50m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        osd:
-          requests:
-            cpu: 250m
-            memory: 5Gi
-          limits:
-            memory: 5Gi
-        mgr-sidecar:
-          requests:
-            cpu: 20m
-            memory: 128Mi
-          limits:
-            memory: 256Mi
-        logcollector:
-          requests:
-            cpu: 10m
-            memory: 128Mi
-          limits:
-            memory: 128Mi
+      # resources:
+      #   mgr:
+      #     requests:
+      #       cpu: 50m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   mon:
+      #     requests:
+      #       cpu: 50m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   osd:
+      #     requests:
+      #       cpu: 250m
+      #       memory: 5Gi
+      #     limits:
+      #       memory: 5Gi
+      #   mgr-sidecar:
+      #     requests:
+      #       cpu: 20m
+      #       memory: 128Mi
+      #     limits:
+      #       memory: 256Mi
+      #   logcollector:
+      #     requests:
+      #       cpu: 10m
+      #       memory: 128Mi
+      #     limits:
+      #       memory: 128Mi
       storage:
         useAllNodes: false
         useAllDevices: false
