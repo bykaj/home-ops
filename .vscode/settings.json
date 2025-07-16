@@ -40,7 +40,7 @@
         "network": "context",
         "observability": "event",
         "openebs-system": "base",
-        "rook-ceph": "dump",
+        "storage": "dump",
         "system-upgrade": "update",
         "tools": "tools",
         "volsync-system": "aws"
