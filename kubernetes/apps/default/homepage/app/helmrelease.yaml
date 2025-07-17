@@ -54,7 +54,6 @@ spec:
         name: homepage-config
         globalMounts:
           - path: /app/config
-            readOnly: true
       tmpfs:
         type: emptyDir
         globalMounts:
