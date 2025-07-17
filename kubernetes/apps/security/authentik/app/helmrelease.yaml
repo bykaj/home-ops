@@ -73,7 +73,7 @@ spec:
 
     # GeoIP Updater
     geoip:
-      enabled: true
+      enabled: false
       editionIds: "GeoLite2-City GeoLite2-ASN"
       existingSecret:
         secretName: *secret
