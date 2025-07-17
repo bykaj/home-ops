@@ -83,10 +83,10 @@ spec:
             memory: 256Mi
         logcollector:
           requests:
-            cpu: 10m
+            cpu: 20m
             memory: 128Mi
           limits:
-            memory: 128Mi
+            memory: 512Mi
       storage:
         useAllNodes: false
         useAllDevices: false
