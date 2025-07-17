@@ -13,6 +13,7 @@ configMapGenerator:
       - ./config/bookmarks.yaml
       - ./config/docker.yaml
       - ./config/kubernetes.yaml
+      - ./config/proxmox.yaml
       - ./config/services.yaml
       - ./config/settings.yaml
       - ./config/widgets.yaml
