@@ -45,6 +45,7 @@ spec:
               N8N_DIAGNOSTICS_ENABLED: "false"
               N8N_EMAIL_MODE: "smtp"
               N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "false"
+              N8N_HIDE_USAGE_PAGE: "true"
               N8N_HOST: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               N8N_LOG_LEVEL: "info"
               N8N_LOG_OUTPUT: "console"
