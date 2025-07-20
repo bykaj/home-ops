@@ -55,7 +55,7 @@ spec:
               N8N_PROXY_HOPS: "1"
               N8N_RUNNERS_ENABLED: "true"
               N8N_SMTP_PORT: "587"
-              WEBHOOK_URL: "https://${GATUS_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_APP}/"
+              WEBHOOK_URL: "https://${GATUS_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_IO}/"
             envFrom: *envFrom
             probes:
               liveness: &probes
@@ -106,11 +106,11 @@ spec:
                 port: *port
       webhook:
         hostnames:
-          - "${GATUS_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_APP}"
+          - "${GATUS_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_IO}"
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https-app
+            sectionName: https-io
         rules:
           - matches:
               - path:
