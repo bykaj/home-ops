@@ -81,10 +81,10 @@ spec:
             sectionName: https-app
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port
     service:
-      app:
+      *app :
         controller: *app
         ports:
           http:
