@@ -23,9 +23,9 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: n8n
       VOLSYNC_CLAIM: n8n-config
-      VOLSYNC_CAPACITY: 256Mi
+      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_CACHE_CAPACITY: 2Gi
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
