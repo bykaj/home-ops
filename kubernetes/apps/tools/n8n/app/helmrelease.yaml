@@ -63,10 +63,10 @@ spec:
                 memory: 2Gi
     defaultPodOptions:
       securityContext:
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
         existingClaim: n8n-config
