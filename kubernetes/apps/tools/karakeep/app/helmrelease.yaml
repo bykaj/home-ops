@@ -26,7 +26,7 @@ spec:
           init-migrate: &container
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: latest@sha256:1e8ac2190ce38392749d4dfe05406204eb19328bf417b2a2b4ff688dd579af9b
+              tag: latest@sha256:67c78971426d8cfc18980bded203fae4bbfc303cf35b865556c441f8eab657ba
             workingDir: /db_migrations
             command:
               - node
