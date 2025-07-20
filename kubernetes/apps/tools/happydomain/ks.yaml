@@ -26,6 +26,7 @@ spec:
       GATUS_NAME: HappyDomain
       VOLSYNC_CLAIM: happydomain-config
       VOLSYNC_CAPACITY: 256Mi
+      VOLSYNC_CACHE_CAPACITY: 256Mi
   retryInterval: 2m
   sourceRef:
     kind: GitRepository

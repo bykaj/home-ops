@@ -8,9 +8,10 @@ components:
 resources:
   - ./atuin/ks.yaml
   - ./dsmr-reader/ks.yaml
-  - ./happydomain/ks.yaml
+  #- ./happydomain/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
+  #- ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
