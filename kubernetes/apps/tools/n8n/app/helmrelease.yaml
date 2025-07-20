@@ -36,22 +36,25 @@ spec:
               repository: ghcr.io/n8n-io/n8n
               tag: 1.103.1@sha256:a8de25cb7958fee59ab90c6264e9310c36f44dc37d4c1734045339364f5df8ba
             env:
-              DB_TYPE: "postgresdb"
               DB_POSTGRESDB_HOST: "${DB_HOST}"
-              EXECUTIONS_DATA_PRUNE: "true"
+              DB_TYPE: "postgresdb"
               EXECUTIONS_DATA_MAX_AGE: "7"
               EXECUTIONS_DATA_PRUNE_MAX_COUNT: "50000"
+              EXECUTIONS_DATA_PRUNE: "true"
               GENERIC_TIMEZONE: "${TIMEZONE}"
               N8N_DIAGNOSTICS_ENABLED: "false"
-              N8N_RUNNERS_ENABLED: "true"
+              N8N_EMAIL_MODE: "smtp"
               N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "false"
-              N8N_PROTOCOL: "https"
-              N8N_PORT: &port 8080
               N8N_HOST: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               N8N_LOG_LEVEL: "info"
               N8N_LOG_OUTPUT: "console"
-              N8N_EMAIL_MODE: "smtp"
+              N8N_METRICS: "true"
+              N8N_PORT: &port 5678
+              N8N_PROTOCOL: "https"
+              N8N_PROXY_HOPS: "1"
+              N8N_RUNNERS_ENABLED: "true"
               N8N_SMTP_PORT: "587"
+              WEBHOOK_URL: "https://${GATUS_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_APP}/"
             envFrom: *envFrom
             probes:
               liveness: &probes
