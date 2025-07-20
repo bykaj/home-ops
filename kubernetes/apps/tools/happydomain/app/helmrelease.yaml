@@ -26,6 +26,7 @@ spec:
               repository: happydomain/happydomain
               tag: 0.4.1@sha256:e60ba2a081b2dd9218db7afdc0f3a86dfe27262839bee450c8ddb2896d22e5ef
             env:
+              HAPPYDOMAIN_DEFAULT_NS: "https://1.1.1.1:443/dns-query"
               HAPPYDOMAIN_DISABLE_EMBEDDED_LOGIN: "1"
               HAPPYDOMAIN_DISABLE_REGISTRATION: "1"
               HAPPYDOMAIN_EXTERNALURL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
@@ -52,9 +53,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 128Mi
+                memory: 64Mi
               limits:
-                memory: 512Mi
+                memory: 128Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
