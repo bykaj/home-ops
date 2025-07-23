@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app audiobookshelf
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      audiobookshelf:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/advplyr/audiobookshelf
+              tag: 2.26.2@sha256:80f0005eeecb952605aa9674bc39a77849614b5ca461d06229ceec7642f96cdb
+            env:
+              TZ: "${TIMEZONE}"
+              AUDIOBOOKSHELF_UID: "4000"
+              AUDIOBOOKSHELF_GID: "4000"
+              CONFIG_PATH: "/data/config"
+              METADATA_PATH: "/data/metadata"
+              BACKUP_PATH: &backupPath "/mnt/backups"
+              PORT: &port 80
+            envFrom:
+              - secretRef:
+                  name: audiobookshelf-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthcheck
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: audiobookshelf-config
+        globalMounts:
+          - path: /data
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: *backupPath
+            subPath: Apps/Audiobookshelf
+      media:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault-alpha/Media
+        globalMounts:
+          - path: /mnt/media
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /data/metadata/logs
+            subPath: logs
+          - path: /tmp
+            subPath: tmp
+    route:
+      audiobookshelf:
+        hostnames: ["${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *port
+    service:
+      *app :
+        controller: *app
+        ports:
+          http:
+            port: *port
