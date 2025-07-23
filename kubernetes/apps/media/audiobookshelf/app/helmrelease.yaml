@@ -33,7 +33,6 @@ spec:
               AUDIOBOOKSHELF_GID: "4000"
               CONFIG_PATH: &configPath "/config"
               METADATA_PATH: "/config/metadata"
-              BACKUP_PATH: &backupPath "/mnt/backups"
               HOST: "0.0.0.0"
               PORT: &port 80
             envFrom:
@@ -75,7 +74,7 @@ spec:
         server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
-          - path: *backupPath
+          - path: /config/metadata/backups
             subPath: Apps/Audiobookshelf
       media:
         type: nfs
@@ -87,7 +86,7 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /data/metadata/logs
+          - path: /config/metadata/logs
             subPath: logs
           - path: /tmp
             subPath: tmp
