@@ -31,9 +31,10 @@ spec:
               TZ: "${TIMEZONE}"
               AUDIOBOOKSHELF_UID: "4000"
               AUDIOBOOKSHELF_GID: "4000"
-              CONFIG_PATH: "/data/config"
-              METADATA_PATH: "/data/metadata"
+              CONFIG_PATH: &configPath "/config"
+              METADATA_PATH: "/config/metadata"
               BACKUP_PATH: &backupPath "/mnt/backups"
+              HOST: "0.0.0.0"
               PORT: &port 80
             envFrom:
               - secretRef:
@@ -68,7 +69,7 @@ spec:
       config:
         existingClaim: audiobookshelf-config
         globalMounts:
-          - path: /data
+          - path: *configPath
       backups:
         type: nfs
         server: "${NAS_HOST}"
