@@ -28,8 +28,8 @@ spec:
               repository: ghcr.io/advplyr/audiobookshelf
               tag: 2.26.2@sha256:80f0005eeecb952605aa9674bc39a77849614b5ca461d06229ceec7642f96cdb
             env:
-              AUDIOBOOKSHELF_GID: "4000"
-              AUDIOBOOKSHELF_UID: "4000"
+              AUDIOBOOKSHELF_GID: 4000
+              AUDIOBOOKSHELF_UID: 4000
               CONFIG_PATH: &configPath "/config"
               HOST: "0.0.0.0"
               METADATA_PATH: "/config/metadata"
@@ -61,14 +61,13 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-        pod:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 4000
-            runAsGroup: 4000
-            fsGroup: 4000
-            fsGroupChangePolicy: OnRootMismatch
-            seccompProfile: { type: RuntimeDefault }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         existingClaim: audiobookshelf-config
