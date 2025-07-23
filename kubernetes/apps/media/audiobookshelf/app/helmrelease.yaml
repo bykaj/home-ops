@@ -86,8 +86,8 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /config/metadata/logs
-            subPath: logs
+          # - path: /config/metadata/logs
+          #   subPath: logs
           - path: /tmp
             subPath: tmp
     route:
