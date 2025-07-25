@@ -11,7 +11,6 @@ resources:
   - ./happydomain/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
-  - ./karakeep-s3/ks.yaml
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
