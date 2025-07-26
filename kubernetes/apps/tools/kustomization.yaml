@@ -8,7 +8,6 @@ components:
 resources:
   - ./atuin/ks.yaml
   - ./dsmr-reader/ks.yaml
-  - ./happydomain/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
   - ./n8n/ks.yaml
