@@ -1,0 +1,161 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app your-spotify
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      server:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/yooooomi/your_spotify_server
+              tag: 1.13.1@sha256:552f1577b38fdd2d9e1a52a5f945c5471f57feaed9684c7b88abc9640c4a2fac
+            env:
+              # Don't use 'Spotify' in any domain name.
+              # Ref: https://github.com/Yooooomi/your_spotify/pull/254
+              API_ENDPOINT: &apiEndpoint "https://${GATUS_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
+              CLIENT_ENDPOINT: "https://${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
+              MONGO_ENDPOINT: "mongodb://your-spotify-mongodb:27017/your_spotify"
+              PORT: &serverPort 8080
+              TIMEZONE: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: your-spotify-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *serverPort
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+      web:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/yooooomi/your_spotify_client
+              tag: 1.13.1@sha256:a9672141625f47ce34aa837ddab15d436bc6b3a72cff001a906fe79b078403e5
+            env:
+              API_ENDPOINT: *apiEndpoint
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &webPort 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext: *securityContext
+      mongodb:
+        type: statefulset
+        statefulset:
+          podManagementPolicy: OrderedReady
+        containers:
+          app:
+            image:
+              repository: docker.io/library/mongo
+              tag: 6.0.4-focal
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: "${VOLSYNC_CLAIM}"
+        advancedMounts:
+          mongodb:
+            app:
+              - path: /data/db
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+    route:
+      server:
+        hostnames: ["${GATUS_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app
+        rules:
+          - backendRefs:
+              - identifier: server
+                port: http
+      web:
+        hostnames: ["${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app
+        rules:
+          - backendRefs:
+              - identifier: web
+                port: http
+    service:
+      server:
+        controller: server
+        primary: true
+        ports:
+          http:
+            port: *serverPort
+      web:
+        controller: web
+        ports:
+          http:
+            port: *webPort
+      mongodb:
+        controller: mongodb
+        ports:
+          db:
+            port: 27017
