@@ -102,13 +102,6 @@ spec:
                 enabled: true
               startup:
                 enabled: true
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
