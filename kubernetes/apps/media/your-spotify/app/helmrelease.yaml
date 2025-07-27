@@ -131,7 +131,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: server
-                port: http
+                port: *serverPort
       web:
         hostnames: ["${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"]
         parentRefs:
@@ -141,7 +141,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: web
-                port: http
+                port: *webPort
     service:
       server:
         controller: server
