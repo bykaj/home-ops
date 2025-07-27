@@ -59,7 +59,7 @@ spec:
                 memory: 512Mi
             securityContext: &securityContext
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
       web:
         annotations:
