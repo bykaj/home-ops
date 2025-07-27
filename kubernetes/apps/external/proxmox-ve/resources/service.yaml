@@ -2,10 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxmox-ve
+  name: &app proxmox-ve
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 spec:
   sessionAffinity: ClientIP
   ports:
   - name: https
     port: 443
+    protocol: TCP
     targetPort: 8006

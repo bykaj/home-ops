@@ -4,6 +4,8 @@ kind: EndpointSlice
 metadata:
   name: &app kvm-leonis
   labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
     kubernetes.io/service-name: *app
     endpointslice.kubernetes.io/managed-by: *app
 addressType: IPv4
