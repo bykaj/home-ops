@@ -26,10 +26,9 @@ spec:
             image:
               repository: ghcr.io/home-operations/k8s-sidecar
               tag: 1.30.7@sha256:3b6444d91c6e69a9e07c5e55419452d967d18c833d88b36277dc2021b708f621
-            command: ["/bin/sh", "-c"]
+            command: ["/bin/bash", "-c"]
             args:
               - |
-                echo "Email: ${PGADMIN_DEFAULT_EMAIL}";
                 export USER_FOLDER="/var/lib/pgadmin/${PGADMIN_DEFAULT_EMAIL//@/_}";
                 echo "Creating user folder ${USER_FOLDER}.";
                 mkdir -p ${USER_FOLDER};
@@ -39,9 +38,12 @@ spec:
                 chown 5050:root ${USER_FOLDER}/.pgpass;
                 chmod 600 ${USER_FOLDER}/.pgpass;
                 echo "Done."
-            envFrom: &envFrom
-              - secretRef:
+            env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                secretKeyRef:
                   name: &secret pgadmin-secret
+                  key: PGADMIN_DEFAULT_EMAIL
         containers:
           app:
             image:
@@ -59,7 +61,9 @@ spec:
               PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
               PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
-            envFrom: *envFrom
+            envFrom:
+              - secretRef:
+                  name: *secret
             probes:
               liveness: &probes
                 enabled: true
