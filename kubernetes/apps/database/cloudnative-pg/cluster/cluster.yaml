@@ -11,7 +11,7 @@ spec:
   # - https://docs.pgbarman.org/release/3.13.3/releases/index.html#id7
   # - https://forum.storj.io/t/s3-put-stopped-working-with-missing-content-length-http-header/30176
   # - https://www.beyondwatts.com/posts/debugging-barman-xamzcontentsha256mismatch-error-after-upgrading-to-postgresql175/
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.4
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-standard-bookworm
   primaryUpdateStrategy: unsupervised
   replicationSlots:
     highAvailability:
