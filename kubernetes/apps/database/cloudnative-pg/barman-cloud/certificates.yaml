@@ -9,7 +9,7 @@ spec:
   duration: 2160h
   isCA: false
   issuerRef:
-    name: barman-cloud-selfsigned
+    name: barman-cloud-selfsigned-issuer
     kind: Issuer
     group: cert-manager.io
   renewBefore: 360h
@@ -27,7 +27,7 @@ spec:
   duration: 2160h
   isCA: false
   issuerRef:
-    name: barman-cloud-selfsigned
+    name: barman-cloud-selfsigned-issuer
     kind: Issuer
     group: cert-manager.io
   renewBefore: 360h
