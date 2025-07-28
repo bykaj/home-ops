@@ -21,6 +21,16 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
+        # initContainers:
+        #   init-config:
+        #     image:
+        #       repository: ghcr.io/home-operations/k8s-sidecar
+        #       tag: 1.30.7@sha256:3b6444d91c6e69a9e07c5e55419452d967d18c833d88b36277dc2021b708f621
+        #     command: ["/bin/sh", "-c"]
+        #     args:
+        #       - |
+        #         cp /tmp/secrets/.pgpass /var/lib/pgadmin/.pgpass;
+        #         chmod 600 /var/lib/pgadmin/.pgpass;
         containers:
           app:
             image:
@@ -69,29 +79,35 @@ spec:
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
-        advancedMounts:
-          *app :
-            app:
-              - path: /var/lib/pgadmin
+        globalMounts:
+          - path: /var/lib/pgadmin
       secrets:
         type: secret
         name: *secret
         advancedMounts:
           *app :
+            # init-config:
+            #   - #path: /tmp/secrets/.pgpass
+            #     path: /pgadmin4/.pgpass
+            #     subPath: pgpass
             app:
               - path: /pgadmin4/.pgpass
                 subPath: pgpass
+                defaultMode: 0600
               - path: /pgadmin4/servers.json
                 subPath: servers.json
       backups:
         type: nfs
         server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
-        advancedMounts:
-          *app :
-            app:
-              - path: /mnt/backups
-                subPath: Apps/pgAdmin
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/pgAdmin
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
     route:
       app:
         annotations:
