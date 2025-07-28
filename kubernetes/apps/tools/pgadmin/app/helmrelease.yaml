@@ -21,28 +21,28 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        # initContainers:
-        #   init-config:
-        #     image:
-        #       repository: ghcr.io/home-operations/k8s-sidecar
-        #       tag: 1.30.7@sha256:3b6444d91c6e69a9e07c5e55419452d967d18c833d88b36277dc2021b708f621
-        #     command: ["/bin/sh", "-c"]
-        #     args:
-        #       - |
-        #         cp /tmp/secrets/.pgpass /var/lib/pgadmin/.pgpass;
-        #         chmod 600 /var/lib/pgadmin/.pgpass;
+        initContainers:
+          init-config:
+            image:
+              repository: ghcr.io/home-operations/k8s-sidecar
+              tag: 1.30.7@sha256:3b6444d91c6e69a9e07c5e55419452d967d18c833d88b36277dc2021b708f621
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                cp /tmp/secrets/.pgpass /var/lib/pgadmin/.pgpass;
+                chmod 600 /var/lib/pgadmin/.pgpass;
         containers:
           app:
             image:
               repository: dpage/pgadmin4
               tag: 9.6.0@sha256:2c7d73e13bd6c30b1d53e4c25d0d6d81adbd0799c4f4d6a09efc5d68fca5d16d
             env:
-              PGADMIN_CONFIG_AUTHENTICATION_SOURCES: "['oauth2']"
-              PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
+              PGADMIN_CONFIG_AUTHENTICATION_SOURCES: "['oauth2', 'internal']"
+              PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "20"
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_CONFIG_MAIL_PORT: "587"
               PGADMIN_CONFIG_MAIL_USE_TLS: "True"
-              PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+              # PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
               PGADMIN_CONFIG_OAUTH2_AUTO_CREATE_USER: "True"
               PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
               PGADMIN_DISABLE_POSTFIX: "True"
@@ -86,14 +86,10 @@ spec:
         name: *secret
         advancedMounts:
           *app :
-            # init-config:
-            #   - #path: /tmp/secrets/.pgpass
-            #     path: /pgadmin4/.pgpass
-            #     subPath: pgpass
-            app:
-              - path: /pgadmin4/.pgpass
+            init-config:
+              - path: /tmp/secrets/.pgpass
                 subPath: pgpass
-                defaultMode: 0600
+            app:
               - path: /pgadmin4/servers.json
                 subPath: servers.json
       backups:
