@@ -7,7 +7,10 @@ metadata:
 spec:
   instances: 3
   # WARNING: newer versions of the Postgres image have an incompatible version of the AWS S3 SDK (in Barman) for non-AWS S3 storage!
-  # Ref: https://forum.storj.io/t/s3-put-stopped-working-with-missing-content-length-http-header/30176
+  # Ref:
+  # - https://docs.pgbarman.org/release/3.13.3/releases/index.html#id7
+  # - https://forum.storj.io/t/s3-put-stopped-working-with-missing-content-length-http-header/30176
+  # - https://www.beyondwatts.com/posts/debugging-barman-xamzcontentsha256mismatch-error-after-upgrading-to-postgresql175/
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   primaryUpdateStrategy: unsupervised
   replicationSlots:
@@ -48,7 +51,7 @@ spec:
         maxParallel: 8
       destinationPath: "s3://cloudnative-pg"
       endpointURL: "https://gateway.storjshare.io"
-      serverName: &currentCluster postgres-v17-20250717
+      serverName: "${CNPG_CURRENT_CLUSTER}"
       s3Credentials:
         accessKeyId:
           name: *secret
@@ -65,7 +68,7 @@ spec:
     #   secret:
     #     name: cloudnative-pg-bootstrap-secret
 
-    # Recovers from the latest S3 backup (after moving/renaming the 'currentCluster' folder to 'previousCluster' in the bucket!)
+    # Recovers from the latest S3 backup (after changing `serverName` in `cluster-settings.yaml`)
     recovery:
       source: &previousCluster postgres-v17-backup
 
@@ -73,4 +76,4 @@ spec:
     - name: *previousCluster
       barmanObjectStore:
         <<: *barmanObjectStore
-        serverName: *previousCluster
+        serverName: "${CNPG_PREVIOUS_CLUSTER}"
