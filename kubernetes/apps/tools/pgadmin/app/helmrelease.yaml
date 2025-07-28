@@ -29,21 +29,21 @@ spec:
             command: ["/bin/bash", "-c"]
             args:
               - |
-                export USER_FOLDER="/var/lib/pgadmin/${PGADMIN_DEFAULT_EMAIL//@/_}";
-                echo "Creating user folder ${USER_FOLDER}.";
-                mkdir -p ${USER_FOLDER};
+                export USER_FOLDER="/var/lib/pgadmin/${PGADMIN_DEFAULT_EMAIL/@/_}";
+                echo "Creating user folder $USER_FOLDER.";
+                mkdir -p $USER_FOLDER;
                 echo "Copying .pgpass file to user folder.";
-                cp /tmp/secrets/.pgpass ${USER_FOLDER}/.pgpass;
+                cp /tmp/secrets/.pgpass $USER_FOLDER/.pgpass;
                 echo "Setting permissions for .pgpass file.";
-                chown 5050:root ${USER_FOLDER}/.pgpass;
-                chmod 600 ${USER_FOLDER}/.pgpass;
+                chown 5050:root $USER_FOLDER/.pgpass;
+                chmod 600 $USER_FOLDER/.pgpass;
                 echo "Done."
             env:
-            - name: PGADMIN_DEFAULT_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: &secret pgadmin-secret
-                  key: PGADMIN_DEFAULT_EMAIL
+              - name: PGADMIN_DEFAULT_EMAIL
+                valueFrom:
+                  secretKeyRef:
+                    name: &secret pgadmin-secret
+                    key: PGADMIN_DEFAULT_EMAIL
         containers:
           app:
             image:
