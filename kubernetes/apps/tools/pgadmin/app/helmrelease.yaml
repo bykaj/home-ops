@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      pgadmin:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -32,10 +32,12 @@ spec:
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_CONFIG_MAIL_PORT: "587"
               PGADMIN_CONFIG_MAIL_USE_TLS: "True"
+              PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
               PGADMIN_CONFIG_OAUTH2_AUTO_CREATE_USER: "True"
               PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
               PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
+              PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
             envFrom:
               - secretRef:
                   name: &secret pgadmin-secret
@@ -47,7 +49,7 @@ spec:
                   httpGet:
                     path: /misc/ping
                     port: *port
-                  initialDelaySeconds: 0
+                  initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
@@ -57,7 +59,7 @@ spec:
                 cpu: 10m
                 memory: 256Mi
               limits:
-                memory: 384Mi
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsUser: 5050
@@ -66,25 +68,19 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: pgadmin-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         advancedMounts:
-          pgadmin:
+          *app :
             app:
               - path: /var/lib/pgadmin
-      pgpass:
+      secrets:
         type: secret
         name: *secret
         advancedMounts:
-          pgadmin:
+          *app :
             app:
               - path: /pgadmin4/pgpass
                 subPath: pgpass
-      servers-json:
-        type: configMap
-        name: pgadmin-config
-        advancedMounts:
-          pgadmin:
-            app:
               - path: /pgadmin4/servers.json
                 subPath: servers.json
       backups:
@@ -92,7 +88,7 @@ spec:
         server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         advancedMounts:
-          pgadmin:
+          *app :
             app:
               - path: /mnt/backups
                 subPath: Apps/pgAdmin

@@ -5,9 +5,3 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-configMapGenerator:
-  - name: pgadmin-config
-    files:
-      - servers.json=./config/servers.json
-generatorOptions:
-  disableNameSuffixHash: true
