@@ -57,7 +57,7 @@ spec:
     #   secret:
     #     name: cloudnative-pg-bootstrap-secret
 
-    # Recovers from the latest S3 backup (after changing `serverName` in `cluster-settings.yaml`)
+    # Recovers from the latest S3 backup (after changing `serverName` in `ks.yaml`)
     recovery:
       source: &previousCluster postgres-v17-backup
 
