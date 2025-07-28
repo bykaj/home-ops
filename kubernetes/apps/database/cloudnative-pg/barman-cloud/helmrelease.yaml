@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app barman-cloud
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      barman-cloud:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/cloudnative-pg/plugin-barman-cloud
+              tag: v0.5.0@sha256:d84794c09178e8a39944dce04ca234a14e1551f914af90f1768c1222733438a6
+            args:
+              - operator
+              - --leader-elect
+              - --server-cert=/server/tls.crt
+              - --server-key=/server/tls.key
+              - --client-cert=/client/tls.crt
+              - --server-address=:9090
+            env:
+              # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar
+              SIDECAR_IMAGE: ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar:v0.5.0
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz8
+                    port: &metricsPort 8081
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                << : *probes
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *metricsPort
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+        serviceAccount:
+          name: *app
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+    persistence:
+      client:
+        type: secret
+        name: &clientCert barman-cloud-client-tls
+      server:
+        type: secret
+        name: &serverCert barman-cloud-server-tls
+    service:
+      app:
+        annotations:
+          cnpg.io/pluginClientSecret: *clientCert
+          cnpg.io/pluginPort: &pluginPort "9090"
+          cnpg.io/pluginServerSecret: *serverCert
+        labels:
+          cnpg.io/pluginName: barman-cloud.cloudnative-pg.io
+        ports:
+          http:
+            port: *pluginPort

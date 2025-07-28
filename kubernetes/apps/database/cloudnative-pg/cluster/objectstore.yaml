@@ -1,0 +1,23 @@
+---
+## yaml-language-server: $schema=https://schemas.bykaj.io/barmancloud.cnpg.io/objectstore_v1.json
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: cloudnative-pg-storj
+spec:
+  configuration:
+    data:
+      compression: bzip2
+    destinationPath: "s3://cloudnative-pg"
+    endpointURL: "https://gateway.storjshare.io"
+    s3Credentials:
+      accessKeyId:
+        name: &secret cloudnative-pg-secret
+        key: S3_ACCESS_KEY
+      secretAccessKey:
+        name: *secret
+        key: S3_SECRET_KEY
+    wal:
+      compression: bzip2
+      maxParallel: 8
+  retentionPolicy: 30d

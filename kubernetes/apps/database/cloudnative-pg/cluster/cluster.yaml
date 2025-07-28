@@ -21,7 +21,7 @@ spec:
     size: 20Gi
   enableSuperuserAccess: true
   superuserSecret:
-    name: &secret cloudnative-pg-secret
+    name: cloudnative-pg-secret
   postgresql:
     parameters:
       max_connections: "300"
@@ -35,30 +35,24 @@ spec:
     enablePodMonitor: true
   # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2570
   enablePDB: false
+  # Ref: https://www.beyondwatts.com/posts/debugging-barman-xamzcontentsha256mismatch-error-after-upgrading-to-postgresql175/
+  env:
+    - name: AWS_REQUEST_CHECKSUM_CALCULATION
+      value: when_required
+    - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+      value: when_required
   resources:
     requests:
       cpu: 80m
       memory: 768Mi
     limits:
       memory: 2Gi
-  backup:
-    retentionPolicy: 30d
-    barmanObjectStore: &barmanObjectStore
-      data:
-        compression: bzip2
-      wal:
-        compression: bzip2
-        maxParallel: 8
-      destinationPath: "s3://cloudnative-pg"
-      endpointURL: "https://gateway.storjshare.io"
-      serverName: "${CNPG_CURRENT_CLUSTER}"
-      s3Credentials:
-        accessKeyId:
-          name: *secret
-          key: S3_ACCESS_KEY
-        secretAccessKey:
-          name: *secret
-          key: S3_SECRET_KEY
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: &barmanObjectName cloudnative-pg-storj
+        serverName: "${CNPG_CURRENT_CLUSTER}"
 
   bootstrap:
     # Creates an empty/new cluster
@@ -74,6 +68,8 @@ spec:
 
   externalClusters:
     - name: *previousCluster
-      barmanObjectStore:
-        <<: *barmanObjectStore
-        serverName: "${CNPG_PREVIOUS_CLUSTER}"
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: *barmanObjectName
+          serverName: "${CNPG_PREVIOUS_CLUSTER}"
