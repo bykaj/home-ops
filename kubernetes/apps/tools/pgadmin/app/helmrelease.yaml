@@ -79,7 +79,7 @@ spec:
         advancedMounts:
           *app :
             app:
-              - path: /pgadmin4/pgpass
+              - path: /pgadmin4/.pgpass
                 subPath: pgpass
               - path: /pgadmin4/servers.json
                 subPath: servers.json
