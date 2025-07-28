@@ -29,8 +29,7 @@ spec:
             command: ["/bin/bash", "-c"]
             args:
               - |
-                echo "Email: $PGADMIN_DEFAULT_EMAIL";
-                export USER_FOLDER="/var/lib/pgadmin/${PGADMIN_DEFAULT_EMAIL/@/_}";
+                export USER_FOLDER=$(echo "/var/lib/pgadmin/$PGADMIN_DEFAULT_EMAIL" | sed 's/@/_/g')
                 echo "Creating user folder $USER_FOLDER.";
                 mkdir -p $USER_FOLDER;
                 echo "Copying .pgpass file to user folder.";
