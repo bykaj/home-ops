@@ -29,9 +29,18 @@ spec:
             command: ["/bin/sh", "-c"]
             args:
               - |
-                cp /tmp/secrets/.pgpass /var/lib/pgadmin/.pgpass;
-                chown 5050:5050 /var/lib/pgadmin/.pgpass;
-                chmod 600 /var/lib/pgadmin/.pgpass;
+                USER_FOLDER="/var/lib/pgadmin/${PGADMIN_DEFAULT_EMAIL//@/_}";
+                echo "Creating user folder ${USER_FOLDER}.";
+                mkdir -p ${USER_FOLDER};
+                echo "Copying .pgpass file to user folder.";
+                cp /tmp/secrets/.pgpass ${USER_FOLDER}/.pgpass;
+                echo "Setting permissions for .pgpass file.";
+                chown 5050:root ${USER_FOLDER}/.pgpass;
+                chmod 600 ${USER_FOLDER}/.pgpass;
+                echo "Done."
+            envFrom: &envFrom
+              - secretRef:
+                  name: &secret pgadmin-secret
         containers:
           app:
             image:
@@ -49,9 +58,7 @@ spec:
               PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
               PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
-            envFrom:
-              - secretRef:
-                  name: &secret pgadmin-secret
+            envFrom: *envFrom
             probes:
               liveness: &probes
                 enabled: true
