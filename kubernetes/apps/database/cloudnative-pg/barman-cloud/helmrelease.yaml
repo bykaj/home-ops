@@ -43,9 +43,9 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /healthz8
+                    path: /healthz
                     port: &metricsPort 8081
-                  initialDelaySeconds: 0
+                  initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
