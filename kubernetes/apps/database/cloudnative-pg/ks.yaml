@@ -76,6 +76,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_CURRENT_CLUSTER: "postgres-v17-20250728"
+      CNPG_PREVIOUS_CLUSTER: "postgres-v17-20250717"
   prune: true
   retryInterval: 2m
   sourceRef:

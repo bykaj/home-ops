@@ -5,7 +5,3 @@ metadata:
   name: cluster-settings
 data:
   TIMEZONE: "Europe/Amsterdam"
-
-  # Database settings
-  CNPG_CURRENT_CLUSTER: "postgres-v17-20250728"
-  CNPG_PREVIOUS_CLUSTER: "postgres-v17-20250717"
