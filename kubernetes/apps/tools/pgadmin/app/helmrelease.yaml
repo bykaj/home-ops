@@ -48,7 +48,7 @@ spec:
               repository: dpage/pgadmin4
               tag: 9.6.0@sha256:2c7d73e13bd6c30b1d53e4c25d0d6d81adbd0799c4f4d6a09efc5d68fca5d16d
             env:
-              PGADMIN_CONFIG_AUTHENTICATION_SOURCES: "['oauth2', 'internal']"
+              PGADMIN_CONFIG_AUTHENTICATION_SOURCES: "['oauth2']"
               PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "20"
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_CONFIG_MAIL_PORT: "587"
