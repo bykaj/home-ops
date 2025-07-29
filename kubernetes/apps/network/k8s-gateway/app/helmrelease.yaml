@@ -26,4 +26,4 @@ spec:
       annotations:
         lbipam.cilium.io/ips: "10.73.10.53"
       externalTrafficPolicy: Cluster
-    watchedResources: ["HTTPRoute", "Service"]
+    watchedResources: ["HTTPRoute", "Service", "TLSRoute"]
