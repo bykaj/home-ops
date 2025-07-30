@@ -1,8 +1,11 @@
-# Cilium
-**Status:** TODO
+# Cilium BGP
 
-## UniFi BGP
-On UDM Pro Max:
+[Cilium](https://cilium.io/) is used as the CNI (Container Network Interface) for this Kubernetes cluster. This document contains configuration details for network integration.
+
+**Status:** Not Implemented Yet
+
+## UniFi Configuration
+The following BGP configuration needs to be applied to the UniFi Gateway to establish BGP peering with Cilium in the Kubernetes cluster:
 ```sh
 router bgp 64513
   bgp router-id 10.73.0.254
@@ -22,7 +25,9 @@ router bgp 64513
 exit
 ```
 
-## Config changes
+This configuration establishes BGP peering between the UniFi Gateway (AS 64513) and the Kubernetes nodes (AS 64514), enabling dynamic route advertisement for Kubernetes services.
+
+## Kubernetes Configuration
 Add to [`networks.yaml`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/kube-system/cilium/app/networks.yaml):
 ```yaml
 ---

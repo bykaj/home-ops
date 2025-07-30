@@ -6,6 +6,7 @@ resources:
   - ./helmrepository.yaml
   - ./helmrelease.yaml
   - ./networks.yaml
+  - ./httproute.yaml
 configMapGenerator:
   - name: cilium-values
     files:
