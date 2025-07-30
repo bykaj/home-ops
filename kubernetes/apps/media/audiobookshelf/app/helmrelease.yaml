@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      audiobookshelf:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
