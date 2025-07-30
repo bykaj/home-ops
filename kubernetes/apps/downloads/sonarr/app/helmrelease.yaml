@@ -69,12 +69,19 @@ spec:
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
-    service:
-      app:
-        controller: *app
-        ports:
-          http:
-            port: *port
+    ingress:
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
         existingClaim: sonarr-config
@@ -124,3 +131,9 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https-app
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
