@@ -91,10 +91,9 @@ spec:
       enabled: true
       className: tailscale
       defaultBackend:
-        service:
-          name: *app
-          port:
-            number: *port
+        name: *app
+        port:
+          number: *port
       tls:
         - hosts:
             - ${GATUS_SUBDOMAIN:=${APP}}
