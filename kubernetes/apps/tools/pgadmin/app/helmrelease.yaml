@@ -90,13 +90,15 @@ spec:
     ingress:
       enabled: true
       className: tailscale
-      defaultBackend:
-        name: *app
-        port:
-          number: *port
+      annotations: {}
+      hosts:
+        - host: &tsHost ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          paths:
+            - path: /
+              pathType: Prefix
       tls:
         - hosts:
-            - ${GATUS_SUBDOMAIN:=${APP}}
+            - *tsHost
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
