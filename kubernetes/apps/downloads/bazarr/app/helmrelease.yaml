@@ -60,7 +60,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: bazarr-config
+        existingClaim: "${VOLSYNC_CLAIM}"
       backups:
         type: nfs
         server: "${NAS_HOST}"

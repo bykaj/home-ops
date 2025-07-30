@@ -30,7 +30,7 @@ spec:
               tag: 1.41.9.9961@sha256:6c86319bb3275135f5da5aec71b45e48305669ecbceee0f88d335bebf0d0f218
             env:
               TZ: "${TIMEZONE}"
-              PLEX_ADVERTISE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,http://10.73.10.200:32400"
+              PLEX_ADVERTISE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,https://${GATUS_SUBDOMAIN:=${APP}}.{TAILSCALE_DOMAIN}:443,http://10.73.10.200:32400"
               PLEX_NO_AUTH_NETWORKS: "10.73.0.0/20,10.42.0.0/16,10.43.0.0/16"
             probes:
               liveness: &probes
@@ -69,9 +69,22 @@ spec:
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44]
+    ingress:
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
-        existingClaim: plex-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       config-cache:

@@ -84,7 +84,7 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: sonarr-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       backups:

@@ -68,15 +68,22 @@ spec:
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
-    service:
-      app:
-        controller: *app
-        ports:
-          http:
-            port: *port
+    ingress:
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
-        existingClaim: radarr-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       backups:
@@ -123,3 +130,9 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https-app
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port

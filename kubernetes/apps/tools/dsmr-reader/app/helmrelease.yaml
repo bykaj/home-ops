@@ -63,6 +63,19 @@ spec:
                 memory: 384Mi
               limits:
                 memory: 1Gi
+    ingress:
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: &port 80
+        tls:
+          - hosts:
+              - *host
     persistence:
       backups:
         type: nfs
@@ -100,7 +113,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: app
-                port: &port 80
+                port: *port
     service:
       app:
         primary: true

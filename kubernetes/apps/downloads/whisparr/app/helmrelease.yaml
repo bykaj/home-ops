@@ -69,7 +69,7 @@ spec:
               runAsUser: 0
     persistence:
       config:
-        existingClaim: whisparr-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       backups:

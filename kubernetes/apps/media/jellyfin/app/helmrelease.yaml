@@ -65,9 +65,22 @@ spec:
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44]
+    ingress:
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
-        existingClaim: jellyfin-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       # config-cache:
