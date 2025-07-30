@@ -88,17 +88,18 @@ spec:
         fsGroup: 5050
         fsGroupChangePolicy: OnRootMismatch
     ingress:
-      enabled: true
-      className: tailscale
-      annotations: {}
-      hosts:
-        - host: &tsHost ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - hosts:
-            - *tsHost
+      ts:
+        className: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: *app
+                  port: *port
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
