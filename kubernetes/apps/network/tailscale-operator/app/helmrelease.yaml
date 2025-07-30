@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tailscale-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: tailscale-operator
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *app
+    oauthSecretVolume:
+      secret:
+        secretName: &secret tailscale-operator-secret
+    operatorConfig:
+      hostname: *app
+      podAnnotations:
+        secret.reloader.stakater.com/reload: *secret
