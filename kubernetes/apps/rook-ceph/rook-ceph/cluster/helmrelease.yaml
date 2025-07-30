@@ -52,10 +52,10 @@ spec:
             enabled: true
           - name: rook
             enabled: true
-      network:
-        provider: host
-        connections:
-          requireMsgr2: true
+      # network:
+      #   provider: host
+      #   connections:
+      #     requireMsgr2: true
       resources:
         mgr:
           requests:
