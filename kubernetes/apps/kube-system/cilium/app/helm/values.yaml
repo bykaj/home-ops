@@ -1,5 +1,8 @@
 ---
 autoDirectNodeRoutes: true
+bandwidthManager:
+  enabled: true
+  bbr: true
 bpf:
   masquerade: true
   # Ref: https://github.com/siderolabs/talos/issues/10002
@@ -15,15 +18,20 @@ cgroup:
 # devices: eno+ eth+
 dashboards:
   enabled: true
+  annotations:
+    grafana_folder: Cilium
 endpointRoutes:
   enabled: true
 envoy:
+  enabled: true
   rollOutPods: true
   prometheus:
      serviceMonitor:
        enabled: true
 gatewayAPI:
   enabled: true
+  enableAlpn: true
+  xffNumTrustedHops: 1
 hubble:
   enabled: false
 ipam:
@@ -42,11 +50,13 @@ localRedirectPolicy: true
 operator:
   dashboards:
     enabled: true
+    annotations:
+      grafana_folder: Cilium
   prometheus:
     enabled: true
     serviceMonitor:
       enabled: true
-  replicas: 1
+  replicas: 2
   rollOutPods: true
 prometheus:
   enabled: true
