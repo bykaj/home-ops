@@ -87,6 +87,17 @@ spec:
         runAsGroup: 5050
         fsGroup: 5050
         fsGroupChangePolicy: OnRootMismatch
+    ingress:
+      enabled: true
+      className: tailscale
+      defaultBackend:
+        service:
+          name: *app
+          port:
+            number: *port
+      tls:
+        - hosts:
+            - ${GATUS_SUBDOMAIN:=${APP}}
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
