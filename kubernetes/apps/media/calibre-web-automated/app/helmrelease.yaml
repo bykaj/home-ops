@@ -86,6 +86,15 @@ spec:
           - hosts:
               - *host
     persistence:
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault-alpha/Backups
+        advancedMounts:
+          *name :
+            app:
+              - path: /config/processed_books
+                subPath: Apps/Calibre-Web-Automated
       config:
         existingClaim: "${VOLSYNC_CLAIM}"
         advancedMounts:
