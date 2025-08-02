@@ -117,6 +117,8 @@ spec:
         globalMounts:
           - path: /config/logs
             subPath: logs
+          - path: /config/.cwa_conversion_tmp
+            subPath: conversion
           - path: /tmp
             subPath: tmp
     route:
