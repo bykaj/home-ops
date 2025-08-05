@@ -38,7 +38,7 @@ spec:
     replicaCount: 3
 
     zitadel:
-      masterkeySecretName: &secret zitadel-secret
+      masterkeySecretName: &secret zitadel-init-secret
 
       # configmapConfig & secretConfig
       # Ref: https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
@@ -102,6 +102,9 @@ spec:
           DefaultLanguage: en
           Org:
             Name: "ByKaj"
+            Human:
+              Email:
+                Verified: true
           LoginPolicy:
             AllowRegister: false
           SMTPConfiguration:
