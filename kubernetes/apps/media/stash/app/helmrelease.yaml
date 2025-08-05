@@ -71,7 +71,7 @@ spec:
         supplementalGroups: [44]
     persistence:
       config:
-        existingClaim: stash-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /blobs
             subPath: blobs
