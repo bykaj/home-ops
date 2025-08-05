@@ -126,6 +126,10 @@ spec:
       configSecretName: *secret
       configSecretKey: config.yaml
 
+    login:
+      ingress:
+        enabled: true
+
     metrics:
       enabled: true
       serviceMonitor:
