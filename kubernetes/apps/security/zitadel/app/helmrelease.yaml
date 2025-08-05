@@ -35,7 +35,7 @@ spec:
     #   image:
     #     tag: "v3.3.2"
 
-    replicaCount: 3
+    replicaCount: 1
 
     zitadel:
       masterkeySecretName: &secret zitadel-secret
