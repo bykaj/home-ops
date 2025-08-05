@@ -12,6 +12,10 @@ spec:
       namespace: kube-system
       sectionName: https-id
   rules:
-    - backendRefs:
-      - name: zitadel
-        port: 8080
+    - matches:
+      - path:
+          type: PathPrefix
+          value: /
+      backendRefs:
+        - name: zitadel
+          port: 8080
