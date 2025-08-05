@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: zitadel
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: zitadel
+      version: 9.0.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: zitadel
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  driftDetection:
+    mode: enabled
+  # Default values
+  # Ref: https://github.com/zitadel/zitadel-charts/blob/main/charts/zitadel/values.yaml
+  values:
+    annotations:
+      reloader.stakater.com/auto: "true"
+
+    replicaCount: 3
+
+    zitadel:
+      masterkeySecretName: &secret zitadel-secret
+
+      # configmapConfig & secretConfig
+      # Ref: https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
+      configmapConfig:
+        Log:
+          Level: info
+          Formatter:
+            Format: text
+
+        Metrics:
+          Type: otel
+
+        Telemetry:
+          Enabled: false
+
+        ExternalDomain: "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        ExternalPort: 443
+        ExternalSecure: true
+        TLS:
+          Enabled: false
+        Port: &port 8080
+
+        Database:
+          Postgres:
+            Host: "${DB_HOST}"
+            Port: 5432
+            MaxOpenConns: 10
+            MaxIdleConns: 5
+            MaxConnLifetime: 30m
+            MaxConnIdleTime: 5m
+            User:
+              SSL:
+                Mode: disable
+            Admin:
+              SSL:
+                Mode: disable
+
+        Caches:
+          Connectors:
+            Memory:
+              nabled: false
+            Postgres:
+              Enabled: true
+            Redis:
+              Enabled: true
+              Addr: "${REDIS_HOST}:6379"
+              DBOffset: 5
+          Instance:
+            Connector: "redis"
+          Milestones:
+            Connector: "redis"
+          Organization:
+            Connector: "redis"
+          IdPFormCallbacks:
+            Connector: "postgres"
+          FederatedLogouts:
+            Connector: "postgres"
+
+        DefaultInstance:
+          SMTPConfiguration:
+            TLS: true
+            FromName: "Cetana ID"
+
+        ServicePing:
+          Enabled: false
+
+      configSecretName: *secret
+      configSecretKey: config.yaml
+
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        honorLabels: false
+        honorTimestamps: true
+
+    pdb:
+      enabled: true
+      minAvailable: 1
