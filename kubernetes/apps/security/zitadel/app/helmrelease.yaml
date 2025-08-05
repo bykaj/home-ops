@@ -29,11 +29,11 @@ spec:
     annotations:
       reloader.stakater.com/auto: "true"
 
-    image:
-      tag: "v3.3.2"
-    login:
-      image:
-        tag: "v3.3.2"
+    # image:
+    #   tag: "v3.3.2"
+    # login:
+    #   image:
+    #     tag: "v3.3.2"
 
     replicaCount: 3
 
