@@ -79,7 +79,7 @@ spec:
         Caches:
           Connectors:
             Memory:
-              nabled: false
+              Enabled: false
             Postgres:
               Enabled: true
             Redis:
