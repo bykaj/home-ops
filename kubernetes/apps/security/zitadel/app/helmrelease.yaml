@@ -77,15 +77,15 @@ spec:
             Postgres:
               Enabled: true
             Redis:
-              Enabled: true
+              Enabled: false
               Addr: "${REDIS_HOST}:6379"
               DBOffset: 5
-          Instance:
-            Connector: "redis"
-          Milestones:
-            Connector: "redis"
-          Organization:
-            Connector: "redis"
+          # Instance:
+          #   Connector: "redis"
+          # Milestones:
+          #   Connector: "redis"
+          # Organization:
+          #   Connector: "redis"
           IdPFormCallbacks:
             Connector: "postgres"
           FederatedLogouts:
