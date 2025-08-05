@@ -39,7 +39,7 @@ spec:
       - --gateway-name=external
     triggerLoopOnEvent: true
     policy: sync
-    sources: ["crd", "gateway-httproute"]
+    sources: ["crd", "gateway-httproute", "gateway-tlsroute", "gateway-grpcroute"]
     txtOwnerId: cf
     txtPrefix: k8s.
     domainFilters: ["${DOMAIN_APP}","${DOMAIN_ID}","${DOMAIN_IO}","${DOMAIN_LOL}","${DOMAIN_NET}","${DOMAIN_ST}"]
