@@ -6,4 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./helmrepository.yaml
   - ./helmrelease.yaml
-  - ./httproute.yaml
+  - ./grpcroute.yaml

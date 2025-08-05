@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.networking.k8s.io/grpcroute_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: zitadel
+spec:
+  hostnames:
+    - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https-id
+  rules:
+    - backendRefs:
+      - name: zitadel
+        port: 8080
