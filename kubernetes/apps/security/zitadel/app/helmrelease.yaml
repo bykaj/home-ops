@@ -29,12 +29,6 @@ spec:
     annotations:
       reloader.stakater.com/auto: "true"
 
-    # image:
-    #   tag: "v3.3.2"
-    # login:
-    #   image:
-    #     tag: "v3.3.2"
-
     replicaCount: 1
 
     zitadel:
@@ -128,6 +122,9 @@ spec:
 
       configSecretName: *secret
       configSecretKey: config.yaml
+
+    ingress:
+      enabled: true
 
     login:
       ingress:
