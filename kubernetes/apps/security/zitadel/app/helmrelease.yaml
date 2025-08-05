@@ -91,7 +91,7 @@ spec:
           FederatedLogouts:
             Connector: "postgres"
 
-        DefaultInstance:
+        FirstInstance:
           InstanceName: "Cetana ID"
           DefaultLanguage: en
           Org:
