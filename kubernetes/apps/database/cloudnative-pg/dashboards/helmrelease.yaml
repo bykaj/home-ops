@@ -15,6 +15,5 @@ spec:
   interval: 1h
   values:
     grafanaDashboard:
-      namespace: database
       annotations:
         grafana_folder: Database
