@@ -121,9 +121,6 @@ spec:
           PrivacyPolicy:
             CustomLink: "https://status.${DOMAIN_APP}"
             CustomLinkText: "Service Status"
-          SMTPConfiguration:
-            TLS: true
-            FromName: *instanceName
 
         DefaultInstance:
           DefaultLanguage: en
@@ -137,6 +134,9 @@ spec:
           PrivacyPolicy:
             CustomLink: "https://status.${DOMAIN_APP}"
             CustomLinkText: "Service Status"
+          SMTPConfiguration:
+            TLS: true
+            FromName: *instanceName
 
         ServicePing:
           Enabled: false
