@@ -32,8 +32,6 @@ spec:
     replicaCount: 1
 
     zitadel:
-      masterkeySecretName: &secret zitadel-secret
-
       # configmapConfig & secretConfig
       # Ref: https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
       configmapConfig:
@@ -53,7 +51,7 @@ spec:
         ExternalSecure: true
         TLS:
           Enabled: false
-        Port: &port 8080
+        Port: 8080
 
         Database:
           Postgres:
@@ -77,33 +75,34 @@ spec:
             Postgres:
               Enabled: true
             Redis:
-              Enabled: false
+              Enabled: true
               Addr: "${REDIS_HOST}:6379"
-              DBOffset: 5
-          # Instance:
-          #   Connector: "redis"
-          # Milestones:
-          #   Connector: "redis"
-          # Organization:
-          #   Connector: "redis"
+              DBOffset: 10
+          Instance:
+            Connector: "redis"
+          Milestones:
+            Connector: "redis"
+          Organization:
+            Connector: "redis"
           IdPFormCallbacks:
             Connector: "postgres"
           FederatedLogouts:
             Connector: "postgres"
 
-        FirstInstance:
-          InstanceName: "Cetana ID"
+        DefaultInstance:
+          InstanceName: &instanceName "Cetana ID"
           DefaultLanguage: en
           Org:
             Name: "ByKaj"
             Human:
+              FirstName: "ID"
+              LastName: "Admin"
               Email:
                 Verified: true
           LoginPolicy:
             AllowRegister: false
-          SMTPConfiguration:
-            TLS: true
-            FromName: "Cetana ID"
+            AllowExternalIDP: false
+            ForceMFA: true
           LabelPolicy:
             PrimaryColor: "#5469d4"
             BackgroundColor: "#fafafa"
@@ -116,12 +115,23 @@ spec:
             HideLoginNameSuffix: false
             ErrorMsgPopup: false
             DisableWatermark: false
+          LockoutPolicy:
+            MaxPasswordAttempts: 3
+            MaxOTPAttempts: 3
+          PrivacyPolicy:
+            CustomLink: "https://status.${DOMAIN_APP}"
+            CustomLinkText: "Service Status"
+          SMTPConfiguration:
+            TLS: true
+            FromName: *instanceName
 
         ServicePing:
           Enabled: false
 
-      configSecretName: *secret
-      configSecretKey: config.yaml
+      configSecretName: &secret zitadel-secret
+      configSecretKey: config-yaml
+
+      masterkeySecretName: *secret
 
     ingress:
       enabled: false
@@ -129,6 +139,7 @@ spec:
     login:
       ingress:
         enabled: false
+      resources: {}
 
     metrics:
       enabled: true
@@ -140,3 +151,5 @@ spec:
     pdb:
       enabled: true
       minAvailable: 1
+
+    resources: {}

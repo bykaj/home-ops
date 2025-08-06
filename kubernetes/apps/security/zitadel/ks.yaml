@@ -27,7 +27,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Zitadel
-      GATUS_DOMAIN: sso.cetana.id
+      GATUS_DOMAIN: login.cetana.id
   prune: true
   retryInterval: 2m
   sourceRef:
