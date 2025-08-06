@@ -75,21 +75,21 @@ spec:
             Postgres:
               Enabled: true
             Redis:
-              Enabled: true
+              Enabled: false
               Addr: "${REDIS_HOST}:6379"
               DBOffset: 10
-          Instance:
-            Connector: "redis"
-          Milestones:
-            Connector: "redis"
-          Organization:
-            Connector: "redis"
+          # Instance:
+          #   Connector: "redis"
+          # Milestones:
+          #   Connector: "redis"
+          # Organization:
+          #   Connector: "redis"
           IdPFormCallbacks:
             Connector: "postgres"
           FederatedLogouts:
             Connector: "postgres"
 
-        DefaultInstance:
+        FirstInstance:
           InstanceName: &instanceName "Cetana ID"
           DefaultLanguage: en
           Org:
@@ -124,6 +124,19 @@ spec:
           SMTPConfiguration:
             TLS: true
             FromName: *instanceName
+
+        DefaultInstance:
+          DefaultLanguage: en
+          LockoutPolicy:
+            MaxPasswordAttempts: 3
+            MaxOTPAttempts: 3
+          LoginPolicy:
+            AllowRegister: false
+            AllowExternalIDP: false
+            ForceMFA: true
+          PrivacyPolicy:
+            CustomLink: "https://status.${DOMAIN_APP}"
+            CustomLinkText: "Service Status"
 
         ServicePing:
           Enabled: false
