@@ -162,7 +162,7 @@ spec:
         honorTimestamps: true
 
     pdb:
-      enabled: true
+      enabled: false
       minAvailable: 1
 
     resources: {}
