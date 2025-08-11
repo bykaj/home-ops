@@ -19,7 +19,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_DOMAIN: status.${DOMAIN_APP}
+      GATUS_SUBDOMAIN: status
       VOLSYNC_CLAIM: gatus-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi

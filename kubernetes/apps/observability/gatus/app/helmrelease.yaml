@@ -49,7 +49,10 @@ spec:
               TZ: "${TIMEZONE}"
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
-              WEB_PORT: &port 80
+              WEB_PORT: &port 8080
+            envFrom:
+              - secretRef:
+                  name: gatus-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -82,7 +85,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: gatus-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         globalMounts:
           - path: /config
       config-file:
@@ -110,7 +113,7 @@ spec:
     route:
       app:
         hostnames:
-          - "status.${DOMAIN_APP}"
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: external
             namespace: kube-system

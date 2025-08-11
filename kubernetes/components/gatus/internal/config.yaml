@@ -10,3 +10,5 @@ endpoints:
       dns-resolver: tcp://10.43.0.10:53
     conditions:
       - "[STATUS] == ${GATUS_STATUS:=200}"
+    alerts:
+      - type: pushover
