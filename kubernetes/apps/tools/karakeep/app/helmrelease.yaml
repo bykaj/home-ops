@@ -31,14 +31,10 @@ spec:
             command:
               - node
               - index.js
-            envFrom:
-              - secretRef:
-                  name: &secret karakeep-secret
             env:
               # ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
               BROWSER_CONNECT_ONDEMAND: "true"
               BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
-              # BROWSER_WEB_URL: http://karakeep-chrome:9222
               COREPACK_INTEGRITY_KEYS: "0"
               CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
               CRAWLER_ENABLE_ADBLOCKER: "true"
@@ -56,13 +52,16 @@ spec:
               INFERENCE_LANG: "english"
               INFERENCE_TEXT_MODEL: "gpt-4.1-mini"
               MEILI_ADDR: "http://meilisearch.database:7700"
-              NEXTAUTH_URL: "https://links.${DOMAIN_APP}"
+              NEXTAUTH_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
               OCR_LANGS: "eng,nld"
               RATE_LIMITING_ENABLED: "true"
               TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: &secret karakeep-secret
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
@@ -103,35 +102,6 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 1Gi
-
-      # chrome:
-      #   annotations:
-      #     reloader.stakater.com/auto: "true"
-      #   containers:
-      #     app:
-      #       image:
-      #         repository: gcr.io/zenika-hub/alpine-chrome
-      #         tag: 124@sha256:1a0046448e0bb6c275c88f86e01faf0de62b02ec8572901256ada0a8c08be23f
-      #       command:
-      #         - chromium-browser
-      #       args:
-      #         - --headless
-      #         - --no-sandbox
-      #         - --disable-gpu
-      #         - --disable-dev-shm-usage
-      #         - --remote-debugging-address=0.0.0.0
-      #         - --remote-debugging-port=9222
-      #         - --hide-scrollbars
-      #       resources:
-      #         requests:
-      #           cpu: 10m
-      #           memory: 1Gi
-      #         limits:
-      #           memory: 4Gi
-      #       securityContext:
-      #         capabilities:
-      #           drop:
-      #             - ALL
 
       browserless:
         annotations:
@@ -229,11 +199,6 @@ spec:
         ports:
           http:
             port: *port
-      # chrome:
-      #   controller: chrome
-      #   ports:
-      #     http:
-      #       port: 9222
       browserless:
         controller: browserless
         ports:
