@@ -62,7 +62,6 @@ spec:
           secret:
             secretName: "${DOMAIN_IO/./-}-tls"
       minAvailable: 1
-      maxUnavailable: 2
   listenersServiceTemplate:
     metadata:
       annotations:
