@@ -7,20 +7,20 @@ storage:
   caching: true
 metrics: true
 debug: false
-ui:
-  title: Health Dashboard | ByKaj Apps
-  header: Health Dashboard
-  logo: https://github.com/bykaj/home-ops/blob/main/assets/images/home-ops-logo.png?raw=true
-  description: |-
-    If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
-  link: https://github.com/bykaj/home-ops
-  buttons:
-    - name: Blog
-      link: https://bykaj.com
-    - name: GitHub
-      link: https://github.com/bykaj
-    - name: Home Operations
-      link: https://github.com/bykaj/home-ops
+# ui:
+#   title: Health Dashboard | ByKaj Apps
+#   header: Health Dashboard
+#   logo: https://github.com/bykaj/home-ops/blob/main/assets/images/home-ops-logo.png?raw=true
+#   description: |-
+#     If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
+#   link: https://github.com/bykaj/home-ops
+#   buttons:
+#     - name: Blog
+#       link: https://bykaj.com
+#     - name: GitHub
+#       link: https://github.com/bykaj
+#     - name: Home Operations
+#       link: https://github.com/bykaj/home-ops
 connectivity:
   checker:
     target: 1.1.1.1:53
