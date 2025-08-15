@@ -9,7 +9,7 @@ data:
   config.yaml: |
     endpoints:
       - name: EMQX
-        group: "3. Infrastructure Services"
+        group: "Infrastructure Services"
         url: tcp://${MQTT_HOST}:1883
         interval: 1m
         ui:

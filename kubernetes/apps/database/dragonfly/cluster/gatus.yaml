@@ -9,7 +9,7 @@ data:
   config.yaml: |
     endpoints:
       - name: Dragonfly
-        group: "3. Infrastructure Services"
+        group: "Infrastructure Services"
         url: tcp://${REDIS_HOST}:6379
         interval: 1m
         ui:

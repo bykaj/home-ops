@@ -1,12 +1,14 @@
 endpoints:
   - name: "${GATUS_NAME:=${APP}}"
-    group: "2. Internal Applications"
+    group: "Internal Applications"
     url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}${GATUS_PATH:=/}"
     interval: 1m
     ui:
       hide-hostname: true
       hide-url: true
     client:
+      # Ref: https://github.com/TwiN/gatus/issues/1182
+      insecure: true
       dns-resolver: tcp://10.43.0.10:53
     conditions:
       - "[STATUS] == ${GATUS_STATUS:=200}"

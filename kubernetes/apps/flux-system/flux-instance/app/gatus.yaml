@@ -9,13 +9,15 @@ data:
   config.yaml: |
     endpoints:
       - name: "Flux Webhook"
-        group: "3. Infrastructure Services"
+        group: "Infrastructure Services"
         url: https://flux-webhook.${DOMAIN_IO}
         interval: 1m
         ui:
           hide-url: true
           hide-hostname: true
         client:
+          # Ref: https://github.com/TwiN/gatus/issues/1182
+          insecure: true
           dns-resolver: tcp://1.1.1.1:53
         conditions:
           - "[STATUS] == 404"

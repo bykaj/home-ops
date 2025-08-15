@@ -9,7 +9,7 @@ data:
   config.yaml: |
     endpoints:
       - name: CloudNativePG
-        group: "3. Infrastructure Services"
+        group: "Infrastructure Services"
         url: tcp://${DB_HOST}:5432
         interval: 1m
         ui:
