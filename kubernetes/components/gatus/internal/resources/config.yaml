@@ -7,8 +7,6 @@ endpoints:
       hide-hostname: true
       hide-url: true
     client:
-      # Ref: https://github.com/TwiN/gatus/issues/1182
-      insecure: true
       dns-resolver: tcp://10.43.0.10:53
     conditions:
       - "[STATUS] == ${GATUS_STATUS:=200}"
