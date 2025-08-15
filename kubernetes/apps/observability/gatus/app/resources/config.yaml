@@ -13,14 +13,16 @@ ui:
   logo: https://bykaj.com/img/logo-header.png
   description: |-
     If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
-  link: https://github.com/bykaj/home-ops
+  link: https://bykaj.com
   buttons:
     - name: Blog
       link: https://bykaj.com
-    - name: GitHub
+    - name: Profile
       link: https://github.com/bykaj
-    - name: Home Operations
+    - name: Repository
       link: https://github.com/bykaj/home-ops
+  # For new UI when released in 5.23.0
+  # default-sort-by: group
 connectivity:
   checker:
     target: 1.1.1.1:53
