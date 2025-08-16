@@ -1,0 +1,104 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: goldilocks
+spec:
+  interval: 1h
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.fairwinds.com/stable
+      chart: goldilocks
+      version: 10.0.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: fairwinds
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  driftDetection:
+    mode: enabled
+  values:
+    annotations:
+      reloader.stakater.com/auto: "true"
+
+    vpa:
+      enabled: true
+      updater:
+        enabled: true
+
+    metrics-server:
+      enabled: true
+      apiService:
+        create: true
+
+    image:
+      repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks
+      tag: v4.14.2
+      pullPolicy: IfNotPresent
+
+    controller:
+      enabled: true
+      rbac:
+        create: true
+        enableArgoproj: false
+      serviceAccount:
+        create: true
+      resources:
+        requests:
+          cpu: 15m
+          memory: 128Mi
+        limits:
+          memory: 160Mi
+      securityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 10324
+        capabilities:
+          drop:
+            - ALL
+
+    dashboard:
+      basePath: null
+      enabled: true
+      replicaCount: 1
+      service:
+        type: ClusterIP
+        port: 80
+      rbac:
+        create: true
+        enableArgoproj: false
+      serviceAccount:
+        create: true
+      ingress:
+        enabled: true
+        ingressClassName: tailscale
+        hosts:
+          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+            paths:
+              - path: /
+                type: Prefix
+        tls:
+          - hosts:
+              - *host
+      resources:
+        requests:
+          cpu: 15m
+          memory: 128M
+        limits:
+          memory: 160M
+      securityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 10324
+        capabilities:
+          drop:
+            - ALL
