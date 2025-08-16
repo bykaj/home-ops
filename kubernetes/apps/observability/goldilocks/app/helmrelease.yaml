@@ -34,7 +34,7 @@ spec:
         enabled: true
 
     metrics-server:
-      enabled: true
+      enabled: false
       apiService:
         create: true
 
