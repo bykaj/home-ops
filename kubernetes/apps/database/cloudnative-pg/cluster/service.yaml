@@ -5,7 +5,7 @@ metadata:
   name: &app postgres-v17
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "db.${DOMAIN_IO}"
-    lbipam.cilium.io/ips: 10.73.10.202
+    lbipam.cilium.io/ips: "${LB_IP_POSTGRES}"
 spec:
   type: LoadBalancer
   ports:
