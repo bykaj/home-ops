@@ -87,8 +87,8 @@ spec:
       securityContext:
         allowPrivilegeEscalation: false
         runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
+        runAsUser: 1000
+        runAsGroup: 1000
         readOnlyRootFilesystem: null
         seccompProfile:
           type: RuntimeDefault
