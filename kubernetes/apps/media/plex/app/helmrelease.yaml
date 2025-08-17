@@ -29,9 +29,16 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.42.1.10060@sha256:04563be281364ba2462285aacb2ca13d7ef7e1d0b19e1203f4c19b4a56840c5c
             env:
-              TZ: "${TIMEZONE}"
               PLEX_ADVERTISE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,https://${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}:443,http://${LB_IP_PLEX}:32400"
               PLEX_NO_AUTH_NETWORKS: "${LAN_CIDR},${POD_CIDR},${SERVICE_CIDR},${TAILSCALE_CIDR}"
+              PLEX_PREFERENCE_1: "AllowMediaDeletion=0"
+              PLEX_PREFERENCE_2: "EnableIPv6=0"
+              PLEX_PREFERENCE_3: "FriendlyName=Media Server"
+              PLEX_PREFERENCE_4: "LanNetworksBandwidth=${LAN_CIDR}"
+              PLEX_PREFERENCE_5: "ButlerDatabaseBackupPath=/mnt/backups"
+              PLEX_PREFERENCE_6: "RelayEnabled=0"
+              PLEX_PREFERENCE_7: "sendCrashReports=0"
+              TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true
