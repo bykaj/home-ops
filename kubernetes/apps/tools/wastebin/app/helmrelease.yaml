@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: docker.io/quxfoo/wastebin
-              tag: 3.2.0@sha256:b636f029eecfb174aa40b93ded7d2b9753e3c9ae13277f90a36d24c16b35035b
+              tag: 3.3.0@sha256:b93714fe28ddf15848fa92c44ec666f7c66907f7495740d18b5eaa07cfd8c0ae
             env:
               TMPDIR: "/tmp"
               TZ: "${TIMEZONE}"
