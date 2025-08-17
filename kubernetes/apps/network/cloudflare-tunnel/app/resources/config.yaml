@@ -7,6 +7,10 @@ ingress:
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${DOMAIN_APP}"
     service: *svc
+  - hostname: "${DOMAIN_DEV}"
+    service: *svc
+  - hostname: "*.${DOMAIN_DEV}"
+    service: *svc
   - hostname: "${DOMAIN_ID}"
     service: *svc
   - hostname: "*.${DOMAIN_ID}"

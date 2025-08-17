@@ -58,7 +58,7 @@ spec:
     sources: ["gateway-httproute", "gateway-tlsroute", "gateway-grpcroute", "service"]
     txtOwnerId: unifi
     txtPrefix: k8s.
-    domainFilters: ["${DOMAIN_APP}","${DOMAIN_ID}","${DOMAIN_IO}","${DOMAIN_LOL}","${DOMAIN_NET}","home.${DOMAIN_NET}","kvm.home.${DOMAIN_NET}","${DOMAIN_ST}"]
+    domainFilters: ["${DOMAIN_APP}","${DOMAIN_DEV}","${DOMAIN_ID}","${DOMAIN_IO}","${DOMAIN_LOL}","${DOMAIN_NET}","home.${DOMAIN_NET}","kvm.home.${DOMAIN_NET}","${DOMAIN_ST}"]
     serviceMonitor:
       enabled: true
     podAnnotations:
