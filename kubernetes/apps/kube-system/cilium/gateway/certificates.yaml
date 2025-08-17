@@ -29,6 +29,24 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: "coder-${DOMAIN_DEV/./-}"
+spec:
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "development"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+  secretName: "coder-${DOMAIN_DEV/./-}-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "coder.${DOMAIN_DEV}"
+  dnsNames: ["coder.${DOMAIN_DEV}", "*.coder.${DOMAIN_DEV}"]
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: "${DOMAIN_ID/./-}"
 spec:
   secretName: "${DOMAIN_ID/./-}-tls"

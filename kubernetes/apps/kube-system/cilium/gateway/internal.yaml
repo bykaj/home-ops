@@ -51,6 +51,24 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_DEV/./-}-tls
+    - name: http-dev-coder
+      protocol: HTTP
+      port: 80
+      hostname: "*.coder.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-dev-coder
+      protocol: HTTPS
+      port: 443
+      hostname: "*.coder.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: coder-${DOMAIN_DEV/./-}-tls
     - name: http-id
       protocol: HTTP
       port: 80
