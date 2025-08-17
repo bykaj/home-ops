@@ -34,7 +34,7 @@ spec:
         - name: CODER_BLOCK_DIRECT
           value: "true"
         - name: CODER_DISABLE_PASSWORD_AUTH
-          value: "false"
+          value: "true"
         - name: CODER_DERP_SERVER_STUN_ADDRESSES
           value: "disable"
         - name: CODER_EMAIL_TLS_STARTTLS
