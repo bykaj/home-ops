@@ -51,7 +51,7 @@ spec:
         - name: CODER_OIDC_ROLE_FIELD
           value: "groups"
         - name: CODER_OIDC_SCOPES
-          value: "openid,profile,email,groups"
+          value: "openid,profile,email,groups,offline_access"
         - name: CODER_OIDC_USER_ROLE_MAPPING
           value: |
             {"Administrators": ["owner"]}
