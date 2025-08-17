@@ -66,6 +66,6 @@ spec:
     metadata:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
-        lbipam.cilium.io/ips: 10.73.10.201
+        lbipam.cilium.io/ips: "${LB_IP_EMQX}"
     spec:
       type: LoadBalancer

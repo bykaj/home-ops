@@ -14,5 +14,6 @@ data:
 
   # Reserved IPs for LoadBalancer services
   LB_IP_PLEX: 10.73.10.200
-  LB_IP_CODER: 10.73.10.201
+  LB_IP_EMQX: 10.73.10.201
   LB_IP_POSTGRES: 10.73.10.202
+  LB_IP_CODER: 10.73.10.203
