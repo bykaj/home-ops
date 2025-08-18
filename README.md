@@ -175,19 +175,9 @@ And of course, shoutout to [@QNimbus](https://github.com/QNimbus) for his bash s
 
 ---
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="20" height="20"> Stargazers
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.gif" alt="🌟" width="20" height="20"> Stargazer
 
-<div align="center">
-
-<a href="https://star-history.com/#bykaj/home-ops&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date" />
-  </picture>
-</a>
-
-</div>
+[![Star History Chart](https://api.star-history.com/svg?repos=bykaj/home-ops&type=Date)](https://www.star-history.com/#bykaj/home-ops&Date)
 
 ---
 
