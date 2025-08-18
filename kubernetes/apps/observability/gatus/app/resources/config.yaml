@@ -21,8 +21,7 @@ ui:
       link: https://github.com/bykaj
     - name: Repository
       link: https://github.com/bykaj/home-ops
-  # For new UI when released in 5.23.0
-  # default-sort-by: group
+  default-sort-by: group
 connectivity:
   checker:
     target: 1.1.1.1:53
