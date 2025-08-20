@@ -19,7 +19,7 @@ spec:
     namespace: flux-system
   targetNamespace: *namespace
   timeout: 5m
-  wait: false
+  wait: true
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -31,9 +31,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: certificates-import
-  #     namespace: *namespace
+  dependsOn:
+    - name: certificates-import
+      namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/kube-system/certificates/export
   prune: true
