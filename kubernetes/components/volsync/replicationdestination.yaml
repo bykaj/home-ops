@@ -7,22 +7,24 @@ metadata:
 spec:
   trigger:
     manual: restore-once
-  restic:
+  kopia:
     accessModes:
       - "${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"
     cacheAccessModes:
       - "${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-5Gi}"
+    cacheCapacity: "${VOLSYNC_CAPACITY:-5Gi}"
     cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
-    capacity: "${VOLSYNC_CAPACITY:-1Gi}"
+    capacity: "${VOLSYNC_CAPACITY:-5Gi}"
     cleanupCachePVC: true
     cleanupTempPVC: true
-    enableFileDeletion: true
     copyMethod: "${VOLSYNC_COPYMETHOD:-Snapshot}"
+    enableFileDeletion: true
     moverSecurityContext:
-      runAsUser: ${APP_UID:-4000}
-      runAsGroup: ${APP_GID:-4000}
-      fsGroup: ${APP_GID:-4000}
-    repository: "${APP}-volsync"
+      runAsUser: ${VOLSYNC_PUID:-4000}
+      runAsGroup: ${VOLSYNC_PGID:-4000}
+      fsGroup: ${VOLSYNC_PGID:-4000}
+    repository: ${APP}-volsync-secret
+    sourceIdentity:
+      sourceName: ${APP}
     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"

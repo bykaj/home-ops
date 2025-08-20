@@ -104,7 +104,7 @@ spec:
                 enabled: true
     persistence:
       config:
-        existingClaim: "${VOLSYNC_CLAIM}"
+        existingClaim: *app
         advancedMounts:
           mongodb:
             app:

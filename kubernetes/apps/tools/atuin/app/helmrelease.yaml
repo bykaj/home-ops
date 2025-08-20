@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: atuin
+  name: &app atuin
 spec:
   interval: 1h
   chartRef:
@@ -71,7 +71,7 @@ spec:
             sectionName: https-app
     persistence:
       config:
-        existingClaim: atuin-config
+        existingClaim: *app
       tmpfs:
         type: emptyDir
         globalMounts:

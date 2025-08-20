@@ -26,7 +26,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: n8n-config
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_CACHE_CAPACITY: 2Gi
   retryInterval: 2m

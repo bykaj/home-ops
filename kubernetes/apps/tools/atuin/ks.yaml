@@ -22,7 +22,6 @@ spec:
       APP: *app
       GATUS_NAME: Atuin
       GATUS_SUBDOMAIN: sh
-      VOLSYNC_CLAIM: atuin-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
   prune: true

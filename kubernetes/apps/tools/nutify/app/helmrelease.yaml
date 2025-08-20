@@ -64,7 +64,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: nutify-config
+        existingClaim: *app
         globalMounts:
           - path: /app/nutify/instance
             subPath: instance

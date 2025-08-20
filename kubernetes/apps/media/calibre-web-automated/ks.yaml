@@ -30,7 +30,6 @@ spec:
       APP: *app
       GATUS_NAME: "Calibre-Web Automated"
       GATUS_SUBDOMAIN: ebooks
-      VOLSYNC_CLAIM: calibre-web-automated-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
   retryInterval: 2m

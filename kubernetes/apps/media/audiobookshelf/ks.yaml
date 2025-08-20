@@ -30,7 +30,6 @@ spec:
       APP: *app
       GATUS_NAME: Audiobookshelf
       GATUS_SUBDOMAIN: audiobooks
-      VOLSYNC_CLAIM: audiobookshelf-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
   retryInterval: 2m

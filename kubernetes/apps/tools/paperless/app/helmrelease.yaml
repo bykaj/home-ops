@@ -82,7 +82,7 @@ spec:
                 memory: 4Gi
     persistence:
       config:
-        existingClaim: paperless-config
+        existingClaim: *app
         globalMounts:
           - path: /usr/src/paperless/data
       archive:

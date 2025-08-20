@@ -89,7 +89,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
-        existingClaim: n8n-config
+        existingClaim: *app
         globalMounts:
           - path: /home/node/.n8n
     route:

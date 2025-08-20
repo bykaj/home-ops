@@ -27,7 +27,6 @@ spec:
       APP: *app
       GATUS_NAME: Karakeep
       GATUS_SUBDOMAIN: links
-      VOLSYNC_CLAIM: karakeep-config
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

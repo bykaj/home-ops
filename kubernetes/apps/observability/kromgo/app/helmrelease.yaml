@@ -69,7 +69,8 @@ spec:
             port: *healthPort
     route:
       app:
-        hostnames: ["stats.${DOMAIN_IO}"]
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: external
             namespace: kube-system

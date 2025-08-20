@@ -89,7 +89,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: "${VOLSYNC_CLAIM}"
+        existingClaim: *app
         globalMounts:
           - path: /var/lib/pgadmin
       secrets:

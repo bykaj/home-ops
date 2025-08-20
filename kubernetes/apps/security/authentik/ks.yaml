@@ -32,7 +32,6 @@ spec:
       KEDA_NAME: authentik-server
       GATUS_NAME: Authentik
       GATUS_DOMAIN: auth.cetana.id
-      VOLSYNC_CLAIM: authentik-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
   prune: true

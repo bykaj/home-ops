@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: meilisearch
+  name: &app meilisearch
 spec:
   chart:
     spec:
@@ -29,7 +29,7 @@ spec:
       existingMasterKeySecret: meilisearch-secret
     persistence:
       enabled: true
-      existingClaim: meilisearch-config
+      existingClaim: *app
     resources:
       requests:
         cpu: 10m

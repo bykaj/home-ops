@@ -84,7 +84,7 @@ spec:
             sectionName: https-lol-apex
     persistence:
       data:
-        existingClaim: wastebin-config
+        existingClaim: *app
         globalMounts:
           - path: /data
       tmpfs:

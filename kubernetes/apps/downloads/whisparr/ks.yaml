@@ -28,7 +28,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: whisparr-config
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 10Gi
   prune: true

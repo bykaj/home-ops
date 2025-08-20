@@ -23,7 +23,6 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Nutify
-      VOLSYNC_CLAIM: nutify-config
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_CACHE_CAPACITY: 1Gi
   prune: true

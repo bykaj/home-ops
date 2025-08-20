@@ -150,7 +150,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: karakeep-config
+        existingClaim: *app
         advancedMounts:
           karakeep:
             init-migrate: &data

@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: authentik
+  name: &app authentik
 spec:
   interval: 1h
   chart:
@@ -49,7 +49,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: authentik-config
+            claimName: *app
 
     # Authentik configuration
     authentik:

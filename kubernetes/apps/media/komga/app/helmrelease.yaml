@@ -79,7 +79,7 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: "${VOLSYNC_CLAIM}"
+        existingClaim: *app
         globalMounts:
           - path: /config
       backups:
