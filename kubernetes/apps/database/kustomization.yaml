@@ -8,4 +8,4 @@ components:
 resources:
   - ./cloudnative-pg/ks.yaml
   - ./dragonfly/ks.yaml
-  - ./meilisearch/ks.yaml
+  #- ./meilisearch/ks.yaml
