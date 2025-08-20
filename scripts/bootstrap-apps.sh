@@ -53,9 +53,32 @@ function apply_namespaces() {
     done
 }
 
+# # 1Password secrets to be applied before the helmfile charts are installed
+# function apply_op_secrets() {
+#     log debug "Applying 1Password secrets"
+
+#     secret="${ROOT_DIR}/bootstrap/secrets.yaml"
+
+#     if [ ! -f "${secret}" ]; then
+#         log error "File does not exist" "file=${secret}"
+#     fi
+
+#     # Check if the secret resources are up-to-date
+#     if op inject --in-file "${secret}" | kubectl diff --filename - &>/dev/null; then
+#         log info "Secret resource is up-to-date" "resource=$(basename "${secret}" ".yaml")"
+#     else
+#         # Apply secret resources
+#         if op inject --in-file "${secret}" | kubectl apply --server-side --filename - &>/dev/null; then
+#             log info "Secret resource applied successfully" "resource=$(basename "${secret}" ".yaml")"
+#         else
+#             log error "Failed to apply secret resource" "resource=$(basename "${secret}" ".yaml")"
+#         fi
+#     fi
+# }
+
 # SOPS secrets to be applied before the helmfile charts are installed
 function apply_sops_secrets() {
-    log debug "Applying secrets"
+    log debug "Applying SOPS secrets"
 
     local -r secrets=(
         "${ROOT_DIR}/bootstrap/github-deploy-key.sops.yaml"
@@ -129,11 +152,12 @@ function sync_helm_releases() {
 
 function main() {
     check_env KUBECONFIG TALOSCONFIG
-    check_cli helmfile kubectl kustomize sops talhelper yq
+    check_cli helmfile kubectl kustomize sops talhelper yq op
 
     # Apply resources and Helm releases
     wait_for_nodes
     apply_namespaces
+    # apply_op_secrets
     apply_sops_secrets
     apply_crds
     sync_helm_releases

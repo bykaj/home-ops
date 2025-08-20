@@ -19,6 +19,20 @@ tasks:
       - test -f {{.TALOS_DIR}}/talconfig.yaml
       - which talhelper talosctl sops
 
+  resources:
+    desc: Bootstrap resources into the Talos cluster
+    cmd: |
+      echo "Bootstrapping Resources..."
+      op inject --in-file {{.BOOTSTRAP_DIR}}/secrets.yaml | kubectl apply --server-side --filename -
+      echo "Done."
+    status:
+      - op inject --in-file {{.BOOTSTRAP_DIR}}/secrets.yaml | kubectl diff --filename -
+    preconditions:
+      - op whoami
+      - test -f {{.BOOTSTRAP_DIR}}/secrets.yaml
+      - which kubectl op
+    silent: true
+
   apps:
     desc: Bootstrap apps into the Talos cluster
     cmd: bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
