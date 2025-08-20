@@ -62,12 +62,7 @@ spec:
               PAPERLESS_DBHOST: "${DB_HOST}"
               # Configure user permissions
               USERMAP_UID: "${APP_UID}"
-              USERMAP_GID: "${APP_GID}" # gladius:external-services
-              # # s6 overlay fixes
-              # # Ref: https://github.com/just-containers/s6-overlay/issues/600
-              # S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
-              # S6_READ_ONLY_ROOT: "1"
-              # S6_VERBOSITY: "2"
+              USERMAP_GID: "${APP_GID}"
             envFrom: *envFrom
             probes:
               liveness:
@@ -111,10 +106,6 @@ spec:
             subPath: tmp
           - path: /usr/src/paperless/data/log
             subPath: log
-          # # s6 overlay fixes
-          # # Ref: https://github.com/just-containers/s6-overlay/issues/600
-          # - path: /run
-          #   subPath: run
     route:
       app:
         annotations:
