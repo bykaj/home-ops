@@ -6,16 +6,16 @@ namespace: tools
 components:
   - ../../components/common
 resources:
-  # - ./atuin/ks.yaml
-  # - ./dsmr-reader/ks.yaml
-  # - ./it-tools/ks.yaml
+  - ./atuin/ks.yaml
+  - ./dsmr-reader/ks.yaml
+  - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
-  # - ./kopia/ks.yaml
-  # - ./n8n/ks.yaml
-  # - ./nutify/ks.yaml
-  # - ./oidc-provider-debugger/ks.yaml
-  # - ./paperless/ks.yaml
-  # - ./persistence/ks.yaml
-  # - ./pgadmin/ks.yaml
-  # - ./wallos/ks.yaml
-  # - ./wastebin/ks.yaml
+  - ./kopia/ks.yaml
+  - ./n8n/ks.yaml
+  - ./nutify/ks.yaml
+  - ./oidc-provider-debugger/ks.yaml
+  - ./paperless/ks.yaml
+  - ./persistence/ks.yaml
+  - ./pgadmin/ks.yaml
+  - ./wallos/ks.yaml
+  - ./wastebin/ks.yaml
