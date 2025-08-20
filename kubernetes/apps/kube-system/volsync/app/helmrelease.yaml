@@ -6,9 +6,13 @@ metadata:
   name: volsync
 spec:
   interval: 1h
-  chartRef:
-    kind: OCIRepository
-    name: volsync
+  chart:
+    spec:
+      chart: volsync
+      version: 0.16.7
+      sourceRef:
+        kind: HelmRepository
+        name: volsync
   install:
     remediation:
       retries: -1
@@ -17,8 +21,16 @@ spec:
     remediation:
       retries: 3
   values:
+    image: &image
+      repository: ghcr.io/perfectra1n/volsync
+      tag: v0.15.38@sha256:ea5a9e688acc2205901ba693582cc2594190a8868e45acba144f5768e1be9be0
+    kopia: *image
+    rclone: *image
+    restic: *image
+    rsync: *image
+    rsync-tls: *image
+    syncthing: *image
     manageCRDs: true
-    replicaCount: 2
     metrics:
       disableAuth: true
     podSecurityContext:
