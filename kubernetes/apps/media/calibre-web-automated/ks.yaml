@@ -28,6 +28,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_UID: "1000"
+      APP_GID: "1000"
       GATUS_NAME: "Calibre-Web Automated"
       GATUS_SUBDOMAIN: ebooks
       VOLSYNC_CAPACITY: 1Gi

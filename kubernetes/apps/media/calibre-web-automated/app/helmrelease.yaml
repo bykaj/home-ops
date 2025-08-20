@@ -26,10 +26,10 @@ spec:
           app:
             image:
               repository: docker.io/crocodilestick/calibre-web-automated
-              tag: V3.1.1@sha256:a4f91a780685274bde623d38b540932be5638e5379075a002d9c55517869e25a
+              tag: V3.1.4@sha256:577e846f104fd21453ef306eefb4a95dd95b3b9ddd2463a150944494284da0fd
             env:
-              PGID: "4000"
-              PUID: "4000"
+              PGID: "${APP_GID}"
+              PUID: "${APP_UID}"
               TIMEZONE: "${TIMEZONE}"
             envFrom:
               - secretRef:
@@ -42,7 +42,7 @@ spec:
                   httpGet:
                     path: /login
                     port: &port 8083
-                  initialDelaySeconds: 5
+                  initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
