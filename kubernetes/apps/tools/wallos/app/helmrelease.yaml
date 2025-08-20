@@ -62,7 +62,7 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
           *name :
             app:
