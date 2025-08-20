@@ -15,8 +15,6 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-    - name: cloudnative-pg-cluster
-      namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
