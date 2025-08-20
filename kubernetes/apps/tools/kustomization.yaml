@@ -14,8 +14,8 @@ resources:
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./oidc-provider-debugger/ks.yaml
-  - ./paperless/ks.yaml
+  #- ./paperless/ks.yaml
   - ./persistence/ks.yaml
-  - ./pgadmin/ks.yaml
+  #- ./pgadmin/ks.yaml
   - ./wallos/ks.yaml
   - ./wastebin/ks.yaml
