@@ -30,7 +30,7 @@ spec:
       podAnnotations:
         reloader.stakater.com/auto: "true"
       deploymentStrategy:
-        type: RollingUpdate
+        type: Recreate
       env:
         - name: AUTHENTIK_REDIS__DB
           value: "1"
