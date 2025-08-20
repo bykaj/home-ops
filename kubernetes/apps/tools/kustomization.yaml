@@ -9,8 +9,8 @@ resources:
   # - ./atuin/ks.yaml
   # - ./dsmr-reader/ks.yaml
   # - ./it-tools/ks.yaml
-  # - ./karakeep/ks.yaml
-  - ./kopia/ks.yaml
+  - ./karakeep/ks.yaml
+  # - ./kopia/ks.yaml
   # - ./n8n/ks.yaml
   # - ./nutify/ks.yaml
   # - ./oidc-provider-debugger/ks.yaml
