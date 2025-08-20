@@ -22,8 +22,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/szinn/atuin
-              tag: v18.6.1-sqlite-5@sha256:192389b6b6da30fbf81c6fee8f978a7262d8683657056cf021983481b41162c5
+              repository: ghcr.io/atuinsh/atuin
+              tag: v18.8.0@sha256:8a8a8ef4eb5865656072bace5cc49390b56caa81360f9f0869054777155b6ef1
             env:
               ATUIN_HOST: "0.0.0.0"
               ATUIN_PORT: &port 80
@@ -37,7 +37,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /healthz
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -61,6 +61,14 @@ spec:
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
     route:
       app:
         hostnames:
@@ -69,14 +77,6 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https-app
-    persistence:
-      config:
-        existingClaim: *app
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
     service:
       app:
         ports:
