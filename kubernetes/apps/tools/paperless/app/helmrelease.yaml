@@ -46,6 +46,11 @@ spec:
               PAPERLESS_TIME_ZONE: "${TIMEZONE}"
               PAPERLESS_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               PAPERLESS_WEBSERVER_WORKERS: "2"
+              # Configure folders
+              PAPERLESS_CONSUMPTION_DIR: &consumePath /mnt/archive/consume
+              PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data
+              PAPERLESS_EXPORT_DIR: &exportPath /mnt/archive/export
+              PAPERLESS_MEDIA_ROOT: &mediaPath /mnt/archive/media
               # Configure folder importer
               PAPERLESS_CONSUMER_POLLING: "15"
               PAPERLESS_CONSUMER_RECURSIVE: "true"
@@ -55,25 +60,25 @@ spec:
               PAPERLESS_OCR_LANGUAGES: nld
               # Configure database
               PAPERLESS_DBHOST: "${DB_HOST}"
-              # s6 overlay fixes
-              # Ref: https://github.com/just-containers/s6-overlay/issues/600
-              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
-              S6_READ_ONLY_ROOT: "1"
-              S6_VERBOSITY: "2"
+              # Configure user permissions
+              USERMAP_UID: "${APP_UID}"
+              USERMAP_GID: "${APP_GID}" # gladius:external-services
+              # # s6 overlay fixes
+              # # Ref: https://github.com/just-containers/s6-overlay/issues/600
+              # S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+              # S6_READ_ONLY_ROOT: "1"
+              # S6_VERBOSITY: "2"
             envFrom: *envFrom
             probes:
-              liveness: &probes
+              liveness:
                 enabled: true
-                custom: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
                 spec:
-                  httpGet:
-                    path: /
-                    port: *port
-                  initialDelaySeconds: 10
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  failureThreshold: 30
+                  periodSeconds: 5
             resources:
               requests:
                 cpu: 25m
@@ -82,17 +87,17 @@ spec:
                 memory: 4Gi
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
-          - path: /usr/src/paperless/data
+          - path: *dataPath
       archive:
         existingClaim: smb-archive
         globalMounts:
-          - path: /usr/src/paperless/consume
+          - path: *consumePath
             subPath: consume
-          - path: /usr/src/paperless/export
+          - path: *exportPath
             subPath: export
-          - path: /usr/src/paperless/media
+          - path: *mediaPath
             subPath: media
       backups:
         existingClaim: smb-backups
@@ -106,10 +111,10 @@ spec:
             subPath: tmp
           - path: /usr/src/paperless/data/log
             subPath: log
-          # s6 overlay fixes
-          # Ref: https://github.com/just-containers/s6-overlay/issues/600
-          - path: /run
-            subPath: run
+          # # s6 overlay fixes
+          # # Ref: https://github.com/just-containers/s6-overlay/issues/600
+          # - path: /run
+          #   subPath: run
     route:
       app:
         annotations:

@@ -31,6 +31,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_UID: "1000"
+      APP_GID: "65542"
       GATUS_NAME: Paperless
       GATUS_SUBDOMAIN: archive
       VOLSYNC_CAPACITY: 1Gi
