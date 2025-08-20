@@ -16,6 +16,6 @@ resources:
   - ./oidc-provider-debugger/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
-  - ./pgadmin/ks.yaml
+  #- ./pgadmin/ks.yaml
   - ./wallos/ks.yaml
   - ./wastebin/ks.yaml
