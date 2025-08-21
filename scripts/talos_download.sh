@@ -8,9 +8,9 @@
 # ====================================================
 #
 # Author:      B. van Wetten <git@bvw.email>
-# Version:     1.0.9
+# Version:     1.1.1
 # Created:     2025-06-19
-# Updated:     2025-06-19
+# Updated:     2025-07-07
 #
 # This script automates the download of Talos Linux ISOs.
 # It uses shared libraries for common utilities and Proxmox interactions.
@@ -158,6 +158,47 @@ ensure_library_loaded() {
     else log_error "'$lib_filename' not found after download attempt."; exit 1; fi
 }
 
+# Add the missing detect_iso_storage function
+detect_iso_storage() {
+    log_verbose "Detecting available ISO storage pools..."
+    
+    # Get list of storages that support ISO content
+    local storages
+    if ! storages=$(pvesm status --content iso 2>/dev/null | tail -n +2 | awk '{print $1}' | grep -v '^$'); then
+        log_error "Failed to query ISO storages with pvesm status."
+        return 1
+    fi
+    
+    if [[ -z "$storages" ]]; then
+        log_error "No storages with ISO content found."
+        return 1
+    fi
+    
+    # Convert to array and check each storage
+    local storage_array=($storages)
+    log_verbose "Found ${#storage_array[@]} potential ISO storage(s): ${storage_array[*]}"
+    
+    # Prefer common storage names first
+    local preferred_storages=("local" "local-iso" "iso" "iso-storage")
+    
+    # Check preferred storages first
+    for preferred in "${preferred_storages[@]}"; do
+        for storage in "${storage_array[@]}"; do
+            if [[ "$storage" == "$preferred" ]]; then
+                log_verbose "Using preferred ISO storage: $storage"
+                echo "$storage"
+                return 0
+            fi
+        done
+    done
+    
+    # If no preferred storage found, use the first available one
+    local first_storage="${storage_array[0]}"
+    log_verbose "No preferred storage found, using first available: $first_storage"
+    echo "$first_storage"
+    return 0
+}
+
 for lib_key in "${!LIBRARIES_CONFIG[@]}"; do
     ensure_library_loaded "$lib_key"
 done
@@ -291,9 +332,14 @@ if [[ "${1:-}" == "update" ]]; then
     if [[ "${1:-}" == "--verbose" ]]; then VERBOSE_FLAG="true"; log_verbose "Verbose mode enabled for update process."; shift; fi
 else
     if [[ $# -eq 0 ]]; then usage; fi
-    _idx=0; TALOS_VERSION="$DEFAULT_TALOS_VERSION"; IMAGE_TYPE="$DEFAULT_IMAGE_TYPE"; FORCE_MODE=false; PROXMOX_STORAGE=""; SCHEMATIC_ID=""
-    while [[ $_idx -lt $# ]]; do
-        _current_arg="${!((_idx + 1))}"; _next_arg="${!((_idx + 2))}"
+    _idx=1; TALOS_VERSION="$DEFAULT_TALOS_VERSION"; IMAGE_TYPE="$DEFAULT_IMAGE_TYPE"; FORCE_MODE=false; PROXMOX_STORAGE=""; SCHEMATIC_ID=""
+    while [[ $_idx -le $# ]]; do
+        _current_arg="${!_idx}"
+        _next_idx=$((_idx + 1))
+        _next_arg=""
+        if [[ $_next_idx -le $# ]]; then
+            _next_arg="${!_next_idx}"
+        fi
         case "$_current_arg" in
             --schematic-id|--id) if [[ -z "$_next_arg" ]] || [[ "$_next_arg" == --* ]]; then log_error "$_current_arg needs value."; usage; fi; SCHEMATIC_ID="$_next_arg"; _idx=$((_idx + 1)) ;;
             --version) if [[ -z "$_next_arg" ]] || [[ "$_next_arg" == --* ]]; then log_error "$_current_arg needs value."; usage; fi; TALOS_VERSION="$_next_arg"; _idx=$((_idx + 1)) ;;
@@ -332,16 +378,27 @@ if [[ "$ACTION" == "download" ]]; then
         if [[ "$check_ok" == "false" ]]; then exit 1; fi; log_success "✓ Preflight checks passed."
     }
     get_storage_path() {
-        local storage_name=$1; log_info "Getting storage path for '$storage_name'..."
-        local storage_details=$(pvesh get "/storage/${storage_name}" --output-format=json 2>/dev/null || { log_error "Failed to get details for '$storage_name'."; return 1; })
+        local storage_name=$1
+        log_info "Getting storage path for '$storage_name'..." >&2
+        local storage_details=$(pvesh get "/storage/${storage_name}" --output-format=json 2>/dev/null || { log_error "Failed to get details for '$storage_name'." >&2; return 1; })
         local storage_physical_path=$(echo "$storage_details" | jq -r '.path // .export // ""' 2>/dev/null)
-        if [[ -z "$storage_physical_path" ]]; then log_error "No physical path for '$storage_name'."; log_verbose "Details: $storage_details"; exit 1; fi
+        if [[ -z "$storage_physical_path" ]]; then 
+            log_error "No physical path for '$storage_name'." >&2
+            log_verbose "Details: $storage_details" >&2
+            return 1
+        fi
         local iso_dir_path="${storage_physical_path}/template/iso"
         if [[ ! -d "$iso_dir_path" ]]; then
-            log_info "Attempting to create ISO dir: $iso_dir_path"
-            if ! mkdir -p "$iso_dir_path"; then log_error "Failed to create ISO dir: $iso_dir_path"; exit 1; fi
-            log_success "Created ISO dir: $iso_dir_path"
-        fi; log_success "✓ Storage ISO path: $iso_dir_path"; echo "$iso_dir_path"
+            log_info "Attempting to create ISO dir: $iso_dir_path" >&2
+            if ! mkdir -p "$iso_dir_path"; then 
+                log_error "Failed to create ISO dir: $iso_dir_path" >&2
+                return 1
+            fi
+            log_success "Created ISO dir: $iso_dir_path" >&2
+        fi
+        log_success "✓ Storage ISO path: $iso_dir_path" >&2
+        # Only output the path to stdout, everything else explicitly goes to stderr
+        echo "$iso_dir_path"
     }
     verify_schematic() {
         local sid=$1 ver=$2 img_type=$3; log_info "Verifying schematic $sid / $ver / $img_type..."
@@ -351,11 +408,31 @@ if [[ "$ACTION" == "download" ]]; then
     }
     download_iso_file() {
         local sid=$1 ver=$2 store_path=$3 force=$4 img_type=$5
-        local download_url="https://factory.talos.dev/image/${sid}/${ver}/${img_type}.iso"; local filename=$(basename "$download_url")
+        local download_url="https://factory.talos.dev/image/${sid}/${ver}/${img_type}.iso"
+        local filename=$(basename "$download_url")  # This will be metal-amd64.iso
         local full_path="${store_path}/${filename}"; local id_file="${full_path}.id"
         log_info "Download URL: $download_url"; log_info "Target file: $full_path"
-        if [[ -f "$full_path" && "$force" != "true" ]]; then log_error "File exists: $full_path. Use --force."; exit 1; fi
-        if [[ -f "$full_path" && "$force" == "true" ]]; then log_warning "Overwriting: $full_path"; echo "$(date): Overwriting: $full_path" >> "$LOG_FILE"; fi
+        log_verbose "Checking if file exists: $full_path"
+        if [[ -f "$full_path" ]]; then
+            log_verbose "File exists. Force mode: $force"
+            if [[ "$force" != "true" ]]; then 
+                log_warning "File already exists: $full_path"
+                log_info "This file may be from a different Talos version or schematic."
+                log_info "Use --force to overwrite, or remove the existing file manually."
+                log_error "Download cancelled to prevent overwriting existing file."
+                exit 1
+            else
+                log_warning "File exists but --force specified. Will overwrite: $full_path"
+                # Remove the existing file to ensure clean download
+                if ! rm -f "$full_path"; then
+                    log_error "Failed to remove existing file: $full_path"
+                    exit 1
+                fi
+                log_verbose "Existing file removed successfully"
+            fi
+        else
+            log_verbose "File does not exist, proceeding with download"
+        fi
         log_info "Starting ISO download..."; echo "$(date): Downloading $download_url to $full_path" >> "$LOG_FILE"; printf "\033[?25l"
         local curl_dl_args=(-L --fail --progress-bar -o "$full_path" "$download_url")
         if ! curl "${curl_dl_args[@]}"; then restore_cursor; echo ""; log_error "Download failed."; [[ -f "$full_path" ]] && rm -f "$full_path"; exit 1; fi
