@@ -36,7 +36,7 @@ spec:
               - --server-address=:9090
             env:
               # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar
-              SIDECAR_IMAGE: ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar:v0.5.0
+              SIDECAR_IMAGE: ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar:v0.6.0
             probes:
               liveness: &probes
                 enabled: true
