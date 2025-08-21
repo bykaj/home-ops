@@ -23,6 +23,16 @@ spec:
       createPrometheusRules: true
     toolbox:
       enabled: false
+    route:
+      dashboard:
+        host:
+          name: rook.${DOMAIN_APP}
+          path: /
+          pathType: PathPrefix
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-app
     cephClusterSpec:
       cephConfig:
         global:
@@ -30,13 +40,10 @@ spec:
           bdev_async_discard_threads: "1" # quote
           osd_class_update_on_start: "false" # quote
           device_failure_prediction_mode: local # requires mgr module
-        mgr:
-          mgr/crash/warn_recent_interval: "7200" # 2h
+      cleanupPolicy:
+        wipeDevicesFromOtherClusters: true
       crashCollector:
         disable: false
-      csi:
-        readAffinity:
-          enabled: true
       dashboard:
         enabled: true
         urlPrefix: /
@@ -58,35 +65,61 @@ spec:
       #     requireMsgr2: true
       resources:
         mgr:
+          limits:
+            cpu: 500m
+            memory: 640Mi
+          requests:
+            cpu: 50m
+            memory: 320Mi
+        mon:
+          limits:
+            cpu: 500m
+            memory: 640Mi
           requests:
             cpu: 100m
-            memory: 512Mi
-          limits:
-            memory: 2Gi
-        mon:
-          requests:
-            cpu: 50m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
+            memory: 320Mi
         osd:
-          requests:
-            cpu: 500m
-            memory: 2Gi
           limits:
-            memory: 6Gi
-        mgr-sidecar:
+            cpu: 500m
+            memory: 1600Mi
+          requests:
+            cpu: 150m
+            memory: 800Mi
+        prepareosd:
+          limits:
+            cpu: 1000m
+            memory: 400Mi
           requests:
             cpu: 50m
-            memory: 128Mi
+            memory: 200Mi
+        mgr-sidecar:
           limits:
-            memory: 256Mi
-        logcollector:
+            cpu: 256m
+            memory: 100Mi
           requests:
-            cpu: 20m
-            memory: 128Mi
+            cpu: 50m
+            memory: 40Mi
+        crashcollector:
           limits:
-            memory: 512Mi
+            cpu: 100m
+            memory: 64M
+          requests:
+            cpu: 15m
+            memory: 32M
+        logcollector:
+          limits:
+            cpu: 50m
+            memory: 32Mi
+          requests:
+            cpu: 5m
+            memory: 16Mi
+        cleanup:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
       storage:
         useAllNodes: false
         useAllDevices: false
