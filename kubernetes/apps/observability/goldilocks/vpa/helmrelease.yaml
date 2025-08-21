@@ -38,8 +38,8 @@ spec:
         limits:
           memory: 256Mi
       extraArgs:
-        pod-recommendation-min-cpu-millicores: 15
-        pod-recommendation-min-memory-mb: 61
+        pod-recommendation-min-cpu-millicores: 10
+        pod-recommendation-min-memory-mb: 32
         storage: prometheus
         prometheus-address: http://prometheus-operated.observability.svc.cluster.local:9090
     updater:
