@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: goldilocks-vpa
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: vpa
+      version: 4.8.1
+      sourceRef:
+        kind: HelmRepository
+        name: fairwinds
+        namespace: flux-system
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  driftDetection:
+    mode: enabled
+  values:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    recommender:
+      enabled: true
+      image:
+        repository: registry.k8s.io/autoscaling/vpa-recommender
+        tag: 1.4.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+      extraArgs:
+        pod-recommendation-min-cpu-millicores: 15
+        pod-recommendation-min-memory-mb: 61
+        storage: prometheus
+        prometheus-address: http://prometheus-operated.observability.svc.cluster.local:9090
+    updater:
+      enabled: false
+    admissionController:
+      enabled: false

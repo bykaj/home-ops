@@ -15,6 +15,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds
+        namespace: flux-system
   install:
     remediation:
       retries: -1
@@ -27,22 +28,6 @@ spec:
   values:
     annotations:
       reloader.stakater.com/auto: "true"
-
-    vpa:
-      enabled: true
-      updater:
-        enabled: true
-
-    metrics-server:
-      enabled: false
-      apiService:
-        create: true
-
-    image:
-      repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks
-      tag: v4.14.4
-      pullPolicy: IfNotPresent
-
     controller:
       enabled: true
       rbac:
@@ -64,7 +49,6 @@ spec:
         capabilities:
           drop:
             - ALL
-
     dashboard:
       basePath: null
       enabled: true
@@ -102,3 +86,11 @@ spec:
         capabilities:
           drop:
             - ALL
+    vpa:
+      enabled: false
+      updater:
+        enabled: true
+    metrics-server:
+      enabled: false
+      apiService:
+        create: true
