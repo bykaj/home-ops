@@ -66,60 +66,60 @@ spec:
       resources:
         mgr:
           limits:
-            cpu: 500m
+            cpu: 100m
+            memory: 1536Mi
+          requests:
+            cpu: 50m
+            memory: 512Mi
+        mon:
+          limits:
+            cpu: 70m
             memory: 640Mi
           requests:
             cpu: 50m
             memory: 320Mi
-        mon:
-          limits:
-            cpu: 500m
-            memory: 640Mi
-          requests:
-            cpu: 100m
-            memory: 320Mi
         osd:
           limits:
             cpu: 500m
-            memory: 1600Mi
+            memory: 3072Mi
           requests:
             cpu: 150m
-            memory: 800Mi
+            memory: 1024Mi
         prepareosd:
           limits:
-            cpu: 1000m
+            cpu: 100m
             memory: 400Mi
           requests:
             cpu: 50m
             memory: 200Mi
         mgr-sidecar:
           limits:
-            cpu: 256m
-            memory: 100Mi
+            cpu: 70m
+            memory: 128Mi
           requests:
             cpu: 50m
-            memory: 40Mi
+            memory: 48Mi
         crashcollector:
           limits:
-            cpu: 100m
-            memory: 64M
+            cpu: 50m
+            memory: 64Mi
           requests:
             cpu: 15m
-            memory: 32M
+            memory: 32Mi
         logcollector:
           limits:
-            cpu: 50m
+            cpu: 10m
             memory: 32Mi
           requests:
             cpu: 5m
             memory: 16Mi
         cleanup:
           limits:
-            cpu: 500m
-            memory: 1Gi
+            cpu: 200m
+            memory: 1024Mi
           requests:
             cpu: 100m
-            memory: 100Mi
+            memory: 128Mi
       storage:
         useAllNodes: false
         useAllDevices: false

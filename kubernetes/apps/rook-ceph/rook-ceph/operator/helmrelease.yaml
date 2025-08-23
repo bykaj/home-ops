@@ -38,7 +38,7 @@ spec:
               cpu: 5m
             limits:
               memory: 32Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-resizer
           resource:
             requests:
@@ -46,7 +46,7 @@ spec:
               cpu: 5m
             limits:
               memory: 96Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-attacher
           resource:
             requests:
@@ -54,7 +54,7 @@ spec:
               cpu: 5m
             limits:
               memory: 64Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-snapshotter
           resource:
             requests:
@@ -62,7 +62,7 @@ spec:
               cpu: 5m
             limits:
               memory: 32Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-rbdplugin
           resource:
             requests:
@@ -70,7 +70,7 @@ spec:
               cpu: 15m
             limits:
               memory: 96Mi
-              cpu: 200m
+              cpu: 100m
         - name : liveness-prometheus
           resource:
             requests:
@@ -78,7 +78,7 @@ spec:
               cpu: 5m
             limits:
               memory: 48Mi
-              cpu: 100m
+              cpu: 50m
       csiRBDPluginResource: |
         - name : driver-registrar
           resource:
@@ -87,7 +87,7 @@ spec:
               cpu: 5m
             limits:
               memory: 128Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-rbdplugin
           resource:
             requests:
@@ -95,7 +95,7 @@ spec:
               cpu: 10m
             limits:
               memory: 192Mi
-              cpu: 200m
+              cpu: 100m
         - name : liveness-prometheus
           resource:
             requests:
@@ -103,7 +103,7 @@ spec:
               cpu: 5m
             limits:
               memory: 96Mi
-              cpu: 100m
+              cpu: 50m
       csiCephFSProvisionerResource: |
         - name : csi-provisioner
           resource:
@@ -112,7 +112,7 @@ spec:
               cpu: 5m
             limits:
               memory: 32Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-resizer
           resource:
             requests:
@@ -120,7 +120,7 @@ spec:
               cpu: 5m
             limits:
               memory: 96Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-attacher
           resource:
             requests:
@@ -128,7 +128,7 @@ spec:
               cpu: 5m
             limits:
               memory: 64Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-snapshotter
           resource:
             requests:
@@ -136,7 +136,7 @@ spec:
               cpu: 5m
             limits:
               memory: 32Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-cephfsplugin
           resource:
             requests:
@@ -144,7 +144,7 @@ spec:
               cpu: 15m
             limits:
               memory: 96Mi
-              cpu: 200m
+              cpu: 100m
         - name : liveness-prometheus
           resource:
             requests:
@@ -152,7 +152,7 @@ spec:
               cpu: 5m
             limits:
               memory: 128Mi
-              cpu: 100m
+              cpu: 50m
       # CEPH CSI CephFS plugin resource requirement list, Put here list of resource
       # requests and limits you want to apply for plugin pod
       csiCephFSPluginResource: |
@@ -163,7 +163,7 @@ spec:
               cpu: 5m
             limits:
               memory: 128Mi
-              cpu: 100m
+              cpu: 50m
         - name : csi-cephfsplugin
           resource:
             requests:
@@ -171,7 +171,7 @@ spec:
               cpu: 10m
             limits:
               memory: 128Mi
-              cpu: 200m
+              cpu: 100m
         - name : liveness-prometheus
           resource:
             requests:
@@ -179,7 +179,7 @@ spec:
               cpu: 5m
             limits:
               memory: 96Mi
-              cpu: 100m
+              cpu: 50m
     cephCommandsTimeoutSeconds: "20"
     monitoring:
       enabled: true
@@ -188,5 +188,5 @@ spec:
         cpu: 50m
         memory: 224Mi
       limits:
-        cpu: 500m
+        cpu: 200m
         memory: 480Mi
