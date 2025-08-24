@@ -32,7 +32,7 @@ spec:
     substitute:
       APP: *app
       APP_UID: "1000"
-      APP_GID: "65542"  # gladius:external-services
+      APP_GID: "1000"
       GATUS_NAME: Paperless
       GATUS_SUBDOMAIN: archive
       VOLSYNC_CAPACITY: 1Gi
