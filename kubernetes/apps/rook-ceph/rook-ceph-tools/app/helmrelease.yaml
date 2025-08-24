@@ -41,7 +41,10 @@ spec:
                     key: ceph-secret
             resources:
               requests:
-                cpu: 5m
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
             securityContext:
               privileged: true
     defaultPodOptions:
