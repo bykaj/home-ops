@@ -85,11 +85,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 11m
-                memory: 273M
+                cpu: 10m
+                memory: 512Mi
               limits:
-                cpu: 11m
-                memory: 273M
+                memory: 1Gi
           worker:
             <<: *container
             workingDir: /app/apps/workers
@@ -99,11 +98,10 @@ spec:
               - start:prod
             resources:
               requests:
-                cpu: 11m
-                memory: 765M
+                cpu: 10m
+                memory: 512Mi
               limits:
-                cpu: 11m
-                memory: 765M
+                memory: 1Gi
 
       browserless:
         annotations:
