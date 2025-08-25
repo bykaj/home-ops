@@ -75,10 +75,10 @@ spec:
         mon:
           limits:
             cpu: 70m
-            memory: 640Mi
+            memory: 1024Mi
           requests:
             cpu: 50m
-            memory: 320Mi
+            memory: 512Mi
         osd:
           limits:
             cpu: 500m
@@ -89,10 +89,10 @@ spec:
         prepareosd:
           limits:
             cpu: 100m
-            memory: 400Mi
+            memory: 512Mi
           requests:
             cpu: 50m
-            memory: 200Mi
+            memory: 256Mi
         mgr-sidecar:
           limits:
             cpu: 70m
