@@ -25,7 +25,6 @@ spec:
     - name: dragonfly-cluster
       namespace: database
   interval: 1h
-  path: ./kubernetes/apps/security/authentik/app
   # Patch for podAffinity for the worker pod to shedule on the same node as the server pod due RWO storage
   patches:
     - patch: |-
@@ -53,6 +52,7 @@ spec:
       target:
         kind: Deployment
         name: authentik-worker
+  path: ./kubernetes/apps/security/authentik/app
   postBuild:
     substitute:
       APP: *app
