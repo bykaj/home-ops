@@ -30,6 +30,7 @@ spec:
       GATUS_NAME: Plex
       GATUS_PATH: /web/index.html
       VOLSYNC_CAPACITY: 80Gi
+      VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
   retryInterval: 2m
   sourceRef:

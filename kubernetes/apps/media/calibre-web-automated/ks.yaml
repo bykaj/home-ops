@@ -33,7 +33,6 @@ spec:
       GATUS_NAME: "Calibre-Web Automated"
       GATUS_SUBDOMAIN: ebooks
       VOLSYNC_CAPACITY: 1Gi
-      VOLSYNC_CACHE_CAPACITY: 1Gi
   retryInterval: 2m
   sourceRef:
     kind: GitRepository

@@ -26,7 +26,6 @@ spec:
       GATUS_NAME: "Your Spotify"
       GATUS_SUBDOMAIN: sptfy
       VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_CACHE_CAPACITY: 2Gi
   retryInterval: 2m
   sourceRef:
     kind: GitRepository

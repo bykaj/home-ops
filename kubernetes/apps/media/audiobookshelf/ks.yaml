@@ -31,7 +31,6 @@ spec:
       GATUS_NAME: Audiobookshelf
       GATUS_SUBDOMAIN: audiobooks
       VOLSYNC_CAPACITY: 1Gi
-      VOLSYNC_CACHE_CAPACITY: 1Gi
   retryInterval: 2m
   sourceRef:
     kind: GitRepository

@@ -24,7 +24,6 @@ spec:
       APP: *app
       GATUS_NAME: pgAdmin
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_CACHE_CAPACITY: 2Gi
   prune: true
   retryInterval: 2m
   sourceRef:
