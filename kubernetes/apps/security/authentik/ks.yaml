@@ -26,6 +26,33 @@ spec:
       namespace: database
   interval: 1h
   path: ./kubernetes/apps/security/authentik/app
+  # Patch for podAffinity for the worker pod to shedule on the same node as the server pod due RWO storage
+  patches:
+    - patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: authentik-worker
+        spec:
+          template:
+            spec:
+              affinity:
+                podAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values:
+                        - authentik
+                      - key: app.kubernetes.io/component
+                        operator: In
+                        values:
+                        - server
+                    topologyKey: kubernetes.io/hostname
+      target:
+        kind: Deployment
+        name: authentik-worker
   postBuild:
     substitute:
       APP: *app
