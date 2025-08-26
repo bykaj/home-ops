@@ -38,17 +38,17 @@ spec:
               affinity:
                 podAffinity:
                   requiredDuringSchedulingIgnoredDuringExecution:
-                  - labelSelector:
-                      matchExpressions:
-                      - key: app.kubernetes.io/name
-                        operator: In
-                        values:
-                        - authentik
-                      - key: app.kubernetes.io/component
-                        operator: In
-                        values:
-                        - server
-                    topologyKey: kubernetes.io/hostname
+                    - labelSelector:
+                        matchExpressions:
+                          - key: app.kubernetes.io/name
+                            operator: In
+                            values:
+                              - authentik
+                          - key: app.kubernetes.io/component
+                            operator: In
+                            values:
+                              - server
+                      topologyKey: kubernetes.io/hostname
       target:
         kind: Deployment
         name: authentik-worker
