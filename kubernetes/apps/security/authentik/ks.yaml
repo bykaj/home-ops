@@ -25,9 +25,9 @@ spec:
     - name: dragonfly-cluster
       namespace: database
   interval: 1h
-  # Patch for podAffinity for the worker pod to shedule on the same node as the server pod due RWO storage
   patches:
-    - patch: |-
+    - # Apply podAffinity patch to ensure worker pod schedules on the same node as server pod due to RWO storage constraints
+      patch: |-
         apiVersion: apps/v1
         kind: Deployment
         metadata:
