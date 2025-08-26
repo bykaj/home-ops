@@ -3,12 +3,6 @@
 version: "3"
 
 tasks:
-  reconcile:
-    desc: Force Flux to pull in changes from your Git repository
-    cmd: flux --namespace flux-system reconcile kustomization flux-system --with-source
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - which flux
 
   "*-ks":
     desc: Render a Flux Kustomizations [DIR=required] [NAME] [SRC]
@@ -47,3 +41,18 @@ tasks:
       - for:
           var: NAMESPACES
         cmd: flux {{.STATE}} ks -n "{{.ITEM}}" --all || true
+
+  non-ready:
+    desc: List all non-ready Flux resources across all namespaces
+    cmds:
+      - flux get all -A --status-selector ready=false
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which flux
+
+  reconcile:
+    desc: Force Flux to pull in changes from your Git repository
+    cmd: flux --namespace flux-system reconcile kustomization flux-system --with-source
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which flux
