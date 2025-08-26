@@ -25,33 +25,6 @@ spec:
     - name: dragonfly-cluster
       namespace: database
   interval: 1h
-  patches:
-    - # Apply podAffinity patch to ensure worker pod schedules on the same node as server pod due to RWO storage constraints
-      patch: |-
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: authentik-worker
-        spec:
-          template:
-            spec:
-              affinity:
-                podAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    - labelSelector:
-                        matchExpressions:
-                          - key: app.kubernetes.io/name
-                            operator: In
-                            values:
-                              - authentik
-                          - key: app.kubernetes.io/component
-                            operator: In
-                            values:
-                              - server
-                      topologyKey: kubernetes.io/hostname
-      target:
-        kind: Deployment
-        name: authentik-worker
   path: ./kubernetes/apps/security/authentik/app
   postBuild:
     substitute:
