@@ -89,7 +89,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: /home/node/.n8n
     route:
