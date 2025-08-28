@@ -60,13 +60,13 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
       backups:
         type: nfs
         server: "${NAS_HOST}"
         path: /mnt/vault-alpha/Backups
         globalMounts:
-          - path: /mnt/backups
+          - path: /config/backup
             subPath: Apps/Bazarr
       media:
         type: nfs
