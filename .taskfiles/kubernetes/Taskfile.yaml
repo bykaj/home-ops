@@ -17,6 +17,19 @@ tasks:
       - kubectl browse-pvc --version
       - which kubectl
 
+  scale-app:
+    desc: Scale an application [NS=default] [APP=required] [REPLICAS=0]
+    interactive: true
+    cmd: kubectl scale deployment --namespace {{.NS}} {{.APP}} --replicas={{.REPLICAS}}
+    vars:
+      NS: '{{.NS | default "default"}}'
+      REPLICAS: '{{.REPLICAS | default "0"}}'
+    requires:
+      vars: [APP, REPLICAS]
+    preconditions:
+      - kubectl get deployments --namespace {{.NS}} {{.APP}}
+      - which kubectl
+
   node-shell:
     desc: Open a shell to a node [NODE=required]
     interactive: true
