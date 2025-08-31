@@ -1,6 +1,8 @@
 machine:
   kubelet:
     extraConfig:
+      featureGates:
+        ImageVolume: true
       serializeImagePulls: false
     extraMounts:
       # Mount openebs-hostpath in kubelet
