@@ -39,6 +39,9 @@ spec:
               PLEX_PREFERENCE_6: "RelayEnabled=0"
               PLEX_PREFERENCE_7: "sendCrashReports=0"
               TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: plex-secret
             probes:
               liveness: &probes
                 enabled: true
