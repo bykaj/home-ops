@@ -1,0 +1,109 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ocis
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: "${APP_UID:-1000}"
+            runAsGroup: "${APP_GID:-1000}"
+            runAsNonRoot: true
+            fsGroup: "${APP_GID:-1000}"
+            fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          init-config:
+            image:
+              repository: docker.io/owncloud/ocis
+              tag: 7.2.0@sha256:a4b42923f0f3c4458660e1485693bf5a8399b8354c75febfedfd07e55590b8ab
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                if [ ! -f /etc/ocis/ocis.yaml ]; then ocis init; else exit 0; fi
+            env:
+              OCIS_INSECURE: true
+        containers:
+          app:
+            image:
+              repository: docker.io/owncloud/ocis
+              tag: 7.2.0@sha256:a4b42923f0f3c4458660e1485693bf5a8399b8354c75febfedfd07e55590b8ab
+            env:
+              DEMO_USERS: "false"
+              OCIS_LOG_COLOR: "true"
+              OCIS_LOG_LEVEL: "info"
+              OCIS_LOG_PRETTY: "true"
+              OCIS_URL: "https://${GATUS_DOMAIN:-${GATUS_SUBDOMAIN:-${APP}}.${DOMAIN_APP}}"
+              PROXY_TLS: "false"
+            envFrom:
+              - secretRef:
+                  name: ocis-secret
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1024Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      config:
+        type: configMap
+        name: ocis-config
+        globalMounts:
+          - path: /etc/ocis/web.yaml
+            subPath: web.yaml
+            readOnly: true
+      data:
+        existingClaim: "${VOLSYNC_CLAIM:-${APP}}"
+        globalMounts:
+          - path: /var/lib/ocis
+            subPath: data
+          - path: /etc/ocis
+            subPath: config
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+    route:
+      app:
+        hostnames:
+          - "${GATUS_DOMAIN:-${GATUS_SUBDOMAIN:-${APP}}.${DOMAIN_APP}}"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: &port 9200
+    service:
+      *app :
+        controller: *app
+        ports:
+          http:
+            port: *port
