@@ -4,13 +4,13 @@ bpf:
   masquerade: true
   # Ref: https://github.com/siderolabs/talos/issues/10002
   hostLegacyRouting: true
-cni:
-  # Required for pairing with Multus CNI
-  exclusive: false
 cgroup:
   automount:
     enabled: false
   hostRoot: /sys/fs/cgroup
+cni:
+  # Required for pairing with Multus CNI
+  exclusive: false
 # NOTE: devices might need to be set if you have more than one active NIC on your hosts
 # devices: eno+ eth+
 dashboards:
@@ -20,15 +20,7 @@ dashboards:
 endpointRoutes:
   enabled: true
 envoy:
-  enabled: true
-  rollOutPods: true
-  prometheus:
-     serviceMonitor:
-       enabled: true
-gatewayAPI:
-  enabled: true
-  enableAlpn: true
-  xffNumTrustedHops: 1
+  enabled: false
 hubble:
   enabled: false
 ipam:

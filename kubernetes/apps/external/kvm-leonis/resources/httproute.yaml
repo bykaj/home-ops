@@ -10,8 +10,8 @@ metadata:
 spec:
   hostnames: ["leonis.kvm.home.${DOMAIN_NET}"]
   parentRefs:
-    - name: services
-      namespace: kube-system
+    - name: envoy-services
+      namespace: network
       sectionName: https-net-home-kvm
   rules:
     - matches:

@@ -3,30 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app certificates-import
-  namespace: &namespace kube-system
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  interval: 1h
-  path: ./kubernetes/apps/kube-system/certificates/import
-  prune: true
-  retryInterval: 2m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
-  wait: true
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app certificates-export
-  namespace: &namespace kube-system
+  name: &app envoy-gateway
+  namespace: &namespace network
 spec:
   commonMetadata:
     labels:
@@ -35,9 +13,34 @@ spec:
     - name: certificates-import
       namespace: *namespace
   interval: 1h
-  path: ./kubernetes/apps/kube-system/certificates/export
+  path: ./kubernetes/apps/network/envoy-gateway/app
   prune: true
-  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app envoy-gateway-config
+  namespace: &namespace network
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
+    - name: envoy-gateway
+      namespace: *namespace
+  interval: 30m
+  path: ./kubernetes/apps/network/envoy-gateway/config
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

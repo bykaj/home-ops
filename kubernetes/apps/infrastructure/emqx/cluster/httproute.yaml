@@ -7,8 +7,8 @@ metadata:
 spec:
   hostnames: ["emqx.${DOMAIN_APP}"]
   parentRefs:
-    - name: internal
-      namespace: kube-system
+    - name: envoy-internal
+      namespace: network
       sectionName: https-app
   rules:
     - backendRefs:

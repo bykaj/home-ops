@@ -29,8 +29,8 @@ spec:
           enabled: true
           hostnames: ["alertmanager.${DOMAIN_APP}"]
           parentRefs:
-            - name: internal
-              namespace: kube-system
+            - name: envoy-internal
+              namespace: network
               sectionName: https-app
       alertmanagerSpec:
         alertmanagerConfiguration:
@@ -57,8 +57,8 @@ spec:
           enabled: true
           hostnames: ["prometheus.${DOMAIN_APP}"]
           parentRefs:
-            - name: internal
-              namespace: kube-system
+            - name: envoy-internal
+              namespace: network
               sectionName: https-app
       prometheusSpec:
         image:

@@ -79,8 +79,8 @@ spec:
         hostnames:
           - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
-          - name: external
-            namespace: kube-system
+          - name: envoy-external
+            namespace: network
             sectionName: https-lol-apex
     persistence:
       data:

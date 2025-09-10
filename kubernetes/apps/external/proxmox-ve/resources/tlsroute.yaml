@@ -10,8 +10,8 @@ metadata:
 spec:
   hostnames: ["pve.${DOMAIN_APP}"]
   parentRefs:
-    - name: services
-      namespace: kube-system
+    - name: envoy-services
+      namespace: network
       sectionName: tls-app
   rules:
     - backendRefs:

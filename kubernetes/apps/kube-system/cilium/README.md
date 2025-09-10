@@ -28,7 +28,7 @@ exit
 This configuration establishes BGP peering between the UniFi Gateway (AS 64513) and the Kubernetes nodes (AS 64514), enabling dynamic route advertisement for Kubernetes services.
 
 ## Kubernetes Configuration
-Add to [`networks.yaml`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/kube-system/cilium/app/networks.yaml):
+Add to [`networking.yaml`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/kube-system/cilium/app/networking.yaml):
 ```yaml
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumbgpadvertisement_v2alpha1.json

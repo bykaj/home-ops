@@ -122,8 +122,8 @@ spec:
           hostnames:
             - "auth.${DOMAIN_ID}"
           parentRefs:
-            - name: external
-              namespace: kube-system
+            - name: envoy-external
+              namespace: network
               sectionName: https-id
 
     # Authentik Worker

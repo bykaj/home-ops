@@ -118,8 +118,8 @@ spec:
       server:
         hostnames: ["${GATUS_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"]
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: envoy-internal
+            namespace: network
             sectionName: https-app
         rules:
           - backendRefs:
@@ -128,8 +128,8 @@ spec:
       web:
         hostnames: ["${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"]
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: envoy-internal
+            namespace: network
             sectionName: https-app
         rules:
           - backendRefs:
