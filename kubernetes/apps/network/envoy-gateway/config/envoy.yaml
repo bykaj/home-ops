@@ -43,7 +43,7 @@ spec:
     name: envoy
     namespace: network
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/backendtrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: BackendTrafficPolicy
 metadata:
@@ -56,7 +56,7 @@ spec:
     - type: Brotli
     - type: Gzip
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
