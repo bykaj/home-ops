@@ -98,4 +98,4 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https-app
+            sectionName: https

@@ -12,7 +12,7 @@ spec:
   parentRefs:
     - name: envoy-services
       namespace: network
-      sectionName: tls-app
+      sectionName: tls
   rules:
     - backendRefs:
         - name: *app

@@ -117,7 +117,7 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
-            sectionName: https-app
+            sectionName: https
     serviceAccount:
       gatus: {}
     service:

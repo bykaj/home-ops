@@ -13,17 +13,15 @@ spec:
       external-dns.alpha.kubernetes.io/hostname: *hostname
       lbipam.cilium.io/ips: 10.73.10.30
   listeners:
-    - name: http-app
+    - name: http
       protocol: HTTP
       port: 80
-      hostname: "*.${DOMAIN_APP}"
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-app
+    - name: https
       protocol: HTTPS
       port: 443
-      hostname: "*.${DOMAIN_APP}"
       allowedRoutes:
         namespaces:
           from: All
@@ -31,69 +29,20 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${DOMAIN_APP/./-}-tls
-    - name: tls-app
+          - kind: Secret
+            name: ${DOMAIN_IO/./-}-tls
+          - kind: Secret
+            name: home-${DOMAIN_NET/./-}-tls
+          - kind: Secret
+            name: kvm-home-${DOMAIN_NET/./-}-tls
+    - name: tls
       protocol: TLS
       port: 443
-      hostname: "*.${DOMAIN_APP}"
       tls:
         mode: Passthrough
       allowedRoutes:
         namespaces:
           from: All
-    - name: http-io
-      protocol: HTTP
-      port: 80
-      hostname: "*.${DOMAIN_IO}"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: https-io
-      protocol: HTTPS
-      port: 443
-      hostname: "*.${DOMAIN_IO}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: ${DOMAIN_IO/./-}-tls
-    - name: http-net-home
-      protocol: HTTP
-      port: 80
-      hostname: "*.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: https-net-home
-      protocol: HTTPS
-      port: 443
-      hostname: "*.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: home-${DOMAIN_NET/./-}-tls
-    - name: http-net-home-kvm
-      protocol: HTTP
-      port: 80
-      hostname: "*.kvm.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: https-net-home-kvm
-      protocol: HTTPS
-      port: 443
-      hostname: "*.kvm.home.${DOMAIN_NET}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: kvm-home-${DOMAIN_NET/./-}-tls
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/gateway.networking.k8s.io/httproute_v1.json
 apiVersion: gateway.networking.k8s.io/v1
@@ -106,8 +55,7 @@ spec:
   parentRefs:
     - name: envoy-services
       namespace: network
-      sectionName: http-app
-    # TODO: add all other http listeners
+      sectionName: http
   rules:
     - filters:
         - type: RequestRedirect
