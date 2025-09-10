@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: k8s-gateway
+    - name: envoy-gateway
       namespace: network
   interval: 1h
   path: ./kubernetes/apps/external/kvm-icarus/resources
