@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./bjw-s-labs.yaml
   - ./bykaj.yaml
-  - ./external-dns.yaml
   - ./fairwinds.yaml

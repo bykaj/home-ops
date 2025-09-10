@@ -1,0 +1,64 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app external-dns-cloudflare
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: external-dns-cloudflare
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    domainFilters:
+      - ${DOMAIN_APP}
+      - ${DOMAIN_DEV}
+      - ${DOMAIN_ID}
+      - ${DOMAIN_IO}
+      - ${DOMAIN_LOL}
+      - ${DOMAIN_NET}
+      - ${DOMAIN_ST}
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: &secret external-dns-cloudflare-secret
+            key: CF_API_TOKEN
+    extraArgs:
+      - --cloudflare-dns-records-per-page=1000
+      - --cloudflare-proxied
+      - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+      - --crd-source-kind=DNSEndpoint
+      - --gateway-name=envoy-external
+    fullnameOverride: *app
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *secret
+    policy: sync
+    provider: cloudflare
+    resources:
+      requests:
+        cpu: 15m
+        memory: 64Mi
+      limits:
+        memory: 64Mi
+    serviceMonitor:
+      enabled: true
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-grpcroute
+      - crd
+    triggerLoopOnEvent: true
+    txtOwnerId: main
+    txtPrefix: "k8s."
+
+
+
