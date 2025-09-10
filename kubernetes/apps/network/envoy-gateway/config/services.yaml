@@ -35,9 +35,10 @@ spec:
             name: home-${DOMAIN_NET/./-}-tls
           - kind: Secret
             name: kvm-home-${DOMAIN_NET/./-}-tls
-    - name: tls
+    - name: tls-app
       protocol: TLS
       port: 443
+      hostname: "*.${DOMAIN_APP}"
       tls:
         mode: Passthrough
       allowedRoutes:
