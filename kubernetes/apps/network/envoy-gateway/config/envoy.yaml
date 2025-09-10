@@ -64,7 +64,7 @@ metadata:
 spec:
   clientIPDetection:
     xForwardedFor:
-      numTrustedHops: 1
+      numTrustedHops: 2
   # http3: {}
   targetSelectors:
     - group: gateway.networking.k8s.io
