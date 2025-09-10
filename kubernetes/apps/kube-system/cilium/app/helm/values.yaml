@@ -47,7 +47,7 @@ operator:
   dashboards:
     enabled: true
     annotations:
-      grafana_folder: Cilium
+      grafana_folder: Infrastructure
   prometheus:
     enabled: true
     serviceMonitor:

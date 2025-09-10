@@ -41,7 +41,7 @@ spec:
         dashboards:
           enabled: true
           annotations:
-            grafana_folder: Hubble
+            grafana_folder: Infrastructure
       relay:
         enabled: true
         rollOutPods: true
