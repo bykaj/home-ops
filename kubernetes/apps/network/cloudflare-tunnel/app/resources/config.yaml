@@ -1,5 +1,6 @@
 ---
 originRequest:
+  http2Origin: true
   originServerName: "external.${DOMAIN_NET}"
 
 ingress:
