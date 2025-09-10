@@ -74,45 +74,45 @@ spec:
     alpnProtocols:
       - h2
       - http/1.1
-# ---
-# # yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: ClientTrafficPolicy
-# metadata:
-#   name: "${DOMAIN_APP/./-}-ctp"
-# spec:
-#   targetRefs:
-#     - group: gateway.networking.k8s.io
-#       kind: Gateway
-#       name: envoy-external
-#       sectionName: https-app
-#     - group: gateway.networking.k8s.io
-#       kind: Gateway
-#       name: envoy-external
-#       sectionName: http-app
-#   tls:
-#     minVersion: "1.2"
-#     alpnProtocols:
-#       - h2
-#       - http/1.1
-# ---
-# # yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: ClientTrafficPolicy
-# metadata:
-#   name: "${DOMAIN_ID/./-}-ctp"
-# spec:
-#   targetRefs:
-#     - group: gateway.networking.k8s.io
-#       kind: Gateway
-#       name: envoy-external
-#       sectionName: https-id
-#     - group: gateway.networking.k8s.io
-#       kind: Gateway
-#       name: envoy-external
-#       sectionName: http-id
-#   tls:
-#     minVersion: "1.2"
-#     alpnProtocols:
-#       - h2
-#       - http/1.1
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: "${DOMAIN_APP/./-}-ctp"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-external
+      sectionName: https-app
+    # - group: gateway.networking.k8s.io
+    #   kind: Gateway
+    #   name: envoy-external
+    #   sectionName: http-app
+  tls:
+    minVersion: "1.2"
+    alpnProtocols:
+      - h2
+      - http/1.1
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: "${DOMAIN_ID/./-}-ctp"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-external
+      sectionName: https-id
+    # - group: gateway.networking.k8s.io
+    #   kind: Gateway
+    #   name: envoy-external
+    #   sectionName: http-id
+  tls:
+    minVersion: "1.2"
+    alpnProtocols:
+      - h2
+      - http/1.1
