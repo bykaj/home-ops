@@ -9,9 +9,11 @@ resources:
 configMapGenerator:
   - name: authentik-custom-assets
     files:
-      - custom.css=./resources/custom.css
+      - custom.css=./resources/assets/custom.css
     options:
       disableNameSuffixHash: true
-# patchesStrategicMerge:
-#   # Apply podAffinity patch to ensure worker pod schedules on the same node as server pod due to RWO storage constraints
-#   - ./patches/podaffinity.yaml
+  - name: authentik-custom-templates
+    files:
+      - Password Reset.html=./resources/templates/Password Reset.html
+    options:
+      disableNameSuffixHash: true
