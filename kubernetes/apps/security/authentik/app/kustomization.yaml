@@ -14,6 +14,6 @@ configMapGenerator:
       disableNameSuffixHash: true
   - name: authentik-custom-templates
     files:
-      - Password Reset.html=./resources/templates/Password Reset.html
+      - password-reset.html=./resources/templates/password-reset.html
     options:
       disableNameSuffixHash: true
