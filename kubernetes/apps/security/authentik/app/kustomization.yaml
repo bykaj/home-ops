@@ -17,3 +17,6 @@ configMapGenerator:
       - password-reset.html=./resources/templates/password-reset.html
     options:
       disableNameSuffixHash: true
+# patchesStrategicMerge:
+#   # Apply podAffinity patch to ensure worker pod schedules on the same node as server pod due to RWO storage constraints
+#   - ./patches/podaffinity.yaml
