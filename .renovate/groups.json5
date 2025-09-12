@@ -2,10 +2,23 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "Actions Runner Controller Group",
-      groupName: "actions-runner-controller",
+      description: "1Password Connect Group",
+      groupName: "1Password Connect",
       matchDatasources: ["docker"],
-      matchPackageNames: ["/gha-runner-scale-set-controller/", "/gha-runner-scale-set/"],
+      matchPackageNames: ["/1password/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Actions Runner Controller Group",
+      groupName: "Actions Runner Controller",
+      matchDatasources: ["docker"],
+      matchPackageNames: [
+        "/gha-runner-scale-set-controller/",
+        "/gha-runner-scale-set/",
+      ],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -13,7 +26,7 @@
     },
     {
       description: "Flux Operator Group",
-      groupName: "flux-operator",
+      groupName: "Flux Operator",
       matchDatasources: ["docker"],
       matchPackageNames: ["/flux-operator/", "/flux-instance/"],
       group: {
@@ -22,18 +35,8 @@
       minimumGroupSize: 2,
     },
     {
-      description: "Intel Device Plugins Group",
-      groupName: "intel-device-plugins",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/intel-device-plugins-operator/", "/intel-device-plugins-gpu/"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group",
-      },
-      minimumGroupSize: 2,
-    },
-    {
       description: "Kubernetes Group",
-      groupName: "kubernetes",
+      groupName: "Kubernetes",
       matchDatasources: ["docker"],
       matchPackageNames: [
         "/kube-apiserver/",
@@ -48,9 +51,22 @@
     },
     {
       description: "Rook-Ceph Group",
-      groupName: "rook-ceph",
+      groupName: "Rook-Ceph",
       matchDatasources: ["docker"],
-      matchPackageNames: ["/rook-ceph-operator/", "/rook-ceph-cluster/"],
+      matchPackageNames: [
+        "/rook-ceph-ceph/",
+        "/rook-ceph-cluster/"
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Silence-Operator Group",
+      groupName: "Silence-Operator",
+      matchDatasources: ["docker", "github-releases"],
+      matchPackageNames: ["/silence-operator/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -58,7 +74,7 @@
     },
     {
       description: "Talos Group",
-      groupName: "talos",
+      groupName: "Talos",
       matchDatasources: ["docker"],
       matchPackageNames: ["/installer/", "/talosctl/"],
       group: {
