@@ -20,14 +20,15 @@ dashboards:
 endpointRoutes:
   enabled: true
 envoy:
-  rollOutPods: true
-  prometheus:
-    serviceMonitor:
-      enabled: true
-gatewayAPI:
-  enabled: true
-  enableAlpn: true
-  xffNumTrustedHops: 1
+  enabled: false
+  # rollOutPods: true
+  # prometheus:
+  #   serviceMonitor:
+  #     enabled: true
+# gatewayAPI:
+#   enabled: true
+#   enableAlpn: true
+#   xffNumTrustedHops: 1
 hubble:
   enabled: false
 ipam:
@@ -81,5 +82,5 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
-socketLB:
-  hostNamespaceOnly: true
+# socketLB:
+#   hostNamespaceOnly: true
