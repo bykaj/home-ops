@@ -6,14 +6,9 @@ metadata:
   name: &app authentik
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: authentik
-      version: 2025.8.1
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: HelmRepository
-        name: authentik
+  chartRef:
+    kind: OCIRepository
+    name: authentik
   install:
     remediation:
       retries: -1
