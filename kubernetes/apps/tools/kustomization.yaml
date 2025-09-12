@@ -13,7 +13,7 @@ resources:
   - ./kopia/ks.yaml
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
-  #- ./ocis/ks.yaml
+  - ./ocis/ks.yaml
   - ./oidc-provider-debugger/ks.yaml
   - ./paperless/ks.yaml
   - ./persistence/ks.yaml
