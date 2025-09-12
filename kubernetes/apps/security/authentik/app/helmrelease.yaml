@@ -44,15 +44,18 @@ spec:
         - secretRef:
             name: &secret authentik-secret
       volumeMounts:
+        - name: config
+          mountPath: /media
+          subPath: media
+        # - name: config
+        #   mountPath: /templates
+        #   subPath: templates
         - name: custom-templates
           mountPath: /templates
       volumes:
-        - name: media
+        - name: config
           persistentVolumeClaim:
             claimName: "${VOLSYNC_CLAIM:=${APP}}"
-        - name: custom-assets
-          configMap:
-            name: authentik-custom-assets
         - name: custom-templates
           configMap:
             name: authentik-custom-templates
@@ -115,12 +118,13 @@ spec:
         limits:
           memory: 2Gi
       volumeMounts:
-        - name: media
-          mountPath: /media
-          subPath: media
         - name: custom-assets
           mountPath: /web/dist/custom.css
           subPath: custom.css
+      volumes:
+        - name: custom-assets
+          configMap:
+            name: authentik-custom-assets
       containerSecurityContext:
         readOnlyRootFilesystem: true
       route:
@@ -140,7 +144,7 @@ spec:
         readOnlyRootFilesystem: true
       resources:
         requests:
-          cpu: 50m
+          cpu: 80m
           memory: 512Mi
         limits:
           memory: 1Gi
