@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      whisparr:
+      *app :
         annotations:
           reloader.stakater.com/reload: &secret whisparr-secret
         containers:
@@ -27,20 +27,10 @@ spec:
               repository: ghcr.io/hotio/whisparr
               tag: v3-3.0.0.1254@sha256:4fe729b814bd6d0f7dbc49fbf38b50f7fa342de04a435ce03772746edec091d5
             env:
+              PGID: "${APP_GID:-1000}"
+              PUID: "${APP_UID:-1000}"
+              UMASK: "002"
               TZ: "${TIMEZONE}"
-              WHISPARR__ANALYTICS_ENABLED: "False"
-              WHISPARR__AUTHENTICATION_METHOD: "External"
-              WHISPARR__AUTHENTICATION_REQUIRED: "DisabledForLocalAddresses"
-              WHISPARR__BRANCH: "nightly"
-              WHISPARR__INSTANCE_NAME: "Whisparr"
-              WHISPARR__LOG__DBENABLED: "False"
-              WHISPARR__LOG_LEVEL: "debug"
-              WHISPARR__PORT: &port 6969
-              # # s6 overlay fixes
-              # # Ref: https://github.com/just-containers/s6-overlay/issues/600
-              # S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
-              # S6_READ_ONLY_ROOT: "1"
-              # S6_VERBOSITY: "2"
             envFrom:
               - secretRef:
                   name: *secret
@@ -51,8 +41,8 @@ spec:
                 spec:
                   httpGet:
                     path: /ping
-                    port: *port
-                  initialDelaySeconds: 0
+                    port: &port 6969
+                  initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
@@ -69,7 +59,7 @@ spec:
               runAsUser: 0
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: /config
       backups:
@@ -98,15 +88,6 @@ spec:
             subPath: tmp
           - path: /config/logs
             subPath: logs
-        # advancedMounts:
-        #   whisparr:
-        #     app:
-        #       # s6 overlay fixes
-        #       # Ref: https://github.com/just-containers/s6-overlay/issues/600
-        #       - path: /run
-        #         subPath: run
-        #       - path: /run/nginx
-        #         subPath: nginx
     route:
       app:
         annotations:
