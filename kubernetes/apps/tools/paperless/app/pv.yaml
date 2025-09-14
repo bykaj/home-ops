@@ -5,7 +5,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: tools-smb-archive
+  name: ${APP}-smb-archive
 spec:
   capacity:
     storage: 2T
@@ -19,23 +19,36 @@ spec:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: tools-smb-archive
+    volumeHandle: ${APP}-smb-archive
     volumeAttributes:
       source: //${NAS_HOST}/Archive
     nodeStageSecretRef:
       name: smb-credentials
       namespace: system
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/persistentvolumeclaim.json
-kind: PersistentVolumeClaim
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/persistentvolume.json
 apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: smb-archive
+  annotations:
+    pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
+  name: ${APP}-smb-backups
 spec:
+  capacity:
+    storage: 2T
   accessModes:
     - ReadWriteMany
-  resources:
-    requests:
-      storage: 2T
-  volumeName: tools-smb-archive
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: smb
+  mountOptions:
+    - noperm
+  csi:
+    driver: smb.csi.k8s.io
+    # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
+    volumeHandle: ${APP}-smb-backups
+    volumeAttributes:
+      source: //${NAS_HOST}/Backups
+    nodeStageSecretRef:
+      name: smb-credentials
+      namespace: system

@@ -86,7 +86,7 @@ spec:
         globalMounts:
           - path: *dataPath
       archive:
-        existingClaim: smb-archive
+        existingClaim: ${APP}-smb-archive
         globalMounts:
           - path: *consumePath
             subPath: consume
@@ -95,7 +95,7 @@ spec:
           - path: *mediaPath
             subPath: media
       backups:
-        existingClaim: smb-backups
+        existingClaim: ${APP}-smb-backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Paperless
