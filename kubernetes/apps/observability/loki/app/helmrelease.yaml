@@ -5,27 +5,20 @@ kind: HelmRelease
 metadata:
   name: loki
 spec:
-  interval: 1h
+  interval: 30m
+  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: loki
-  install:
-    crds: Skip
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    crds: Skip
-    remediation:
-      retries: 3
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
     deploymentMode: SingleBinary
     loki:
-      auth_enabled: false
       analytics:
         reporting_enabled: false
-      server:
-        log_level: info
+      auth_enabled: false
       commonConfig:
         replication_factor: 1
       compactor:
@@ -36,52 +29,48 @@ spec:
         chunk_encoding: snappy
       limits_config:
         retention_period: 14d
-      storage:
-        type: filesystem
       schemaConfig:
         configs:
-          - from: "2024-04-01" # quote
+          - from: "2024-04-01"
             store: tsdb
             object_store: filesystem
             schema: v13
             index:
               prefix: loki_index_
               period: 24h
-      structuredConfig:
-        ruler:
-          enable_api: true
-          enable_alertmanager_v2: true
-          alertmanager_url: http://kube-prometheus-stack-alertmanager:9093
-          storage:
-            type: local
-            local:
-              directory: /rules
-          rule_path: /rules/fake
+      server:
+        log_level: info
+        grpc_server_max_recv_msg_size: 10485760 # 10 MiB
+        grpc_server_max_send_msg_size: 10485760 # 10 MiB
+      storage:
+        type: filesystem
+    backend:
+      replicas: 0
+    chunksCache:
+      enabled: false
+    gateway:
+      replicas: 0
+    lokiCanary:
+      enabled: false
+    read:
+      replicas: 0
+    resultsCache:
+      enabled: false
+    sidecar:
+      image:
+        repository: ghcr.io/home-operations/k8s-sidecar
+        tag: 1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
+      enableUniqueFilenames: true
+      rules:
+        searchNamespace: ALL
+        folder: /rules/fake
     singleBinary:
       replicas: 1
       persistence:
         enabled: true
         storageClass: ceph-block
         size: 20Gi
-    gateway:
-      replicas: 0
-    backend:
-      replicas: 0
-    read:
-      replicas: 0
-    write:
-      replicas: 0
-    chunksCache:
-      enabled: false
-    resultsCache:
-      enabled: false
-    lokiCanary:
-      enabled: false
     test:
       enabled: false
-    sidecar:
-      image:
-        repository: ghcr.io/home-operations/k8s-sidecar
-        tag: 1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
-      rules:
-        searchNamespace: ALL
+    write:
+      replicas: 0
