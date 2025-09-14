@@ -39,7 +39,7 @@
         "kube-system": "kubernetes",
         "network": "context",
         "observability": "event",
-        "openebs-system": "base",
+        "system": "base",
         "storage": "dump",
         "system-upgrade": "update",
         "tools": "tools",
