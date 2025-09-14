@@ -16,7 +16,7 @@ spec:
     - name: onepassword-store
       namespace: external-secrets
     - name: keda
-      namespace: observability
+      namespace: system
     - name: cloudnative-pg-cluster
       namespace: database
     - name: tailscale-operator

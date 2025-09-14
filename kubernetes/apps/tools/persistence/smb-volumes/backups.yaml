@@ -24,7 +24,7 @@ spec:
       source: //${NAS_HOST}/Backups
     nodeStageSecretRef:
       name: smb-credentials
-      namespace: kube-system
+      namespace: system
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/persistentvolumeclaim.json
 kind: PersistentVolumeClaim

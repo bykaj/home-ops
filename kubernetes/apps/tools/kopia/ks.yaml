@@ -13,8 +13,10 @@ spec:
     - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
   dependsOn:
+    - name: keda
+      namespace: system
     - name: volsync
-      namespace: kube-system
+      namespace: system
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

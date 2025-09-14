@@ -3,14 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app descheduler
-  namespace: &namespace kube-system
+  name: &app csi-driver-smb
+  namespace: &namespace system
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: onepassword-store
+      namespace: external-secrets
   interval: 1h
-  path: ./kubernetes/apps/kube-system/descheduler/app
+  path: ./kubernetes/apps/system/csi-driver-smb/app
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -19,4 +22,4 @@ spec:
     namespace: flux-system
   targetNamespace: *namespace
   timeout: 5m
-  wait: false
+  wait: true

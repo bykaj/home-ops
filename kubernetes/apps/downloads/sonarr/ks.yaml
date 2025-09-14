@@ -21,7 +21,7 @@ spec:
     - name: sabnzbd
       namespace: *namespace
     - name: keda
-      namespace: observability
+      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: tailscale-operator
