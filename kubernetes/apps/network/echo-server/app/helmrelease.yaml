@@ -16,9 +16,6 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: cloudflare-tunnel
-      namespace: network
   values:
     controllers:
       echo:
@@ -27,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mendhak/http-https-echo
-              tag: 37
+              tag: 37@sha256:f55000d9196bd3c853d384af7315f509d21ffb85de315c26e9874033b9f83e15
             env:
               HTTP_PORT: &port 80
               LOG_WITHOUT_NEWLINE: true
@@ -74,9 +71,10 @@ spec:
           - port: http
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.${DOMAIN_APP}"]
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
-          - name: envoy-external
+          - name: envoy-internal
             namespace: network
             sectionName: https
         rules:

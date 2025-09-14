@@ -3,20 +3,21 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app whoami
-  namespace: &namespace default
+  name: &app echo-server
+  namespace: &namespace network
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
+    - ../../../../components/gatus/internal
   interval: 1h
-  path: ./kubernetes/apps/default/whoami/app
+  path: ./kubernetes/apps/network/echo-server/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: WhoAmI
+      GATUS_NAME: "Echo Server"
+      GATUS_SUBDOMAIN: "echo"
   prune: true
   retryInterval: 2m
   sourceRef:
