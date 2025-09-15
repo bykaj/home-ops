@@ -23,7 +23,7 @@ spec:
   values:
     image: &image
       repository: ghcr.io/perfectra1n/volsync
-      tag: 0.15.43@sha256:3a86986dd7db6afccd3c8763170d8c877a6c41532cd96fa6da389687350e6edf
+      tag: 0.15.44@sha256:291c56ad42045575a9f3ebcdef6df947c4ab13186bc41651b27af28f3bc9a2d2
     kopia: *image
     rclone: *image
     restic: *image
