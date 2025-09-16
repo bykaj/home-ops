@@ -12,7 +12,7 @@ _.file = [
 [tools]
 "python" = "3.13"
 # "pipx:makejinja" = "2.8.1"
-"pipx:flux-local" = "7.9.0"
+"pipx:flux-local" = "7.10.0"
 # "aqua:budimanjojo/talhelper" = "3.0.32"
 # "aqua:cilium/cilium-cli" = "0.18.6"
 # "aqua:cli/cli" = "2.76.2"
@@ -21,7 +21,7 @@ _.file = [
 # "aqua:FiloSottile/age" = "1.2.1"
 # "aqua:fluxcd/flux2" = "2.6.4"
 # "aqua:getsops/sops" = "3.10.2"
-"aqua:go-task/task" = "3.44.1"
+"aqua:go-task/task" = "3.45.3"
 # "aqua:helm/helm" = "3.18.6"
 # "aqua:helmfile/helmfile" = "1.1.5"
 # "aqua:jqlang/jq" = "1.7.1"
