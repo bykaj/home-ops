@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mailbackup
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      mailbackup:
+        type: cronjob
+        cronjob:
+          schedule: "15 2 * * *"
+          backoffLimit: 0
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 1
+          successfulJobsHistory: 0
+        pod:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/getmail
+              tag: 6.19.10@sha256:b84eb8697a70afa27ad30bd39c960578c2a4c18c19b51b3b50e3775f6fa48802
+            command:
+              - "/scripts/mailbackup.sh"
+    persistence:
+      config:
+        type: secret
+        name: mailbackup-secrets
+        advancedMounts:
+          mailbackup:
+            app:
+              - path: /config
+      scripts:
+        type: configMap
+        name: mailbackup-scripts
+        defaultMode: 0775
+        advancedMounts:
+          mailbackup:
+            app:
+              - path: /scripts/mailbackup.sh
+                subPath: mailbackup.sh
+      backup:
+        type: nfs
+        server: ${NAS_HOST}
+        path: /mnt/vault-alpha/Backups
+        advancedMounts:
+          mailbackup:
+            app:
+              - path: /data
+                subPath: E-mail
