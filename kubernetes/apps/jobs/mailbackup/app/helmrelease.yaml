@@ -56,5 +56,5 @@ spec:
         advancedMounts:
           mailbackup:
             app:
-              - path: /data
-                subPath: E-mail
+              - path: /backup
+                subPath: Users/Kaj/E-mail
