@@ -7,4 +7,3 @@ resources:
   - ./ceph-node-nfsmount-diskspace-warning.yaml
   - ./keda-hpa-maxed-out.yaml
   - ./nas-memory-high-utilization.yaml
-
