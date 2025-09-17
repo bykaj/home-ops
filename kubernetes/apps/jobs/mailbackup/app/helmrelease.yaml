@@ -14,11 +14,11 @@ spec:
       mailbackup:
         type: cronjob
         cronjob:
-          schedule: "15 2 * * *"
+          schedule: "15 1 * * *"
           backoffLimit: 0
           concurrencyPolicy: Forbid
           failedJobsHistory: 1
-          successfulJobsHistory: 0
+          successfulJobsHistory: 1
         pod:
           restartPolicy: OnFailure
           securityContext:
