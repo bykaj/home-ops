@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/observability.giantswarm.io/silence_v1alpha2.json
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: nas-memory-high-utilization
+spec:
+  matchers:
+    - name: alertname
+      value: NodeMemoryHighUtilization
+    - name: instance
+      value: ${NAS_HOST}:9100
