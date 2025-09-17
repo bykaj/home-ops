@@ -43,5 +43,12 @@
       semanticCommitScope: "github-release",
       commitMessageTopic: "release {{depName}}",
     },
+    {
+      matchManagers: ["mise"],
+      semanticCommitType: "fix",
+      semanticCommitScope: "deps",
+      commitMessageTopic: "dependency {{depName}}",
+      commitMessageExtra: "( {{currentVersion}} ➔ {{newVersion}} )",
+    },
   ],
 }
