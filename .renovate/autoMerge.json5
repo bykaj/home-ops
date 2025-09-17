@@ -2,21 +2,30 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "Auto-merge trusted container digests",
+      description: "Auto merge container digests",
       matchDatasources: ["docker"],
       automerge: true,
-      automergeType: "pr",
       matchUpdateTypes: ["digest"],
-      matchPackageNames: ["/home-operations/"],
+      matchPackagePrefixes: [
+        "ghcr.io/home-operations",
+        "ghcr.io/onedr0p",
+        "ghcr.io/bjw-s",
+        "ghcr.io/bjw-s-labs",
+        "ghcr.io/bykaj",
+      ],
       ignoreTests: false,
     },
     {
-      description: "Auto-merge OCI Charts",
+      description: "Auto merge minors and patches",
       matchDatasources: ["docker"],
       automerge: true,
       automergeType: "pr",
       matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: ["/kube-prometheus-stack/", "/grafana/"],
+      matchPackageNames: [
+        "/kube-prometheus-stack/",
+        "/grafana/",
+        "ghcr.io/bjw-s-labs/wrangler"
+      ],
       ignoreTests: false,
     },
     {
@@ -33,7 +42,7 @@
       matchManagers: ["github-actions"],
       matchPackageNames: [
         "/^actions\//",
-        "/^renovatebot\//",
+        "/^renovatebot\//"
       ],
       automerge: true,
       automergeType: "branch",
@@ -47,7 +56,10 @@
       automerge: true,
       automergeType: "branch",
       matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: ["/external-dns/", "/gateway-api/", "/prometheus-operator/"],
+      matchPackageNames: [
+        "/external-dns/",
+        "/prometheus-operator/"
+      ],
       ignoreTests: true,
     },
   ],

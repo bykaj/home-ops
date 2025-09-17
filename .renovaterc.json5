@@ -5,6 +5,7 @@
     "docker:enableMajor",
     "helpers:pinGitHubActionDigests",
     "github>bykaj/home-ops//.renovate/autoMerge.json5",
+    "github>bykaj/home-ops//.renovate/changelogs.json5",
     "github>bykaj/home-ops//.renovate/customManagers.json5",
     "github>bykaj/home-ops//.renovate/grafanaDashboards.json5",
     "github>bykaj/home-ops//.renovate/groups.json5",
