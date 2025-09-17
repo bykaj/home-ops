@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app publish-schemas
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      *app :
+        type: cronjob
+        cronjob:
+          schedule: "0 * * * *"
+          concurrencyPolicy: "Replace"
+          backoffLimit: 0
+          failedJobsHistory: 1
+          successfulJobsHistory: 0
+        pod:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+        initContainers:
+          generate-schemas:
+            image:
+              repository: ghcr.io/bjw-s-labs/k8s-crd-extractor
+              tag: 2025.6.12@sha256:c004a691f8371a7fb0954cbbb696d273198644eec2bcaa571de0fc002aa730ac
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/wrangler
+              tag: 4.37.1@sha256:3f4ac323a8a87ad5faf7bc808a5982300af5bc111f771466960fe4b48eb209fc
+            envFrom:
+              - secretRef:
+                  name: publish-schemas-secret
+            args:
+              - pages
+              - deploy
+              - /data/crdSchemas
+              - --project-name
+              - k8sschemas
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          *app :
+            generate-schemas:
+              - path: /config/.datree
+                subPath: data
+              - path: /tmp
+                subPath: tmp
+            app:
+              - path: /config
+                subPath: config
+              - path: /data
+                subPath: data
+    serviceAccount:
+      *app : {}
+    rbac:
+      roles:
+        *app :
+          type: ClusterRole
+          rules:
+            - apiGroups:
+                - apiextensions.k8s.io
+              resources:
+                - customresourcedefinitions
+                - customresourcedefinitions/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - apiregistration.k8s.io
+              resources:
+                - apiservices
+                - apiservices/status
+              verbs:
+                - get
+                - list
+                - watch
+      bindings:
+        *app :
+          type: ClusterRoleBinding
+          roleRef:
+            identifier: *app
+          subjects:
+            - identifier: *app
