@@ -40,7 +40,6 @@
         "network": "context",
         "observability": "event",
         "rook-ceph": "dump",
-        "selfhosted": "home",
         "system": "base",
         "system-upgrade": "update"
     },

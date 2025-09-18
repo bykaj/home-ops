@@ -1,0 +1,58 @@
+---
+- Tools: []
+- Media: []
+- Downloads: []
+- Infrastructure:
+    - UniFi:
+        href: https://gateway.home.${DOMAIN_NET}
+        icon: unifi.png
+        description: UniFi UDM Pro Max
+    - Cloudflared:
+        href: https://dash.cloudflare.com/
+        icon: cloudflare-zero-trust.png
+        description: Cloudflared Tunnel
+        widget:
+          type: cloudflared
+          accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}
+          tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}
+          key: {{HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN}}
+- Monitoring:
+    - Alertmanager:
+        href: https://alertmanager.${DOMAIN_APP}
+        icon: alertmanager.png
+        description: Alertmanager Dashboard
+    - Grafana:
+        href: https://grafana.${DOMAIN_APP}
+        icon: grafana.png
+        # description: This is my service
+    - Goldilocks:
+        href: https://goldilocks.${DOMAIN_APP}
+        icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
+        description: Helps identify a starting point for resource requests and limits
+    - Prometheus:
+        href: https://prometheus.${DOMAIN_APP}
+        icon: prometheus.png
+        # description: This is my service
+    - Crowdsec:
+        href: https://app.crowdsec.net/
+        icon: crowdsec.png
+        description: Crowd-based cyber security threat detection & mitigation
+- Storage:
+    - TrueNAS:
+        href: https://${NAS_HOST}
+        icon: truenas-scale.png
+        # description: This is my service
+        widget:
+            type: truenas
+            url: https://${NAS_HOST}
+            # username:
+            # password:
+            key: {{HOMEPAGE_VAR_TRUENAS_API_KEY}}
+    - Rook-Ceph:
+        href: https://rook.${DOMAIN_APP}
+        icon: ceph.png
+        # description: This is my service
+    - Scrutiny:
+        href: https://scrutiny.${DOMAIN_APP}
+        icon: scrutiny.png
+        description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds

@@ -96,7 +96,7 @@ Applications are organized by namespace under `kubernetes/apps/`:
 - `monitoring/` - Prometheus, Grafana, Loki stack
 - `media/` - Plex, Jellyfin, etc.
 - `downloads/` - *arr applications (Sonarr, Radarr, etc.)
-- `selfhosted/` - Self-hosted applications
+- `tools/` - Self-hosted applications
 
 Each app follows the pattern:
 ```
