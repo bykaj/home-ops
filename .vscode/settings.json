@@ -33,17 +33,16 @@
         "cert-manager": "guard",
         "default": "home",
         "external": "connection",
-        "external-secrets": "secure",
+        "external-secrets": "guard",
         "flux-system": "pipe",
         "infrastructure": "server",
         "kube-system": "kubernetes",
         "network": "context",
         "observability": "event",
+        "rook-ceph": "dump",
+        "selfhosted": "home",
         "system": "base",
-        "storage": "dump",
-        "system-upgrade": "update",
-        "tools": "tools",
-        "volsync-system": "aws"
+        "system-upgrade": "update"
     },
     "sops.defaults.ageKeyFile": "age.key",
     "vs-kubernetes": {

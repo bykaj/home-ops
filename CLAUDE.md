@@ -21,7 +21,7 @@ task reconcile
 # Bootstrap Talos cluster (creates cluster from scratch)
 task bootstrap:talos
 
-# Bootstrap applications into existing cluster  
+# Bootstrap applications into existing cluster
 task bootstrap:apps
 ```
 
@@ -55,7 +55,7 @@ task talos:reset
 - **OS**: Talos Linux (immutable, minimal Kubernetes OS)
 - **Container Runtime**: containerd
 - **CNI**: Cilium (eBPF-based networking)
-- **Storage**: 
+- **Storage**:
   - Rook-Ceph for distributed block storage
   - OpenEBS for local container-attached storage
   - TrueNAS for NFS/SMB shares (virtualized separately)
@@ -96,7 +96,7 @@ Applications are organized by namespace under `kubernetes/apps/`:
 - `monitoring/` - Prometheus, Grafana, Loki stack
 - `media/` - Plex, Jellyfin, etc.
 - `downloads/` - *arr applications (Sonarr, Radarr, etc.)
-- `tools/` - Utility applications
+- `selfhosted/` - Self-hosted applications
 
 Each app follows the pattern:
 ```
@@ -145,7 +145,7 @@ Applications can depend on other Flux resources using `dependsOn` in Kustomizati
 Required tools:
 - `task` - Task runner
 - `flux` - Flux CLI
-- `kubectl` - Kubernetes CLI  
+- `kubectl` - Kubernetes CLI
 - `talosctl` - Talos CLI
 - `talhelper` - Talos configuration helper
 - `helmfile` - Helm deployment tool

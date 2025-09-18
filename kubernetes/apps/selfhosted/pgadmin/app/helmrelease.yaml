@@ -1,0 +1,145 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app pgadmin
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-config:
+            image:
+              repository: ghcr.io/home-operations/k8s-sidecar
+              tag: 1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
+            command: ["/bin/bash", "-c"]
+            args:
+              - |
+                export USER_FOLDER=$(echo "/var/lib/pgadmin/storage/$PGADMIN_DEFAULT_EMAIL" | sed 's/@/_/g')
+                echo "Creating user folder $USER_FOLDER.";
+                mkdir -p $USER_FOLDER;
+                cp /tmp/secrets/.pgpass $USER_FOLDER/.pgpass;
+                chown 5050:5050 $USER_FOLDER/.pgpass;
+                chmod 600 $USER_FOLDER/.pgpass;
+                echo "Done."
+            env:
+              PGADMIN_DEFAULT_EMAIL:
+                valueFrom:
+                  secretKeyRef:
+                    name: &secret pgadmin-secret
+                    key: PGADMIN_DEFAULT_EMAIL
+        containers:
+          app:
+            image:
+              repository: dpage/pgadmin4
+              tag: 9.8.0@sha256:d115bcd737940a6cfb61a54439d50de8b850e0782e2363102c9fa761f4022f49
+            env:
+              PGADMIN_CONFIG_AUTHENTICATION_SOURCES: "['oauth2']"
+              PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "20"
+              PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
+              PGADMIN_CONFIG_MAIL_PORT: "587"
+              PGADMIN_CONFIG_MAIL_USE_TLS: "True"
+              PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+              PGADMIN_CONFIG_OAUTH2_AUTO_CREATE_USER: "True"
+              PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
+              PGADMIN_DISABLE_POSTFIX: "True"
+              PGADMIN_LISTEN_PORT: &port 5050
+              PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
+            envFrom:
+              - secretRef:
+                  name: *secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /misc/ping
+                    port: *port
+                  initialDelaySeconds: 20
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 5050
+        runAsGroup: 5050
+        fsGroup: 5050
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+        globalMounts:
+          - path: /var/lib/pgadmin
+      secrets:
+        type: secret
+        name: *secret
+        advancedMounts:
+          *app :
+            init-config:
+              - path: /tmp/secrets/.pgpass
+                subPath: pgpass
+            app:
+              - path: /pgadmin4/servers.json
+                subPath: servers.json
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault-alpha/Backups
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/pgAdmin
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+    route:
+      app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Self-hosted"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-pgadmin.svg"
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port

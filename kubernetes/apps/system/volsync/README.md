@@ -249,8 +249,8 @@ kubectl patch replicationsource <app-name> -n <namespace> \
   --type='merge' \
   -p='{"spec":{"trigger":{"manual":"sync-'$(date +%s)'"}}}'
 
-# Example: Trigger backup for pgadmin-config in tools namespace
-kubectl patch replicationsource pgadmin-config -n tools \
+# Example: Trigger backup for pgadmin-config in selfhosted namespace
+kubectl patch replicationsource pgadmin-config -n selfhosted \
   --type='merge' \
   -p='{"spec":{"trigger":{"manual":"sync-'$(date +%s)'"}}}'
 ```
