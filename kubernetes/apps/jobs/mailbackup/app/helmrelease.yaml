@@ -28,8 +28,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/bjw-s-labs/getmail
-              tag: 6.19.10@sha256:b84eb8697a70afa27ad30bd39c960578c2a4c18c19b51b3b50e3775f6fa48802
+              repository: ghcr.io/bykaj/getmail
+              tag: 6.19.10@sha256:58516248218ebcf797691f7b14d1a3000854baa4fad64913f15a4ddc52136da8
             command:
               - "/scripts/mailbackup.sh"
     persistence:
