@@ -28,8 +28,8 @@ spec:
         initContainers:
           generate-schemas:
             image:
-              repository: ghcr.io/bjw-s-labs/k8s-crd-extractor
-              tag: 2025.6.12@sha256:c004a691f8371a7fb0954cbbb696d273198644eec2bcaa571de0fc002aa730ac
+              repository: ghcr.io/bykaj/k8s-crd-extractor
+              tag: 2025.9.18@sha256:fa7fc33ddbbbc829889ddde21b91317272fdadc1fdae2bec48a75afc3d18cdd2
             resources:
               requests:
                 cpu: 10m
@@ -45,8 +45,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/bjw-s-labs/wrangler
-              tag: 4.37.1@sha256:3f4ac323a8a87ad5faf7bc808a5982300af5bc111f771466960fe4b48eb209fc
+              repository: ghcr.io/bykaj/wrangler
+              tag: 4.37.1@sha256:668a2ba930eecb748ed5e67efcd5c81aa2b277e16846313b640f15614dae94a2
             envFrom:
               - secretRef:
                   name: publish-schemas-secret
