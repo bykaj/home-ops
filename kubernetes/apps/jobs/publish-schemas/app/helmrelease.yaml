@@ -18,7 +18,7 @@ spec:
           concurrencyPolicy: "Replace"
           backoffLimit: 0
           failedJobsHistory: 1
-          successfulJobsHistory: 0
+          successfulJobsHistory: 1
         pod:
           restartPolicy: OnFailure
           securityContext:
