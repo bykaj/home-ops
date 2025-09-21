@@ -4,7 +4,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app dsmr-reader
-  namespace: &namespace tools
+  namespace: &namespace default
 spec:
   commonMetadata:
     labels:
@@ -22,7 +22,7 @@ spec:
     - name: tailscale-operator
       namespace: network
   interval: 1h
-  path: ./kubernetes/apps/tools/dsmr-reader/app
+  path: ./kubernetes/apps/default/dsmr-reader/app
   postBuild:
     substitute:
       APP: *app
