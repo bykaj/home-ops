@@ -22,7 +22,6 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Wallos
-      GATUS_SUBDOMAIN: wallos-new
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

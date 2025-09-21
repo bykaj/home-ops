@@ -23,7 +23,7 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: OpenCloud
-      GATUS_SUBDOMAIN: files-new
+      GATUS_SUBDOMAIN: files
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
