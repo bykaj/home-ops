@@ -32,7 +32,7 @@ spec:
               FETCH_WORKERS: "10"
               HIDE_REFERER: "true"
               MINIMUM_SECONDS_RECHECK_TIME: "3"
-              PLAYWRIGHT_DRIVER_URL: ws://localhost:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
+              PLAYWRIGHT_DRIVER_URL: ws://localhost:3000/?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               PORT: &port 5000
               SCREENSHOT_MAX_HEIGHT: "16000"
               TZ: "${TIMEZONE}"
