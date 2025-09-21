@@ -1,0 +1,140 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app changedetection
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/dgtlmoon/changedetection.io
+              tag: 0.50.14@sha256:d8113bf66f47895d29c6935000bbac4c0f33d79588ae37d9ed6000ed328c5833
+            env:
+              BASE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              DISABLE_VERSION_CHECK: "true"
+              FETCH_WORKERS: "10"
+              HIDE_REFERER: "true"
+              MINIMUM_SECONDS_RECHECK_TIME: "3"
+              PLAYWRIGHT_DRIVER_URL: "ws://localhost:3000/?token=$(TOKEN)"
+              PORT: &port 5000
+              SCREENSHOT_MAX_HEIGHT: "16000"
+              TZ: "${TIMEZONE}"
+              USE_X_SETTINGS: "1"
+            envFrom:
+              - secretRef:
+                  name: &secret changedetection-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
+          browserless:
+            image:
+              repository: ghcr.io/browserless/chromium
+              tag: v2.36.0@sha256:9a52db471050e30d8fb0d39f4a777adb1fe6ca531eb291a1fb381e8d03c85db1
+              pullPolicy: IfNotPresent
+            env:
+              CHROME_REFRESH_TIME: "600000"
+              CONNECTION_TIMEOUT: "300000"
+              DATA_DIR: /profile
+              DEFAULT_BLOCK_ADS: "true"
+              DEFAULT_STEALTH: "true"
+              DOWNLOAD_DIR: /downloads
+              ENABLE_DEBUGGER: "false"
+              MAX_CONCURRENT_SESSIONS: "10"
+              PREBOOT_CHROME: "true"
+              SCREEN_DEPTH: "16"
+              SCREEN_HEIGHT: "1024"
+              SCREEN_WIDTH: "1920"
+              TIMEOUT: "60000"
+              TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: *secret
+                    key: TOKEN
+              TZ: "${TIMEZONE}"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: "${APP_UID:=4000}"
+        runAsGroup: "${APP_GID:=4000}"
+        fsGroup: "${APP_GID:=4000}"
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+        advancedMounts:
+          *app :
+            app:
+              - path: /datastore
+                subPath: datastore
+            browserless:
+              - path: /downloads
+                subPath: downloads
+              - path: /profile
+                subPath: profile
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+    route:
+      app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Tools"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-changedetection.svg"
+          gethomepage.dev/widget.type: "changedetectionio"
+          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_CHANGEDETECTION_API_KEY}}` }}"
+          gethomepage.dev/widget.fields: '["diffsDetected", "totalObserved"]'
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
