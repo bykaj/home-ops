@@ -6,7 +6,6 @@ namespace: tools
 components:
   - ../../components/common
 resources:
-  - ./karakeep/ks.yaml
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
