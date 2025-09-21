@@ -68,7 +68,7 @@ There is a template available at [onedr0p/cluster-template](https://github.com/o
 - [openebs](https://github.com/openebs/openebs) – Local container-attached storage for caching.
 - [rook](https://github.com/rook/rook) – Distributed block storage with Ceph for persistent storage.
 - [sops](https://github.com/getsops/sops) – Managed secrets using AGE encryption for Kubernetes and Ansible which are commited to Git.
-- [spegel](https://github.com/spegel-org/spegel) – Stateless local OCI registry mirror to bypass rate limiting from container registries.
+- [spegel](https://github.com/spegel-org/spegel) – Stateless local OCI registry mirror.
 - [volsync](https://github.com/backube/volsync) – Backup and recovery of persistent volume claims.
 
 ### GitOps
