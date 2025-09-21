@@ -108,6 +108,24 @@ spec:
             subPath: tmp
           - path: /config/logs
             subPath: logs
+      # TODO: Enable this when having enough storage on nodes for downloads
+      # ephemeral:
+      #   type: custom
+      #   volumeSpec:
+      #     ephemeral:
+      #       volumeClaimTemplate:
+      #         spec:
+      #           accessModes:
+      #             - ReadWriteOnce
+      #           storageClassName: openebs-hostpath
+      #           resources:
+      #             requests:
+      #               storage: 100Gi
+      #   advancedMounts:
+      #     sabnzbd:
+      #       app:
+      #         - path: /mnt/downloads/incomplete
+      #           subPath: incomplete
     route:
       app:
         annotations:
