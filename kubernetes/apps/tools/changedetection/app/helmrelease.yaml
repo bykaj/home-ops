@@ -32,7 +32,7 @@ spec:
               FETCH_WORKERS: "10"
               HIDE_REFERER: "true"
               MINIMUM_SECONDS_RECHECK_TIME: "3"
-              PLAYWRIGHT_DRIVER_URL: "ws://localhost:3000/?token=$(TOKEN)"
+              PLAYWRIGHT_DRIVER_URL: ws://localhost:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               PORT: &port 5000
               SCREENSHOT_MAX_HEIGHT: "16000"
               TZ: "${TIMEZONE}"
@@ -58,15 +58,10 @@ spec:
               tag: v2.36.0@sha256:9a52db471050e30d8fb0d39f4a777adb1fe6ca531eb291a1fb381e8d03c85db1
               pullPolicy: IfNotPresent
             env:
-              CHROME_REFRESH_TIME: "600000"
-              CONNECTION_TIMEOUT: "300000"
+              CONCURRENT: "10"
               DATA_DIR: /profile
-              DEFAULT_BLOCK_ADS: "true"
-              DEFAULT_STEALTH: "true"
               DOWNLOAD_DIR: /downloads
               ENABLE_DEBUGGER: "false"
-              MAX_CONCURRENT_SESSIONS: "10"
-              PREBOOT_CHROME: "true"
               SCREEN_DEPTH: "16"
               SCREEN_HEIGHT: "1024"
               SCREEN_WIDTH: "1920"
