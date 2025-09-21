@@ -7,4 +7,5 @@ resources:
   - ./cluster-secrets.sops.yaml
   - ./cluster-settings.yaml
   - ./namespace.yaml
+  - ./password.yaml
   - ./sops-age.sops.yaml
