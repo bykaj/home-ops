@@ -11,4 +11,3 @@ resources:
   - ./nutify/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
-  - ./wastebin/ks.yaml
