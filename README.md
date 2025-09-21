@@ -159,7 +159,7 @@ To complete the setup, I've configured a third ingress class called `services` t
 - **Upgrading to more powerful hardware** – I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.
 - **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
 - **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
-- **Optimizing inter-node connectivity** – I'm implementing 40Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
+- **Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
 - **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
 - **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
 
