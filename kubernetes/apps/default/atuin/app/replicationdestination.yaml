@@ -2,21 +2,21 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: changedetection-restore
+  name: atuin-restore
   namespace: default  # Target namespace
 spec:
   trigger:
     manual: restore-once
   kopia:
     # Repository configuration in staging namespace
-    repository: changedetection-volsync-secret
+    repository: atuin-volsync-secret
 
     # Create or use existing PVC in staging
-    destinationPVC: changedetection
+    destinationPVC: atuin
     copyMethod: Direct
 
     # Specify the source backup to restore from
     sourceIdentity:
-      sourceName: changedetection
+      sourceName: atuin
       sourceNamespace: tools  # Source namespace
       # sourcePVCName is auto-discovered from the ReplicationSource
