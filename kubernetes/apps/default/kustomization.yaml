@@ -19,4 +19,4 @@ resources:
   # - ./paperless/ks.yaml
   # - ./pgadmin/ks.yaml
   - ./wallos/ks.yaml
-  # - ./wastebin/ks.yaml
+  - ./wastebin/ks.yaml

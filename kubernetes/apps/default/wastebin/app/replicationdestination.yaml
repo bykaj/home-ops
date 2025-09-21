@@ -2,21 +2,21 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: karakeep-restore
+  name: wastebin-restore
   namespace: default  # Target namespace
 spec:
   trigger:
     manual: restore-once
   kopia:
     # Repository configuration in staging namespace
-    repository: karakeep-volsync-secret
+    repository: wastebin-volsync-secret
 
     # Create or use existing PVC in staging
-    destinationPVC: karakeep
+    destinationPVC: wastebin
     copyMethod: Direct
 
     # Specify the source backup to restore from
     sourceIdentity:
-      sourceName: karakeep
+      sourceName: wastebin
       sourceNamespace: tools  # Source namespace
       # sourcePVCName is auto-discovered from the ReplicationSource

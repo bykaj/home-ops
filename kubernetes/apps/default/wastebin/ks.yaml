@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app karakeep
+  name: &app wastebin
   namespace: &namespace default
 spec:
   commonMetadata:
@@ -15,24 +15,22 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-    - name: meilisearch
-      namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
-  interval: 30m
-  timeout: 5m
-  path: ./kubernetes/apps/default/karakeep/app
+  interval: 1h
+  path: ./kubernetes/apps/default/wastebin/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Karakeep
-      GATUS_SUBDOMAIN: links
-      VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_CACHE_CAPACITY: 5Gi
+      GATUS_NAME: Wastebin
+      GATUS_DOMAIN: drup.lol          # Manually add to DNS servers
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
+  timeout: 5m
   wait: false
