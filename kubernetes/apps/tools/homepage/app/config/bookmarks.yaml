@@ -1,0 +1,18 @@
+---
+# Ref: # https://gethomepage.dev/configs/bookmarks
+- Developer:
+    - GitHub:
+        - icon: github.png
+          href: https://github.com/bykaj
+          description: My profile
+
+- Social:
+    - Reddit:
+        - icon: reddit.png
+          href: https://reddit.com/
+          description: The front page of the internet
+
+- Entertainment:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/
