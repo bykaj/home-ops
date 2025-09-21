@@ -18,5 +18,5 @@ resources:
   - ./opencloud/ks.yaml
   # - ./paperless/ks.yaml
   # - ./pgadmin/ks.yaml
-  # - ./wallos/ks.yaml
+  - ./wallos/ks.yaml
   # - ./wastebin/ks.yaml
