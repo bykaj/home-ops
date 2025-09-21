@@ -3,29 +3,30 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app wastebin
-  namespace: &namespace tools
+  name: &app n8n
+  namespace: &namespace default
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
+    - ../../../../components/gatus/internal
+    - ../../../../components/keda/postgres-scaler
     - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
+    - name: keda
+      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/tools/wastebin/app
+  path: ./kubernetes/apps/default/n8n/app
+  prune: true
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Wastebin
-      GATUS_DOMAIN: drup.lol          # Manually add to DNS servers
       VOLSYNC_CAPACITY: 5Gi
-  prune: true
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
