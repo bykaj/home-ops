@@ -5,5 +5,4 @@ kind: Kustomization
 namespace: tools
 components:
   - ../../components/common
-resources:
-  - ./paperless/ks.yaml
+resources: []
