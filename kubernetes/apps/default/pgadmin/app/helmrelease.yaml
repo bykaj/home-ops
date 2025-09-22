@@ -88,9 +88,9 @@ spec:
                 memory: 512Mi
     defaultPodOptions:
       securityContext:
-        runAsUser: 5050
-        runAsGroup: 5050
-        fsGroup: 5050
+        runAsUser: ${APP_UID:=5050}
+        runAsGroup: ${APP_GID:=5050}
+        fsGroup: ${APP_GID:=5050}
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:

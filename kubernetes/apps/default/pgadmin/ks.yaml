@@ -22,6 +22,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_GID: "5050"
+      APP_UID: "5050"
       GATUS_NAME: pgAdmin
       VOLSYNC_CAPACITY: 5Gi
   prune: true
