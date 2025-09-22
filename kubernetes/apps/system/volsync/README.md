@@ -630,6 +630,39 @@ To restore from backup:
 
 This architecture ensures that persistent data is automatically backed up to external storage while maintaining high performance for running applications through the Rook Ceph + OpenEBS combination.
 
+### Restore cross-namespace with Kopia
+Source: https://perfectra1n.github.io/volsync/usage/kopia/cross-namespace-restore.html
+
+```yaml
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: ${APP}-restore
+  namespace: default  # Target namespace
+spec:
+  trigger:
+    manual: restore-once
+  kopia:
+    # Repository configuration in staging namespace
+    repository: ${APP}-volsync-secret
+
+    # Create or use existing PVC in staging
+    destinationPVC: ${APP}
+    copyMethod: Direct
+
+    moverSecurityContext:
+      runAsUser: ${APP_UID:=1000}
+      runAsGroup: ${APP_GID:=1000}
+      fsGroup: ${APP_GID:=1000}
+
+    # Specify the source backup to restore from
+    sourceIdentity:
+      sourceName: ${APP}
+      sourceNamespace: tools  # Source namespace
+      # sourcePVCName is auto-discovered from the ReplicationSource
+```
+
 ## Bootstrap Process for New Applications
 
 When a kustomization including the VolSync component is applied for the first time and no PVC exists yet, the following bootstrap process occurs:
