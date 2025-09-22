@@ -14,7 +14,7 @@ resources:
   - ./karakeep/ks.yaml
   - ./kopia/ks.yaml
   - ./n8n/ks.yaml
-  # - ./nutify/ks.yaml
+  - ./nutify/ks.yaml
   - ./opencloud/ks.yaml
   # - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
