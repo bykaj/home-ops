@@ -16,9 +16,9 @@ spec:
     copyMethod: Direct
 
     moverSecurityContext:
-      runAsUser: ${APP_UID:=4000}
-      runAsGroup: ${APP_GID:=4000}
-      fsGroup: ${APP_GID:=4000}
+      runAsUser: ${APP_UID:=1000}
+      runAsGroup: ${APP_GID:=1000}
+      fsGroup: ${APP_GID:=1000}
 
     # Specify the source backup to restore from
     sourceIdentity:
