@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/persistentvolumeclaim.json
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ${APP}-smb-archive
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2T
+  volumeName: ${APP}-smb-archive
+  storageClassName: smb
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/persistentvolumeclaim.json
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ${APP}-smb-backups
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2T
+  volumeName: ${APP}-smb-backups
+  storageClassName: smb

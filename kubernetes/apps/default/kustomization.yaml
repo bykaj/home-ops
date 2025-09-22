@@ -16,7 +16,7 @@ resources:
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./opencloud/ks.yaml
-  # - ./paperless/ks.yaml
+  - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
   - ./wallos/ks.yaml
   - ./wastebin/ks.yaml
