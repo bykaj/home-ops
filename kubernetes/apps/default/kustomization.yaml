@@ -5,18 +5,18 @@ kind: Kustomization
 namespace: default
 components:
   - ../../components/common
-resources:
-  - ./atuin/ks.yaml
-  - ./changedetection/ks.yaml
-  - ./dsmr-reader/ks.yaml
-  - ./homepage/ks.yaml
-  - ./it-tools/ks.yaml
-  - ./karakeep/ks.yaml
-  - ./kopia/ks.yaml
-  - ./n8n/ks.yaml
-  - ./nutify/ks.yaml
-  - ./opencloud/ks.yaml
-  - ./paperless/ks.yaml
-  - ./pgadmin/ks.yaml
-  - ./wallos/ks.yaml
+resources: []
+  # - ./atuin/ks.yaml
+  # - ./changedetection/ks.yaml
+  # - ./dsmr-reader/ks.yaml
+  # - ./homepage/ks.yaml
+  # - ./it-tools/ks.yaml
+  # - ./karakeep/ks.yaml
+  # - ./kopia/ks.yaml
+  # - ./n8n/ks.yaml
+  # - ./nutify/ks.yaml
+  # - ./opencloud/ks.yaml
+  # - ./paperless/ks.yaml
+  # - ./pgadmin/ks.yaml
+  # - ./wallos/ks.yaml
   # - ./wastebin/ks.yaml

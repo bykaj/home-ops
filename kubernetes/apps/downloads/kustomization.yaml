@@ -5,11 +5,11 @@ kind: Kustomization
 namespace: downloads
 components:
   - ../../components/common
-resources:
-  - ./bazarr/ks.yaml
-  - ./huntarr/ks.yaml
-  - ./prowlarr/ks.yaml
-  - ./radarr/ks.yaml
-  - ./sabnzbd/ks.yaml
-  - ./sonarr/ks.yaml
-  - ./whisparr/ks.yaml
+resources: []
+  # - ./bazarr/ks.yaml
+  # - ./huntarr/ks.yaml
+  # - ./prowlarr/ks.yaml
+  # - ./radarr/ks.yaml
+  # - ./sabnzbd/ks.yaml
+  # - ./sonarr/ks.yaml
+  # - ./whisparr/ks.yaml
