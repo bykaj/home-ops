@@ -3,7 +3,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: proxmox-ve
+  name: &app proxmox-ve
 spec:
   hostnames:
     - pve.${DOMAIN_APP}
@@ -15,7 +15,7 @@ spec:
     - backendRefs:
         - group: gateway.envoyproxy.io
           kind: Backend
-          name: proxmox-ve
+          name: *app
       matches:
         - path:
             type: PathPrefix

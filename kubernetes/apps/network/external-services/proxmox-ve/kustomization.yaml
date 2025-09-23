@@ -8,3 +8,4 @@ resources:
   # - ./tlsroute.yaml
   - ./backend.yaml
   - ./httproute.yaml
+  - ./backendtrafficpolicy.yaml
