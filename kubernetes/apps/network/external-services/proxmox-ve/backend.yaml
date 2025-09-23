@@ -1,0 +1,18 @@
+
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/backend_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: proxmox-ve
+spec:
+  endpoints:
+    - fqdn:
+        hostname: icarus.home.${DOMAIN_NET}
+        port: 8006
+    - fqdn:
+        hostname: leonis.home.${DOMAIN_NET}
+        port: 8006
+    - fqdn:
+        hostname: zeus.home.${DOMAIN_NET}
+        port: 8006
