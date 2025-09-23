@@ -52,8 +52,8 @@ tasks:
     preconditions:
       - which kubectl
 
-  cleanse-pods:
-    desc: Cleanse pods with a Failed/Pending/Succeeded phase
+  prune-pods:
+    desc: Prune pods with a Failed/Pending/Succeeded phase
     cmds:
       - for:
           matrix:
