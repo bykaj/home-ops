@@ -14,6 +14,6 @@ spec:
       type: Cookie
       cookie:
         name: proxmox-ve-session
-        ttl: 60s
+        ttl: 3600s
         attributes:
           SameSite: Strict
