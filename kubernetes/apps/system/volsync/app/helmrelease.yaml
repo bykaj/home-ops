@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: volsync
-      version: 0.16.9
+      version: 0.17.3
       sourceRef:
         kind: HelmRepository
         name: volsync
@@ -23,7 +23,7 @@ spec:
   values:
     image: &image
       repository: ghcr.io/perfectra1n/volsync
-      tag: 0.15.45@sha256:ea9f7e0296323381697a56f49757a8dbff293c74d45750594fc2ca1f392aa78c
+      tag: v0.16.3@sha256:62b21f997ca545155fba9c550ae5a030f79d3a9ff2373e70f658b3c13f0af898
     kopia: *image
     rclone: *image
     restic: *image
