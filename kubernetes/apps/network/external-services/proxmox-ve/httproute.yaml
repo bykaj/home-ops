@@ -20,7 +20,7 @@ spec:
         - path:
             type: PathPrefix
             value: /
-      sessionPersistence:
+      sessionPersistence: # NOT WORKING YET, DO NOT COPY
         sessionName: proxmox-ve-session
         type: Cookie
         absoluteTimeout: 3600s
