@@ -14,6 +14,13 @@ spec:
           cloudflare:
             apiTokenSecretRef:
               name: cert-manager-secret
-              key: api-token
+              key: CF_API_TOKEN
         selector:
-          dnsZones: ["${DOMAIN_APP}", "${DOMAIN_DEV}", "${DOMAIN_ID}", "${DOMAIN_IO}", "${DOMAIN_NET}", "${DOMAIN_ST}", "${DOMAIN_LOL}"]
+          dnsZones:
+            - ${DOMAIN_APP}
+            - ${DOMAIN_DEV}
+            - ${DOMAIN_ID}
+            - ${DOMAIN_IO}
+            - ${DOMAIN_NET}
+            - ${DOMAIN_ST}
+            - ${DOMAIN_LOL}
