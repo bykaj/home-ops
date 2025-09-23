@@ -6,13 +6,9 @@ metadata:
   name: cert-manager
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: cert-manager
-      version: v1.18.2
-      sourceRef:
-        kind: HelmRepository
-        name: jetstack
+  chartRef:
+    kind: OCIRepository
+    name: cert-manager
   install:
     remediation:
       retries: -1
@@ -23,7 +19,6 @@ spec:
   values:
     crds:
       enabled: true
-    replicaCount: 1
     dns01RecursiveNameservers: https://1.1.1.1:443/dns-query,https://1.0.0.1:443/dns-query
     dns01RecursiveNameserversOnly: true
     prometheus:
