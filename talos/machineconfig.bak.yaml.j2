@@ -4,10 +4,12 @@ version: v1alpha1
 machine:
   ca:
     crt: op://Homelab/talos/MACHINE_CA_CRT
+    {% if ENV.IS_CONTROLLER %}
     key: op://Homelab/talos/MACHINE_CA_KEY
+    {% endif %}
   certSANs:
     - 127.0.0.1
-    - kube-vip.home.cetana.net
+    - 10.73.10.1
   features:
     apidCheckExtKeyUsage: true
     diskQuotaSupport: true
@@ -18,6 +20,7 @@ machine:
     kubePrism:
       enabled: true
       port: 7445
+    {% if ENV.IS_CONTROLLER %}
     kubernetesTalosAPIAccess:
       allowedKubernetesNamespaces:
         - actions-runner-system
@@ -25,6 +28,7 @@ machine:
       allowedRoles:
         - os:admin
       enabled: true
+    {% endif %}
     rbac: true
     stableHostname: true
   files:
@@ -50,7 +54,7 @@ machine:
         noatime=True
   install:
     disk: /dev/sda
-    image: factory.talos.dev/metal-installer/d49f6c31c666cfd609dea5b4fdbde60deea213b79d001dbd10117443a9af26f9:v1.11.1
+    image: factory.talos.dev/installer/d49f6c31c666cfd609dea5b4fdbde60deea213b79d001dbd10117443a9af26f9:v1.11.1
     wipe: false
   kernel:
     modules:
@@ -100,10 +104,12 @@ machine:
 cluster:
   ca:
     crt: op://Homelab/talos/CLUSTER_CA_CRT
+    {% if ENV.IS_CONTROLLER %}
     key: op://Homelab/talos/CLUSTER_CA_KEY
+    {% endif %}
   clusterName: main
   controlPlane:
-    endpoint: https://10.73.10.1:6443
+    endpoint: https://kube-vip.home.cetana.net:6443
   discovery:
     enabled: true
     registries:
@@ -122,6 +128,7 @@ cluster:
       - 10.43.0.0/16
   secret: op://Homelab/talos/CLUSTER_SECRET
   token: op://Homelab/talos/CLUSTER_TOKEN
+  {% if ENV.IS_CONTROLLER %}
   aggregatorCA:
     crt: op://Homelab/talos/CLUSTER_AGGREGATORCA_CRT
     key: op://Homelab/talos/CLUSTER_AGGREGATORCA_KEY
@@ -134,7 +141,6 @@ cluster:
         - level: Metadata
     certSANs:
       - 127.0.0.1
-      - 10.73.10.1
       - kube-vip.home.cetana.net
     disablePodSecurityPolicy: true
     extraArgs:
@@ -183,3 +189,4 @@ cluster:
   secretboxEncryptionSecret: op://Homelab/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
     key: op://Homelab/talos/CLUSTER_SERVICEACCOUNT_KEY
+  {% endif %}
