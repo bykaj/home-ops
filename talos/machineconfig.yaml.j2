@@ -1,11 +1,11 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/siderolabs/talos/refs/heads/release-1.10/website/content/v1.10/schemas/config.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siderolabs/talos/refs/heads/release-1.11/website/content/v1.11/schemas/config.schema.json
 version: v1alpha1
 machine:
   ca:
-    crt: op://kubernetes/talos/MACHINE_CA_CRT
+    crt: op://Homelab/talos/MACHINE_CA_CRT
     {% if ENV.IS_CONTROLLER %}
-    key: op://kubernetes/talos/MACHINE_CA_KEY
+    key: op://Homelab/talos/MACHINE_CA_KEY
     {% endif %}
   certSANs:
     - 127.0.0.1
@@ -73,14 +73,6 @@ machine:
         - 10.73.10.0/20
   network:
     disableSearchDomain: true
-    interfaces:
-      - routes:
-          - network: 0.0.0.0/0
-            gateway: 10.73.0.254
-        mtu: 1500
-        dhcp: false
-        vip:
-          ip: 10.73.10.1
     nameservers:
       - 10.73.0.254
     extraHostEntries:
@@ -102,12 +94,12 @@ machine:
     servers:
       - 162.159.200.1
       - 162.159.200.123
-  token: op://kubernetes/talos/MACHINE_TOKEN
+  token: op://Homelab/talos/MACHINE_TOKEN
 cluster:
   ca:
-    crt: op://kubernetes/talos/CLUSTER_CA_CRT
+    crt: op://Homelab/talos/CLUSTER_CA_CRT
     {% if ENV.IS_CONTROLLER %}
-    key: op://kubernetes/talos/CLUSTER_CA_KEY
+    key: op://Homelab/talos/CLUSTER_CA_KEY
     {% endif %}
   clusterName: main
   controlPlane:
@@ -119,7 +111,7 @@ cluster:
         disabled: true
       service:
         disabled: false
-  id: op://kubernetes/talos/CLUSTER_ID
+  id: op://Homelab/talos/CLUSTER_ID
   network:
     cni:
       name: none
@@ -128,12 +120,12 @@ cluster:
       - 10.42.0.0/16
     serviceSubnets:
       - 10.43.0.0/16
-  secret: op://kubernetes/talos/CLUSTER_SECRET
-  token: op://kubernetes/talos/CLUSTER_TOKEN
+  secret: op://Homelab/talos/CLUSTER_SECRET
+  token: op://Homelab/talos/CLUSTER_TOKEN
   {% if ENV.IS_CONTROLLER %}
   aggregatorCA:
-    crt: op://kubernetes/talos/CLUSTER_AGGREGATORCA_CRT
-    key: op://kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
+    crt: op://Homelab/talos/CLUSTER_AGGREGATORCA_CRT
+    key: op://Homelab/talos/CLUSTER_AGGREGATORCA_KEY
   allowSchedulingOnControlPlanes: true
   apiServer:
     auditPolicy:
@@ -160,8 +152,8 @@ cluster:
     advertisedSubnets:
       - 10.73.10.0/20
     ca:
-      crt: op://kubernetes/talos/CLUSTER_ETCD_CA_CRT
-      key: op://kubernetes/talos/CLUSTER_ETCD_CA_KEY
+      crt: op://Homelab/talos/CLUSTER_ETCD_CA_CRT
+      key: op://Homelab/talos/CLUSTER_ETCD_CA_KEY
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
   proxy:
@@ -188,7 +180,7 @@ cluster:
     extraArgs:
       bind-address: 0.0.0.0
     image: registry.k8s.io/kube-scheduler:v1.34.1
-  secretboxEncryptionSecret: op://kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
+  secretboxEncryptionSecret: op://Homelab/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
-    key: op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
+    key: op://Homelab/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
