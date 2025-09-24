@@ -85,10 +85,10 @@ spec:
         osd:
           limits:
             cpu: 500m
-            memory: 4096Mi
+            memory: 5120Mi
           requests:
             cpu: 150m
-            memory: 1024Mi
+            memory: 1536Mi
         prepareosd:
           limits:
             cpu: 1000m
