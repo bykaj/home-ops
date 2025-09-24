@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: security
 components:
   - ../../components/common
-resources: []
-  # - ./authentik/ks.yaml
-  # - ./oidc-provider-debugger/ks.yaml
+resources:
+  - ./authentik/ks.yaml
+  - ./oidc-provider-debugger/ks.yaml

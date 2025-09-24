@@ -8,13 +8,13 @@ components:
 resources:
   - ./alloy/ks.yaml
   - ./blackbox-exporter/ks.yaml
-  # - ./gatus/ks.yaml
+  - ./gatus/ks.yaml
   - ./goldilocks/ks.yaml
   - ./grafana/ks.yaml
   - ./kromgo/ks.yaml
-  # - ./kube-prometheus-stack/ks.yaml
+  - ./kube-prometheus-stack/ks.yaml
   - ./kube-state-metrics/ks.yaml
-  # - ./loki/ks.yaml
+  - ./loki/ks.yaml
   - ./node-exporter/ks.yaml
   - ./robusta/ks.yaml
   - ./silence-operator/ks.yaml
