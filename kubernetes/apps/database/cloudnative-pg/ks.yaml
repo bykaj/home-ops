@@ -69,8 +69,6 @@ spec:
       namespace: *namespace
     - name: cloudnative-pg-barman-cloud
       namespace: *namespace
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   postBuild:
