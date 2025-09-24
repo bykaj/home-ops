@@ -9,7 +9,7 @@ default:
 
 [doc('Apply local Flux Kustomization')]
 apply-ks dir ks="*":
-    just kube render-local-ks "{{ dir }}" "{{ ks }}" \
+    just kubernetes render-local-ks "{{ dir }}" "{{ ks }}" \
         | kubectl apply --server-side --field-manager=kustomize-controller -f /dev/stdin
 
 [doc('Browse a PVC')]
@@ -18,7 +18,7 @@ browse-pvc namespace claim:
 
 [doc('Delete local Flux Kustomization')]
 delete-ks dir ks="*":
-    just kube render-local-ks "{{ dir }}" "{{ ks }}" | kubectl delete -f /dev/stdin
+    just kubernetes render-local-ks "{{ dir }}" "{{ ks }}" | kubectl delete -f /dev/stdin
 
 [doc('Open a shell on a node')]
 node-shell node:
