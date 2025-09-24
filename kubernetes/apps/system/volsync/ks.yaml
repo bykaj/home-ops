@@ -9,11 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/keda/nfs-scaler
   dependsOn:
-    - name: keda
-      namespace: *namespace
     - name: openebs
       namespace: *namespace
     - name: snapshot-controller
@@ -25,6 +21,33 @@ spec:
       namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/system/volsync/app
+  postBuild:
+    substitute:
+      APP: *app
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app volsync-maintenance
+  namespace: &namespace system
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: volsync
+      namespace: *namespace
+  interval: 1h
+  path: ./kubernetes/apps/system/volsync/maintenance
   postBuild:
     substitute:
       APP: *app
