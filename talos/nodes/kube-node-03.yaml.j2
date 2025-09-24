@@ -1,0 +1,30 @@
+---
+machine:
+  network:
+    hostname: kube-node-03.home.cetana.net
+    interfaces:
+      - deviceSelector:
+          hardwareAddr: bc:24:11:ae:0c:56
+        addresses:
+          - 10.73.10.112/20
+  nodeLabels:
+    intel.feature.node.kubernetes.io/gpu: "true"
+    topology.kubernetes.io/region: main
+    topology.kubernetes.io/zone: home
+  type: controlplane
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: system_disk
+  maxSize: 120GiB
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: system_disk
+  maxSize: 128GiB

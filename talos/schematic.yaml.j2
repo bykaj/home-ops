@@ -1,0 +1,19 @@
+---
+customization:
+  extraKernelArgs:
+    - -init_on_alloc # Less security, more performance
+    - -init_on_free # Less security, more performance
+    - -selinux # Less security, more performance
+    - apparmor=0 # Less security, more performance
+    - init_on_alloc=0 # Less security, more performance
+    - init_on_free=0 # Less security, more performance
+    - mitigations=off # Less security, more performance
+    - security=none # Less security, more performance
+    - talos.auditd.disabled=1 # Less security, more performance
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/i915 # Intel iGPU
+      - siderolabs/intel-ucode # Intel iGPU
+      - siderolabs/mei # Intel iGPU
+      - siderolabs/nfsrahead # NFS Performance
+      - siderolabs/qemu-guest-agent # QEMU Guest Agent
