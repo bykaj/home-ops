@@ -14,6 +14,7 @@ spec:
     updateInterval: 30
   storage:
     size: 20Gi
+    storageClass: openebs-hostpath
   enableSuperuserAccess: true
   superuserSecret:
     name: cloudnative-pg-secret
