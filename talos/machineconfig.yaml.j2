@@ -79,6 +79,9 @@ machine:
       - ip: 10.73.10.1
         aliases:
           - kube-vip.home.cetana.net
+  nodeLabels:
+    topology.kubernetes.io/region: main
+    topology.kubernetes.io/zone: home
   sysctls:
     fs.inotify.max_user_instances: "8192"
     fs.inotify.max_user_watches: "1048576"
