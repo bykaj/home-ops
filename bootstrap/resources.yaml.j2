@@ -19,6 +19,25 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
+  name: cluster-secrets
+  namespace: flux-system
+stringData:
+  DOMAIN_APP: op://Homelab/cluster/DOMAIN_APP
+  DOMAIN_DEV: op://Homelab/cluster/DOMAIN_DEV
+  DOMAIN_ID: op://Homelab/cluster/DOMAIN_ID
+  DOMAIN_IO: op://Homelab/cluster/DOMAIN_IO
+  DOMAIN_LOL: op://Homelab/cluster/DOMAIN_LOL
+  DOMAIN_NET: op://Homelab/cluster/DOMAIN_NET
+  DOMAIN_ST: op://Homelab/cluster/DOMAIN_ST
+  TAILSCALE_DOMAIN: op://Homelab/tailscale/DOMAIN
+  DB_HOST: op://Homelab/cluster/DB_HOST
+  MQTT_HOST: op://Homelab/cluster/MQTT_HOST
+  NAS_HOST: op://Homelab/cluster/NAS_HOST
+  REDIS_HOST: op://Homelab/cluster/REDIS_HOST
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: cloudflare-tunnel-id-secret
   namespace: network
 stringData:
