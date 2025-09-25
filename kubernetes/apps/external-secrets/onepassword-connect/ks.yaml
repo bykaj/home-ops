@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app onepassword-connect
   namespace: &namespace external-secrets
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
