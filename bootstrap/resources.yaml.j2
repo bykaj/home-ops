@@ -27,10 +27,10 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: tailscale-email-secret
+  name: tailscale-user-secret
   namespace: network
 stringData:
-  ACCOUNT_EMAIL: op://Homelab/tailscale/ACCOUNT_EMAIL
+  TAILSCALE_USER: op://Homelab/tailscale/USERNAME
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition

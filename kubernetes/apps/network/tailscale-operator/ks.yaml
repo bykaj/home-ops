@@ -5,11 +5,12 @@ kind: Kustomization
 metadata:
   name: &app tailscale-operator
   namespace: &namespace network
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-      substitution.flux.home.arpa/disabled: "true"
   decryption:
     provider: sops
     secretRef:
@@ -24,7 +25,7 @@ spec:
     substitute:
       APP: *app
     substituteFrom:
-      - name: tailscale-email-secret
+      - name: tailscale-user-secret
         kind: Secret
       - name: cluster-settings
         kind: ConfigMap
