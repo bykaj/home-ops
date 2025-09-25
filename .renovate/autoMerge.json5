@@ -24,7 +24,7 @@
       matchPackageNames: [
         "/kube-prometheus-stack/",
         "/grafana/",
-        "ghcr.io/bjw-s-labs/wrangler"
+        "ghcr.io/bykaj/wrangler"
       ],
       ignoreTests: false,
     },
