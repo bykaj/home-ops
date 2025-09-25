@@ -5,19 +5,31 @@ kind: Kustomization
 metadata:
   name: &app cloudflare-tunnel
   namespace: &namespace network
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/cloudflare-tunnel/app
-  # postBuild:
-  #   substituteFrom:
-  #     - kind: Secret
-  #       name: cloudflare-tunnel-id-secret
+  postBuild:
+    substitute:
+      APP: *app
+    substituteFrom:
+      - kind: Secret
+        name: cloudflare-tunnel-id-secret
+      - name: cluster-settings
+        kind: ConfigMap
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:
