@@ -6,4 +6,9 @@ namespace: system-upgrade
 components:
   - ../../components/common
 resources:
-  - ./tuppr/ks.yaml
+  - ./system-upgrade-controller/ks.yaml
+configMapGenerator:
+  - name: versions
+    env: ./resources/versions.env
+configurations:
+  - ./resources/kustomizeconfig.yaml
