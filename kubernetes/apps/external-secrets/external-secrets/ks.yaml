@@ -50,7 +50,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app secrets
+  name: &app clustersecrets
   namespace: &namespace external-secrets
 spec:
   commonMetadata:
@@ -60,7 +60,7 @@ spec:
     - name: onepassword-store
       namespace: *namespace
   interval: 1h
-  path: ./kubernetes/apps/external-secrets/external-secrets/secrets
+  path: ./kubernetes/apps/external-secrets/external-secrets/clustersecrets
   prune: true
   sourceRef:
     kind: GitRepository
