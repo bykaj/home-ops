@@ -128,6 +128,7 @@ spec:
     ###
     prometheus:
       prometheusSpec:
+        externalUrl: https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
         image:
           registry: docker.io
           repository: prompp/prompp
