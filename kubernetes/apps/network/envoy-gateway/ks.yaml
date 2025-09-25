@@ -10,6 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: certificates-import
       namespace: *namespace
   interval: 1h
@@ -34,6 +36,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: cert-manager
       namespace: cert-manager
     - name: envoy-gateway

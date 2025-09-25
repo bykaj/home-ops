@@ -9,6 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
   interval: 30m
   path: ./kubernetes/apps/observability/kube-state-metrics/app
   prune: true

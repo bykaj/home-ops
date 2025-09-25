@@ -10,6 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: openebs
       namespace: *namespace
     - name: snapshot-controller
@@ -44,6 +46,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: volsync
       namespace: *namespace
   interval: 1h

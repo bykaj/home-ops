@@ -14,6 +14,8 @@ spec:
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: intel-device-plugin-gpu
       namespace: system
     - name: keda
@@ -52,7 +54,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/media/plex/tools

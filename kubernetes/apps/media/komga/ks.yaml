@@ -14,6 +14,8 @@ spec:
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: keda
       namespace: system
     - name: rook-ceph-cluster

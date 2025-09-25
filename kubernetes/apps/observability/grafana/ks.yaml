@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/gatus/internal
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
   interval: 30m
   path: ./kubernetes/apps/observability/grafana/app

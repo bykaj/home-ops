@@ -16,7 +16,7 @@ spec:
     secretRef:
       name: sops-age
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/cloudflare-tunnel/app

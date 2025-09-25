@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
   interval: 30m
   timeout: 5m

@@ -11,6 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/external
+  dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/default/it-tools/app
   postBuild:

@@ -13,7 +13,7 @@ spec:
     - ../../../../components/gatus/external
     - ../../../../components/volsync
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
     - name: meilisearch
       namespace: database

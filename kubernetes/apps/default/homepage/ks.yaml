@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/gatus/internal
   dependsOn:
-    - name: onepassword-store
+    - name: cluster-secrets
       namespace: external-secrets
   interval: 1h
   timeout: 5m

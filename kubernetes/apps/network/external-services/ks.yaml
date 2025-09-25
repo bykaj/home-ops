@@ -10,6 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: envoy-gateway
       namespace: network
   interval: 1h
@@ -35,6 +37,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: envoy-gateway
       namespace: network
   interval: 1h
@@ -60,6 +64,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: envoy-gateway
       namespace: network
   interval: 1h
@@ -85,6 +91,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: envoy-gateway
       namespace: network
   interval: 1h
@@ -110,6 +118,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: cluster-secrets
+      namespace: external-secrets
     - name: envoy-gateway
       namespace: network
   interval: 1h
