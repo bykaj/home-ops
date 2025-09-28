@@ -183,3 +183,8 @@ cluster:
   secretboxEncryptionSecret: op://Homelab/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
     key: op://Homelab/talos/CLUSTER_SERVICEACCOUNT_KEY
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
