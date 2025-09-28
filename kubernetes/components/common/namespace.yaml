@@ -8,4 +8,3 @@ metadata:
     volsync.backube/privileged-movers: "true"
   labels:
     goldilocks.fairwinds.com/enabled: "true"
-    external-secrets.io/cluster-secrets: "true"
