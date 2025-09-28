@@ -8,6 +8,7 @@ spec:
   interval: 1h
   chart:
     spec:
+      # renovate: registryUrl=https://charts.fairwinds.com/stable
       chart: vpa
       version: 4.9.0
       sourceRef:
