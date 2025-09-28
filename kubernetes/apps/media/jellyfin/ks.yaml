@@ -14,8 +14,6 @@ spec:
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: intel-device-plugin-gpu
       namespace: system
     - name: keda

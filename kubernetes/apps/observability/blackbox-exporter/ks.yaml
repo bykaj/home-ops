@@ -10,9 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
   interval: 30m
   timeout: 5m
   path: ./kubernetes/apps/observability/blackbox-exporter/app

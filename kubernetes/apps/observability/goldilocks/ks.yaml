@@ -9,9 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
@@ -44,8 +41,6 @@ spec:
   components:
     - ../../../../components/gatus/internal
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: goldilocks-vpa
       namespace: *namespace
   healthChecks:

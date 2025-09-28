@@ -13,8 +13,6 @@ spec:
     - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: sonarr
       namespace: *namespace
     - name: radarr

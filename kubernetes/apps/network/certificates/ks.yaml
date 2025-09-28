@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
+    - name: onepassword-store
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/certificates/import
@@ -35,8 +35,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: certificates-import
       namespace: *namespace
   interval: 1h

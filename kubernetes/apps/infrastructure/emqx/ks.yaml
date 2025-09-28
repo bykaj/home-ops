@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
+    - name: onepassword-store
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/infrastructure/emqx/operator
@@ -37,8 +37,6 @@ spec:
   components:
     - ../../../../components/gatus/internal
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: emqx-operator
       namespace: *namespace
   interval: 1h

@@ -16,7 +16,7 @@ spec:
     secretRef:
       name: sops-age
   dependsOn:
-    - name: cluster-secrets
+    - name: onepassword-store
       namespace: external-secrets
   interval: 30m
   timeout: 5m
@@ -50,8 +50,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: tailscale-operator
       namespace: *namespace
   interval: 30m

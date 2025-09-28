@@ -5,8 +5,6 @@ kind: Kustomization
 metadata:
   name: &app external-secrets
   namespace: &namespace external-secrets
-  labels:
-    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
@@ -28,15 +26,11 @@ kind: Kustomization
 metadata:
   name: &app onepassword-store
   namespace: &namespace external-secrets
-  labels:
-    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: external-secrets
-      namespace: *namespace
     - name: onepassword-connect
       namespace: *namespace
   interval: 1h
@@ -49,29 +43,29 @@ spec:
   targetNamespace: *namespace
   timeout: 5m
   wait: true
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app cluster-secrets
-  namespace: &namespace external-secrets
-  labels:
-    substitution.flux.home.arpa/disabled: "true"
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-store
-      namespace: *namespace
-  interval: 1h
-  path: ./kubernetes/apps/external-secrets/external-secrets/cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
-  wait: true
+# ---
+# # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app cluster-secrets
+#   namespace: &namespace external-secrets
+#   labels:
+#     substitution.flux.home.arpa/disabled: "true"
+# spec:
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: onepassword-store
+#       namespace: *namespace
+#   interval: 1h
+#   path: ./kubernetes/apps/external-secrets/external-secrets/cluster-secrets
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#     namespace: flux-system
+#   targetNamespace: *namespace
+#   timeout: 5m
+#   wait: true

@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
+    - name: onepassword-store
       namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/operator
@@ -35,8 +35,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: cert-manager
       namespace: cert-manager
     - name: cloudnative-pg-operator
@@ -67,8 +65,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: cloudnative-pg-operator
       namespace: *namespace
     - name: cloudnative-pg-barman-cloud
@@ -101,8 +97,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
-      namespace: external-secrets
     - name: cloudnative-pg-cluster
       namespace: *namespace
   interval: 1h
@@ -128,7 +122,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-secrets
+    - name: onepassword-store
       namespace: external-secrets
     - name: cloudnative-pg-cluster
       namespace: *namespace
