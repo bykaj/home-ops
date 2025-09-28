@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: rook-ceph
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./rook-ceph/ks.yaml
   - ./rook-ceph-tools/ks.yaml

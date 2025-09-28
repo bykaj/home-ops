@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: system
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./csi-driver-nfs/ks.yaml
   - ./csi-driver-smb/ks.yaml

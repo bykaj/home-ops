@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: kube-system
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml

@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: network
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./certificates/ks.yaml
   - ./cloudflare-tunnel/ks.yaml

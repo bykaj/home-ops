@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: default
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./atuin/ks.yaml
   - ./changedetection/ks.yaml

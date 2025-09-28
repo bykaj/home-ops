@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: security
 components:
   - ../../components/common
+  - ../../components/flux/alerts
 resources:
   - ./authentik/ks.yaml
   - ./oidc-provider-debugger/ks.yaml
