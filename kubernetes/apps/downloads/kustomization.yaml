@@ -7,7 +7,7 @@ components:
   - ../../components/common
   - ../../components/flux/alerts
 resources:
-  - ./autobrr/ks.yaml
+  #- ./autobrr/ks.yaml
   - ./bazarr/ks.yaml
   - ./huntarr/ks.yaml
   - ./prowlarr/ks.yaml
