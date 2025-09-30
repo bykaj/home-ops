@@ -54,14 +54,15 @@ task talos:reset
 ### Infrastructure Stack
 - **OS**: Talos Linux (immutable, minimal Kubernetes OS)
 - **Container Runtime**: containerd
-- **CNI**: Cilium (eBPF-based networking)
+- **CNI**: Cilium (eBPF-based networking with Gateway API)
 - **Storage**:
   - Rook-Ceph for distributed block storage
   - OpenEBS for local container-attached storage
-  - TrueNAS for NFS/SMB shares (virtualized separately)
-- **GitOps**: Flux v2 with SOPS encryption
-- **DNS**: CoreDNS with k8s-gateway for internal services
-- **Ingress**: Cilium Gateway API with Cloudflare Tunnel
+  - CSI drivers for NFS and SMB shares
+- **GitOps**: Flux v2 with SOPS encryption using Flux Operator
+- **DNS**: CoreDNS with external-dns for Cloudflare and UniFi
+- **Ingress**: Envoy Gateway with HTTPRoute/TLSRoute and Cloudflare Tunnel
+- **Monitoring**: Prometheus stack with Grafana, Loki, and Alloy
 
 ### Cluster Configuration
 - **3-node control plane**: All nodes are control plane (HA setup)
@@ -81,22 +82,32 @@ task talos:reset
 │   ├── apps/           # Application deployments (organized by namespace)
 │   ├── components/     # Reusable Kustomize components
 │   └── flux/           # Flux system configuration
-├── talos/              # Talos cluster configuration
-├── bootstrap/          # Initial cluster bootstrap (Helmfile)
-└── scripts/            # Utility scripts
+├── talos/              # Talos cluster configuration (with Jinja2 templates)
+├── bootstrap/          # Initial cluster bootstrap (Helmfile with Justfile)
+├── scripts/            # Utility scripts
+└── archive/            # Archived configurations
 ```
 
 ### Kubernetes Apps Organization
 Applications are organized by namespace under `kubernetes/apps/`:
+- `actions-runner-system/` - GitHub Actions self-hosted runners
 - `cert-manager/` - SSL certificate management
-- `kube-system/` - Core Kubernetes components (Cilium, CoreDNS, etc.)
-- `flux-system/` - Flux GitOps operator
-- `external-secrets/` - External secret management
-- `rook-ceph/` - Distributed storage
-- `monitoring/` - Prometheus, Grafana, Loki stack
-- `media/` - Plex, Jellyfin, etc.
-- `downloads/` - *arr applications (Sonarr, Radarr, etc.)
-- `tools/` - Self-hosted applications
+- `database/` - Database services (CloudNative-PG, Dragonfly, Meilisearch)
+- `default/` - General applications (homepage, paperless, etc.)
+- `development/` - Development tools (Coder)
+- `downloads/` - *arr applications (Sonarr, Radarr, Prowlarr, etc.)
+- `external-secrets/` - External secret management with 1Password Connect
+- `flux-system/` - Flux GitOps operator and instance
+- `infrastructure/` - Infrastructure services (EMQX broker)
+- `jobs/` - Scheduled jobs (mail backup, schema publishing)
+- `kube-system/` - Core Kubernetes components (Cilium, CoreDNS, metrics-server)
+- `media/` - Media services (Plex, Jellyfin, Audiobookshelf, etc.)
+- `network/` - Networking (Envoy Gateway, Cloudflare Tunnel, external-dns, etc.)
+- `observability/` - Monitoring stack (Prometheus, Grafana, Loki, Alloy, etc.)
+- `rook-ceph/` - Distributed storage operator and tools
+- `security/` - Authentication and security (Authentik, OIDC debugger)
+- `system-upgrade/` - Automated system upgrades (Tuppr)
+- `system/` - System services (CSI drivers, KEDA, OpenEBS, etc.)
 
 Each app follows the pattern:
 ```
@@ -104,29 +115,32 @@ app-name/
 ├── app/
 │   ├── helmrelease.yaml      # Helm chart deployment
 │   ├── kustomization.yaml    # Kustomize configuration
-│   └── helm/
-│       └── values.yaml       # Helm chart values
+│   ├── ocirepository.yaml    # OCI repository (replaces Helm repos)
+│   └── externalsecret.yaml   # External secret configuration
 └── ks.yaml                   # Flux Kustomization
 ```
 
 ## Flux Workflow
 
-Flux watches the `kubernetes/` directory and applies changes through two main Kustomizations:
-1. **cluster-meta**: Applies Flux repositories and common resources
-2. **cluster-apps**: Applies all application workloads with dependency management
+Flux watches the `kubernetes/` directory and applies changes through a single main Kustomization:
+- **cluster-apps**: Applies all application workloads with dependency management and SOPS decryption
 
 ### Key Files
-- `kubernetes/flux/cluster/ks.yaml`: Main Flux Kustomizations
-- `kubernetes/components/common/cluster-settings.yaml`: Global configuration (timezone, etc.)
-- `kubernetes/components/common/sops/`: SOPS encrypted secrets
+- `kubernetes/flux/cluster/ks.yaml`: Main Flux Kustomization with SOPS patches and postBuild substitutions
+- `kubernetes/components/common/cluster-secrets.sops.yaml`: SOPS encrypted cluster secrets
+- `kubernetes/external-secrets/external-secrets/cluster-secrets/`: External secrets configuration
 
 ## Working with the Repository
 
 ### Adding New Applications
 1. Create directory structure under `kubernetes/apps/namespace/app-name/`
-2. Add `ks.yaml` (Flux Kustomization)
-3. Add `app/` directory with `helmrelease.yaml` and `kustomization.yaml`
-4. Update parent namespace `kustomization.yaml`
+2. Add `ks.yaml` (Flux Kustomization) 
+3. Add `app/` directory with:
+   - `helmrelease.yaml` (Helm chart configuration)
+   - `kustomization.yaml` (Kustomize resources)
+   - `ocirepository.yaml` (OCI registry source)
+   - `externalsecret.yaml` (if secrets needed)
+4. Update parent namespace `kustomization.yaml` to include new app
 
 ### Secrets
 - Use External Secrets for runtime secrets (1Password integration)
@@ -134,12 +148,23 @@ Flux watches the `kubernetes/` directory and applies changes through two main Ku
 - Never commit plaintext secrets
 
 ### Dependencies
-Applications can depend on other Flux resources using `dependsOn` in Kustomizations or `needs` in Helmfile.
+Applications can depend on other Flux resources using `dependsOn` in Kustomizations. The cluster uses a single main Kustomization for all apps with automatic dependency resolution.
 
 ## Environment Variables
 - `KUBECONFIG`: Points to cluster kubeconfig file
 - `TALOSCONFIG`: Points to Talos configuration
 - `SOPS_AGE_KEY_FILE`: Points to AGE encryption key
+
+## Repository Status
+
+### Recent Changes
+The repository has moved from Helm repositories to OCI repositories for most charts, improving security and reliability. The Goldilocks application recently switched from the deprecated Fairwinds Helm repository to using HelmRepository resources.
+
+### Current State
+- Flux meta configuration has been simplified (deleted legacy meta directory structure)
+- Applications now primarily use OCI repositories for Helm charts
+- Goldilocks VPA (Vertical Pod Autoscaler) and dashboard are configured
+- All major applications have monitoring and observability configured
 
 ## Prerequisites
 Required tools:
@@ -147,7 +172,8 @@ Required tools:
 - `flux` - Flux CLI
 - `kubectl` - Kubernetes CLI
 - `talosctl` - Talos CLI
-- `talhelper` - Talos configuration helper
+- `just` - Command runner (for Justfiles)
 - `helmfile` - Helm deployment tool
 - `sops` - Secret encryption
 - `yq` - YAML processor
+- `jinja2` - Template engine for Talos configs
