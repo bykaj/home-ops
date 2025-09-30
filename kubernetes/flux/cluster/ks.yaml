@@ -52,19 +52,15 @@ spec:
           value:
             provider: sops
     - # Add postBuild substitutions to child Kustomizations
-      patch: |-
-        apiVersion: kustomize.toolkit.fluxcd.io/v1
+      target:
         kind: Kustomization
-        metadata:
-          name: not-used
-        spec:
-          postBuild:
+        version: v1
+        group: kustomize.toolkit.fluxcd.io
+        labelSelector: substitution.flux.home.arpa/disabled notin (true)
+      patch: |-
+        - op: add
+          path: /spec/postBuild
+          value:
             substituteFrom:
-              - name: cluster-settings
-                kind: ConfigMap
               - name: cluster-secrets
                 kind: Secret
-      target:
-        group: kustomize.toolkit.fluxcd.io
-        kind: Kustomization
-        labelSelector: substitution.flux.home.arpa/disabled notin (true)
