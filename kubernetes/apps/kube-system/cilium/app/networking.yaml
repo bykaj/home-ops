@@ -29,6 +29,7 @@ kind: Service
 metadata:
   name: kube-api
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: k8s.home.${DOMAIN_NET}
     lbipam.cilium.io/ips: 10.73.10.1
 spec:
   type: LoadBalancer
