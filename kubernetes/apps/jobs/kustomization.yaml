@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: jobs
 components:
   - ../../components/common
-  - ../../components/flux/alerts
 resources:
   - ./mailbackup/ks.yaml
   - ./publish-schemas/ks.yaml

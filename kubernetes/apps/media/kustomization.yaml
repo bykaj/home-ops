@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: media
 components:
   - ../../components/common
-  - ../../components/flux/alerts
 resources:
   - ./audiobookshelf/ks.yaml
   - ./calibre-web-automated/ks.yaml
