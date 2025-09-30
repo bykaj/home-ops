@@ -59,8 +59,7 @@ spec:
         labelSelector: substitution.flux.home.arpa/disabled notin (true)
       patch: |-
         - op: add
-          path: /spec/postBuild
+          path: /spec/postBuild/substituteFrom
           value:
-            substituteFrom:
-              - name: cluster-secrets
-                kind: Secret
+            - name: cluster-secrets
+              kind: Secret
