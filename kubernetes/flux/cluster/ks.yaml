@@ -39,6 +39,16 @@ spec:
   timeout: 5m
   wait: false
   patches:
+    - # Enable SOPS decryption on all child Kustomizations
+      target:
+        kind: Kustomization
+        version: v1
+        group: kustomize.toolkit.fluxcd.io
+      patch: |-
+        - op: add
+          path: /spec/decryption
+          value:
+            provider: sops
     - # Add postBuild substitutions to child Kustomizations
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
