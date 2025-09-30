@@ -25,6 +25,8 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
+  decryption:
+    provider: sops
   dependsOn:
     - name: cluster-meta
       namespace: flux-system
