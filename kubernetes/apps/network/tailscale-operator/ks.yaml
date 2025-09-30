@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app tailscale-operator
   namespace: &namespace network
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
@@ -20,6 +22,8 @@ spec:
       APP: *app
     substituteFrom:
       - name: tailscale-user-secret
+        kind: Secret
+      - name: cluster-secrets
         kind: Secret
   prune: true
   sourceRef:

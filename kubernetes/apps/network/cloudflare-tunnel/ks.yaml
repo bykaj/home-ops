@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app cloudflare-tunnel
   namespace: &namespace network
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   commonMetadata:
     labels:
@@ -20,6 +22,8 @@ spec:
     substituteFrom:
       - kind: Secret
         name: cloudflare-tunnel-id-secret
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:
