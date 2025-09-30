@@ -56,7 +56,7 @@ spec:
         kind: Kustomization
         version: v1
         group: kustomize.toolkit.fluxcd.io
-        labelSelector: substitution.flux.home.arpa/disabled notin (true)
+        # labelSelector: substitution.flux.home.arpa/disabled notin (true)
       patch: |-
         - op: add
           path: /spec/postBuild/substituteFrom
