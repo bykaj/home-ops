@@ -13,8 +13,7 @@ spec:
       version: 4.9.0
       sourceRef:
         kind: HelmRepository
-        name: fairwinds
-        namespace: flux-system
+        name: fairwinds-vpa
   install:
     remediation:
       retries: -1

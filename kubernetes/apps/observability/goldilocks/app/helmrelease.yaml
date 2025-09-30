@@ -14,8 +14,7 @@ spec:
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        name: fairwinds
-        namespace: flux-system
+        name: fairwinds-goldilocks
   install:
     remediation:
       retries: -1
