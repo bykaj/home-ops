@@ -62,6 +62,12 @@ sync-all-es:
     just k8s sync-es "$ns" "$name"; \
   done
 
+[doc('Suspend or resume VolSync')]
+volsync state:
+    flux -n system {{ state }} kustomization volsync
+    flux -n system {{ state }} helmrelease volsync
+    kubectl -n system scale deployment volsync --replicas {{ if state != "suspend" { "1" } else { "0" } }}
+
 [doc('Snapshot VolSync PVCs')]
 snapshot:
   kubectl get replicationsources --no-headers -A | while read -r ns name _; do \
