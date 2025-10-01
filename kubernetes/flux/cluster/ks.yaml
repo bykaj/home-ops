@@ -10,14 +10,6 @@ spec:
     provider: sops
   interval: 1h
   path: ./kubernetes/apps
-  prune: true
-  retryInterval: 2m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  timeout: 5m
-  wait: false
   patches:
     - # Add SOPS decryption to all Kustomizations
       patch: |-
@@ -75,3 +67,11 @@ spec:
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  timeout: 5m
+  wait: false
