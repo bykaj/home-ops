@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: development
 components:
   - ../../components/namespace
-resources:
-  - ./coder/ks.yaml
+resources: []
+  #- ./coder/ks.yaml
