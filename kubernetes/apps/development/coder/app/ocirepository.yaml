@@ -11,4 +11,4 @@ spec:
     operation: copy
   ref:
     tag: v2.25.2
-  url: oci://ghcr.io/coder/coder
+  url: oci://ghcr.io/coder/chart/coder
