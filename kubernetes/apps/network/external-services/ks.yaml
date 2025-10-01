@@ -15,13 +15,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-icarus
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -40,13 +38,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-leonis
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -65,13 +61,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-zeus
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -90,13 +84,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/external-services/proxmox-backup-server
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -115,11 +107,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/network/external-services/proxmox-ve
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false

@@ -15,8 +15,7 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/default/wallos/app
   postBuild:
     substitute:

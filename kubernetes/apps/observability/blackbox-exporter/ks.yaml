@@ -6,16 +6,15 @@ metadata:
   name: &app blackbox-exporter
   namespace: &namespace observability
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/observability/blackbox-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: false

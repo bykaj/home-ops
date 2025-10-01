@@ -14,8 +14,7 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/network/tailscale-operator/app
   postBuild:
     substitute:
@@ -46,8 +45,7 @@ spec:
   dependsOn:
     - name: tailscale-operator
       namespace: *namespace
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/network/tailscale-operator/connectors
   postBuild:
     substitute:

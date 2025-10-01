@@ -9,7 +9,6 @@ spec:
   decryption:
     provider: sops
   interval: 1h
-  path: ./kubernetes/apps
   patches:
     - # Add SOPS decryption to all Kustomizations
       patch: |-
@@ -39,6 +38,18 @@ spec:
         version: v1
         group: kustomize.toolkit.fluxcd.io
         labelSelector: substitution.flux.home.arpa/disabled notin (true)
+    - # Add default timings to all Kustomizations
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          retryInterval: 2m
+          timeout: 10m
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
     - # Add HelmRelease defaults to all Kustomizations
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -57,21 +68,27 @@ spec:
                     crds: CreateReplace
                     strategy:
                       name: RetryOnFailure
+                  timeout: 10m
                   upgrade:
+                    cleanupOnFail: true
                     crds: CreateReplace
                     strategy:
-                      name: RetryOnFailure
+                      name: RemediateOnFailure
+                    remediation:
+                      remediateLastFailure: true
+                      retries: 2
               target:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
+  path: ./kubernetes/apps
   prune: true
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  timeout: 5m
+  timeout: 10m
   wait: false

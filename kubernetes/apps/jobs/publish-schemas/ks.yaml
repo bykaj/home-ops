@@ -12,7 +12,7 @@ spec:
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-  interval: 30m
+  interval: 1h
   path: ./kubernetes/apps/jobs/publish-schemas/app
   prune: true
   sourceRef:
@@ -20,5 +20,4 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false

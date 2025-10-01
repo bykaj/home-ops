@@ -20,13 +20,11 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -60,10 +58,8 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 15m

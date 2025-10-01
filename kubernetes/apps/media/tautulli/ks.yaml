@@ -6,7 +6,6 @@ metadata:
   name: &app tautulli
   namespace: &namespace media
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -16,8 +15,7 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/media/tautulli/app
   postBuild:
     substitute:
@@ -29,4 +27,5 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   wait: false

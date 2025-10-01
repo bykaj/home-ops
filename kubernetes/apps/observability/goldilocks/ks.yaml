@@ -14,8 +14,7 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/observability/goldilocks/vpa
   postBuild:
     substitute:
@@ -48,8 +47,7 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
-  interval: 30m
-  timeout: 5m
+  interval: 1h
   path: ./kubernetes/apps/observability/goldilocks/app
   postBuild:
     substitute:

@@ -34,13 +34,11 @@ spec:
       VOLSYNC_CAPACITY: 80Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 20m
   wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -59,11 +57,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/media/plex/tools
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false

@@ -11,26 +11,22 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/internal
-    - ../../../../components/keda/nfs-scaler
-    # - ../../../../components/volsync
+    - ../../../../components/keda/postgres-scaler
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
-    # - name: rook-ceph-cluster
-    #   namespace: rook-ceph
+    - name: cloudnative-pg-cluster
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/downloads/autobrr/app
   postBuild:
     substitute:
       APP: *app
       GATUS_NAME: Autobrr
-      # VOLSYNC_CAPACITY: 5Gi
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false

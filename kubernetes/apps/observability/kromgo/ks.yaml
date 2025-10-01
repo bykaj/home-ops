@@ -20,11 +20,9 @@ spec:
       GATUS_DOMAIN: stats.bykaj.io
       GATUS_PATH: /talos_version
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false

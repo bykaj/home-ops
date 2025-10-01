@@ -26,11 +26,9 @@ spec:
       GATUS_NAME: "Your Spotify"
       GATUS_SUBDOMAIN: sptfy
       VOLSYNC_CAPACITY: 2Gi
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 5m
   wait: false
