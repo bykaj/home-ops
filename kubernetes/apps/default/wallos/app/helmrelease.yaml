@@ -5,17 +5,10 @@ kind: HelmRelease
 metadata:
   name: &name wallos
 spec:
-  interval: 30m
   chartRef:
     kind: OCIRepository
     name: wallos
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
+  interval: 1h
   values:
     controllers:
       *name :

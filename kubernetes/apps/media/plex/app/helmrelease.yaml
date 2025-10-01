@@ -5,19 +5,11 @@ kind: HelmRelease
 metadata:
   name: &app plex
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: plex
-  install:
-    remediation:
-      retries: -1
-    timeout: 15m
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-    timeout: 15m
+  interval: 1h
+  timeout: 15m
   values:
     controllers:
       plex:

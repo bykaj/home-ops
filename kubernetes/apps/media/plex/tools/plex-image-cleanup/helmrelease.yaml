@@ -8,10 +8,10 @@ spec:
   chartRef:
     kind: OCIRepository
     name: plex-image-cleanup
-  interval: 30m
   dependsOn:
     - name: plex
       namespace: media
+  interval: 1h
   values:
     controllers:
       plex-image-cleanup:

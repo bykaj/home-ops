@@ -5,19 +5,10 @@ kind: HelmRelease
 metadata:
   name: csi-driver-smb
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: csi-driver-smb
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+  interval: 1h
   values:
     feature:
       enableGetVolumeStats: true

@@ -5,18 +5,14 @@ kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
 spec:
-  interval: 30m
-  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: kube-prometheus-stack
-  install:
-    crds: CreateReplace
-  upgrade:
-    crds: CreateReplace
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 1h
+  timeout: 15m
   values:
     crds:
       enabled: true

@@ -5,18 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app dragonfly-operator
 spec:
-  interval: 30m
   chartRef:
     kind: OCIRepository
     name: dragonfly-operator
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
+  interval: 1h
   values:
     controllers:
       dragonfly-operator:

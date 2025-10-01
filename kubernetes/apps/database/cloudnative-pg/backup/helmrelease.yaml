@@ -5,21 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app cloudnative-pg-backup
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: cloudnative-pg-backup
-  maxHistory: 3
-  install:
-    createNamespace: true
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+  interval: 1h
   values:
     controllers:
       cloudnative-pg-backup:

@@ -8,8 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: grafana
-  interval: 30m
-  timeout: 20m
+  interval: 1h
   values:
     admin:
       existingSecret: &secret grafana-secret

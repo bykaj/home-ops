@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: emqx-operator
 spec:
-  interval: 30m
   chart:
     spec:
       chart: emqx-operator
@@ -13,13 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: emqx
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
+  interval: 1h
   values:
     image:
       repository: ghcr.io/emqx/emqx-operator

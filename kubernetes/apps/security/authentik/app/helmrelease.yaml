@@ -5,19 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app authentik
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: authentik
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  driftDetection:
-    mode: enabled
+  interval: 1h
   values:
     # Global configuration
     global:

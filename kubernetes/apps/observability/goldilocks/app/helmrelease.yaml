@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: goldilocks
 spec:
-  interval: 1h
   chart:
     spec:
       # renovate: registryUrl=https://charts.fairwinds.com/stable
@@ -15,15 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds-goldilocks
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  driftDetection:
-    mode: enabled
+  interval: 1h
   values:
     annotations:
       reloader.stakater.com/auto: "true"

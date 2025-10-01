@@ -5,20 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app cloudnative-pg
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: cloudnative-pg
-  maxHistory: 3
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+  interval: 1h
   values:
     crds:
       create: true

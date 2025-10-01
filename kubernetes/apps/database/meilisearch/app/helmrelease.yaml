@@ -14,8 +14,6 @@ spec:
         kind: HelmRepository
         name: meilisearch
   interval: 1h
-  driftDetection:
-    mode: enabled
   values:
     command:
       - tini
