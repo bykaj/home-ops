@@ -69,3 +69,4 @@ spec:
         lbipam.cilium.io/ips: "${LB_IP_EMQX}"
     spec:
       type: LoadBalancer
+      externalTrafficPolicy: Local

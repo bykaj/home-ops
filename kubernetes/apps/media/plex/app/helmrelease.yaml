@@ -155,6 +155,7 @@ spec:
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "${LB_IP_PLEX}"
+        externalTrafficPolicy: Local
         ports:
           http:
             port: *port

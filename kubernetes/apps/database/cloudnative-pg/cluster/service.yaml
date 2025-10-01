@@ -8,6 +8,7 @@ metadata:
     lbipam.cilium.io/ips: "${LB_IP_POSTGRES}"
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
   ports:
     - name: postgres
       port: 5432
