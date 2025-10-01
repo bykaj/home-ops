@@ -5,13 +5,9 @@ kind: HelmRelease
 metadata:
   name: &app coder
 spec:
-  chart:
-    spec:
-      chart: coder
-      version: 2.26.0
-      sourceRef:
-        kind: HelmRepository
-        name: coder
+  chartRef:
+    kind: OCIRepository
+    name: coder
   interval: 1h
   # Default values
   # Ref: https://github.com/coder/coder/blob/main/helm/coder/values.yaml
@@ -83,11 +79,11 @@ spec:
         readOnlyRootFilesystem: null
         seccompProfile:
           type: RuntimeDefault
-      # service:
-      #   type: LoadBalancer
-      #   annotations:
-      #     external-dns.alpha.kubernetes.io/hostname: "*.coder.${DOMAIN_DEV}"
-      #     io.cilium/lb-ipam-ips: ${LB_IP_CODER}
+      service:
+        type: LoadBalancer
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: "*.coder.${DOMAIN_DEV}"
+          io.cilium/lb-ipam-ips: ${LB_IP_CODER}
   postRenderers:
     - kustomize:
         patches:
