@@ -10,5 +10,5 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: v2.25.2
+    tag: v2.26.0
   url: oci://ghcr.io/coder/coder
