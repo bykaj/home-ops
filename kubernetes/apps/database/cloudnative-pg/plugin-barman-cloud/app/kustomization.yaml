@@ -6,4 +6,5 @@ resources:
   - ./ocirepository.yaml
   - ./issuer.yaml
   - ./certificate.yaml
+  - ./crds.yaml
   - ./helmrelease.yaml
