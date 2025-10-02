@@ -13,11 +13,7 @@ spec:
     crds:
       create: true
     monitoring:
-      enabled: true
-      prometheusRule:
-        enabled: true
-      podMonitor:
-        enabled: true
+      podMonitorEnabled: true
       grafanaDashboard:
         create: true
     resources:
