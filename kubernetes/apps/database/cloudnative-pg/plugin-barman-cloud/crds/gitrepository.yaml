@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/source.toolkit.fluxcd.io/gitrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: plugin-barman-cloud-crds
+spec:
+  interval: 1h
+  url: https://github.com/cloudnative-pg/plugin-barman-cloud.git
+  ref:
+    tag: v0.7.0
+  ignore: |
+    # exclude
+    /*
+    # include
+    !config/crd/bases/barmancloud.cnpg.io_objectstores.yaml

@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app cloudnative-pg-backup
+  name: postgres-backup-local
 spec:
   chartRef:
     kind: OCIRepository
-    name: cloudnative-pg-backup
+    name: postgres-backup-local
   interval: 1h
   values:
     controllers:
-      cloudnative-pg-backup:
+      postgres-backup-local:
         type: cronjob
         cronjob:
           schedule: "@daily"
@@ -31,7 +31,8 @@ spec:
             image:
               repository: docker.io/prodrigestivill/postgres-backup-local
               tag: 18@sha256:f70742ebe42b2277689b028d1fd15aa80f77cffa01da163cc9f85a6ff1866e7f
-            command: ["/backup.sh"]
+            command:
+              - /backup.sh
             env:
               BACKUP_DIR: "/mnt/backups"
               BACKUP_KEEP_DAYS: "7"
@@ -45,7 +46,7 @@ spec:
               TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
-                  name: &secret cloudnative-pg-backup-secret
+                  name: postgres-backup-local-secret
     persistence:
       backups:
         type: nfs

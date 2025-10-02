@@ -3,6 +3,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: barman-cloud-selfsigned-issuer
+  name: barman-cloud-issuer
 spec:
-  selfSigned: {}
+  ca:
+    secretName: barman-cloud-ca-secret

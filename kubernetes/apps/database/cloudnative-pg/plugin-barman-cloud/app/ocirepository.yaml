@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: cloudnative-pg-backup
+  name: plugin-barman-cloud
 spec:
   interval: 15m
   layerSelector:
