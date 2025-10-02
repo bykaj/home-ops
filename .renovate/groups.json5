@@ -50,12 +50,13 @@
       matchDatasources: ["docker"],
       matchPackageNames: [
         "/rook-ceph/",
-        "/rook-ceph-cluster/"
+        "/rook-ceph-cluster/",
+        "/rook\/ceph/"
       ],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 2,
+      minimumGroupSize: 3,
     },
     {
       description: "Plugin Barman Cloud Group",
