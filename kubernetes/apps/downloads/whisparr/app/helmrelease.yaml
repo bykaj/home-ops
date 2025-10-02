@@ -13,7 +13,7 @@ spec:
     controllers:
       *app :
         annotations:
-          reloader.stakater.com/reload: &secret whisparr-secret
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -24,9 +24,6 @@ spec:
               PUID: "${APP_UID:-1000}"
               UMASK: "002"
               TZ: "${TIMEZONE}"
-            envFrom:
-              - secretRef:
-                  name: *secret
             probes:
               liveness: &probes
                 enabled: true
