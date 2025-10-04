@@ -1,0 +1,89 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: authentik-radarr-application-blueprint
+  labels:
+    k8s-sidecar.home.arpa/application: authentik
+type: Opaque
+stringData:
+  authentik-radarr-application-blueprint.yaml: |-
+    ---
+    # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+    version: 1
+    metadata:
+      name: Radarr application
+      labels:
+        blueprints.goauthentik.io/description: Resources for Radarr SSO
+    entries:
+      # Dependencies
+      - model: authentik_blueprints.metaapplyblueprint
+        attrs:
+          identifiers:
+            name: Cetana ID - Implicit provider authentication
+          required: true
+      # TODO: add blueprints for cetana-authentication-flow and cetana-invalidation-flow
+      # Application
+      - model: authentik_providers_proxy.proxyprovider
+        id: radarr-provider
+        identifiers:
+          name: Radarr Provider
+        attrs:
+          name: Radarr
+          mode: forward_single
+          external_host:
+            - https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
+          intercept_header_auth: true
+          authentication_flow:
+            !Find [authentik_flows.flow, [slug, cetana-authentication-flow]]
+          authorization_flow:
+            !Find [authentik_flows.flow, [slug, cetana-implicit-authorization-flow]]
+          invalidation_flow: !Find [authentik_flows.flow, [slug, cetana-invalidation-flow]]
+          access_token_validity: hours=4
+          refresh_token_validity: days=2
+          property_mappings:
+            - !Find [
+                authentik_providers_oauth2.scopemapping,
+                [name, "authentik default OAuth Mapping: Application Entitlements"],
+              ]
+            - !Find [
+                authentik_providers_oauth2.scopemapping,
+                [name, "authentik default OAuth Mapping: OpenID 'email'"],
+              ]
+            - !Find [
+                authentik_providers_oauth2.scopemapping,
+                [name, "authentik default OAuth Mapping: OpenID 'openid'"],
+              ]
+            - !Find [
+                authentik_providers_oauth2.scopemapping,
+                [name, "authentik default OAuth Mapping: OpenID 'profile'"],
+              ]
+            - !Find [
+                authentik_providers_oauth2.scopemapping,
+                [name, "authentik default OAuth Mapping: Proxy outpost"],
+              ]
+      - model: authentik_core.application
+        id: radarr-application
+        identifiers:
+          slug: radarr
+        attrs:
+          name: Radarr
+          slug: radarr
+          group: Downloads
+          provider: !KeyOf radarr-provider
+          policy_engine_mode: any
+          meta_launch_url: https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
+          icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/radarr.png
+      # Groups
+      - model: authentik_core.group
+        id: radarr-group
+        identifiers:
+          name: Radarr access
+        attrs:
+          attributes:
+            test_id: "test"
+      - model: authentik_policies.policybinding
+        identifiers:
+          order: 0
+          group: !KeyOf radarr-group
+          target: !KeyOf radarr-application

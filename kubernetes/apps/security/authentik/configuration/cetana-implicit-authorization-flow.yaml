@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: Cetana ID - Implicit provider authentication
+  labels:
+    blueprints.goauthentik.io/description: Implicitly allow provider to authenticate
+entries:
+  - model: authentik_flows.flow
+    id: cetana-implicit-authorization-flow
+    identifiers:
+      slug: cetana-implicit-authorization-flow
+    attrs:
+      designation: authorization
+      name: Implicit authorization
+      title: Redirecting to %(app)s
+      authentication: require_authenticated

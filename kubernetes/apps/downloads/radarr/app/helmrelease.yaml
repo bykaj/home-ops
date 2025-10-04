@@ -123,6 +123,15 @@ spec:
           - name: envoy-internal
             namespace: network
             sectionName: https
+          # Send auth requests to the authentik outpost
+          - backendRefs:
+              - name: authentik-outpost-proxy
+                namespace: security
+                port: 80
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /outpost.goauthentik.io
     service:
       app:
         controller: *app
