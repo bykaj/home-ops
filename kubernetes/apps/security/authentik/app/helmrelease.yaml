@@ -26,6 +26,9 @@ spec:
       envFrom:
         - secretRef:
             name: &secret authentik-secret
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
       volumeMounts:
         - name: custom-templates
           mountPath: /templates
