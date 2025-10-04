@@ -93,16 +93,10 @@ spec:
         limits:
           memory: 2Gi
       volumeMounts:
-        - name: media
-          mountPath: /media
-          subPath: media
         - name: custom-assets
           mountPath: /web/dist/custom.css
           subPath: custom.css
       volumes:
-        - name: media
-          persistentVolumeClaim:
-            claimName: "${VOLSYNC_CLAIM:=${APP}}"
         - name: custom-assets
           configMap:
             name: authentik-custom-assets

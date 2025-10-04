@@ -12,14 +12,11 @@ spec:
   components:
     - ../../../../components/gatus/external
     - ../../../../components/keda/postgres-scaler
-    - ../../../../components/volsync
   dependsOn:
     - name: onepassword-store
       namespace: external-secrets
     - name: keda
       namespace: system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
     - name: cloudnative-pg-cluster
       namespace: database
     - name: dragonfly-cluster
@@ -32,7 +29,6 @@ spec:
       KEDA_NAME: authentik-server
       GATUS_NAME: Authentik
       GATUS_DOMAIN: auth.cetana.id
-      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository
