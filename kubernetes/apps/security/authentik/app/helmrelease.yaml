@@ -20,10 +20,10 @@ spec:
       env:
         - name: AUTHENTIK_REDIS__DB
           value: "1"
-        # - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
-        #   value: "s3"
-        # - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
-        #   value: "true"
+        - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
+          value: "s3"
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
+          value: "true"
         - name: TZ
           value: "${TIMEZONE}"
       envFrom:
