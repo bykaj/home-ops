@@ -3,20 +3,17 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: authentik
+  name: &app authentik
 spec:
   chartRef:
     kind: OCIRepository
     name: authentik
   interval: 1h
   values:
-    # Global configuration
     global:
       priorityClassName: system-cluster-critical
       podAnnotations:
         reloader.stakater.com/auto: "true"
-      deploymentStrategy:
-        type: Recreate
       env:
         - name: AUTHENTIK_REDIS__DB
           value: "1"
@@ -36,11 +33,9 @@ spec:
         - name: custom-templates
           configMap:
             name: authentik-custom-templates
-
-    # Authentik configuration
     authentik:
       disable_startup_analytics: true
-      disable_update_check: false
+      disable_update_check: true
       email:
         port: 587
         timeout: 30
@@ -56,8 +51,6 @@ spec:
         host: "${DB_HOST}"
       redis:
         host: "${REDIS_HOST}"
-
-    # GeoIP Updater
     geoip:
       enabled: false
       editionIds: "GeoLite2-City GeoLite2-ASN"
@@ -72,8 +65,6 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
-
-    # Authentik Server
     server:
       initContainers:
         - name: init-db
@@ -81,25 +72,20 @@ spec:
           envFrom:
             - secretRef:
                 name: *secret
-      replicas: 1
-      metrics:
+      metrics: &metrics
         prometheus:
           serviceMonitor:
             enabled: true
+      pdb:
+        enabled: true
+        minAvailable: 1
       resources:
         requests:
           cpu: 100m
           memory: 512Mi
         limits:
           memory: 2Gi
-      volumeMounts:
-        - name: custom-assets
-          mountPath: /web/dist/custom.css
-          subPath: custom.css
-      volumes:
-        - name: custom-assets
-          configMap:
-            name: authentik-custom-assets
+      replicas: 2
       route:
         main:
           enabled: true
@@ -109,26 +95,48 @@ spec:
             - name: envoy-external
               namespace: network
               sectionName: https
-
-    # Authentik Worker
+      topologySpreadConstraints:
+        - maxSkew: 1 # Skew of 1 allows for rolling updates
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: *app
+              app.kubernetes.io/component: server
+          whenUnsatisfiable: DoNotSchedule
+      volumeMounts:
+        - name: custom-assets
+          mountPath: /web/dist/custom.css
+          subPath: custom.css
+      volumes:
+        - name: custom-assets
+          configMap:
+            name: authentik-custom-assets
     worker:
-      replicas: 1
+      metrics: *metrics
+      pdb:
+        enabled: true
+        minAvailable: 1
+      replicas: 2
       resources:
         requests:
           cpu: 80m
           memory: 512Mi
         limits:
           memory: 1Gi
-
-    # Prometheus
+      topologySpreadConstraints:
+        - maxSkew: 1 # Skew of 1 allows for rolling updates
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: *app
+              app.kubernetes.io/component: worker
+          whenUnsatisfiable: DoNotSchedule
     prometheus:
       rules:
         enabled: true
-        namespace: security
-
   postRenderers:
     # Allow pods to be evicted when unhealthy
-    # This occurs during postgres failover, which is required for node draining
+    # This occurs during Postgres failover, which is required for node draining
     - kustomize:
         patches:
           - patch: |
