@@ -22,7 +22,7 @@ entries:
     id: test-brand
     identifiers:
       default: false
-      domain: "${DOMAIN_DEV}"
+      domain: "test.${DOMAIN_DEV}"
     attrs:
       branding_title: Test
       branding_logo: https://cdn.cetana.id/media/public/brand/logo_cetana_id.svg
