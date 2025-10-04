@@ -29,7 +29,7 @@ spec:
           app:
             image:
               repository: ghcr.io/bykaj/getmail
-              tag: 6.19.10@sha256:58516248218ebcf797691f7b14d1a3000854baa4fad64913f15a4ddc52136da8
+              tag: 6.19.10@sha256:324bbfeddd23c7fc376429a8b7bcfdd106d7b237047f04ad97a8024c72940de6
             command:
               - "/scripts/mailbackup.sh"
     persistence:
