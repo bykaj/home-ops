@@ -10,12 +10,12 @@ entries:
   - model: authentik_blueprints.metaapplyblueprint
     attrs:
       identifiers:
-        name: Sign in
+        slug: cetana-authentication-flow
       required: true
   - model: authentik_blueprints.metaapplyblueprint
     attrs:
       identifiers:
-        name: Logout
+        slug: cetana-invalidation-flow
       required: true
   - model: authentik_brands.brand
     id: test-brand
