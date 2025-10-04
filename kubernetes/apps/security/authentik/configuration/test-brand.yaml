@@ -7,16 +7,17 @@ metadata:
     blueprints.goauthentik.io/description: Test brand
 entries:
   # Dependencies
-  - model: authentik_blueprints.metaapplyblueprint
-    attrs:
-      identifiers:
-        slug: cetana-authentication-flow
-      required: true
-  - model: authentik_blueprints.metaapplyblueprint
-    attrs:
-      identifiers:
-        slug: cetana-invalidation-flow
-      required: true
+  # - model: authentik_blueprints.metaapplyblueprint
+  #   attrs:
+  #     identifiers:
+  #       name: Sign in
+  #     required: true
+  # - model: authentik_blueprints.metaapplyblueprint
+  #   attrs:
+  #     identifiers:
+  #       name: Logout
+  #     required: true
+  # Brand
   - model: authentik_brands.brand
     id: test-brand
     identifiers:
