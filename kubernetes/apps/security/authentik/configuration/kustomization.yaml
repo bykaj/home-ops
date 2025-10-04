@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+configMapGenerator:
+  - name: authentik-configuration-blueprints
+    files:
+      - ./test-brand.yaml
+    options:
+      labels:
+        k8s-sidecar.home.arpa/application: authentik
+      disableNameSuffixHash: true

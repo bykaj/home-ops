@@ -131,6 +131,35 @@ spec:
               app.kubernetes.io/instance: *app
               app.kubernetes.io/component: worker
           whenUnsatisfiable: DoNotSchedule
+      volumes:
+        - name: sidecar-blueprints
+          emptyDir: {}
+      volumeMounts:
+        - &blueprintsMount
+          name: sidecar-blueprints
+          mountPath: &sidecarBlueprintsFolder /blueprints/sidecar
+      extraContainers:
+        - name: k8s-sidecar
+          image: ghcr.io/home-operations/k8s-sidecar:1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
+          env:
+            - name: LABEL
+              value: k8s-sidecar.home.arpa/application
+            - name: LABEL_VALUE
+              value: authentik
+            - name: FOLDER
+              value: *sidecarBlueprintsFolder
+            - name: NAMESPACE
+              value: ALL
+            - name: RESOURCE
+              value: both
+            - name: METHOD
+              value: WATCH
+            - name: UNIQUE_FILENAMES
+              value: "true"
+            - name: DEFAULT_FILE_MODE
+              value: "660"
+          volumeMounts:
+            - *blueprintsMount
     prometheus:
       rules:
         enabled: true
