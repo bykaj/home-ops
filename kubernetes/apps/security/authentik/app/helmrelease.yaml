@@ -140,7 +140,7 @@ spec:
       volumeMounts:
         - &blueprintsMount
           name: sidecar-blueprints
-          mountPath: &sidecarBlueprintsFolder /blueprints/sidecar
+          mountPath: &blueprintsFolder /blueprints/sidecar
       extraContainers:
         - name: k8s-sidecar
           image: ghcr.io/home-operations/k8s-sidecar:1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
@@ -150,7 +150,7 @@ spec:
             - name: LABEL_VALUE
               value: authentik
             - name: FOLDER
-              value: *sidecarBlueprintsFolder
+              value: *blueprintsFolder
             - name: NAMESPACE
               value: ALL
             - name: RESOURCE
