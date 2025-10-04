@@ -6,15 +6,16 @@ metadata:
   labels:
     blueprints.goauthentik.io/description: Test brand
 entries:
+  # Dependencies
   - model: authentik_blueprints.metaapplyblueprint
     attrs:
       identifiers:
-        name: Password authentication flow
+        name: Sign in
       required: true
   - model: authentik_blueprints.metaapplyblueprint
     attrs:
       identifiers:
-        name: Invalidation flow
+        name: Logout
       required: true
   - model: authentik_brands.brand
     id: test-brand
