@@ -11,9 +11,6 @@ spec:
   interval: 1h
   values:
     global:
-      priorityClassName: system-cluster-critical
-      podAnnotations:
-        reloader.stakater.com/auto: "true"
       env:
         - name: AUTHENTIK_REDIS__DB
           value: "1"
@@ -26,6 +23,9 @@ spec:
       envFrom:
         - secretRef:
             name: &secret authentik-secret
+      podAnnotations:
+        reloader.stakater.com/auto: "true"
+      priorityClassName: system-cluster-critical
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
@@ -148,7 +148,7 @@ spec:
             - name: LABEL
               value: k8s-sidecar.home.arpa/application
             - name: LABEL_VALUE
-              value: authentik
+              value: *app
             - name: FOLDER
               value: *blueprintsFolder
             - name: NAMESPACE
