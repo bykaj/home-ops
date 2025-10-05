@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: Cetana ID - Authentication flow
+  labels:
+    blueprints.goauthentik.io/description: Handle authentication flow
+entries:
+  # Dependencies
+  - model: authentik_blueprints.metaapplyblueprint
+    attrs:
+      identifiers:
+        name: Cetana ID - Password change flow
+      required: false
+  # Model
+  - attrs:
+      designation: authentication
+      name: Sign in
+      title: Sign in
+      authentication: none
+    identifiers:
+      slug: cetana-authentication-flow
+    model: authentik_flows.flow
+    id: flow
+  - attrs:
+      backends:
+      - authentik.core.auth.InbuiltBackend
+      - authentik.sources.kerberos.auth.KerberosBackend
+      - authentik.sources.ldap.auth.LDAPBackend
+      - authentik.core.auth.TokenBackend
+      configure_flow: !Find [authentik_flows.flow, [slug, cetana-password-change]]
+    identifiers:
+      name: cetana-authentication-password
+    id: cetana-authentication-password
+    model: authentik_stages_password.passwordstage
+  - identifiers:
+      name: cetana-authentication-mfa-validation
+    id: cetana-authentication-mfa-validation
+    model: authentik_stages_authenticator_validate.authenticatorvalidatestage
+  - attrs:
+      user_fields:
+      - email
+      - username
+    identifiers:
+      name: cetana-authentication-identification
+    id: cetana-authentication-identification
+    model: authentik_stages_identification.identificationstage
+  - identifiers:
+      name: cetana-authentication-login
+    id: cetana-authentication-login
+    model: authentik_stages_user_login.userloginstage
+  - identifiers:
+      order: 10
+      stage: !KeyOf cetana-authentication-identification
+      target: !KeyOf flow
+    model: authentik_flows.flowstagebinding
+  - identifiers:
+      order: 20
+      stage: !KeyOf cetana-authentication-password
+      target: !KeyOf flow
+    attrs:
+      re_evaluate_policies: true
+    id: cetana-authentication-flow-password-binding
+    model: authentik_flows.flowstagebinding
+  - identifiers:
+      order: 30
+      stage: !KeyOf cetana-authentication-mfa-validation
+      target: !KeyOf flow
+    model: authentik_flows.flowstagebinding
+  - identifiers:
+      order: 100
+      stage: !KeyOf cetana-authentication-login
+      target: !KeyOf flow
+    model: authentik_flows.flowstagebinding
+  - model: authentik_policies_expression.expressionpolicy
+    id: cetana-authentication-flow-password-optional
+    identifiers:
+      name: cetana-authentication-flow-password-stage
+    attrs:
+      expression: |
+        flow_plan = request.context.get("flow_plan")
+        if not flow_plan:
+            return True
+        # If the user does not have a backend attached to it, they haven't
+        # been authenticated yet and we need the password stage
+        return not hasattr(flow_plan.context.get("pending_user"), "backend")
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 10
+      target: !KeyOf cetana-authentication-flow-password-binding
+      policy: !KeyOf cetana-authentication-flow-password-optional
+    attrs:
+      failure_result: true
