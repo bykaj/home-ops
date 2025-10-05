@@ -18,6 +18,11 @@ env:
   TALOSCONFIG: '{{.ROOT_DIR}}/talos/talosconfig'
 
 includes:
+  bootstrap: .taskfiles/bootstrap
+  flux: .taskfiles/flux
+  kubernetes: .taskfiles/kubernetes
+  talos: .taskfiles/talos
+  volsync: .taskfiles/volsync
   workstation: .taskfiles/workstation
 
 tasks:
