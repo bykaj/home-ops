@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app external-secrets
-  namespace: &namespace external-secrets
 spec:
   commonMetadata:
     labels:
@@ -16,7 +15,6 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
   wait: true
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -24,14 +22,13 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app onepassword-store
-  namespace: &namespace external-secrets
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: onepassword-connect
-      namespace: *namespace
+      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/external-secrets/external-secrets/stores/onepassword
   prune: true
@@ -39,7 +36,6 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
   wait: true
 # ---
 # # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -47,7 +43,6 @@ spec:
 # kind: Kustomization
 # metadata:
 #   name: &app cluster-secrets
-#   namespace: &namespace external-secrets
 #   labels:
 #     substitution.flux.home.arpa/disabled: "true"
 # spec:
@@ -56,7 +51,7 @@ spec:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
 #     - name: onepassword-store
-#       namespace: *namespace
+#       namespace: external-secrets
 #   interval: 1h
 #   path: ./kubernetes/apps/external-secrets/external-secrets/cluster-secrets
 #   prune: true
@@ -64,5 +59,4 @@ spec:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   targetNamespace: *namespace
 #   wait: true

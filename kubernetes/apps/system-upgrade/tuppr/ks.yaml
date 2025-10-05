@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app tuppr
-  namespace: &namespace system-upgrade
 spec:
   commonMetadata:
     labels:
@@ -13,7 +12,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: *app
-      namespace: *namespace
+      namespace: system-upgrade
   interval: 1h
   path: ./kubernetes/apps/system-upgrade/tuppr/app
   prune: true
@@ -21,14 +20,12 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app tuppr-upgrades
-  namespace: &namespace system-upgrade
 spec:
   commonMetadata:
     labels:
@@ -45,4 +42,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace

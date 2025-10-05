@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph
-  namespace: &namespace rook-ceph
 spec:
   commonMetadata:
     labels:
@@ -16,7 +15,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: rook-ceph-operator
-      namespace: *namespace
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
   prune: true
@@ -24,32 +23,30 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph-cluster
-  namespace: &namespace rook-ceph
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph
-      namespace: *namespace
+      namespace: rook-ceph
     - name: volsync
       namespace: system
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: rook-ceph-cluster
-      namespace: *namespace
+      namespace: rook-ceph
     - apiVersion: ceph.rook.io/v1
       kind: CephCluster
       name: rook-ceph
-      namespace: *namespace
+      namespace: rook-ceph
   healthCheckExprs:
     - apiVersion: ceph.rook.io/v1
       kind: CephCluster
@@ -62,4 +59,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace

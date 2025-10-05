@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app wastebin
-  namespace: &namespace default
 spec:
   commonMetadata:
     labels:
@@ -23,12 +22,11 @@ spec:
     substitute:
       APP: *app
       GATUS_NAME: Wastebin
-      GATUS_DOMAIN: drup.lol          # Manually add to DNS servers
+      GATUS_DOMAIN: drup.lol # Manually add to DNS servers
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
   wait: false

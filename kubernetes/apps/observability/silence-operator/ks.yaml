@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app silence-operator
-  namespace: &namespace observability
 spec:
   commonMetadata:
     labels:
@@ -13,7 +12,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: *app
-      namespace: *namespace
+      namespace: observability
   interval: 1h
   path: ./kubernetes/apps/observability/silence-operator/app
   prune: true
@@ -21,21 +20,19 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app silence-operator-silences
-  namespace: &namespace observability
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: silence-operator
-      namespace: *namespace
+      namespace: observability
   interval: 1h
   path: ./kubernetes/apps/observability/silence-operator/silences
   prune: true
@@ -43,5 +40,4 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
   wait: false

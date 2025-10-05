@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: observability
 components:
   - ../../components/namespace
+replacements:
+  - path: ../../components/replacements/ks.yaml
 resources:
   - ./alloy/ks.yaml
   - ./blackbox-exporter/ks.yaml

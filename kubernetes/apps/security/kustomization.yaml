@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: security
 components:
   - ../../components/namespace
+replacements:
+  - path: ../../components/replacements/ks.yaml
 resources:
   - ./authentik/ks.yaml
   - ./oidc-provider-debugger/ks.yaml

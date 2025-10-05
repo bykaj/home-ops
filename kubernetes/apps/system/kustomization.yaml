@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: system
 components:
   - ../../components/namespace
+replacements:
+  - path: ../../components/replacements/ks.yaml
 resources:
   - ./csi-driver-nfs/ks.yaml
   - ./csi-driver-smb/ks.yaml

@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: rook-ceph
 components:
   - ../../components/namespace
+replacements:
+  - path: ../../components/replacements/ks.yaml
 resources:
   - ./rook-ceph/ks.yaml
   - ./rook-ceph-tools/ks.yaml
