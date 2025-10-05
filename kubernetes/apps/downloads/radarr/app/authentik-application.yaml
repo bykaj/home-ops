@@ -22,7 +22,7 @@ stringData:
           identifiers:
             name: Cetana ID - Implicit provider authentication
           required: true
-      # TODO: add blueprints for cetana-authentication-flow and cetana-invalidation-flow
+      # TODO: add blueprints dependencies (when available) for cetana-authentication-flow and cetana-invalidation-flow
       # Application
       - model: authentik_providers_proxy.proxyprovider
         id: radarr-provider
