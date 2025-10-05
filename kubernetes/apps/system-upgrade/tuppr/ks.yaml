@@ -36,6 +36,8 @@ spec:
   dependsOn:
     - name: tuppr
       namespace: system-upgrade
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/system-upgrade/tuppr/upgrades
   prune: true
