@@ -80,7 +80,7 @@ toolbox:
   set -euo pipefail
   pod=$(kubectl get pods -n rook-ceph -l app.kubernetes.io/name=rook-ceph-tools -o jsonpath='{.items[0].metadata.name}')
   if [ -n "$pod" ]; then
-    just log info "Connecting to pod $pod"
+    just log info "Connecting to pod '$pod'"
     kubectl -n rook-ceph exec -it "$pod" -- bash
   else
     just log error "No rook-ceph-tools pod found"
