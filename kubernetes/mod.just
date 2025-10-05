@@ -74,6 +74,18 @@ snapshot:
     kubectl -n "$ns" patch replicationsources "$name" --type merge -p '{"spec":{"trigger":{"manual":"$(date +%s)"}}}'; \
   done
 
+[doc('Connect to the Rook Ceph Toolbox pod')]
+toolbox:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  pod=$(kubectl get pods -n rook-ceph -l app.kubernetes.io/name=rook-ceph-tools -o jsonpath='{.items[0].metadata.name}')
+  if [ -n "$pod" ]; then
+    kubectl -n rook-ceph exec -it "$pod" -- bash
+  else
+    echo "No rook-ceph-tools pod found"
+    exit 1
+  fi
+
 [private]
 render-local-ks dir ks="*":
   flux-local build ks --all-namespaces --path "{{ kubernetes_dir }}/apps/{{ dir }}" {{ if ks != "*" { ks } else { "" } }}
