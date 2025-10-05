@@ -76,7 +76,7 @@ snapshot:
 
 [doc('Connect to the Rook Ceph Toolbox pod')]
 toolbox:
-  #!/bin/bash
+  #!/usr/bin/env bash
   set -euo pipefail
   pod=$(kubectl get pods -n rook-ceph -l app.kubernetes.io/name=rook-ceph-tools -o jsonpath='{.items[0].metadata.name}')
   if [ -n "$pod" ]; then
