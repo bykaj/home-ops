@@ -44,13 +44,17 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 10m
                 memory: 1Gi
               limits:
-                gpu.intel.com/i915: 1
                 memory: 2Gi
     defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: "${APP}-gpu"
       securityContext:
         runAsNonRoot: true
         runAsUser: 4000

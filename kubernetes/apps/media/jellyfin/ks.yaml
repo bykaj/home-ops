@@ -9,10 +9,13 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gpu
     - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
+    - name: intel-gpu-resource-driver
+      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: tailscale-operator
