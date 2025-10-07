@@ -33,12 +33,7 @@ spec:
     - ../../../../components/gatus/external
     - ../../../../components/keda/postgres-scaler
   dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
     - name: authentik-configuration
-      namespace: security
-    - name: keda
-      namespace: system
     - name: cloudnative-pg-cluster
       namespace: database
     - name: dragonfly-cluster

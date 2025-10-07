@@ -12,10 +12,6 @@ spec:
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
-    - name: intel-device-plugins-gpu
-      namespace: system
-    - name: keda
-      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h

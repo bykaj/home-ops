@@ -8,9 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/certificates/import
   prune: true
@@ -31,7 +28,6 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: certificates-import
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/certificates/export
   prune: true

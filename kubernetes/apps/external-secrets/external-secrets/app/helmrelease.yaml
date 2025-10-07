@@ -8,9 +8,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: external-secrets
-  dependsOn:
-    - name: onepassword-connect
-      namespace: external-secrets
   interval: 1h
   values:
     image:

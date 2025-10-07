@@ -14,11 +14,7 @@ spec:
     - ../../../../components/volsync
   dependsOn:
     - name: sonarr
-      namespace: downloads
     - name: radarr
-      namespace: downloads
-    - name: keda
-      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h

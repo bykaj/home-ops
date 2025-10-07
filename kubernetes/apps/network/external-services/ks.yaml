@@ -8,9 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-icarus
   prune: true
@@ -29,9 +26,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-leonis
   prune: true
@@ -50,9 +44,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-zeus
   prune: true
@@ -71,9 +62,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/external-services/proxmox-backup-server
   prune: true
@@ -92,9 +80,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/external-services/proxmox-ve
   prune: true

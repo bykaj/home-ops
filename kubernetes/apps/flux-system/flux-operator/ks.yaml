@@ -8,14 +8,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: flux-system
   interval: 1h
   path: ./kubernetes/apps/flux-system/flux-operator/app
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system

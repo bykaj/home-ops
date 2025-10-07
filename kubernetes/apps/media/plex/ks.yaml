@@ -13,12 +13,6 @@ spec:
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
-    - name: intel-device-plugins-gpu
-      namespace: system
-    - name: keda
-      namespace: system
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: tailscale-operator
@@ -48,9 +42,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/media/plex/tools
   prune: true

@@ -13,11 +13,8 @@ spec:
     - ../../../../components/volsync
   dependsOn:
     - name: sonarr
-      namespace: downloads
     - name: radarr
-      namespace: downloads
     - name: whisparr
-      namespace: downloads
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h

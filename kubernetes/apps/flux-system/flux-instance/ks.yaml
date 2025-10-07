@@ -9,13 +9,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
     - name: flux-operator
-      namespace: flux-system
   interval: 1h
   path: ./kubernetes/apps/flux-system/flux-instance/app
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system

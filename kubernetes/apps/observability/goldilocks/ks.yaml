@@ -8,11 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: observability
   interval: 1h
   path: ./kubernetes/apps/observability/goldilocks/vpa
   postBuild:
@@ -38,12 +33,6 @@ spec:
     - ../../../../components/gatus/internal
   dependsOn:
     - name: goldilocks-vpa
-      namespace: observability
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: observability
   interval: 1h
   path: ./kubernetes/apps/observability/goldilocks/app
   postBuild:

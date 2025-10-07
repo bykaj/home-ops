@@ -10,9 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-store
-      namespace: external-secrets
   interval: 1h
   path: ./kubernetes/apps/network/tailscale-operator/app
   postBuild:
@@ -41,7 +38,6 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: tailscale-operator
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/tailscale-operator/connectors
   postBuild:

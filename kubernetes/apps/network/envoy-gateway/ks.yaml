@@ -10,6 +10,10 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: certificates-import
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
       namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/envoy-gateway/app
@@ -33,7 +37,6 @@ spec:
     - name: cert-manager
       namespace: cert-manager
     - name: envoy-gateway
-      namespace: network
   interval: 30m
   path: ./kubernetes/apps/network/envoy-gateway/config
   prune: true
