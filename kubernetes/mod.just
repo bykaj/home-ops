@@ -5,7 +5,7 @@ kubernetes_dir := justfile_dir() + '/kubernetes'
 
 [private]
 default:
-  just -l kubernetes
+  just -l k8s
 
 [doc('Browse a PVC')]
 browse-pvc namespace claim:
