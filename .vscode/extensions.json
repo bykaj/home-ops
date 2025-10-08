@@ -1,10 +1,10 @@
 {
   "recommendations": [
-    "ms-kubernetes-tools.vscode-kubernetes-tools",
     "ms-vscode-remote.remote-containers",
     "tamasfe.even-better-toml",
     "blueglassblock.better-json5",
     "irongeek.vscode-env",
+    "PKief.material-icon-theme",
     "redhat.vscode-yaml",
     "signageos.signageos-vscode-sops",
     "samuelcolvin.jinjahtml",
