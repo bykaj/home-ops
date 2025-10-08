@@ -30,7 +30,7 @@ gen-schematic-id:
 
 [doc('Render Talos config for a node')]
 render-config node:
-  export IS_CONTROLPLANE="$(just talos machine-controller {{ node }})"; \
+  export IS_CONTROLLER="$(just talos machine-controller {{ node }})"; \
   talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
     -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
 
