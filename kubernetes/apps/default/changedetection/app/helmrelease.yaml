@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dgtlmoon/changedetection.io
-              tag: 0.50.16@sha256:d924bacc4640cfe2dbffcdbb221caa740d00dd6e24fa6877ea6b797d8cd29f99
+              tag: 0.50.18@sha256:bef888d9b8012410ba97778dea85e3c4bd708c0c2810825b7084c5879800c131
             env:
               BASE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               DISABLE_VERSION_CHECK: "true"
@@ -48,7 +48,7 @@ spec:
           browserless:
             image:
               repository: ghcr.io/browserless/chromium
-              tag: v2.37.0@sha256:615699913df92b5f0cdaa2873f92d70c87df43c14f6a54aabc53a418ba48fa86
+              tag: v2.37.1@sha256:730733ba9a90f3c8b4627405807a96949ef384a873fe67fe9b13515863e77309
               pullPolicy: IfNotPresent
             env:
               CONCURRENT: "10"
