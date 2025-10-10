@@ -40,9 +40,9 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 4Gi
             securityContext:
               readOnlyRootFilesystem: false
               runAsGroup: 0
