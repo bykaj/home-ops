@@ -3,13 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app plex
+  name: plex
 spec:
   chartRef:
     kind: OCIRepository
     name: plex
   interval: 1h
-  timeout: 15m
   values:
     controllers:
       plex:
@@ -90,13 +89,9 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: /config
-      config-cache:
-        existingClaim: plex-cache
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
       backups:
         type: nfs
         server: "${NAS_HOST}"
@@ -139,7 +134,8 @@ spec:
             namespace: network
             sectionName: https
         rules:
-          - backendRefs:
+          - # Ref: https://forums.plex.tv/t/external-srt-subtitles-are-not-working-w-reverse-proxy/886540
+            backendRefs:
               - identifier: app
                 port: *port
             filters:
