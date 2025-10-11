@@ -21,7 +21,7 @@ spec:
             limits:
               memory: 1Gi
       envoyService:
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
   shutdown:
     drainTimeout: 180s
   telemetry:
@@ -53,7 +53,7 @@ spec:
     - type: Brotli
     - type: Gzip
   connection:
-    bufferLimit: 64Mi
+    bufferLimit: 8Mi
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
@@ -72,9 +72,11 @@ spec:
     xForwardedFor:
       numTrustedHops: 1
   connection:
-    bufferLimit: 64Mi
+    bufferLimit: 4Mi
     maxAcceptPerSocketEvent: 0
   http2:
+    initialStreamWindowSize: 512Ki
+    initialConnectionWindowSize: 8Mi
     onInvalidMessage: TerminateStream
   http3: {}
   targetSelectors:
