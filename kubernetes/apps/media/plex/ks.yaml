@@ -45,6 +45,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: plex
   interval: 1h
   path: ./kubernetes/apps/media/plex/tools
   prune: true

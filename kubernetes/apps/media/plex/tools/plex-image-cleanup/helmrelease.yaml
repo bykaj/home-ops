@@ -8,9 +8,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: plex-image-cleanup
-  dependsOn:
-    - name: plex
-      namespace: media
   interval: 1h
   values:
     controllers:
@@ -83,14 +80,8 @@ spec:
               - path: /tmp
                 subPath: tmp
       plex-config:
-        existingClaim: plex
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
           plex-image-cleanup:
             app:
               - path: /mnt/plex-config
-      plex-cache:
-        existingClaim: plex-cache
-        advancedMounts:
-          plex-image-cleanup:
-            app:
-              - path: "/mnt/plex-config/Library/Application Support/Plex Media Server/Cache"
