@@ -80,7 +80,7 @@ spec:
               - path: /tmp
                 subPath: tmp
       plex-config:
-        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+        existingClaim: plex
         advancedMounts:
           plex-image-cleanup:
             app:
