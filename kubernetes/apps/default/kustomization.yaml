@@ -20,6 +20,7 @@ resources:
   - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
+  - ./spoolman/ks.yaml
   - ./thelounge/ks.yaml
   - ./wallos/ks.yaml
   - ./wastebin/ks.yaml

@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: spoolman
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: spoolman
+  interval: 1h
+  values:
+    controllers:
+      spoolman:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 4000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 4000
+            runAsNonRoot: true
+            runAsUser: 4000
+        containers:
+          app:
+            image:
+              repository: ghcr.io/donkie/spoolman
+              tag: 0.22.1@sha256:238ea5bfb2eeda4436c39f54e73df5fef4ee904fb7c291617588b856786fe0ef
+            command:
+              - uvicorn
+              - spoolman.main:app
+              - --host
+              - 0.0.0.0
+            env:
+              SPOOLMAN_PORT: &port 8000
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      config:
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+        advancedMounts:
+          spoolman:
+            app:
+              - path: /home/app/.local/share/spoolman
+    route:
+      app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Tools"
+          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/icon: "sh-spoolman.svg"
+        hostnames:
+          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+    service:
+      app:
+        ports:
+          http:
+            port: *port
