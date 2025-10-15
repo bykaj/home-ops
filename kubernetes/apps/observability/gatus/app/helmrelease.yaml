@@ -25,7 +25,7 @@ spec:
               - --enable-service
             resources:
               requests:
-                cpu: 10m
+                cpu: 5m
               limits:
                 memory: 64Mi
             restartPolicy: Always
@@ -61,16 +61,18 @@ spec:
               capabilities: {add: ["NET_RAW"], drop: ["ALL"]}
             resources:
               requests:
-                cpu: 5m
+                cpu: 10m
               limits:
                 memory: 256Mi
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              storageClass: ceph-block
+              accessMode: ReadWriteOnce
+              size: 1Gi
     defaultPodOptions:
       hostUsers: false
     persistence:
-      config:
-        existingClaim: *app
-        globalMounts:
-          - path: /config
       config-file:
         type: configMap
         name: gatus-config

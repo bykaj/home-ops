@@ -18,7 +18,7 @@ debug: false
 metrics: true
 storage:
   caching: true
-  path: /config/sqlite.db
+  path: ${GATUS_CONFIG_PATH}/gatus.db
   type: sqlite
 ui:
   buttons:
