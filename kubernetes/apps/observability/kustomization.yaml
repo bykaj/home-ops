@@ -9,7 +9,7 @@ replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
   - ./blackbox-exporter/ks.yaml
-  - ./gatus/ks.yaml
+  #- ./gatus/ks.yaml
   - ./goldilocks/ks.yaml
   - ./grafana/ks.yaml
   - ./kromgo/ks.yaml
