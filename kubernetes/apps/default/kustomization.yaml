@@ -10,7 +10,6 @@ replacements:
 resources:
   - ./atuin/ks.yaml
   - ./changedetection/ks.yaml
-  - ./dsmr-reader/ks.yaml
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
