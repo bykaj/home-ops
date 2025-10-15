@@ -67,6 +67,17 @@ spec:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
         lbipam.cilium.io/ips: "${LB_IP_EMQX}"
+        gatus.home-operations.com/endpoint: |-
+          group: infrastructure
+          url: tcp://${MQTT_HOST}:1883
+          interval: 1m
+          ui:
+            hide-url: true
+            hide-hostname: true
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: pushover
     spec:
       type: LoadBalancer
       externalTrafficPolicy: Local

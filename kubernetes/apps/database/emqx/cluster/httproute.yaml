@@ -5,7 +5,8 @@ kind: HTTPRoute
 metadata:
   name: &app emqx-dashboard
 spec:
-  hostnames: ["emqx.${DOMAIN_APP}"]
+  hostnames:
+    - "emqx.${DOMAIN_APP}"
   parentRefs:
     - name: envoy-internal
       namespace: network
