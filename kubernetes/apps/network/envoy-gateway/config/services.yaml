@@ -6,6 +6,7 @@ metadata:
   name: envoy-services
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname services.home.${DOMAIN_NET}
+    gatus.home-operations.com/enabled: "false"
 spec:
   gatewayClassName: envoy
   infrastructure:
