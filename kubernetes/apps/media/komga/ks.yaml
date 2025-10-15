@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -22,7 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Komga
+      APP_NAME: Komga
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

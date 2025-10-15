@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -21,7 +20,7 @@ spec:
       APP: *app
       APP_UID: "4000"
       APP_GID: "4000"
-      GATUS_NAME: ChangeDetection.io
+      APP_NAME: ChangeDetection.io
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

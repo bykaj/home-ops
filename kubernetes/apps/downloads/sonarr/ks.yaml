@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -24,7 +23,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Sonarr
+      APP_NAME: Sonarr
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:

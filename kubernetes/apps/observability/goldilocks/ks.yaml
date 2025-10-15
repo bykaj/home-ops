@@ -29,8 +29,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/internal
   dependsOn:
     - name: goldilocks-vpa
   interval: 1h
@@ -38,7 +36,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Goldilocks
+      APP_NAME: Goldilocks
   prune: true
   sourceRef:
     kind: GitRepository

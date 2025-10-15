@@ -8,8 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/internal
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -18,8 +16,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Prometheus
-      GATUS_SUBDOMAIN: prometheus
+      APP_NAME: Prometheus
+      APP_SUBDOMAIN: prometheus
   prune: true
   sourceRef:
     kind: GitRepository

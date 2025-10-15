@@ -32,7 +32,7 @@ stringData:
           name: Radarr
           mode: forward_single
           external_host:
-            - https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
+            - https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
           intercept_header_auth: true
           authentication_flow:
             !Find [authentik_flows.flow, [slug, cetana-authentication-flow]]
@@ -72,7 +72,7 @@ stringData:
           group: Downloads
           provider: !KeyOf radarr-provider
           policy_engine_mode: any
-          meta_launch_url: https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
+          meta_launch_url: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
           icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/radarr.png
       # Groups
       - model: authentik_core.group

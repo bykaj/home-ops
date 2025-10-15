@@ -13,7 +13,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: oidc
+      APP_SUBDOMAIN: oidc
   prune: true
   sourceRef:
     kind: GitRepository

@@ -55,7 +55,7 @@ spec:
         enabled: true
         ingressClassName: tailscale
         hosts:
-          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
             paths:
               - path: /
                 type: Prefix

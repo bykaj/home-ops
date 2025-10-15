@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -21,7 +20,7 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      GATUS_NAME: Nutify
+      APP_NAME: Nutify
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

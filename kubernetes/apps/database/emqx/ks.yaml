@@ -35,7 +35,7 @@ spec:
   postBuild:
     substitute:
       APP: emqx
-      GATUS_NAME: "EMQX Dashboard"
+      APP_NAME: "EMQX Dashboard"
   prune: true
   sourceRef:
     kind: GitRepository

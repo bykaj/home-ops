@@ -269,7 +269,7 @@ spec:
       GF_NEWS_NEWS_FEED_ENABLED: false
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_SERVER_ROOT_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+      GF_SERVER_ROOT_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
     imageRenderer:
       enabled: true
 
@@ -298,7 +298,7 @@ spec:
       main:
         enabled: true
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

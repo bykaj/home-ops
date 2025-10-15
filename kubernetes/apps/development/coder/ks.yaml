@@ -8,8 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/internal
   dependsOn:
     - name: authentik
       namespace: security
@@ -23,7 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Coder
+      APP_NAME: Coder
   prune: true
   sourceRef:
     kind: GitRepository

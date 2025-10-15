@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -25,8 +24,8 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      GATUS_NAME: "Calibre-Web Automated"
-      GATUS_SUBDOMAIN: ebooks
+      APP_NAME: "Calibre-Web Automated"
+      APP_SUBDOMAIN: ebooks
       VOLSYNC_CAPACITY: 1Gi
   sourceRef:
     kind: GitRepository

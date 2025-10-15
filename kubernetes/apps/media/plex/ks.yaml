@@ -10,7 +10,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gpu
-    - ../../../../components/gatus/external
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -25,8 +24,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Plex
-      GATUS_PATH: /web/index.html
+      APP_NAME: Plex
       VOLSYNC_CAPACITY: 100Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

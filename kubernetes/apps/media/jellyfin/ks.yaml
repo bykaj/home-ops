@@ -10,7 +10,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gpu
-    - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -25,7 +24,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Jellyfin
+      APP_NAME: Jellyfin
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

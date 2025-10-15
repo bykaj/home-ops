@@ -1,39 +1,39 @@
 ---
-web:
-  port: ${WEB_PORT}
-storage:
-  type: sqlite
-  path: /config/sqlite.db
-  caching: true
-metrics: true
-debug: false
-ui:
-  header: ByKaj Apps
-  title: Health Dashboard
-  logo: https://bykaj.com/img/logo-header.png
-  description: |-
-    If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
-  link: https://bykaj.com
-  buttons:
-    - name: Blog
-      link: https://bykaj.com
-    - name: Profile
-      link: https://github.com/bykaj
-    - name: Repository
-      link: https://github.com/bykaj/home-ops
-  default-sort-by: group
-connectivity:
-  checker:
-    target: 1.1.1.1:53
-    interval: 1m
 alerting:
   pushover:
     application-token: ${PUSHOVER_API_TOKEN}
-    user-key: ${PUSHOVER_USER_KEY}
+    default-alert:
+      description: health check failed
+      failure-threshold: 5
+      send-on-resolved: true
+      success-threshold: 2
     priority: 1
     resolved-priority: 0
-    default-alert:
-      description: "health check failed"
-      send-on-resolved: true
-      failure-threshold: 5
-      success-threshold: 2
+    user-key: ${PUSHOVER_USER_KEY}
+connectivity:
+  checker:
+    interval: 1m
+    target: 1.1.1.1:53
+debug: false
+metrics: true
+storage:
+  caching: true
+  path: /config/sqlite.db
+  type: sqlite
+ui:
+  buttons:
+    - link: https://bykaj.com
+      name: Blog
+    - link: https://github.com/bykaj
+      name: Profile
+    - link: https://github.com/bykaj/home-ops
+      name: Repository
+  default-sort-by: group
+  description: |-
+    If something's broken, trust me, I already know – my phone is screaming, my monitoring dashboard looks like a Christmas tree, and I'm either frantically fixing it while questioning my life choices, or I'm the one who broke it because 'it'll just take 5 minutes to deploy this tiny change on a Friday afternoon'.
+  header: ByKaj Apps
+  link: https://bykaj.com
+  logo: https://bykaj.com/img/logo-header.png
+  title: Status | ByKaj Apps
+web:
+  port: ${GATUS_WEB_PORT}

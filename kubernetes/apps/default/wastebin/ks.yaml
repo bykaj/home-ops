@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -19,8 +18,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Wastebin
-      GATUS_DOMAIN: drup.lol # Manually add to DNS servers
+      APP_NAME: Wastebin
+      APP_DOMAIN: drup.lol # Manually add to DNS servers
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:

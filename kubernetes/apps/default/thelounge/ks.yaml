@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -19,7 +18,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: "The Lounge"
+      APP_NAME: "The Lounge"
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

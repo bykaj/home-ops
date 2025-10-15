@@ -6,6 +6,12 @@ metadata:
   name: envoy-external
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname external.${DOMAIN_NET}
+    gatus.home-operations.com/endpoint: |-
+      alerts:
+        - type: pushover
+      client:
+        dns-resolver: tcp://1.1.1.1:53
+      group: external
 spec:
   gatewayClassName: envoy
   infrastructure:

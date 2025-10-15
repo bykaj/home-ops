@@ -5,7 +5,8 @@ kind: HTTPRoute
 metadata:
   name: goldilocks
 spec:
-  hostnames: ["${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"]
+  hostnames:
+    - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
   parentRefs:
     - name: envoy-internal
       namespace: network

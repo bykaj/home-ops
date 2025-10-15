@@ -22,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_NAME: Stash
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

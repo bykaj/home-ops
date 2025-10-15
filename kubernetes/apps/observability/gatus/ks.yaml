@@ -18,7 +18,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: status
+      APP_SUBDOMAIN: status
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

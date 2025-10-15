@@ -65,7 +65,7 @@ spec:
     route:
       app:
         hostnames:
-          - "sh.${DOMAIN_APP}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

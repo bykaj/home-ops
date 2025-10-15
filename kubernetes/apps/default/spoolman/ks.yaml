@@ -18,7 +18,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Spoolman
+      APP_NAME: Spoolman
       VOLSYNC_CAPACITY: 2Gi
   prune: true
   sourceRef:

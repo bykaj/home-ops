@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -21,7 +20,7 @@ spec:
       APP: *app
       APP_GID: "5050"
       APP_UID: "5050"
-      GATUS_NAME: pgAdmin
+      APP_NAME: pgAdmin
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:

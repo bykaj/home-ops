@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/internal
     - ../../../../components/keda/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
@@ -23,8 +22,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Audiobookshelf
-      GATUS_SUBDOMAIN: audiobooks
+      APP_NAME: AudioBookshelf
+      APP_SUBDOMAIN: audiobooks
       VOLSYNC_CAPACITY: 1Gi
   sourceRef:
     kind: GitRepository

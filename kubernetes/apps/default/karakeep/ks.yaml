@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
     - ../../../../components/volsync
   dependsOn:
     - name: meilisearch
@@ -23,8 +22,8 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      GATUS_NAME: Karakeep
-      GATUS_SUBDOMAIN: links
+      APP_NAME: Karakeep
+      APP_SUBDOMAIN: links
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

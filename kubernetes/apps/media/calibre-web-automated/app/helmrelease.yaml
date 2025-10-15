@@ -69,7 +69,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
             paths:
               - path: /
                 service:
@@ -116,7 +116,8 @@ spec:
             subPath: tmp
     route:
       *name :
-        hostnames: ["${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"]
+        hostnames:
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

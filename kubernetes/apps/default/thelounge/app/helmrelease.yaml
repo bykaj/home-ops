@@ -48,7 +48,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

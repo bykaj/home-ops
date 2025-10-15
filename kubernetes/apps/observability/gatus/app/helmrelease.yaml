@@ -15,24 +15,20 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          init-config:
+          gatus-sidecar:
             image:
-              repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 1.30.11@sha256:d8a53f834b0fe70030df75f3f956d1c5e56fbb067b09803708b2bc26e26cfc12
-            env:
-              FOLDER: /config
-              LABEL: gatus.io/enabled
-              NAMESPACE: ALL
-              RESOURCE: both
-              UNIQUE_FILENAMES: true
-              METHOD: WATCH
-            restartPolicy: Always
+              repository: ghcr.io/home-operations/gatus-sidecar
+              tag: 0.0.9@sha256:31a52dd0e579c1f865b2580a4bb715d2a893deb1351fedeaba73598e9a578cbe
+            args:
+              - --auto-httproute
+              - --enable-httproute
+              - --enable-service
             resources:
               requests:
-                cpu: 2m
-                memory: 128Mi
+                cpu: 10m
               limits:
-                memory: 256Mi
+                memory: 64Mi
+            restartPolicy: Always
         containers:
           app:
             image:
@@ -42,7 +38,7 @@ spec:
               TZ: "${TIMEZONE}"
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
-              WEB_PORT: &port 8080
+              GATUS_WEB_PORT: &port 8080
             envFrom:
               - secretRef:
                   name: gatus-secret
@@ -62,20 +58,14 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: {add: ["NET_RAW"], drop: ["ALL"]}
             resources:
               requests:
                 cpu: 5m
-                memory: 160Mi
               limits:
                 memory: 256Mi
     defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
+      hostUsers: false
     persistence:
       config:
         existingClaim: *app
@@ -93,9 +83,23 @@ spec:
         gatus:
           type: ClusterRole
           rules:
-            - apiGroups: [""]
-              resources: ["configmaps", "secrets"]
-              verbs: ["get", "watch", "list"]
+            - apiGroups:
+                - ""
+              resources:
+                - services
+              verbs:
+                - get
+                - watch
+                - list
+            - apiGroups:
+                - gateway.networking.k8s.io
+              resources:
+                - gateways
+                - httproutes
+              verbs:
+                - get
+                - watch
+                - list
       bindings:
         gatus:
           type: ClusterRoleBinding
@@ -105,8 +109,10 @@ spec:
             - identifier: gatus
     route:
       app:
+        annotations:
+          gatus.home-operations.com/enabled: "false"
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-external
             namespace: network

@@ -8,15 +8,13 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/external
   interval: 1h
   path: ./kubernetes/apps/default/it-tools/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: IT-Tools
-      GATUS_SUBDOMAIN: tools
+      APP_NAME: IT-Tools
+      APP_SUBDOMAIN: tools
   prune: true
   sourceRef:
     kind: GitRepository

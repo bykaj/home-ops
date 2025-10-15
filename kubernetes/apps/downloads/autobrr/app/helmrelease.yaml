@@ -38,7 +38,7 @@ spec:
               AUTOBRR__METRICS_PORT: &metricsPort 9094
               AUTOBRR__OIDC_DISABLE_BUILT_IN_LOGIN: "true"
               AUTOBRR__OIDC_ENABLED: "true"
-              AUTOBRR__OIDC_REDIRECT_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/api/auth/oidc/callback"
+              AUTOBRR__OIDC_REDIRECT_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/api/auth/oidc/callback"
               AUTOBRR__PORT: &port 80
             envFrom: *envFrom
             probes:
@@ -85,10 +85,10 @@ spec:
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Downloads"
-          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-autobrr.png"
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

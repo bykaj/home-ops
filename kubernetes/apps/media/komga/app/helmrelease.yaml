@@ -61,7 +61,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
             paths:
               - path: /
                 service:
@@ -102,14 +102,14 @@ spec:
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Media"
-          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-komga.svg"
           gethomepage.dev/widget.type: "komga"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_KOMGA_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["libraries", "series", "books"]'
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

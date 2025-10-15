@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
@@ -19,8 +18,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: OpenCloud
-      GATUS_SUBDOMAIN: files
+      APP_NAME: OpenCloud
+      APP_SUBDOMAIN: files
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true

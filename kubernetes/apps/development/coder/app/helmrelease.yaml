@@ -15,7 +15,7 @@ spec:
     coder:
       env:
         - name: CODER_ACCESS_URL
-          value: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          value: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         - name: CODER_BLOCK_DIRECT
           value: "true"
         - name: CODER_DISABLE_PASSWORD_AUTH
@@ -49,7 +49,7 @@ spec:
         - name: CODER_TELEMETRY_ENABLE
           value: "false"
         - name: CODER_WILDCARD_ACCESS_URL
-          value: "*.${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_DEV}"
+          value: "*.${APP_SUBDOMAIN:=${APP}}.${DOMAIN_DEV}"
         - name: CODER_UPDATE_CHECK
           value: "false"
       envFrom: &envFrom

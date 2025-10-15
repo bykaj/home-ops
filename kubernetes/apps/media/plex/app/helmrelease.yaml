@@ -20,7 +20,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.42.2.10156@sha256:9ad8a3506e1d8ebda873a668603c1a2c10e6887969564561be669efd65ae8871
             env:
-              PLEX_ADVERTISE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,https://${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}:443,http://${LB_IP_PLEX}:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
+              PLEX_ADVERTISE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,https://${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}:443,http://${LB_IP_PLEX}:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
               PLEX_NO_AUTH_NETWORKS: "${LAN_CIDR},${POD_CIDR},${SERVICE_CIDR},${TAILSCALE_CIDR}"
               PLEX_PREFERENCE_1: "AllowMediaDeletion=0"
               PLEX_PREFERENCE_2: "EnableIPv6=0"
@@ -78,7 +78,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${GATUS_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
             paths:
               - path: /
                 service:
@@ -119,16 +119,18 @@ spec:
     route:
       app:
         annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Media"
-          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-plex.svg"
           gethomepage.dev/widget.type: "plex"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_PLEX_TOKEN}}` }}"
           gethomepage.dev/widget.fields: '["streams", "tv", "movies", "albums"]'
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-external
             namespace: network

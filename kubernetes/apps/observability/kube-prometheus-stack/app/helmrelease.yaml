@@ -124,7 +124,7 @@ spec:
     ###
     prometheus:
       prometheusSpec:
-        externalUrl: https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
+        externalUrl: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}
         image:
           registry: docker.io
           repository: prompp/prompp
@@ -159,7 +159,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+            - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           parentRefs:
             - name: envoy-internal
               namespace: network

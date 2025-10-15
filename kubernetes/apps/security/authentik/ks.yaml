@@ -30,7 +30,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/gatus/external
     - ../../../../components/keda/postgres-scaler
   dependsOn:
     - name: authentik-configuration
@@ -44,8 +43,7 @@ spec:
     substitute:
       APP: *app
       KEDA_NAME: authentik-server
-      GATUS_NAME: Authentik
-      GATUS_DOMAIN: auth.cetana.id
+      APP_NAME: Authentik
   prune: true
   sourceRef:
     kind: GitRepository

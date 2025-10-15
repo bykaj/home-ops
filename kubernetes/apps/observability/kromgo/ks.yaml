@@ -8,15 +8,13 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/external
   interval: 1h
   path: ./kubernetes/apps/observability/kromgo/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Kromgo
-      GATUS_DOMAIN: stats.bykaj.io
+      APP_NAME: Kromgo
+      APP_DOMAIN: stats.bykaj.io
       GATUS_PATH: /talos_version
   prune: true
   sourceRef:

@@ -8,14 +8,12 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus/internal
   interval: 1h
   path: ./kubernetes/apps/observability/grafana/app
   postBuild:
     substitute:
       APP: *app
-      GATUS_NAME: Grafana
+      APP_NAME: Grafana
   prune: true
   sourceRef:
     kind: GitRepository

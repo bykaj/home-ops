@@ -20,9 +20,9 @@ spec:
               repository: leplusorg/openid-connect-provider-debugger
               tag: 1.27.1-2@sha256:3f5a18cec6e1590b8833a36a659fe64280ae8019c3af2eb8104df58a2160d216
             env:
-              oidc_redirect_uri: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/login"
+              oidc_redirect_uri: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/login"
               oidc_scope: "openid profile email"
-              oidc_post_logout_uri: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/status"
+              oidc_post_logout_uri: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/status"
             envFrom:
               - secretRef:
                   name: oidc-provider-debugger-secret
@@ -41,7 +41,7 @@ spec:
     route:
       *app :
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

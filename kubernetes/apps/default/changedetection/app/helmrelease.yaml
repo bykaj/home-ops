@@ -20,7 +20,7 @@ spec:
               repository: ghcr.io/dgtlmoon/changedetection.io
               tag: 0.50.24@sha256:20a4501d304a397139176bf4fd9136011fff2d01044df3575a9e8f2ee35eb0bf
             env:
-              BASE_URL: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               DISABLE_VERSION_CHECK: "true"
               FETCH_WORKERS: "10"
               HIDE_REFERER: "true"
@@ -111,14 +111,14 @@ spec:
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Tools"
-          gethomepage.dev/name: "${GATUS_NAME}"
+          gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-changedetection.svg"
           gethomepage.dev/widget.type: "changedetectionio"
-          gethomepage.dev/widget.url: "https://${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_CHANGEDETECTION_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["diffsDetected", "totalObserved"]'
         hostnames:
-          - "${GATUS_DOMAIN:=${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
           - name: envoy-internal
             namespace: network

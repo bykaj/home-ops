@@ -23,8 +23,8 @@ spec:
             env:
               # Don't use 'Spotify' in any domain name.
               # Ref: https://github.com/Yooooomi/your_spotify/pull/254
-              API_ENDPOINT: &apiEndpoint "https://${GATUS_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
-              CLIENT_ENDPOINT: "https://${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
+              API_ENDPOINT: &apiEndpoint "https://${APP_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
+              CLIENT_ENDPOINT: "https://${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
               MONGO_ENDPOINT: "mongodb://your-spotify-mongodb:27017/your_spotify"
               PORT: &serverPort 8080
               TIMEZONE: "${TIMEZONE}"
@@ -109,7 +109,8 @@ spec:
             subPath: tmp
     route:
       server:
-        hostnames: ["${GATUS_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"]
+        hostnames:
+          - "${APP_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -119,7 +120,8 @@ spec:
               - identifier: server
                 port: *serverPort
       web:
-        hostnames: ["${GATUS_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"]
+        hostnames:
+          - "${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
         parentRefs:
           - name: envoy-internal
             namespace: network

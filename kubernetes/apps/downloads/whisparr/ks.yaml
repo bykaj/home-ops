@@ -21,6 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_NAME: Whisparr
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
