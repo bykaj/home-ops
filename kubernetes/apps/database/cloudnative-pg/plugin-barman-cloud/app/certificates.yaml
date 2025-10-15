@@ -14,7 +14,8 @@ spec:
     group: cert-manager.io
   renewBefore: 360h
   secretName: barman-cloud-client-tls
-  usages: ["client auth"]
+  usages:
+    - client auth
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
@@ -23,7 +24,8 @@ metadata:
   name: barman-cloud-server
 spec:
   commonName: barman-cloud
-  dnsNames: ["barman-cloud"]
+  dnsNames:
+    - barman-cloud
   duration: 2160h
   isCA: false
   issuerRef:
@@ -32,4 +34,5 @@ spec:
     group: cert-manager.io
   renewBefore: 360h
   secretName: barman-cloud-server-tls
-  usages: ["server auth"]
+  usages:
+    - server auth
