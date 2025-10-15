@@ -99,8 +99,7 @@ spec:
                 port: *port
       webhook:
         annotations:
-          gatus.home-operations.com/endpoint: |-
-            conditions: ["[STATUS] == 404"]
+          gatus.home-operations.com/enabled: "false"
         hostnames:
           - "${APP_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_IO}"
         parentRefs:
