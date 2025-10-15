@@ -11,9 +11,9 @@ metadata:
         - type: pushover
       client:
         dns-resolver: tcp://1.1.1.1:53
+        # Ref: https://github.com/TwiN/gatus/issues/1182
+        insecure: true
       group: external
-      # Ref: https://github.com/TwiN/gatus/issues/1182
-      insecure: true
 spec:
   gatewayClassName: envoy
   infrastructure:
