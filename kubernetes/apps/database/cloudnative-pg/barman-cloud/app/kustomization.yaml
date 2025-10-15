@@ -5,6 +5,6 @@ kind: Kustomization
 resources:
   - ./ocirepository.yaml
   - ./issuer.yaml
-  - ./certificates.yaml
+  #- ./certificates.yaml
   - ./crds.yaml
   - ./helmrelease.yaml

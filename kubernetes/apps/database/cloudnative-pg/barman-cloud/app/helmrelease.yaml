@@ -3,17 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app plugin-barman-cloud
+  name: &app barman-cloud
 spec:
   chartRef:
     kind: OCIRepository
-    name: plugin-barman-cloud
+    name: barman-cloud
   interval: 1h
   values:
     controllers:
       barman-cloud:
-        serviceAccount:
-          identifier: *app
         containers:
           barman-cloud:
             image:
@@ -44,6 +42,8 @@ spec:
                 drop:
                   - ALL
               readOnlyRootFilesystem: true
+        serviceAccount:
+          identifier: *app
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -51,14 +51,14 @@ spec:
         runAsUser: 10001
     service:
       barman-cloud:
-        forceRename: barman-cloud
+        forceRename: *app
         annotations:
           cnpg.io/pluginClientSecret: &clientCert barman-cloud-client-tls
           cnpg.io/pluginPort: '9090'
           cnpg.io/pluginServerSecret: &serverCert barman-cloud-server-tls
         labels:
           cnpg.io/pluginName: barman-cloud.cloudnative-pg.io
-        controller: barman-cloud
+        controller: *app
         ports:
           tcp:
             port: *port
