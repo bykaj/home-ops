@@ -12,6 +12,8 @@ metadata:
       client:
         dns-resolver: tcp://1.1.1.1:53
       group: external
+      # Ref: https://github.com/TwiN/gatus/issues/1182
+      insecure: true
 spec:
   gatewayClassName: envoy
   infrastructure:
