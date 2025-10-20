@@ -7,5 +7,6 @@ resources:
   - ./helmrelease.yaml
   - ./alertmanagerconfig.yaml
   - ./externalsecret.yaml
+  - ./grafanadashboard.yaml
   - ./prometheusrules
   - ./scrapeconfigs

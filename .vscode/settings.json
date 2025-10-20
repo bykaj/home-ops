@@ -56,7 +56,8 @@
   },
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
-    "kubernetes": "./kubernetes/**/*.yaml"
+    "kubernetes": "./kubernetes/**/*.yaml",
+    "https://schemas.bykaj.io/grafana.integreatly.org/grafanadashboard_v1beta1.json": "file:///Users/kaj/Development/home-ops/kubernetes/apps/cert-manager/cert-manager/app/grafanadashboard.yaml"
   },
   "[yaml]": {
     "editor.defaultFormatter": "bluebrown.yamlfmt"

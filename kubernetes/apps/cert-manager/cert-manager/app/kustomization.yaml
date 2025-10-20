@@ -6,5 +6,6 @@ resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
   - ./clusterissuer.yaml
+  - ./grafanadashboard.yaml
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
