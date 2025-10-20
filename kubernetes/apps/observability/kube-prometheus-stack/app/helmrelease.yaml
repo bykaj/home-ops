@@ -57,7 +57,9 @@ spec:
     kubeControllerManager:
       enabled: false
     kubeEtcd:
-      enabled: false
+      service:
+        selector:
+          component: kube-apiserver
     kubeProxy:
       enabled: false
     kubeScheduler:
@@ -83,6 +85,7 @@ spec:
     prometheus:
       prometheusSpec:
         externalUrl: https://prometheus.${DOMAIN_APP}
+        version: v2.55.1 # override 'unsupported Prometheus version' error
         image:
           registry: docker.io
           repository: prompp/prompp
@@ -98,7 +101,6 @@ spec:
         retentionSize: 40GB
         ruleSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
-        scrapeInterval: 1m
         securityContext:
           fsGroup: 64535
           runAsGroup: 64535
