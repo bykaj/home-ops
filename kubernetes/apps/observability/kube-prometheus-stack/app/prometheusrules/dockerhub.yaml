@@ -3,19 +3,17 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: zfs-rules
+  name: dockerhub-rules
   labels:
     prometheus: k8s
     role: alert-rules
 spec:
   groups:
-    - name: zfs
+    - name: dockerhub
       rules:
-        - alert: ZfsUnexpectedPoolState
+        - alert: DockerhubRateLimitRisk
           annotations:
-            summary: ZFS pool {{$labels.zpool}} on {{$labels.instance}} is in a unexpected state {{$labels.state}}
-          expr: |
-            node_zfs_zpool_state{state!="online"} > 0
-          for: 15m
+            summary: There are {{ $value }} containers pulling from Dockerhub. This may lead to rate limiting.
+          expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
           labels:
             severity: critical
