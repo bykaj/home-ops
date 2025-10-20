@@ -80,12 +80,10 @@ spec:
               resources:
                 requests:
                   storage: 40Gi
-    prometheus-node-exporter:
+    kubeStateMetrics:
       enabled: false
-      fullnameOverride: node-exporter
-    kube-state-metrics:
+    nodeExporter:
       enabled: false
-      fullnameOverride: kube-state-metrics
     grafana:
       enabled: false
       forceDeployDashboards: true
