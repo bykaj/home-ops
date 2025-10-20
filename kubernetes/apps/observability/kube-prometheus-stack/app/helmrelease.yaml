@@ -57,9 +57,7 @@ spec:
     kubeControllerManager:
       enabled: false
     kubeEtcd:
-      service:
-        selector:
-          component: kube-apiserver
+      enabled: false
     kubeProxy:
       enabled: false
     kubeScheduler:
@@ -101,6 +99,7 @@ spec:
         retentionSize: 40GB
         ruleSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeInterval: 1m
         securityContext:
           fsGroup: 64535
           runAsGroup: 64535
