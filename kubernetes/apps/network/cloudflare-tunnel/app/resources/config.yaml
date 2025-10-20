@@ -1,35 +1,35 @@
 ---
-originRequest:
-  http2Origin: true
-  originServerName: "external.${DOMAIN_NET}"
-
 ingress:
-  - hostname: "${DOMAIN_APP}"
-    service: &svc https://envoy-external.network.svc.cluster.local
-  - hostname: "*.${DOMAIN_APP}"
-    service: *svc
-  - hostname: "${DOMAIN_DEV}"
-    service: *svc
-  - hostname: "*.${DOMAIN_DEV}"
-    service: *svc
-  - hostname: "${DOMAIN_ID}"
-    service: *svc
-  - hostname: "*.${DOMAIN_ID}"
-    service: *svc
-  - hostname: "${DOMAIN_IO}"
-    service: *svc
-  - hostname: "*.${DOMAIN_IO}"
-    service: *svc
-  - hostname: "${DOMAIN_LOL}"
-    service: *svc
-  - hostname: "*.${DOMAIN_LOL}"
-    service: *svc
-  - hostname: "${DOMAIN_NET}"
-    service: *svc
-  - hostname: "*.${DOMAIN_NET}"
-    service: *svc
-  - hostname: "${DOMAIN_ST}"
-    service: *svc
-  - hostname: "*.${DOMAIN_ST}"
-    service: *svc
+  - &config
+    hostname: "${DOMAIN_APP}"
+    originRequest:
+      http2Origin: true
+      originServerName: "external.${DOMAIN_NET}"
+    service: https://envoy-external.network.svc.cluster.local
+  - <<: *config
+    hostname: "*.${DOMAIN_APP}"
+  - <<: *config
+    hostname: "${DOMAIN_DEV}"
+  - <<: *config
+    hostname: "*.${DOMAIN_DEV}"
+  - <<: *config
+    hostname: "${DOMAIN_ID}"
+  - <<: *config
+    hostname: "*.${DOMAIN_ID}"
+  - <<: *config
+    hostname: "${DOMAIN_IO}"
+  - <<: *config
+    hostname: "*.${DOMAIN_IO}"
+  - <<: *config
+    hostname: "${DOMAIN_LOL}"
+  - <<: *config
+    hostname: "*.${DOMAIN_LOL}"
+  - <<: *config
+    hostname: "${DOMAIN_NET}"
+  - <<: *config
+    hostname: "*.${DOMAIN_NET}"
+  - <<: *config
+    hostname: "${DOMAIN_ST}"
+  - <<: *config
+    hostname: "*.${DOMAIN_ST}"
   - service: http_status:404
