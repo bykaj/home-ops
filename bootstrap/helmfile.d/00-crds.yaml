@@ -29,7 +29,7 @@ releases:
     version: 0.20.3
 
   - name: keda
-    namespace: kube-system
+    namespace: system
     chart: oci://ghcr.io/home-operations/charts-mirror/keda
     version: 2.18.0
 
