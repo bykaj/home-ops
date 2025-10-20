@@ -86,7 +86,5 @@ spec:
           compress gzip
     dashboards:
       enabled: true
-      annotations:
-        grafana_folder: Observability
     serviceMonitor:
       enabled: true

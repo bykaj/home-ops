@@ -27,8 +27,6 @@ spec:
     # devices: eno+ eth+
     dashboards:
       enabled: true
-      annotations:
-        grafana_folder: Infrastructure
     endpointRoutes:
       enabled: true
     envoy:
@@ -75,8 +73,6 @@ spec:
     operator:
       dashboards:
         enabled: true
-        annotations:
-          grafana_folder: Infrastructure
       prometheus:
         enabled: true
         serviceMonitor:

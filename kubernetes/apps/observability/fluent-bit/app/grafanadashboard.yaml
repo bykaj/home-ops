@@ -3,7 +3,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: external-dns
+  name: fluent-bit
 spec:
   allowCrossNamespaceImport: true
   instanceSelector:
@@ -12,4 +12,6 @@ spec:
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/15038/revisions/3/download
+  configMapRef:
+    name: fluent-bit-dashboard-fluent-bit
+    key: fluent-bit-fluent-bit.json
