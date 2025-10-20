@@ -23,8 +23,7 @@
       matchUpdateTypes: ["minor", "patch"],
       matchPackageNames: [
         "/kube-prometheus-stack/",
-        "/grafana/",
-        "ghcr.io/bykaj/wrangler"
+        "/bykaj/"
       ],
       ignoreTests: false,
     },
