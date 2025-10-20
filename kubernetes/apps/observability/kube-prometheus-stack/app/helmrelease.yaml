@@ -122,6 +122,7 @@ spec:
     prometheus:
       prometheusSpec:
         externalUrl: https://prometheus.${DOMAIN_APP}
+        version: v2.55.1 # override 'unsupported Prometheus version' error
         image:
           registry: docker.io
           repository: prompp/prompp
