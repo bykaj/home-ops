@@ -17,11 +17,12 @@ spec:
     containerMode:
       type: kubernetes
       kubernetesModeWorkVolumeClaim:
-        accessModes: ["ReadWriteOnce"]
+        accessModes:
+          - ReadWriteOnce
         storageClassName: openebs-hostpath
         resources:
           requests:
-            storage: 20Gi
+            storage: 25Gi
     controllerServiceAccount:
       name: actions-runner-controller
       namespace: actions-runner-system
@@ -30,7 +31,8 @@ spec:
         containers:
           - name: runner
             image: ghcr.io/home-operations/actions-runner:2.329.0@sha256:1d26dc36431014527e0d920e7b84878dcf8fd69fb9639598de1af5ccf9210131
-            command: ["/home/runner/run.sh"]
+            command:
+              - /home/runner/run.sh
             env:
               - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
                 value: "false"

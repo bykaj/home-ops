@@ -8,11 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: actions-runner-system
   interval: 1h
   path: ./kubernetes/apps/actions-runner-system/actions-runner-controller/app
   prune: true
@@ -20,6 +15,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  wait: true
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
