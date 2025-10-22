@@ -53,11 +53,11 @@ machine:
         [ NFSMount_Global_Options ]
         nfsvers=4.2
         hard=True
-        nconnect=16
         noatime=True
+        nconnect=16
   install:
     disk: /dev/sda
-    image: factory.talos.dev/installer/d49f6c31c666cfd609dea5b4fdbde60deea213b79d001dbd10117443a9af26f9:v1.11.3
+    image: factory.talos.dev/installer/660e12c4ae647b84267ea1b54440fb6cdac7545bc4b3c5fe0227285157bc058b:v1.11.3
     wipe: false
   kernel:
     modules:
@@ -102,46 +102,16 @@ machine:
     rules:
       - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
 cluster:
-  ca:
-    crt: op://Homelab/talos/CLUSTER_CA_CRT
-    {% if ENV.IS_CONTROLLER %}
-    key: op://Homelab/talos/CLUSTER_CA_KEY
-    {% endif %}
-  clusterName: main
-  controlPlane:
-    endpoint: https://10.73.10.1:6443
-  discovery:
-    enabled: true
-    registries:
-      kubernetes:
-        disabled: true
-      service:
-        disabled: false
-  id: op://Homelab/talos/CLUSTER_ID
-  network:
-    cni:
-      name: none
-    dnsDomain: cluster.local
-    podSubnets:
-      - 10.42.0.0/16
-    serviceSubnets:
-      - 10.43.0.0/16
-  secret: op://Homelab/talos/CLUSTER_SECRET
-  token: op://Homelab/talos/CLUSTER_TOKEN
   {% if ENV.IS_CONTROLLER %}
   aggregatorCA:
     crt: op://Homelab/talos/CLUSTER_AGGREGATORCA_CRT
     key: op://Homelab/talos/CLUSTER_AGGREGATORCA_KEY
   allowSchedulingOnControlPlanes: true
   apiServer:
-    auditPolicy:
-      apiVersion: audit.k8s.io/v1
-      kind: Policy
-      rules:
-        - level: Metadata
     certSANs:
       - 127.0.0.1
       - 10.73.10.1
+      - kube-vip.home.cetana.net
     disablePodSecurityPolicy: true
     extraArgs:
       enable-aggregator-routing: "true"
@@ -170,19 +140,19 @@ cluster:
       apiVersion: kubescheduler.config.k8s.io/v1
       kind: KubeSchedulerConfiguration
       profiles:
-        - schedulerName: default-scheduler
-          plugins:
-            score:
-              disabled:
-                - name: ImageLocality
-          pluginConfig:
-            - name: PodTopologySpread
-              args:
-                defaultingType: List
+        - pluginConfig:
+            - args:
                 defaultConstraints:
                   - maxSkew: 1
                     topologyKey: kubernetes.io/hostname
                     whenUnsatisfiable: ScheduleAnyway
+                defaultingType: List
+              name: PodTopologySpread
+          plugins:
+            score:
+              disabled:
+                - name: ImageLocality
+          schedulerName: default-scheduler
     extraArgs:
       bind-address: 0.0.0.0
     image: registry.k8s.io/kube-scheduler:v1.34.1
@@ -190,6 +160,32 @@ cluster:
   serviceAccount:
     key: op://Homelab/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
+  ca:
+    crt: op://Homelab/talos/CLUSTER_CA_CRT
+    {% if ENV.IS_CONTROLLER %}
+    key: op://Homelab/talos/CLUSTER_CA_KEY
+    {% endif %}
+  clusterName: main
+  controlPlane:
+    endpoint: https://10.73.10.1:6443
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service:
+        disabled: false
+  id: op://Homelab/talos/CLUSTER_ID
+  network:
+    cni:
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - 10.42.0.0/16
+    serviceSubnets:
+      - 10.43.0.0/16
+  secret: op://Homelab/talos/CLUSTER_SECRET
+  token: op://Homelab/talos/CLUSTER_TOKEN
 ---
 apiVersion: v1alpha1
 kind: WatchdogTimerConfig
