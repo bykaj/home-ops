@@ -45,8 +45,8 @@ spec:
                 memory: 4Gi
             securityContext:
               readOnlyRootFilesystem: false
-              runAsGroup: "${APP_GID:-1000}"
-              runAsUser: "${APP_UID:-1000}"
+              runAsGroup: 0
+              runAsUser: 0
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
