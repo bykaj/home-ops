@@ -14,6 +14,5 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./external-dns/ks.yaml
   - ./external-services/ks.yaml
-  #- ./k8s-gateway/ks.yaml
   - ./tailscale-operator/ks.yaml
   - ./whoami/ks.yaml
