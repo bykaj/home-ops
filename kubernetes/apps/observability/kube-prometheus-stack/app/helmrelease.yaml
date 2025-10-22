@@ -30,7 +30,6 @@ spec:
           parentRefs:
             - name: envoy-internal
               namespace: network
-              sectionName: https
     cleanPrometheusOperatorObjectNames: true
     grafana:
       enabled: false
@@ -88,6 +87,5 @@ spec:
           parentRefs:
             - name: envoy-internal
               namespace: network
-              sectionName: https
     prometheus-node-exporter:
       fullnameOverride: node-exporter

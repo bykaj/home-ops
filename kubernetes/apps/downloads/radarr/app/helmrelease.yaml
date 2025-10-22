@@ -122,7 +122,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https
           # Send auth requests to the authentik outpost
           # - backendRefs:
           #     - name: authentik-outpost-proxy

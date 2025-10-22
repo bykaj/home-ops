@@ -113,7 +113,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https
     service:
       app:
         controller: *app

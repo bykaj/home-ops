@@ -14,7 +14,6 @@ spec:
   parentRefs:
     - name: envoy-services
       namespace: network
-      sectionName: https
   rules:
     - matches:
         - path:
