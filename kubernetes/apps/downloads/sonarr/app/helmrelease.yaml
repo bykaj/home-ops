@@ -122,12 +122,9 @@ spec:
           - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
           - ${APP}.${DOMAIN_IO}
         parentRefs:
-          # - name: envoy-internal
-          #   namespace: network
-          #   sectionName: https
-          - name: test
+          - name: envoy-internal
             namespace: network
-            sectionName: https-app
+            sectionName: https
     service:
       app:
         controller: *app
