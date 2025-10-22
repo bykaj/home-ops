@@ -1,0 +1,179 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.networking.k8s.io/gateway_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: test
+  annotations:
+    external-dns.alpha.kubernetes.io/target: &hostname test.home.${DOMAIN_NET}
+spec:
+  gatewayClassName: cilium
+  addresses:
+    - type: IPAddress
+      value: "10.73.10.12"
+  infrastructure:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: *hostname
+  listeners:
+    - name: http-app
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_APP}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-app
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_APP}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_APP/./-}-tls
+    - name: http-dev
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-dev
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_DEV/./-}-tls
+    - name: http-dev-coder
+      protocol: HTTP
+      port: 80
+      hostname: "*.coder.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-dev-coder
+      protocol: HTTPS
+      port: 443
+      hostname: "*.coder.${DOMAIN_DEV}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: coder-${DOMAIN_DEV/./-}-tls
+    - name: http-id
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_ID}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-id
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_ID}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_ID/./-}-tls
+    - name: http-io
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_IO}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-io
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_IO}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_IO/./-}-tls
+    - name: http-lol-apex
+      protocol: HTTP
+      port: 80
+      hostname: "${DOMAIN_LOL}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-lol-apex
+      protocol: HTTPS
+      port: 443
+      hostname: "${DOMAIN_LOL}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_LOL/./-}-tls
+    - name: http-lol
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_LOL}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-lol
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_LOL}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_LOL/./-}-tls
+    - name: http-net
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-net
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_NET}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_NET/./-}-tls
+    - name: http-st
+      protocol: HTTP
+      port: 80
+      hostname: "*.${DOMAIN_ST}"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-st
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${DOMAIN_ST}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${DOMAIN_ST/./-}-tls
