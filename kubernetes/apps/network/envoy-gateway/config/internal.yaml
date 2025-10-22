@@ -5,7 +5,7 @@ kind: Gateway
 metadata:
   name: envoy-internal
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname internal.home.${DOMAIN_NET}
+    external-dns.alpha.kubernetes.io/target: &hostname internal.${DOMAIN_NET}
     gatus.home-operations.com/endpoint: |-
       alerts:
         - type: pushover
