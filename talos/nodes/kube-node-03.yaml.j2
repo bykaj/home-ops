@@ -3,17 +3,17 @@ machine:
   network:
     hostname: kube-node-03
     interfaces:
-      - deviceSelector:
-          hardwareAddr: bc:24:11:ae:0c:56
-        addresses:
+      - addresses:
           - 10.73.10.112/20
-        routes:
-          - network: 0.0.0.0/0
-            gateway: 10.73.0.254
+        deviceSelector:
+          hardwareAddr: bc:24:11:ae:0c:56
+        dhcp: true
         mtu: 1500
-        dhcp: false
+        routes:
+          - gateway: 10.73.0.254
+            network: 0.0.0.0/0
   nodeLabels:
-    node.kubernetes.io/gpu: "true"
+    node.kubernetes.io/gpu: 'true'
   type: controlplane
 ---
 apiVersion: v1alpha1

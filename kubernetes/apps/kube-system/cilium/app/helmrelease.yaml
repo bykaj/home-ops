@@ -18,7 +18,6 @@ spec:
       datapathMode: netkit
       masquerade: true
       preallocateMaps: true
-      tproxy: true
     bpfClockProbe: true
     # bgpControlPlane:
     #   enabled: true
@@ -37,9 +36,10 @@ spec:
     envoy:
       enabled: false
     gatewayAPI:
-      enabled: true
-      enableAlpn: true
-      xffNumTrustedHops: 1
+      enabled: false
+      # enabled: true
+      # enableAlpn: true
+      # xffNumTrustedHops: 1
     hubble:
       enabled: false
     ipam:

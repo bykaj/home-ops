@@ -9,7 +9,8 @@ machine:
     {% endif %}
   certSANs:
     - 127.0.0.1
-    - 10.73.10.1
+    - 10.73.10.10
+    - kube-vip.home.cetana.net
   features:
     apidCheckExtKeyUsage: true
     diskQuotaSupport: true
@@ -110,7 +111,7 @@ cluster:
   apiServer:
     certSANs:
       - 127.0.0.1
-      - 10.73.10.1
+      - 10.73.10.10
       - kube-vip.home.cetana.net
     disablePodSecurityPolicy: true
     extraArgs:
