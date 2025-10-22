@@ -66,7 +66,7 @@ task talos:reset
 
 ### Cluster Configuration
 - **3-node control plane**: All nodes are control plane (HA setup)
-- **Network**: 10.73.10.0/20 subnet with VIP at 10.73.10.1
+- **Network**: 10.73.10.0/20 subnet with VIP at 10.73.10.10
 - **Pod CIDR**: 10.42.0.0/16
 - **Service CIDR**: 10.43.0.0/16
 
@@ -134,7 +134,7 @@ Flux watches the `kubernetes/` directory and applies changes through a single ma
 
 ### Adding New Applications
 1. Create directory structure under `kubernetes/apps/namespace/app-name/`
-2. Add `ks.yaml` (Flux Kustomization) 
+2. Add `ks.yaml` (Flux Kustomization)
 3. Add `app/` directory with:
    - `helmrelease.yaml` (Helm chart configuration)
    - `kustomization.yaml` (Kustomize resources)
