@@ -36,6 +36,10 @@ spec:
       enabled: true
     envoy:
       enabled: false
+    gatewayAPI:
+      enabled: true
+      enableAlpn: true
+      xffNumTrustedHops: 1
     hubble:
       enabled: false
     ipam:
