@@ -120,7 +120,6 @@ spec:
           gethomepage.dev/widget.fields: '["wanted", "queued", "series"]'
         hostnames:
           - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-          - ${APP}.${DOMAIN_IO}
         parentRefs:
           - name: envoy-internal
             namespace: network
