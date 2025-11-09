@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     controllers:
-      *app :
+      karakeep:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -108,20 +108,16 @@ spec:
       config:
         existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
-          *app :
-            init-migrate: &data
+          karakeep:
+            app:
               - path: /data
-            web: *data
-            worker: *data
       tmpfs:
         type: emptyDir
         advancedMounts:
-          *app :
-            init-migrate: &cache
+          karakeep:
+            app:
               - path: /app/apps/web/.next/cache
                 subPath: cache
-            web: *cache
-            worker: *cache
         globalMounts:
           - path: /tmp
             subPath: tmp
@@ -146,7 +142,7 @@ spec:
               - identifier: *app
                 port: &port 3000
     service:
-      *app :
+      karakeep:
         primary: true
         controller: *app
         ports:
