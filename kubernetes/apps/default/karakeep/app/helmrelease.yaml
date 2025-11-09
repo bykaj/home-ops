@@ -14,15 +14,11 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-migrate: &container
+        containers:
+          app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.28.0@sha256:cd2348520ba25bbee64199468cd41758ab325eecd6a3a5c40cd6443a1607f9e9
-            workingDir: /db_migrations
-            command:
-              - node
-              - index.js
             env:
               # ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
               BROWSER_CONNECT_ONDEMAND: "true"
@@ -54,19 +50,6 @@ spec:
             envFrom:
               - secretRef:
                   name: &secret karakeep-secret
-            securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop:
-                  - ALL
-        containers:
-          web:
-            <<: *container
-            workingDir: /app/apps/web
-            command:
-              - node
-              - server.js
             probes:
               startup:
                 enabled: true
@@ -83,20 +66,12 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 1Gi
-          worker:
-            <<: *container
-            workingDir: /app/apps/workers
-            command:
-              - npm
-              - run
-              - start:prod
-            resources:
-              requests:
-                cpu: 10m
-                memory: 512Mi
-              limits:
-                memory: 1Gi
-
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
       browserless:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -132,8 +107,9 @@ spec:
               runAsUser: 999
               runAsGroup: 999
               allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
-
+              capabilities:
+                drop:
+                  - ALL
     defaultPodOptions:
       securityContext:
         runAsUser: ${APP_UID:=4000}
@@ -141,7 +117,6 @@ spec:
         runAsNonRoot: true
         fsGroup: ${APP_GID:=4000}
         fsGroupChangePolicy: "OnRootMismatch"
-
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
@@ -163,7 +138,6 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
-
     route:
       app:
         annotations:
@@ -184,7 +158,6 @@ spec:
           - backendRefs:
               - identifier: *app
                 port: &port 3000
-
     service:
       *app :
         primary: true
@@ -197,4 +170,3 @@ spec:
         ports:
           http:
             port: 3000
-
