@@ -91,7 +91,7 @@ spec:
       downloads:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-beta/Downloads
+        path: /mnt/vault/Downloads
         globalMounts:
           - path: /mnt/downloads
       tmpfs:
