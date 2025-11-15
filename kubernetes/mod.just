@@ -66,7 +66,7 @@ sync-all-es:
 volsync state:
     flux -n system {{ state }} kustomization volsync
     flux -n system {{ state }} helmrelease volsync
-    kubectl -n system scale deployment volsync --replicas {{ if state != "suspend" { "1" } else { "0" } }}
+    kubectl -n system scale deployment volsync-volsync-perfectra1n --replicas {{ if state != "suspend" { "1" } else { "0" } }}
 
 [doc('Snapshot VolSync PVCs')]
 snapshot:
