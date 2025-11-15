@@ -57,14 +57,14 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Backups
+        path: /mnt/vault/Backups
         globalMounts:
           - path: /config/backup
             subPath: Apps/Bazarr
       media:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Media
+        path: /mnt/vault/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:

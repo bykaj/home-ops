@@ -82,7 +82,7 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Backups
+        path: /mnt/vault/Backups
         advancedMounts:
           *name :
             app:
@@ -97,7 +97,7 @@ spec:
       media:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Media
+        path: /mnt/vault/Media
         advancedMounts:
           *name :
             app:

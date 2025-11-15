@@ -82,7 +82,7 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Backups
+        path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Radarr
@@ -95,7 +95,7 @@ spec:
       media:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Media
+        path: /mnt/vault/Media
         globalMounts:
           - path: /mnt/media
       tmpfs:

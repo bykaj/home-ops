@@ -50,7 +50,7 @@ spec:
       transfer:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Transfer
+        path: /mnt/vault/Transfer
         globalMounts:
           - path: /mnt/transfer
       dev:

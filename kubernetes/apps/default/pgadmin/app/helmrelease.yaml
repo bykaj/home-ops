@@ -104,7 +104,7 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Backups
+        path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/pgAdmin

@@ -96,7 +96,7 @@ The main operator consists of:
 
 3. **Backup Destination (NFS)**:
    - External NFS server for backup repositories
-   - Location: `/mnt/vault-alpha/Backups/Volsync`
+   - Location: `/mnt/vault/Backups/Volsync`
    - Provides off-cluster disaster recovery
 
 ## Mutating Admission Policies

@@ -82,14 +82,14 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Backups
+        path: /mnt/vault/Backups
         globalMounts:
           - path: /config/metadata/backups
             subPath: Apps/Audiobookshelf
       media:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-alpha/Media
+        path: /mnt/vault/Media
         globalMounts:
           - path: /mnt/media
             subPath: Books/Audiobooks
