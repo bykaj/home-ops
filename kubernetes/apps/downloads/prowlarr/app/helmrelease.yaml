@@ -79,13 +79,13 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /config
-      backups:
-        type: nfs
-        server: "${NAS_HOST}"
-        path: /mnt/vault/Backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/Prowlarr
+      # backups:
+      #   type: nfs
+      #   server: "${NAS_HOST}"
+      #   path: /mnt/vault/Backups
+      #   globalMounts:
+      #     - path: /mnt/backups
+      #       subPath: Apps/Prowlarr
       tmpfs:
         type: emptyDir
         globalMounts:
