@@ -46,12 +46,6 @@ spec:
           http:
             port: &port 8080
     persistence:
-      backups:
-        type: nfs
-        server: "${NAS_HOST}"
-        path: /mnt/vault/Backups
-        globalMounts:
-          - path: /mnt/backups
       tmpfs:
         type: emptyDir
         globalMounts:
