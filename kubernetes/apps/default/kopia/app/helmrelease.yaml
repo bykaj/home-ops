@@ -80,7 +80,7 @@ spec:
       repository:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault/Backups/Volsync
+        path: /mnt/vault/Backups/Cluster/main/volsync
         globalMounts:
           - path: /repository
       tmpfs:
