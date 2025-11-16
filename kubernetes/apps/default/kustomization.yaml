@@ -13,7 +13,7 @@ resources:
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
-  - ./kopia/ks.yaml
+  #- ./kopia/ks.yaml
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
   - ./opencloud/ks.yaml
