@@ -46,12 +46,12 @@ spec:
           http:
             port: &port 8080
     persistence:
-      repository:
+      backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault/Backups/Volsync
+        path: /mnt/vault/Backups
         globalMounts:
-          - path: /repository
+          - path: /mnt/backups
       tmpfs:
         type: emptyDir
         globalMounts:
