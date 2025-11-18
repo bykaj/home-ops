@@ -88,7 +88,7 @@ spec:
       media:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault-beta/Private
+        path: /mnt/vault/Private
         globalMounts:
           - path: /mnt/private
       tmpfs:
