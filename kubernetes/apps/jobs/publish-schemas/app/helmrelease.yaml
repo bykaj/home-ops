@@ -46,7 +46,7 @@ spec:
           app:
             image:
               repository: ghcr.io/bykaj/wrangler
-              tag: 4.48.0@sha256:98d7510b768bad796c2a5bbc80b2444c1415a1ba8768fd81a21ba3aa80958520
+              tag: 4.49.0@sha256:102452efdfab435c3ca02b79c88eb9aca50d81d674004f905f3d6bb4a9f08522
             envFrom:
               - secretRef:
                   name: publish-schemas-secret
