@@ -9,3 +9,4 @@ resources:
   - ./cluster.yaml
   - ./scheduledbackup.yaml
   - ./service.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/refs/heads/main/image-catalogs/catalog-minimal-trixie.yaml
