@@ -10,3 +10,15 @@ spec:
       length: 32
       noUpper: false
       allowRepeat: true
+---
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: ClusterGenerator
+metadata:
+  name: password-strong
+spec:
+  kind: Password
+  generator:
+    passwordSpec:
+      length: 64
+      noUpper: false
+      allowRepeat: true
