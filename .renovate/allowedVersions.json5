@@ -5,6 +5,11 @@
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgresql/"],
       allowedVersions: "<=17"
+    },
+    {
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/postgres-init/"],
+      allowedVersions: "<=17"
     }
   ]
 }
