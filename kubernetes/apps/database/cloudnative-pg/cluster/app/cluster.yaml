@@ -30,11 +30,7 @@ spec:
         parameters:
           objectStore: cloudnative-pg-storj
           serverName: ${CNPG_V17_PREVIOUS_CLUSTER}
-  imageCatalogRef:
-    apiGroup: postgresql.cnpg.io
-    kind: ClusterImageCatalog
-    major: 17
-    name: postgresql-minimal-trixie
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
   instances: 3
   monitoring:
     enablePodMonitor: true
@@ -99,11 +95,7 @@ spec:
 #         parameters:
 #           barmanObjectName: cloudnative-pg-storj
 #           serverName: ${CNPG_V18_PREVIOUS_CLUSTER}
-#   imageCatalogRef:
-#     apiGroup: postgresql.cnpg.io
-#     kind: ClusterImageCatalog
-#     major: 18
-#     name: postgresql-minimal-trixie
+#   imageName: ghcr.io/cloudnative-pg/postgresql:18.0-standard-trixie@sha256:ffd3687c9c71b74d8a19f24c4c56366f42ee96f7c516ad2bf31fbeec5b0f9747
 #   instances: 3
 #   monitoring:
 #     enablePodMonitor: true
