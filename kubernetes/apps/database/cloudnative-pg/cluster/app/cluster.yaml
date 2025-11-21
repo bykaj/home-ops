@@ -93,7 +93,7 @@ spec:
       plugin:
         name: barman-cloud.cloudnative-pg.io
         parameters:
-          objectStore: cloudnative-pg-storj
+          barmanObjectName: cloudnative-pg-storj
           serverName: ${CNPG_V18_PREVIOUS_CLUSTER}
   imageName: ghcr.io/cloudnative-pg/postgresql:18.0-standard-trixie@sha256:ffd3687c9c71b74d8a19f24c4c56366f42ee96f7c516ad2bf31fbeec5b0f9747
   instances: 3
@@ -103,7 +103,7 @@ spec:
     - isWALArchiver: true
       name: barman-cloud.cloudnative-pg.io
       parameters:
-        objectStore: cloudnative-pg-storj
+        barmanObjectName: cloudnative-pg-storj
         serverName: ${CNPG_V18_CURRENT_CLUSTER}
   postgresql:
     extensions:
