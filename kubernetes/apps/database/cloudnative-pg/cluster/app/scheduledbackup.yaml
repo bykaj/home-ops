@@ -12,3 +12,17 @@ spec:
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
   schedule: "0 0 2 * * *"   # Daily, 2:00 UTC
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgres-v18
+spec:
+  backupOwnerReference: self
+  cluster:
+    name: postgres-v18
+  immediate: true
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  schedule: "0 0 1 * * *"   # Daily, 1:00 UTC

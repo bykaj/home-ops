@@ -1,0 +1,68 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-ca
+spec:
+  isCA: true
+  commonName: postgres-ca
+  secretName: postgres-ca-secret
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: cluster-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-server-cert
+spec:
+  secretName: postgres-server-cert
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
+  usages:
+    - server auth
+  dnsNames:
+    - postgres-v18-rw
+    - postgres-v18-rw.database
+    - postgres-v18-rw.database.svc
+    - postgres-v18-rw.database.svc.cluster.local
+    - postgres-v18-r
+    - postgres-v18-r.database
+    - postgres-v18-r.database.svc
+    - postgres-v18-r.database.svc.cluster.local
+    - postgres-v18-ro
+    - postgres-v18-ro.database
+    - postgres-v18-ro.database.svc
+    - postgres-v18-ro.database.svc.cluster.local
+  issuerRef:
+    name: postgres-ca
+    kind: Issuer
+    group: cert-manager.io
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-client-cert
+spec:
+  secretName: postgres-client-cert
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
+  usages:
+    - client auth
+  commonName: streaming_replica
+  issuerRef:
+    name: postgres-client-ca
+    kind: ClusterIssuer
+    group: cert-manager.io

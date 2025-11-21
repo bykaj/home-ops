@@ -5,67 +5,142 @@ kind: Cluster
 metadata:
   name: postgres-v17
 spec:
-  instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
-  primaryUpdateStrategy: unsupervised
-  replicationSlots:
-    highAvailability:
-      enabled: true
-    updateInterval: 30
-  storage:
-    size: 20Gi
-    storageClass: openebs-hostpath
-  enableSuperuserAccess: true
-  superuserSecret:
-    name: cloudnative-pg-secret
-  postgresql:
-    parameters:
-      max_connections: "300"
-      shared_buffers: 512MB
-      pg_stat_statements.max: "10000"
-      pg_stat_statements.track: all
-    synchronous:
-      method: any
-      number: 1
-  monitoring:
-    enablePodMonitor: true
+  bootstrap:
+    # Recovers from the latest S3 backup (after changing `serverName` in `ks.yaml`)
+    recovery:
+      source: postgres-v17-backup
   # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2570
   enablePDB: false
+  enableSuperuserAccess: true
   # Ref: https://www.beyondwatts.com/posts/debugging-barman-xamzcontentsha256mismatch-error-after-upgrading-to-postgresql175/
   env:
     - name: AWS_REQUEST_CHECKSUM_CALCULATION
       value: when_required
     - name: AWS_RESPONSE_CHECKSUM_VALIDATION
       value: when_required
+  externalClusters:
+    - name: postgres-v17-backup
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          objectStore: cloudnative-pg-storj
+          serverName: ${CNPG_V17_PREVIOUS_CLUSTER}
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
+  instances: 3
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        objectStore: cloudnative-pg-storj
+        serverName: ${CNPG_V17_CURRENT_CLUSTER}
+  postgresql:
+    parameters:
+      max_connections: '300'
+      pg_stat_statements.max: '10000'
+      pg_stat_statements.track: all
+      shared_buffers: 512MB
+    synchronous:
+      method: any
+      number: 1
+  primaryUpdateStrategy: unsupervised
+  replicationSlots:
+    highAvailability:
+      enabled: true
+    updateInterval: 30
   resources:
+    limits:
+      memory: 2Gi
     requests:
       cpu: 80m
       memory: 768Mi
-    limits:
-      memory: 2Gi
-  plugins:
-    - name: barman-cloud.cloudnative-pg.io
-      isWALArchiver: true
-      parameters:
-        barmanObjectName: &barmanObjectName cloudnative-pg-storj
-        serverName: "${CNPG_CURRENT_CLUSTER}"
-
-  bootstrap:
-    # Creates an empty/new cluster
+  storage:
+    size: 20Gi
+    storageClass: openebs-hostpath
+  superuserSecret:
+    name: cloudnative-pg-secret    # Creates an empty/new cluster
     # initdb:
     #   database: app
     #   owner: app
     #   secret:
     #     name: cloudnative-pg-bootstrap-secret
-
-    # Recovers from the latest S3 backup (after changing `serverName` in `ks.yaml`)
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-v18
+spec:
+  bootstrap:
     recovery:
-      source: &previousCluster postgres-v17-backup
-
+      source: postgres-v18-backup
+  certificates:
+    clientCASecret: postgres-client-cert
+    replicationTLSSecret: postgres-client-cert
+    serverCASecret: postgres-server-cert
+    serverTLSSecret: postgres-server-cert
+  enablePDB: false
+  enableSuperuserAccess: true
+  # Ref: https://www.beyondwatts.com/posts/debugging-barman-xamzcontentsha256mismatch-error-after-upgrading-to-postgresql175/
+  env:
+    - name: AWS_REQUEST_CHECKSUM_CALCULATION
+      value: when_required
+    - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+      value: when_required
   externalClusters:
-    - name: *previousCluster
+    - name: postgres-v18-backup
       plugin:
         name: barman-cloud.cloudnative-pg.io
         parameters:
-          barmanObjectName: *barmanObjectName
-          serverName: "${CNPG_PREVIOUS_CLUSTER}"
+          objectStore: cloudnative-pg-storj
+          serverName: ${CNPG_V18_PREVIOUS_CLUSTER}
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.0-standard-trixie@sha256:ffd3687c9c71b74d8a19f24c4c56366f42ee96f7c516ad2bf31fbeec5b0f9747
+  instances: 3
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        objectStore: cloudnative-pg-storj
+        serverName: ${CNPG_V18_CURRENT_CLUSTER}
+  postgresql:
+    extensions:
+      - dynamic_library_path:
+          - /usr/lib/postgresql/18/lib
+        extension_control_path:
+          - /usr/share/postgresql/18/
+        image:
+          reference: ghcr.io/tensorchord/vchord-scratch:pg18-v0.5.3@sha256:c310ede47f7f82bd257c3e53806d60680d5899c318ca946fb313efad9a90a78e
+        name: vchord
+    parameters:
+      max_connections: '300'
+      pg_stat_statements.max: '10000'
+      pg_stat_statements.track: all
+      shared_buffers: 512MB
+    pg_hba:
+      - hostnossl all all 10.42.0.0/16      scram-sha-256
+      - hostnossl all all 2001:cafe:42::/56 scram-sha-256
+      - hostssl   all all all               cert clientcert=verify-full
+    shared_preload_libraries:
+      - vchord.so
+    synchronous:
+      method: any
+      number: 1
+  primaryUpdateStrategy: unsupervised
+  replicationSlots:
+    highAvailability:
+      enabled: true
+    updateInterval: 30
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 80m
+      memory: 768Mi
+  storage:
+    size: 20Gi
+    storageClass: openebs-hostpath
+  superuserSecret:
+    name: cloudnative-pg-secret
