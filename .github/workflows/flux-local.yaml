@@ -41,13 +41,13 @@ jobs:
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           persist-credentials: false
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Run flux-local test
-        uses: docker://ghcr.io/allenporter/flux-local:v8.0.0
+        uses: docker://ghcr.io/allenporter/flux-local:v8.0.1
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -81,14 +81,14 @@ jobs:
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
       - name: Checkout Pull Request Branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           path: pull
           persist-credentials: false
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Checkout Default Branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           path: default
           persist-credentials: false
@@ -96,7 +96,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Run flux-local diff
-        uses: docker://ghcr.io/allenporter/flux-local:v8.0.0
+        uses: docker://ghcr.io/allenporter/flux-local:v8.0.1
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
