@@ -24,3 +24,21 @@ spec:
             - ${DOMAIN_NET}
             - ${DOMAIN_ST}
             - ${DOMAIN_LOL}
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/clusterissuer_v1.json
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cluster-ca
+spec:
+  ca:
+    secretName: cluster-ca-secret
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/clusterissuer_v1.json
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: postgres-client-ca
+spec:
+  ca:
+    secretName: postgres-client-ca-secret
