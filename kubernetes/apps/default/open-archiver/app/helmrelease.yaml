@@ -38,8 +38,8 @@ spec:
               MEILI_INDEXING_BATCH: 500
               NODE_ENV: "production"
               ORIGIN: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              PORT_BACKEND: 4000
-              PORT_FRONTEND: &port 3000
+              PORT_BACKEND: &backendPort 4000
+              PORT_FRONTEND: &frontendPort 3000
               RATE_LIMIT_MAX_REQUESTS: 100
               RATE_LIMIT_WINDOW_MS: 60000
               REDIS_HOST: "${REDIS_HOST}"
@@ -55,7 +55,7 @@ spec:
                 spec:
                   httpGet:
                     path: /
-                    port: *port
+                    port: *frontendPort
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -121,5 +121,7 @@ spec:
     service:
       app:
         ports:
-          http:
-            port: *port
+          frontend:
+            port: *frontendPort
+          backend:
+            port: *backendPort
