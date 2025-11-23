@@ -66,19 +66,19 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 1024Mi
-    #         securityContext:
-    #           allowPrivilegeEscalation: false
-    #           readOnlyRootFilesystem: true
-    #           capabilities:
-    #             drop:
-    #               - ALL
-    # defaultPodOptions:
-    #   securityContext:
-    #     fsGroup: 1000
-    #     fsGroupChangePolicy: OnRootMismatch
-    #     runAsGroup: 1000
-    #     runAsNonRoot: true
-    #     runAsUser: 1000
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
     persistence:
       data:
         type: nfs
@@ -103,7 +103,7 @@ spec:
         advancedMounts:
           open-archiver:
             app:
-              - path: /.local/share
+              - path: /.local/share/pnpm/
                 subPath: local-share
     route:
       app:
