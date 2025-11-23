@@ -16,6 +16,7 @@ resources:
   - ./kopia/ks.yaml
   - ./n8n/ks.yaml
   - ./nutify/ks.yaml
+  - ./open-archiver/ks.yaml
   - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml

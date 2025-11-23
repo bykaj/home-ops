@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: open-archiver
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: open-archiver
+  interval: 1h
+  values:
+    controllers:
+      open-archiver:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &envFrom
+              - secretRef:
+                  name: open-archiver-secret
+        containers:
+          app:
+            image:
+              repository: logiclabshq/open-archiver
+              tag: v0.4.0@sha256:8b580260ae82d9f4656912a8d7dd57fbdaaca7b993c82a42f7f0514d8908597b
+            env:
+              ALL_INCLUSIVE_ARCHIVE: false
+              APP_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              BODY_SIZE_LIMIT: 100M
+              ENABLE_DELETION: false
+              JWT_EXPIRES_IN: "7d"
+              MEILI_HOST: "http://meilisearch.database:7700"
+              MEILI_INDEXING_BATCH: 500
+              NODE_ENV: "production"
+              ORIGIN: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              PORT_BACKEND: 4000
+              PORT_FRONTEND: &port 3000
+              RATE_LIMIT_MAX_REQUESTS: 100
+              RATE_LIMIT_WINDOW_MS: 60000
+              REDIS_HOST: "${REDIS_HOST}"
+              REDIS_PORT: 6379
+              STORAGE_LOCAL_ROOT_PATH: &storagePath /var/data/open-archiver
+              STORAGE_TYPE: "local"
+              SYNC_FREQUENCY: "0 0 */2 * * *"
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 512Mi
+              limits:
+                memory: 1024Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 4000
+        runAsNonRoot: true
+        runAsUser: 4000
+    persistence:
+      data:
+        type: nfs
+        server: ${NAS_HOST}
+        path: /mnt/vault/Backups
+        advancedMounts:
+          open-archiver:
+            app:
+              - path: *storagePath
+                subPath: Users/Kaj/E-mail/Archive
+      # data:
+      #   existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+      #   advancedMounts:
+      #     open-archiver:
+      #       app:
+      #         - path: *storagePath
+    route:
+      app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "Tools"
+          gethomepage.dev/name: "${APP_NAME}"
+          gethomepage.dev/icon: "sh-open-archiver.png"
+        hostnames:
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    service:
+      app:
+        ports:
+          http:
+            port: *port
