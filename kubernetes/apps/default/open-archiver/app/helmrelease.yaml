@@ -95,6 +95,16 @@ spec:
       #     open-archiver:
       #       app:
       #         - path: *storagePath
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+        advancedMounts:
+          open-archiver:
+            app:
+              - path: /.local/share
+                subPath: local-share
     route:
       app:
         annotations:
