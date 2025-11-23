@@ -29,8 +29,7 @@ spec:
               tag: v0.4.0@sha256:8b580260ae82d9f4656912a8d7dd57fbdaaca7b993c82a42f7f0514d8908597b
             env:
               ALL_INCLUSIVE_ARCHIVE: false
-              # APP_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              APP_URL: http://localhost:3000
+              APP_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               BODY_SIZE_LIMIT: 100M
               ENABLE_DELETION: false
               ENCRYPTION_KEY: ""
@@ -38,8 +37,7 @@ spec:
               MEILI_HOST: "http://meilisearch.database:7700"
               MEILI_INDEXING_BATCH: 500
               NODE_ENV: "production"
-              # ORIGIN: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              ORIGIN: "http://localhost:3000"
+              ORIGIN: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               PORT_BACKEND: &backendPort 4000
               PORT_FRONTEND: &frontendPort 3000
               RATE_LIMIT_MAX_REQUESTS: 100
