@@ -10,6 +10,7 @@ replacements:
 resources:
   - ./atuin/ks.yaml
   - ./changedetection/ks.yaml
+  - ./filabridge/ks.yaml
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
