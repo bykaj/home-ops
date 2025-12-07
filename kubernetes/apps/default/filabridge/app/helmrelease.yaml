@@ -19,19 +19,6 @@ spec:
             image:
               repository: ghcr.io/needo37/filabridge
               tag: v0.2@sha256:df02f409279285630cdb4268d8d5f425c6e90ff50c46097def5b3461e2a00147
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &port 5000
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
             resources:
               requests:
                 cpu: 10m
@@ -72,4 +59,4 @@ spec:
       app:
         ports:
           http:
-            port: *port
+            port: 5000
