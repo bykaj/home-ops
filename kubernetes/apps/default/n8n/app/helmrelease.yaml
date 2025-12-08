@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/n8n-io/n8n
-              tag: 1.123.4@sha256:d9162b9b151744f909d7e687f4179a1aa4e7f3a7504d6bf7e0c0e27852fe9731
+              tag: 2.0.0@sha256:5b143d5ed0df23d295037408a8290872c549033709e375f920b33a94c754ea00
             env:
               DB_POSTGRESDB_HOST: "${DB_HOST}"
               DB_TYPE: "postgresdb"
