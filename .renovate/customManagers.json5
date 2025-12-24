@@ -5,9 +5,9 @@
       customType: "regex",
       description: "Process annotated dependencies",
       managerFilePatterns: [
-        "/(^|/).+\\.env$/",
-        "/(^|/).+\\.sh$/",
-        "/(^|/).+\\.ya?ml(?:\\.j2)?$/",
+        "/\\.env(?:\\.j2)?$/",
+        "/\\.sh(?:\\.j2)?$/",
+        "/\\.yaml(?:\\.j2)?$/",
       ],
       matchStrings: [
         // # renovate: datasource=github-releases depName=foo/bar
@@ -17,6 +17,17 @@
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+(:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)",
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+    },
+    {
+      customType: "regex",
+      description: "Process OCI dependencies",
+      managerFilePatterns: [
+        "/\\.yaml(?:\\.j2)?$/",
+      ],
+      matchStrings: [
+        "oci://(?<depName>[^:]+):(?<currentValue>\\S+)",
+      ],
+      datasourceTemplate: "docker",
     },
   ],
 }
