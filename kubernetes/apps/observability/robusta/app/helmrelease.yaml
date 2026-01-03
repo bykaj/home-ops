@@ -43,6 +43,13 @@ spec:
             secretKeyRef:
               name: *secret
               key: SINK_TOKEN
+      resources:
+        requests:
+          cpu: 99m
+          memory: 1280Mi
+        limits:
+          cpu: ~
+          memory: 1280Mi
     enableHolmesGPT: true
     enabledManagedConfiguration: true
     holmes:
