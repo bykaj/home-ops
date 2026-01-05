@@ -18,7 +18,7 @@ spec:
           init-config:
             image:
               repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 2.2.0@sha256:dd728dd956f8f94d516dd7d9ca6ddb68826d56959573fdbf7e8995dbd92e66f6
+              tag: 2.2.2@sha256:cb9b206f3e1a045632648569c4cb7fc618a292ba1a12cb53e1754025a987445b
             command: ["/bin/bash", "-c"]
             args:
               - |
