@@ -70,10 +70,10 @@ spec:
         mon:
           limits:
             cpu: 100m
-            memory: 1024Mi
+            memory: 1536Mi
           requests:
             cpu: 100m
-            memory: 768Mi
+            memory: 1024Mi
         osd:
           limits:
             cpu: 500m
