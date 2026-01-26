@@ -4,7 +4,9 @@ ingress:
     hostname: "${DOMAIN_APP}"
     originRequest:
       http2Origin: true
+      keepAliveTimeout: 3600s
       originServerName: "external.${DOMAIN_NET}"
+      tcpKeepAlive: 7200s
     service: https://envoy-external.network.svc.cluster.local
   - <<: *config
     hostname: "*.${DOMAIN_APP}"
