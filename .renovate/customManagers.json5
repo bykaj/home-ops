@@ -29,5 +29,16 @@
       ],
       datasourceTemplate: "docker",
     },
+    {
+      customType: "regex",
+      description: "Weird ass version format",
+      managerFilePatterns: [
+        "/\\.yaml(?:\\.j2)?$/",
+      ],
+      matchStrings: [
+        "version\\s*=\\s*['\"](?<currentValue>v\\d+(-v\\d+(\\.\\d+)?)?)['\"]\\s*",
+      ],
+      datasourceTemplate: "docker",
+    }
   ],
 }
