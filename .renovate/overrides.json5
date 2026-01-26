@@ -13,5 +13,12 @@
       matchPackageNames: ["/factory\\.talos\\.dev/"],
       overridePackageName: "ghcr.io/siderolabs/installer",
     },
+    {
+      description: "Override weird Whisparr versioning",
+      matchCurrentVersion: "^v\\d+(-v\\d+(\\.\\d+)?)?$",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/hotio/whisparr"],
+      versioning: "regex"
+    },
   ],
 }
