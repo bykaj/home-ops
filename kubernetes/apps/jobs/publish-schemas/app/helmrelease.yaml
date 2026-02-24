@@ -29,7 +29,7 @@ spec:
           generate-schemas:
             image:
               repository: ghcr.io/bykaj/k8s-crd-extractor
-              tag: 2025.9.18@sha256:fa7fc33ddbbbc829889ddde21b91317272fdadc1fdae2bec48a75afc3d18cdd2
+              tag: 2025.9.18
             resources:
               requests:
                 cpu: 10m
