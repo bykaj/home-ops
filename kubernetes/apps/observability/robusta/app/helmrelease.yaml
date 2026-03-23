@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: robusta
-      version: 0.34.0
+      version: 0.34.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
