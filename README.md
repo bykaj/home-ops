@@ -150,7 +150,7 @@ To complete the setup, I've configured a third (internal) ingress class called `
 | Home Assistant Yellow       | 1   | 8GB eMMC, 256GB NVMe   | 4GB  | 1Gb           | Home Automation         |
 | PiKVM V4 Plus               | 1   | 32GB eMMC              | 8GB  | 1Gb           | KVM                     |
 | JetKVM                      | 3   | 8GB eMMC               | -    | 100Mb         | KVM                     |
-| Eaton Ellipse Pro 650 2U    | 1   | -                      | -    | -             | UPS                     |
+| ~~Eaton Ellipse Pro 650 2U~~ <br><sup>† March 2026</sup>     | ~~1~~   | -                      | -    | -             | ~~UPS~~                    |
 
 ---
 
