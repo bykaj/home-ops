@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: dartsteven/nutify
-              tag: 0.2.0-amd64@sha256:sha256:9360c038cb889c6809194110e716e22ec9a45787eb7ef3bc918a4c58bb4aac18
+              tag: 0.2.0-amd64@sha256:9360c038cb889c6809194110e716e22ec9a45787eb7ef3bc918a4c58bb4aac18
             env:
               TZ: "${TIMEZONE}"
             envFrom:
