@@ -20,7 +20,6 @@ spec:
         - leonis.home.${DOMAIN_NET}
         - nas.home.${DOMAIN_NET}
         - netatmo.home.${DOMAIN_NET}
-        - pikvm.home.${DOMAIN_NET}
         - security_system.home.${DOMAIN_NET}
         - zeus.home.${DOMAIN_NET}
 ---
