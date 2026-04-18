@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: bellamy/wallos
-              tag: 4.8.0@sha256:a1894b1653a7aa9a44e887a06b4db9032c2e61d663fb5b7e7c7ad53f5689c409
+              tag: 4.8.1@sha256:51fdd4462b1f8029b3d0ccff530039cbc089abf3e4620c2d1bcec7e2aae0babf
             env:
               TZ: "${TIMEZONE}"
             probes:
