@@ -15,10 +15,8 @@
     },
     {
       description: "Override weird Whisparr versioning",
-      matchCurrentVersion: "^v\\d+(-v\\d+(\\.\\d+)+)?$",
-      matchDatasources: ["docker"],
       matchPackageNames: ["ghcr.io/hotio/whisparr"],
-      versioning: "regex"
+      versioning: "regex:^v(?<compatibility>\\d+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
   ],
 }
