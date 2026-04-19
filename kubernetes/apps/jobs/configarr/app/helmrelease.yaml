@@ -17,7 +17,7 @@ spec:
           reloader.stakater.com/auto: "true"
         cronjob:
           schedule: "0 * * * *" # Runs every hour
-          timeZone: ${TZ}
+          timeZone: "${TIMEZONE}"
           concurrencyPolicy: Forbid
           successfulJobsHistory: 1
           failedJobsHistory: 1
