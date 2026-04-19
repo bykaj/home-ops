@@ -1,0 +1,139 @@
+---
+# Settings
+sonarrEnabled: true
+radarrEnabled: true
+whisparrEnabled: false
+readarrEnabled: false
+lidarrEnabled: false
+telemetry: false
+
+# Paths
+# localCustomFormatsPath: /app/cfs
+# localConfigTemplatesPath: /app/templates
+
+customFormatDefinitions:
+  - # Language: Not Original
+    trash_id: d6e9318c875905d6cfb5bee961afcea9
+    trash_scores:
+      default: -10000
+      german: 0
+      french-anime-multi: -10000
+      french-anime-vostfr: -10000
+      french-multi-vf: 0
+      french-multi-vo: -10000
+      french-vostfr: -10000
+    trash_description: "Language: Original Only: Because it uses reverse scoring,
+      and if you use the default scores, it will assign all releases without the
+      original audio a score of -10000."
+    name: "Language: Not Original"
+    includeCustomFormatWhenRenaming: false
+    specifications:
+      - name: Not Original Language
+        implementation: LanguageSpecification
+        negate: true
+        required: false
+        fields:
+          value: -2
+  - # BR-DISK
+    trash_id: ed38b889b31be83fda192888e2286d83
+    trash_scores:
+      default: -10000
+      german: -35000
+      german-anime: -35000
+    trash_regex: https://regex101.com/r/UpA3I7/2
+    name: "BR-DISK"
+    includeCustomFormatWhenRenaming: false
+    specifications:
+      - name: BR-DISK
+        implementation: ReleaseTitleSpecification
+        negate: false
+        required: true
+        fields:
+          value: ^(?!.*\\b((?<!HD[._ -]|HD)DVD|BDRip|720p|MKV|XviD|WMV|d3g|(BD)?REMUX|^(?=.*1080p)(?=.*HEVC)|[xh][-_. ]?26[45]|German.*[DM]L|((?<=\\d{4}).*German.*([DM]L)?)(?=.*\\b(AVC|HEVC|VC[-_. ]?1|MVC|MPEG[-_. ]?2)\\b))\\b)(((?=.*\\b(Blu[-_. ]?ray|BD|HD[-_. ]?DVD)\\b)(?=.*\\b(AVC|HEVC|VC[-_. ]?1|MVC|MPEG[-_. ]?2|BDMV|ISO)\\b))|^((?=.*\\b(((?=.*\\b((.*_)?COMPLETE.*|Dis[ck])\\b)(?=.*(Blu[-_. ]?ray|HD[-_. ]?DVD)))|3D[-_. ]?BD|BR[-_. ]?DISK|Full[-_. ]?Blu[-_. ]?ray|^((?=.*((BD|UHD)[-_. ]?(25|50|66|100|ISO)))))))).*
+
+sonarr:
+  series:
+    base_url: http://sonarr.downloads.svc.cluster.local:8989
+    api_key: !env_var SONARR_API_KEY
+    delete_unmanaged_custom_formats:
+      enabled: true
+    delete_unmanaged_quality_profiles:
+      enabled: true
+    quality_definition:
+      type: series
+    quality_profiles:
+      - name: WEB-1080p
+        trash_id: 72dae194fc92bf828f32cde7744e51a1
+        reset_unmatched_scores:
+          enabled: true
+      - name: WEB-2160p (Combined)
+        trash_id: c4cadd6b35b95f62c3d47a408e53e2f7
+        reset_unmatched_scores:
+          enabled: true
+    custom_formats:
+      - # FLUX trumps REPACKS
+        trash_ids:
+          - 5d9fd1b1e06cd8a475462f40214b7df6 # FLUX
+        assign_scores_to:
+          - name: WEB-2160p (Combined)
+            score: 100
+      - # Unwanted
+        trash_ids:
+          - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+          - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+          - 06d66ab109d4d2eddb2794d21526d140 # Retags
+          - ed38b889b31be83fda192888e2286d83 # BR-DISK
+          - d6e9318c875905d6cfb5bee961afcea9 # Language: Not Original
+        assign_scores_to:
+          - name: WEB-1080p
+          - name: WEB-2160p (Combined)
+
+radarr:
+  movies:
+    base_url: http://radarr.downloads.svc.cluster.local:7878
+    api_key: !env_var RADARR_API_KEY
+    delete_unmanaged_custom_formats:
+      enabled: true
+    delete_unmanaged_quality_profiles:
+      enabled: true
+    quality_definition:
+      type: sqp-uhd
+    quality_profiles:
+      - name: SQP-1 (1080p)
+        trash_id: 0896c29d74de619df168d23b98104b22
+        reset_unmatched_scores:
+          enabled: true
+        qualities:
+          - name: Bluray|WEB-1080p
+            qualities:
+              - Bluray-1080p
+              - WEBRip-1080p
+              - WEBDL-1080p
+      - name: SQP-1 (2160p)
+        trash_id: 5128baeb2b081b72126bc8482b2a86a0
+        reset_unmatched_scores:
+          enabled: true
+        qualities:
+          - name: Bluray-2160p
+          - name: WEB 2160p
+            qualities:
+              - WEBRip-2160p
+              - WEBDL-2160p
+          - name: Bluray|WEB-1080p
+            qualities:
+              - Bluray-1080p
+              - WEBRip-1080p
+              - WEBDL-1080p
+    custom_formats:
+      - # Unwanted
+        trash_ids:
+          - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
+          - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
+          - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
+          - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
+          - f537cf427b64c38c8e36298f657e4828 # Scene
+          - ed38b889b31be83fda192888e2286d83 # BR-DISK
+          - d6e9318c875905d6cfb5bee961afcea9 # Language: Not Original
+        assign_scores_to:
+          - name: "SQP-1 (1080p)"
+          - name: "SQP-1 (2160p)"
