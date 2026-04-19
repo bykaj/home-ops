@@ -16,7 +16,7 @@
     {
       description: "Override weird Whisparr versioning",
       matchPackageNames: ["ghcr.io/hotio/whisparr"],
-      versioning: "regex:^v(?<compatibility>\\d+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+      versioning: "regex:^v(?<compatibility>\\d+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
   ],
 }
