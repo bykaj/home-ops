@@ -53,7 +53,7 @@ customFormatDefinitions:
 
 sonarr:
   series:
-    base_url: http://sonarr.downloads.svc.cluster.local:8989
+    base_url: http://sonarr.downloads.svc.cluster.local
     api_key: !env SONARR_API_KEY
     delete_unmanaged_custom_formats:
       enabled: true
@@ -90,7 +90,7 @@ sonarr:
 
 radarr:
   movies:
-    base_url: http://radarr.downloads.svc.cluster.local:7878
+    base_url: http://radarr.downloads.svc.cluster.local
     api_key: !env RADARR_API_KEY
     delete_unmanaged_custom_formats:
       enabled: true
