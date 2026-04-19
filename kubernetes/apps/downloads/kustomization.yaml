@@ -10,6 +10,7 @@ replacements:
 resources:
   - ./autobrr/ks.yaml
   - ./bazarr/ks.yaml
+  - ./configarr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
   - ./sabnzbd/ks.yaml

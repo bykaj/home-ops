@@ -8,6 +8,5 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./configarr/ks.yaml
   - ./mailbackup/ks.yaml
   - ./publish-schemas/ks.yaml

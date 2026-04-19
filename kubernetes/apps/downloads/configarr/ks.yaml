@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./kubernetes/apps/jobs/configarr/app
+  path: ./kubernetes/apps/downloads/configarr/app
   postBuild:
     substitute:
       APP: *app
