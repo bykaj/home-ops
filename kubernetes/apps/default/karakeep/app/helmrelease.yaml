@@ -72,7 +72,7 @@ spec:
           app:
             image:
               repository: ghcr.io/browserless/chromium
-              tag: v2.49.0@sha256:5586b4937931da7f8b1cce20c136b53c99a5d9b0c0b2c95403ef5334263a89a7
+              tag: v2.49.0@sha256:a0c024087a2625704ffe3644ea2d886324b57ab1cc9124fb15eacc6597429ca1
               pullPolicy: IfNotPresent
             env:
               DEBUG: "browserless*,-*:trace,-*:verbose"
