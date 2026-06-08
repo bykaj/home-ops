@@ -58,6 +58,11 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
+      automountServiceAccountToken: true
+      labels:
+        # required for the operator to determine a primary in each deployed cluster
+        # ref: https://deepwiki.com/dragonflydb/dragonfly-operator/2.2-manual-installation#namespace-resource
+        control-plane: controller-manager
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
