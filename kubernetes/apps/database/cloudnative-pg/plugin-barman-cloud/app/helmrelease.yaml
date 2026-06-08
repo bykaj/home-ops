@@ -9,3 +9,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: *app
+  values:
+    crds:
+      create: true
