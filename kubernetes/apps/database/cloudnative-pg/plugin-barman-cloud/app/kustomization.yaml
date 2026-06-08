@@ -3,7 +3,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./plugin-barman-cloud/ks.yaml
-  - ./cluster/ks.yaml
-  - ./operator/ks.yaml
-  - ./postgres-backup-local/ks.yaml
+  - ./ocirepository.yaml
+  - ./helmrelease.yaml
