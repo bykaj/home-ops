@@ -3,10 +3,16 @@
 apiVersion: volsync.backube/v1alpha1
 kind: KopiaMaintenance
 metadata:
-  name: daily
+  name: kopia-daily-maintenance
 spec:
   enabled: true
-  trigger:
-    schedule: "30 0/4 * * *" # Runs at 30 minutes past the hour, every 4 hours
+  moverVolumes:
+    - mountPath: repository
+      volumeSource:
+        nfs:
+          path: /mnt/vault/Backups/Cluster/main/volsync
+          server: ${NAS_HOST}
   repository:
     repository: volsync-maintenance-secret
+  trigger:
+    schedule: "30 0/4 * * *" # Runs at 30 minutes past the hour, every 4 hours
