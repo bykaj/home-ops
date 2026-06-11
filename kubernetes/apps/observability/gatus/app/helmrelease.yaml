@@ -73,6 +73,7 @@ spec:
               size: 1Gi
     defaultPodOptions:
       hostUsers: false
+      automountServiceAccountToken: true
     persistence:
       config-file:
         type: configMap
