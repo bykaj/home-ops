@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dragonfly-cluster-gatus-endpoint
+  name: dragonfly-gatus-endpoint
   labels:
     gatus.io/enabled: "true"
 data:

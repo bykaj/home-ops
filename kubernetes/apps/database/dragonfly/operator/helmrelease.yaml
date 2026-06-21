@@ -7,11 +7,11 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: dragonfly-operator
+    name: *app
   interval: 1h
   values:
     controllers:
-      dragonfly-operator:
+      *app :
         strategy: RollingUpdate
         serviceAccount:
           identifier: *app
@@ -20,33 +20,37 @@ spec:
             image:
               repository: ghcr.io/dragonflydb/operator
               tag: v1.6.1@sha256:b11411142935f92ed0ec30a5ddeb31680e09ab66beecb827cb0224f1c4238638
-            command: ["/manager"]
+            command:
+              - "/manager"
             args:
               - --health-probe-bind-address=:8081
               - --metrics-bind-address=:8080
+              - --leader-elect
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
                 custom: true
-                spec:
+                spec: &probeSpec
                   httpGet:
                     path: /healthz
                     port: &port 8081
                   initialDelaySeconds: 15
                   periodSeconds: 20
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               readiness:
-                enabled: true
-                custom: true
+                <<: *probes
                 spec:
+                  <<: *probeSpec
                   httpGet:
                     path: /readyz
                     port: *port
-                  initialDelaySeconds: 5
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 103
             resources:
               requests:
                 cpu: 10m
@@ -67,7 +71,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
-        seccompProfile: { type: RuntimeDefault }
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -75,6 +78,52 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: *app
+    rbac:
+      bindings:
+        *app :
+          roleRef:
+            kind: ClusterRole
+            name: *app
+          subjects:
+            - identifier: *app
+          type: ClusterRoleBinding
+      roles:
+        *app :
+          rules:
+            - apiGroups: ["coordination.k8s.io"]
+              resources: ["leases"]
+              verbs:
+                ["get", "list", "watch", "create", "update", "patch", "delete"]
+            - apiGroups: [""]
+              resources: ["events"]
+              verbs: ["create", "patch"]
+            - apiGroups: [""]
+              resources: ["configmaps", "pods", "services"]
+              verbs:
+                ["create", "delete", "get", "list", "patch", "update", "watch"]
+            - apiGroups: ["apps"]
+              resources: ["statefulsets"]
+              verbs:
+                ["create", "delete", "get", "list", "patch", "update", "watch"]
+            - apiGroups: ["policy"]
+              resources: ["poddisruptionbudgets"]
+              verbs:
+                ["create", "delete", "get", "list", "patch", "update", "watch"]
+            - apiGroups: ["dragonflydb.io"]
+              resources: ["dragonflies"]
+              verbs:
+                ["create", "delete", "get", "list", "patch", "update", "watch"]
+            - apiGroups: ["dragonflydb.io"]
+              resources: ["dragonflies/finalizers"]
+              verbs: ["update"]
+            - apiGroups: ["dragonflydb.io"]
+              resources: ["dragonflies/status"]
+              verbs: ["get", "patch", "update"]
+            - apiGroups: ["networking.k8s.io"]
+              resources: ["networkpolicies"]
+              verbs:
+                ["create", "delete", "get", "list", "patch", "update", "watch"]
+          type: ClusterRole
     service:
       app:
         controller: *app
@@ -83,6 +132,8 @@ spec:
             port: *port
           metrics:
             port: 8080
+    serviceAccount:
+      *app : {}
     serviceMonitor:
       app:
         serviceName: *app
@@ -92,8 +143,6 @@ spec:
             path: /metrics
             interval: 1m
             scrapeTimeout: 10s
-    serviceAccount:
-      dragonfly-operator: {}
   postRenderers:
     - kustomize:
         patches:
