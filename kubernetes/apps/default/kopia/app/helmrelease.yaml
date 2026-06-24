@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &name kopia
+  name: kopia
 spec:
   chartRef:
     kind: OCIRepository
@@ -11,14 +11,14 @@ spec:
   interval: 1h
   values:
     controllers:
-      *name :
+      kopia:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
               repository: ghcr.io/home-operations/kopia
-              tag: 0.23.1@sha256:e914ae4b91d39c8aef1875a04bbd7824f1405463345fb37b8cd7a7c3cbe6adda
+              tag: 0.23.1@sha256:27da0a33b44e1b902150a6c963514237217464bb13118a95bb056667be93cda5
             env:
               KOPIA_WEB_ENABLED: true
               KOPIA_WEB_PORT: &port 80
@@ -27,6 +27,7 @@ spec:
               - secretRef:
                   name: kopia-secret
             args:
+              - --refresh-interval=5m
               - --without-password
             probes:
               liveness: &probes
@@ -53,9 +54,9 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
@@ -69,14 +70,29 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+    configMaps:
+      config:
+        data:
+          repository.config: |-
+            {
+              "storage": {
+                "type": "filesystem",
+                "config": {
+                  "path": "/repository"
+                }
+              },
+              "hostname": "volsync.{{ .Release.Namespace }}.svc.cluster.local",
+              "username": "volsync",
+              "description": "VolSync Repository",
+              "enableActions": false
+            }
     persistence:
       config-file:
         type: configMap
-        name: kopia-repository-configmap
+        identifier: config
         globalMounts:
           - path: /config/repository.config
             subPath: repository.config
-            readOnly: true
       repository:
         type: nfs
         server: "${NAS_HOST}"
@@ -86,7 +102,7 @@ spec:
       tmpfs:
         type: emptyDir
         advancedMounts:
-          *name :
+          kopia:
             app:
               - path: /config/cache
                 subPath: cache
