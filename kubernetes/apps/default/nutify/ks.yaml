@@ -21,7 +21,7 @@ spec:
       APP_UID: "1000"
       APP_GID: "1000"
       APP_NAME: Nutify
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
