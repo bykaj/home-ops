@@ -21,38 +21,47 @@ spec:
               tag: 1.6.0@sha256:cd63bbd0986c93e238eb8b9442604d249f0d4080099b389f822abe2062044417
             env:
               TZ: "${TIMEZONE}"
+              BAZARR__INSTANCE_NAME: *app
+              BAZARR__PORT: &port 6767
+              BAZARR__APPLICATION_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              BAZARR__LOG_LEVEL: info
+              BAZARR__AUTH__METHOD: External
+              BAZARR__AUTH__REQUIRED: DisabledForLocalAddresses
+            envFrom:
+              - secretRef:
+                  name: bazarr-secret
             probes:
-              liveness:
-                enabled: true
-                spec:
-                  periodSeconds: 30
-                  timeoutSeconds: 5
-                  failureThreshold: 5
-              readiness:
+              liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/system/ping
-                    port: &port 6767
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 5
-                  failureThreshold: 5
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *probes
               startup:
                 enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
+                  httpGet:
+                    path: /health
+                    port: *port
                   periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 60
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 5m
-                memory: 256Mi
+                cpu: 10m
               limits:
-                memory: 512Mi
+                memory: 1Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
