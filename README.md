@@ -117,7 +117,7 @@ While most of my infrastructure and workloads are self-hosted, I do rely on the 
 - [Fastmail](https://fastmail.com/) – Email hosting.
 - [GitHub](https://github.com/) – Hosting this repository and continuous integration/deployments.
 - [Pushover](https://pushover.net/) – Kubernetes alerts and application notifications.
-- [Storj](https://storj.io/) – S3 object storage for applications and backups.
+- ~~[Storj](https://storj.io/)~~ [Backblaze B2](https://backblaze.com/) – S3 object storage for applications and backups.
 
 This helps me avoid three major headaches:
 1. **Chicken-and-egg scenarios** – Dependencies that prevent initial system bootstrapping.
