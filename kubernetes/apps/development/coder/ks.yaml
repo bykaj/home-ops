@@ -8,6 +8,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/keda/postgres-scaler
   dependsOn:
     - name: authentik
       namespace: security
