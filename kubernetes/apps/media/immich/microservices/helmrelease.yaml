@@ -9,6 +9,8 @@ spec:
     kind: OCIRepository
     name: immich-microservices
   interval: 1h
+  dependsOn:
+    - name: immich
   values:
     controllers:
       immich:
