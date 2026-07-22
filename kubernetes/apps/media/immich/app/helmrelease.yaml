@@ -136,7 +136,7 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port
     service:
       immich:
