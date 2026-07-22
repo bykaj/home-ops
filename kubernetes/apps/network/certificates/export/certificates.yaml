@@ -91,6 +91,32 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: "${DOMAIN_PICS/./-}"
+spec:
+  secretName: "${DOMAIN_PICS/./-}-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_PICS}"
+  dnsNames: ["${DOMAIN_PICS}", "*.${DOMAIN_PICS}"]
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${DOMAIN_PHOTOS/./-}"
+spec:
+  secretName: "${DOMAIN_PHOTOS/./-}-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${DOMAIN_PHOTOS}"
+  dnsNames: ["${DOMAIN_PHOTOS}", "*.${DOMAIN_PHOTOS}"]
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: "${DOMAIN_NET/./-}"
 spec:
   secretName: "${DOMAIN_NET/./-}-tls"

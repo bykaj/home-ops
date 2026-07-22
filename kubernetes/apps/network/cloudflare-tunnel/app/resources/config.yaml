@@ -31,6 +31,14 @@ ingress:
   - <<: *config
     hostname: "*.${DOMAIN_NET}"
   - <<: *config
+    hostname: "${DOMAIN_PICS}"
+  - <<: *config
+    hostname: "*.${DOMAIN_PICS}"
+  - <<: *config
+    hostname: "${DOMAIN_PHOTOS}"
+  - <<: *config
+    hostname: "*.${DOMAIN_PHOTOS}"
+  - <<: *config
     hostname: "${DOMAIN_ST}"
   - <<: *config
     hostname: "*.${DOMAIN_ST}"

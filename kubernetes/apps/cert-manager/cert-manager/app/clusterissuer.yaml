@@ -24,6 +24,8 @@ spec:
             - ${DOMAIN_NET}
             - ${DOMAIN_ST}
             - ${DOMAIN_LOL}
+            - ${DOMAIN_PICS}
+            - ${DOMAIN_PHOTOS}
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1
