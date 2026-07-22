@@ -26,8 +26,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: certificates-import
+  dependsOn:
+    - name: certificates-import
   interval: 1h
   path: ./kubernetes/apps/network/certificates/export
   prune: true
