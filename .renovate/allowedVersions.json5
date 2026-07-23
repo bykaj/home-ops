@@ -4,12 +4,12 @@
     {
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgresql/"],
-      allowedVersions: "<=17"
+      allowedVersions: "<19"
     },
     {
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgres-init/"],
-      allowedVersions: "<=17"
+      allowedVersions: "<19"
     }
   ]
 }
