@@ -19,6 +19,8 @@ spec:
       - ${DOMAIN_NET}
       - home.${DOMAIN_NET}
       - kvm.home.${DOMAIN_NET}
+      - ${DOMAIN_PICS}
+      - ${DOMAIN_PHOTOS}
       - ${DOMAIN_ST}
     fullnameOverride: *app
     logLevel: &logLevel info

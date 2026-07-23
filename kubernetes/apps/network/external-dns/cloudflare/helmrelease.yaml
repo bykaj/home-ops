@@ -17,6 +17,8 @@ spec:
       - ${DOMAIN_IO}
       - ${DOMAIN_LOL}
       - ${DOMAIN_NET}
+      - ${DOMAIN_PICS}
+      - ${DOMAIN_PHOTOS}
       - ${DOMAIN_ST}
     env:
       - name: CF_API_TOKEN
