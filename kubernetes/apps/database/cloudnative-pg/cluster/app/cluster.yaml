@@ -30,7 +30,7 @@ spec:
         parameters:
           barmanObjectName: cloudnative-pg-b2
           serverName: ${CNPG_V17_PREVIOUS_CLUSTER}
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.10
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.10-system-trixie
   instances: 3
   monitoring:
     enablePodMonitor: true
