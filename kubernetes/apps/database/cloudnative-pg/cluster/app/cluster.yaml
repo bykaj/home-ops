@@ -3,7 +3,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: postgres-v17
+  name: postgres
 spec:
   bootstrap:
     # initdb:
@@ -13,7 +13,7 @@ spec:
     #     name: cloudnative-pg-bootstrap-secret
     # Recovers from the latest S3 backup (after changing `serverName` in `ks.yaml`)
     recovery:
-      source: postgres-v17-backup
+      source: postgres-backup
   # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2570
   enablePDB: false
   enableSuperuserAccess: true
@@ -24,7 +24,7 @@ spec:
     - name: AWS_RESPONSE_CHECKSUM_VALIDATION
       value: when_required
   externalClusters:
-    - name: postgres-v17-backup
+    - name: postgres-backup
       plugin:
         name: barman-cloud.cloudnative-pg.io
         parameters:
@@ -49,6 +49,11 @@ spec:
     synchronous:
       method: any
       number: 1
+    # extensions:
+    #   - name: pgvector
+    #     image:
+    #       # renovate: suite=trixie-pgdg depName=postgresql-18-pgvector
+    #       reference: ghcr.io/cloudnative-pg/pgvector:0.8.5-18-trixie
   primaryUpdateStrategy: unsupervised
   replicationSlots:
     highAvailability:
