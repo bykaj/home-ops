@@ -46,6 +46,10 @@ spec:
           - kind: Secret
             name: ${DOMAIN_LOL/./-}-tls
           - kind: Secret
+            name: ${DOMAIN_PICS/./-}-tls
+          - kind: Secret
+            name: ${DOMAIN_PHOTOS/./-}-tls
+          - kind: Secret
             name: ${DOMAIN_NET/./-}-tls
           - kind: Secret
             name: ${DOMAIN_ST/./-}-tls
@@ -98,6 +102,10 @@ spec:
             name: ${DOMAIN_IO/./-}-tls
           - kind: Secret
             name: ${DOMAIN_LOL/./-}-tls
+          - kind: Secret
+            name: ${DOMAIN_PICS/./-}-tls
+          - kind: Secret
+            name: ${DOMAIN_PHOTOS/./-}-tls
           - kind: Secret
             name: ${DOMAIN_NET/./-}-tls
           - kind: Secret
