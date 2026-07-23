@@ -19,7 +19,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Wastebin
-      APP_DOMAIN: drup.lol # Manually add to DNS servers
+      APP_DOMAIN: drup.lol
       VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:

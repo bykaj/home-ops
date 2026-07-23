@@ -78,19 +78,6 @@ spec:
         runAsGroup: 4000
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
-    ingress:
-      ts:
-        className: tailscale
-        hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: *app
-                  port: *port
-        tls:
-          - hosts:
-              - *host
     persistence:
       backups:
         type: nfs
@@ -134,10 +121,6 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
-        rules:
-          - backendRefs:
-              - identifier: *app
-                port: *port
     service:
       immich:
         controller: immich
