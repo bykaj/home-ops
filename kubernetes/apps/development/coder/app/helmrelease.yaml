@@ -59,7 +59,7 @@ spec:
         enable: false
       initContainers:
         - name: init-db
-          image: ghcr.io/home-operations/postgres-init:17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+          image: ghcr.io/home-operations/postgres-init:18.4@sha256:ebd9d30add17acdf935d73eb004758c7dfd9388aaa605fda70ad74378ab92aec
           envFrom: *envFrom
       podAnnotations:
         reloader.stakater.com/auto: "true"
