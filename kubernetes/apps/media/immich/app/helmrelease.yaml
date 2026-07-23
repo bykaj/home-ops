@@ -28,7 +28,7 @@ spec:
               repository: ghcr.io/immich-app/immich-server
               tag: v3.0.3@sha256:c716dc20f957aafd89fa9d284a2ec63e25c9e2d8d8e87c6197d540a3dce237db
             env:
-              IMMICH_ALLOW_SETUP: "true"
+              IMMICH_ALLOW_SETUP: "false"
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_TELEMETRY_INCLUDE: "all"
               IMMICH_WORKERS_INCLUDE: "api"
