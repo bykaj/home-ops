@@ -8,5 +8,5 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./authentik/ks.yaml
+  #- ./authentik/ks.yaml
   - ./oidc-provider-debugger/ks.yaml
