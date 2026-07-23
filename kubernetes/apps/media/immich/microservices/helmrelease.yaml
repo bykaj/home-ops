@@ -24,6 +24,8 @@ spec:
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_WORKERS_EXCLUDE: "api"
+              REDIS_HOSTNAME: "${REDIS_HOST}"
+              REDIS_DBINDEX: "5"
               TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
