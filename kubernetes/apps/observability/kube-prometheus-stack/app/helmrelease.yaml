@@ -39,13 +39,15 @@ spec:
         folder: observability
         matchLabels:
           grafana.internal/instance: grafana
-    kube-state-metrics:
-      fullnameOverride: kube-state-metrics
     kubeEtcd:
       service:
         selector:
           component: kube-apiserver
     kubeProxy:
+      enabled: false
+    kubeStateMetrics:
+      enabled: false
+    nodeExporter:
       enabled: false
     prometheus:
       prometheusSpec:
@@ -87,5 +89,3 @@ spec:
           parentRefs:
             - name: envoy-internal
               namespace: network
-    prometheus-node-exporter:
-      fullnameOverride: node-exporter
