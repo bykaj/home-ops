@@ -13,40 +13,55 @@ spec:
     controllers:
       karakeep:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/auto: true
+        pod:
+          labels:
+            app.kubernetes.io/component: application
         containers:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.32.0@sha256:64d6a9bbf2d37b5c808cf06b5d87f1f1c7846fdd3844724145a9741aeb06fd31
             env:
-              ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
-              BROWSER_CONNECT_ONDEMAND: "true"
-              BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
-              COREPACK_INTEGRITY_KEYS: "0"
-              CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
-              CRAWLER_ENABLE_ADBLOCKER: "true"
-              CRAWLER_FULL_PAGE_ARCHIVE: "true"
-              CRAWLER_FULL_PAGE_SCREENSHOT: "true"
-              CRAWLER_SCREENSHOT_TIMEOUT_SEC: "30"
-              CRAWLER_STORE_SCREENSHOT: "true"
+              # Application config
               DATA_DIR: &dataDir "/data"
-              DISABLE_NEW_RELEASE_CHECK: "true"
-              DISABLE_PASSWORD_AUTH: "true"
-              DISABLE_SIGNUPS: "false"
-              INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
-              INFERENCE_ENABLE_AUTO_TAGGING: "true"
-              INFERENCE_IMAGE_MODEL: "gpt-4o-mini"
-              INFERENCE_LANG: "english"
-              INFERENCE_TEXT_MODEL: "gpt-4.1-mini"
+              DISABLE_NEW_RELEASE_CHECK: true
               MEILI_ADDR: "http://meilisearch.database:7700"
               NEXTAUTH_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
+              RATE_LIMITING_ENABLED: true
+              TZ: "${TIMEZONE}"
+              # Asset storage config
+              ASSET_STORE_S3_FORCE_PATH_STYLE: true
+              # Authentication config
+              DISABLE_PASSWORD_AUTH: true
+              DISABLE_SIGNUPS: false
+              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
-              OCR_LANGS: "eng,nld"
-              RATE_LIMITING_ENABLED: "true"
-              TZ: "${TIMEZONE}"
+              # Inference config
+              EMBEDDING_TEXT_MODEL: "text-embedding-3-small"
+              INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
+              INFERENCE_ENABLE_AUTO_TAGGING: true
+              INFERENCE_IMAGE_MODEL: "gpt-5-mini"
+              INFERENCE_LANG: "english"
+              INFERENCE_TEXT_MODEL: "gpt-5-mini"
+              INFERENCE_USE_MAX_COMPLETION_TOKENS: true
+              # Crawler config
+              BROWSER_CONNECT_ONDEMAND: true
+              BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
+              CRAWLER_NUM_WORKERS: 2
+              CRAWLER_DOMAIN_RATE_LIMIT_WINDOW_MS: 15000
+              CRAWLER_DOMAIN_RATE_LIMIT_REQUESTS: 2
+              CRAWLER_JOB_TIMEOUT_SEC: 120
+              CRAWLER_ENABLE_ADBLOCKER: true
+              CRAWLER_DOWNLOAD_BANNER_IMAGE: true
+              CRAWLER_STORE_SCREENSHOT: true
+              CRAWLER_FULL_PAGE_SCREENSHOT: true
+              CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
+              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.${DOMAIN_APP}"
+              # OCR config
+              OCR_LANGS: "eng,nld,jpn"
+              OCR_USE_LLM: true
             envFrom:
               - secretRef:
                   name: &secret karakeep-secret
@@ -67,17 +82,19 @@ spec:
                 memory: 2Gi
       browserless:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/auto: true
+        pod:
+          labels:
+            app.kubernetes.io/component: browserless
         containers:
           app:
             image:
               repository: ghcr.io/browserless/chromium
               tag: v2.55.0@sha256:bba9dc2014f90289d4b845dfe12b38bd00b25b2cd732d5b16778c5229f2da7e1
-              pullPolicy: IfNotPresent
             env:
               DEBUG: "browserless*,-*:trace,-*:verbose"
               CONCURRENT: "5"
-              ENABLE_DEBUGGER: "false"
+              ENABLE_DEBUGGER: false
               TIMEOUT: "60000"
               TOKEN:
                 valueFrom:
@@ -123,7 +140,7 @@ spec:
     route:
       app:
         annotations:
-          gethomepage.dev/enabled: "true"
+          gethomepage.dev/enabled: true
           gethomepage.dev/group: "Tools"
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-karakeep.svg"
