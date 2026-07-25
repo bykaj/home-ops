@@ -91,6 +91,13 @@ spec:
           - hosts:
               - *host
     persistence:
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault/Backups
+        globalMounts:
+          - path: /data/backups
+            subPath: Apps/Immich
       library:
         type: nfs
         server: "${NAS_HOST}"
