@@ -30,7 +30,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/keda/postgres-scaler
+    - ../../../../components/zeroscaler/postgres
   dependsOn:
     - name: authentik-configuration
     - name: cloudnative-pg-cluster
