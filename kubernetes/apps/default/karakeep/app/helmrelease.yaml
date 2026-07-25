@@ -60,7 +60,7 @@ spec:
               CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
               CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.${DOMAIN_APP}"
               # OCR config
-              OCR_LANGS: "eng,nld,jpn"
+              OCR_LANGS: "eng,nld"
               OCR_USE_LLM: "true"
             envFrom:
               - secretRef:
