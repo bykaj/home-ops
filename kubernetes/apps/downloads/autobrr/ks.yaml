@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/keda/postgres-scaler
+    - ../../../../components/zeroscaler/postgres
   dependsOn:
     - name: cloudnative-pg-cluster
       namespace: database

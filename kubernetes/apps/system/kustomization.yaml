@@ -12,7 +12,6 @@ resources:
   - ./csi-driver-smb/ks.yaml
   - ./descheduler/ks.yaml
   - ./intel-gpu-resource-driver/ks.yaml
-  - ./keda/ks.yaml
   - ./openebs/ks.yaml
   - ./reflector/ks.yaml
   - ./reloader/ks.yaml

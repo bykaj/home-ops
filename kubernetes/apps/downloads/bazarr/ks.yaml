@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    # - ../../../../components/keda/nfs-scaler
+    - ../../../../components/zeroscaler/nfs
     - ../../../../components/volsync
   dependsOn:
     - name: sonarr
