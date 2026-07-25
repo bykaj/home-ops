@@ -120,7 +120,7 @@ spec:
       app:
         annotations:
           gatus.home-operations.com/endpoint: |-
-            conditions: ["[STATUS] == 401"]
+            path: /identity
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Media"
           gethomepage.dev/name: "${APP_NAME}"
