@@ -79,19 +79,19 @@ spec:
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
     persistence:
-      backups:
-        type: nfs
-        server: "${NAS_HOST}"
-        path: /mnt/vault/Backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/Immich
       library:
         type: nfs
         server: "${NAS_HOST}"
         path: /mnt/vault/Photos/Library
         globalMounts:
           - path: *mediaLocation
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault/Backups
+        globalMounts:
+          - path: /data/backups
+            subPath: Apps/Immich
       import:
         type: nfs
         server: "${NAS_HOST}"
