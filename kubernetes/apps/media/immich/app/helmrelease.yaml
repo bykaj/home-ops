@@ -84,7 +84,7 @@ spec:
         server: "${NAS_HOST}"
         path: /mnt/vault/Backups
         globalMounts:
-          - path: /data/backups
+          - path: /mnt/backups
             subPath: Apps/Immich
       library:
         type: nfs
