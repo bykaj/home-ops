@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: ${APP}
+  name: ${ZEROSCALER_NAME:=${APP}}
 spec:
   minReplicas: 0
   maxReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: ${CONTROLLER:=Deployment}
-    name: ${APP}
+    name: ${ZEROSCALER_NAME:=${APP}}
   metrics:
     - type: External
       external:

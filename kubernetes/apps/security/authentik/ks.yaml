@@ -42,7 +42,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KEDA_NAME: authentik-server
+      ZEROSCALER_NAME: authentik-server
       APP_NAME: Authentik
   prune: true
   sourceRef:
