@@ -28,7 +28,8 @@ spec:
         parameters:
           barmanObjectName: cloudnative-pg-b2
           serverName: ${CNPG_V18_PREVIOUS_CLUSTER}
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.4-system-trixie@sha256:9287ce030c6f3ce822e383b019ae4aaf1e8370bff3b39f9c51dc10d69dc97219
+  # imageName: ghcr.io/cloudnative-pg/postgresql:18.4-system-trixie@sha256:9287ce030c6f3ce822e383b019ae4aaf1e8370bff3b39f9c51dc10d69dc97219
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.3@sha256:392b53675b403d6a2c72b673cc488a7c272514755dd818c622fb9ce4665193c4
   instances: 3
   monitoring:
     enablePodMonitor: true
