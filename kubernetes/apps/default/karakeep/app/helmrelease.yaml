@@ -13,7 +13,7 @@ spec:
     controllers:
       karakeep:
         annotations:
-          reloader.stakater.com/auto: true
+          reloader.stakater.com/auto: "true"
         pod:
           labels:
             app.kubernetes.io/component: application
@@ -25,43 +25,43 @@ spec:
             env:
               # Application config
               DATA_DIR: &dataDir "/data"
-              DISABLE_NEW_RELEASE_CHECK: true
+              DISABLE_NEW_RELEASE_CHECK: "true"
               MEILI_ADDR: "http://meilisearch.database:7700"
               NEXTAUTH_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              RATE_LIMITING_ENABLED: true
+              RATE_LIMITING_ENABLED: "true"
               TZ: "${TIMEZONE}"
               # Asset storage config
-              ASSET_STORE_S3_FORCE_PATH_STYLE: true
+              ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
               # Authentication config
-              DISABLE_PASSWORD_AUTH: true
-              DISABLE_SIGNUPS: false
-              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
+              DISABLE_PASSWORD_AUTH: "true"
+              DISABLE_SIGNUPS: "false"
+              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
               # Inference config
               EMBEDDING_TEXT_MODEL: "text-embedding-3-small"
-              INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
-              INFERENCE_ENABLE_AUTO_TAGGING: true
+              INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
+              INFERENCE_ENABLE_AUTO_TAGGING: "true"
               INFERENCE_IMAGE_MODEL: "gpt-5-mini"
               INFERENCE_LANG: "english"
               INFERENCE_TEXT_MODEL: "gpt-5-mini"
-              INFERENCE_USE_MAX_COMPLETION_TOKENS: true
+              INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
               # Crawler config
-              BROWSER_CONNECT_ONDEMAND: true
+              BROWSER_CONNECT_ONDEMAND: "true"
               BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               CRAWLER_NUM_WORKERS: 2
               CRAWLER_DOMAIN_RATE_LIMIT_WINDOW_MS: 15000
               CRAWLER_DOMAIN_RATE_LIMIT_REQUESTS: 2
               CRAWLER_JOB_TIMEOUT_SEC: 120
-              CRAWLER_ENABLE_ADBLOCKER: true
-              CRAWLER_DOWNLOAD_BANNER_IMAGE: true
-              CRAWLER_STORE_SCREENSHOT: true
-              CRAWLER_FULL_PAGE_SCREENSHOT: true
+              CRAWLER_ENABLE_ADBLOCKER: "true"
+              CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
+              CRAWLER_STORE_SCREENSHOT: "true"
+              CRAWLER_FULL_PAGE_SCREENSHOT: "true"
               CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
               CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.${DOMAIN_APP}"
               # OCR config
               OCR_LANGS: "eng,nld,jpn"
-              OCR_USE_LLM: true
+              OCR_USE_LLM: "true"
             envFrom:
               - secretRef:
                   name: &secret karakeep-secret
@@ -82,7 +82,7 @@ spec:
                 memory: 2Gi
       browserless:
         annotations:
-          reloader.stakater.com/auto: true
+          reloader.stakater.com/auto: "true"
         pod:
           labels:
             app.kubernetes.io/component: browserless
@@ -94,7 +94,7 @@ spec:
             env:
               DEBUG: "browserless*,-*:trace,-*:verbose"
               CONCURRENT: "5"
-              ENABLE_DEBUGGER: false
+              ENABLE_DEBUGGER: "false"
               TIMEOUT: "60000"
               TOKEN:
                 valueFrom:
@@ -140,7 +140,7 @@ spec:
     route:
       app:
         annotations:
-          gethomepage.dev/enabled: true
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Tools"
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-karakeep.svg"
