@@ -142,7 +142,7 @@ spec:
           mountPath: &blueprintsFolder /blueprints/sidecar
       extraContainers:
         - name: k8s-sidecar
-          image: ghcr.io/home-operations/k8s-sidecar:2.8.2@sha256:74567b6445a6a844ebf9ccdead19190dcc13eeb46c44e0dfa69e967890467e70
+          image: ghcr.io/home-operations/k8s-sidecar:2.9.0@sha256:8202f0089ef11d682fd189b3c83c1cb34cc1475625dff1bdd48f2a25b9953bf2
           env:
             - name: LABEL
               value: k8s-sidecar.home.arpa/application
