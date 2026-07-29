@@ -15,11 +15,11 @@ spec:
         name: meilisearch
   interval: 1h
   values:
+    # - --experimental-dumpless-upgrade
     command:
       - tini
       - --
       - /bin/meilisearch
-      # - --experimental-dumpless-upgrade
     environment:
       MEILI_NO_ANALYTICS: true
       MEILI_ENV: "production"
