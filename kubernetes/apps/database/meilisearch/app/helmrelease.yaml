@@ -19,7 +19,7 @@ spec:
       - tini
       - --
       - /bin/meilisearch
-      - --experimental-dumpless-upgrade
+      # - --experimental-dumpless-upgrade
     environment:
       MEILI_NO_ANALYTICS: true
       MEILI_ENV: "production"
