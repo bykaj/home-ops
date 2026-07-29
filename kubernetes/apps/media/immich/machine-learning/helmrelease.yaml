@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.0.3-openvino
+              tag: v3.1.0-openvino
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               MPLCONFIGDIR: "/cache/matplotlib"
