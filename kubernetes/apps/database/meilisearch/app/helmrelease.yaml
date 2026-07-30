@@ -16,10 +16,8 @@ spec:
   interval: 1h
   values:
     command:
-      - tini
-      - --
       - /bin/meilisearch
-      - —-upgrade-db
+      - --upgrade-db
     environment:
       MEILI_NO_ANALYTICS: true
       MEILI_ENV: "production"
