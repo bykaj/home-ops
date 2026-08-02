@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: docker.io/rook/ceph
-              tag: v1.19.6@sha256:eab4005612a6d10cac3d947f9846380ea13ecd2336c7397f519f0009578329c2
+              tag: v1.19.8@sha256:df9b8538bd0c56b0750b888c89bc459fc9144da755b4b5be2b66241d0f12728a
             command: ["/bin/bash"]
             args: ["-m", "-c", "/usr/local/bin/toolbox.sh"]
             env:
