@@ -39,12 +39,15 @@ spec:
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
               # Inference config
+              EMBEDDING_DIMENSIONS: "1536"
+              EMBEDDING_ENABLE_AUTO_INDEXING: "true"
               EMBEDDING_TEXT_MODEL: "text-embedding-3-small"
+              INFERENCE_CONTEXT_LENGTH: "8192"
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
               INFERENCE_ENABLE_AUTO_TAGGING: "true"
-              INFERENCE_IMAGE_MODEL: "gpt-5-mini"
+              INFERENCE_IMAGE_MODEL: "gpt-4o-mini"
               INFERENCE_LANG: "english"
-              INFERENCE_TEXT_MODEL: "gpt-5-mini"
+              INFERENCE_TEXT_MODEL: "gpt-5.6-luna"
               INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
               # Crawler config
               BROWSER_CONNECT_ONDEMAND: "true"
