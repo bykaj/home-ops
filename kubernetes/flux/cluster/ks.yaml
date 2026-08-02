@@ -46,7 +46,7 @@ spec:
           name: not-used
         spec:
           retryInterval: 2m
-          timeout: 10m
+          timeout: 15m
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
@@ -68,7 +68,7 @@ spec:
                     crds: CreateReplace
                     strategy:
                       name: RetryOnFailure
-                  timeout: 10m
+                  timeout: 15m
                   upgrade:
                     cleanupOnFail: true
                     crds: CreateReplace
