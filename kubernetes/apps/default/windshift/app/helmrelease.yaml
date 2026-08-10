@@ -30,7 +30,7 @@ spec:
             env:
               ALLOW_LOCAL_CONNECTIONS: "true"
               ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              ATTACHMENT_PATH: /data/attachments
+              ATTACHMENT_PATH: "/data/attachments"
               BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               LOG_LEVEL: "info"
               PORT: &port 8080
