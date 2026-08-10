@@ -24,4 +24,4 @@ resources:
   - ./thelounge/ks.yaml
   - ./wallos/ks.yaml
   - ./wastebin/ks.yaml
-  - ./windshift/ks.yaml
+  #- ./windshift/ks.yaml
