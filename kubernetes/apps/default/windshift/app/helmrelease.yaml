@@ -32,7 +32,6 @@ spec:
               ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               ATTACHMENT_PATH: "/data/attachments"
               BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
-              ENABLE_ADMIN_FALLBACK: "true"
               LOG_LEVEL: "info"
               PORT: &port 8080
               TZ: "${TIMEZONE}"
