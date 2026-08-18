@@ -123,6 +123,10 @@ spec:
             app:
               - path: /app/apps/web/.next/cache
                 subPath: cache
+          chrome:
+            app:
+              - path: /var/cache
+                subPath: cache
         globalMounts:
           - path: /tmp
             subPath: tmp
