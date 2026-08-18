@@ -51,7 +51,7 @@ spec:
               INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
               # Crawler config
               BROWSER_CONNECT_ONDEMAND: "true"
-              BROWSER_WEBSOCKET_URL: ws://karakeep-browserless:3000/chromium/playwright?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
+              BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
               CRAWLER_NUM_WORKERS: 2
               CRAWLER_DOMAIN_RATE_LIMIT_WINDOW_MS: 15000
               CRAWLER_DOMAIN_RATE_LIMIT_REQUESTS: 2
@@ -67,62 +67,48 @@ spec:
               OCR_USE_LLM: "true"
             envFrom:
               - secretRef:
-                  name: &secret karakeep-secret
+                  name: karakeep-secret
             probes:
-              startup:
+              liveness: &probes
                 enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
+                  httpGet:
+                    port: &port 3000
+                    path: /api/health
+              readiness: *probes
             resources:
               requests:
                 cpu: 10m
               limits:
                 memory: 2Gi
-      browserless:
+      chrome:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
-            app.kubernetes.io/component: browserless
+            app.kubernetes.io/component: chrome
         containers:
           app:
             image:
-              repository: ghcr.io/browserless/chromium
-              tag: v2.55.4@sha256:2ed0183564d7705be8555632b48306a500073ff64ca9e507f6cd2d4a56ecb0fc
-            env:
-              DEBUG: "browserless*,-*:trace,-*:verbose"
-              CONCURRENT: "5"
-              ENABLE_DEBUGGER: "false"
-              TIMEOUT: "60000"
-              TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: *secret
-                    key: TOKEN
-              TZ: "${TIMEZONE}"
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            resources:
-              requests:
-                cpu: 10m
-                memory: 512Mi
-              limits:
-                memory: 3Gi
+              repository: ghcr.io/karakeep-app/karakeep-chrome
+              tag: 151.0.7922.47-r1@sha256:5b19bbb160e9ff60681a3abd97e1c4ec9f64212301410de658c3900ab7ef31e7
+            args:
+              - --headless
+              - --disable-gpu
+              - --disable-dev-shm-usage
+              - --hide-scrollbars
+              - --disable-blink-features=AutomationControlled
+              - --window-size=1440,900
             securityContext:
-              runAsUser: 999
-              runAsGroup: 999
-              allowPrivilegeEscalation: false
               capabilities:
                 drop:
                   - ALL
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 1Gi
     persistence:
       config:
         existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
@@ -159,7 +145,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: *app
-                port: &port 3000
+                port: *port
     service:
       karakeep:
         primary: true
@@ -167,8 +153,8 @@ spec:
         ports:
           http:
             port: *port
-      browserless:
-        controller: browserless
+      chrome:
+        controller: chrome
         ports:
           http:
-            port: 3000
+            port: 9222
