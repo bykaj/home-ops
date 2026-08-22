@@ -25,6 +25,8 @@ machine:
     kubernetesTalosAPIAccess:
       allowedKubernetesNamespaces:
         - actions-runner-system
+        - kube-system
+        - system
         - system-upgrade
       allowedRoles:
         - os:admin
@@ -37,10 +39,6 @@ machine:
       path: /etc/cri/conf.d/20-customization.part
       permissions: 0o644
       content: |-
-        [plugins]
-          [plugins."io.containerd.grpc.v1.cri"]
-            enable_unprivileged_ports = true
-            enable_unprivileged_icmp = true
         [plugins."io.containerd.cri.v1.images"]
           discard_unpacked_layers = false
         [plugins."io.containerd.cri.v1.runtime"]
@@ -54,8 +52,10 @@ machine:
         [ NFSMount_Global_Options ]
         nfsvers=4.2
         hard=True
-        noatime=True
         nconnect=16
+        noatime=True
+        rsize=1048576
+        wsize=1048576
   install:
     disk: /dev/sda
     image: factory.talos.dev/installer/20dd46839f55d5d975c6c9ac2eea56c20b056e0f72acc434f4882ed71e40013b:v1.13.9
@@ -84,15 +84,20 @@ machine:
     topology.kubernetes.io/region: main
     topology.kubernetes.io/zone: home
   sysctls:
-    fs.inotify.max_user_instances: "8192"
-    fs.inotify.max_user_watches: "1048576"
-    net.core.rmem_max: "67108864"
-    net.core.wmem_max: "67108864"
-    net.ipv4.neigh.default.gc_thresh1: "4096"
-    net.ipv4.neigh.default.gc_thresh2: "8192"
-    net.ipv4.neigh.default.gc_thresh3: "16384"
-    net.ipv4.tcp_fastopen: "3"
-    user.max_user_namespaces: "11255"
+    fs.inotify.max_user_instances: "8192"      # Watchdog
+    fs.inotify.max_user_watches: "1048576"     # Watchdog
+    net.core.rmem_max: "7500000"               # Cloudflared / QUIC
+    net.core.wmem_max: "7500000"               # Cloudflared / QUIC
+    net.ipv4.neigh.default.gc_thresh1: "4096"  # Prevent ARP cache overflows
+    net.ipv4.neigh.default.gc_thresh2: "8192"  # Prevent ARP cache overflows
+    net.ipv4.neigh.default.gc_thresh3: "16384" # Prevent ARP cache overflows
+    net.ipv4.ping_group_range: 0 2147483647    # Allow Ping
+    net.ipv4.tcp_fastopen: "3"                 # Send and accept data in the opening SYN packet
+    net.ipv6.conf.all.autoconf: "0"            # disable IPv6 autoconfig
+    net.ipv6.conf.default.autoconf: "0"        # disable IPv6 autoconfig
+    net.ipv6.conf.bond0.autoconf: "0"          # disable IPv6 autoconfig
+    user.max_user_namespaces: "11255"          # User Namespaces
+    vm.nr_hugepages: "1024"                    # PostgreSQL
   time:
     disabled: false
     servers:
@@ -193,3 +198,10 @@ apiVersion: v1alpha1
 kind: WatchdogTimerConfig
 device: /dev/watchdog0
 timeout: 5m
+---
+# attempt to reduce / disable the broken Talos OOM "feature"
+apiVersion: v1alpha1
+kind: OOMConfig
+triggerExpression: "false"
+cgroupRankingExpression: "0.0"
+sampleInterval: "5s"
