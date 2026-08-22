@@ -64,10 +64,9 @@ spec:
         osd:
           limits:
             cpu: 500m
-            memory: 5120Mi
+            memory: 8Gi
           requests:
             cpu: 150m
-            memory: 2048Mi
         # Really don't want these jobs OOMKilled
         # prepareosd:
         #   limits:
