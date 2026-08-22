@@ -25,6 +25,12 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+    # Keep Ceph on Squid for the chart migration; Tentacle (v20) lands separately.
+    # The chart derives both cephVersion and the toolbox image from cephImage, and
+    # setting cephClusterSpec.cephVersion alongside it renders a duplicate key.
+    cephImage:
+      repository: quay.io/ceph/ceph
+      tag: v19.2.6
     cephClusterSpec:
       cephConfig:
         global:
@@ -38,8 +44,10 @@ spec:
       crashCollector:
         disable: false
       csi:
+        cephfs:
+          kernelMountOptions: ms_mode=prefer-crc
         readAffinity:
-          enabled: true
+          enabled: false # https://github.com/ceph/ceph-csi/issues/5772
       dashboard:
         enabled: true
         urlPrefix: /
