@@ -14,7 +14,7 @@ spec:
       alertmanagerSpec:
         alertmanagerConfiguration:
           name: alertmanager
-        externalUrl: https://alertmanager.${DOMAIN_APP}
+        externalUrl: https://alertmanager.bykaj.app
         storage:
           volumeClaimTemplate:
             spec:
@@ -26,7 +26,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - alertmanager.${DOMAIN_APP}
+            - alertmanager.bykaj.app
           parentRefs:
             - name: envoy-internal
               namespace: network
@@ -51,7 +51,7 @@ spec:
       enabled: false
     prometheus:
       prometheusSpec:
-        externalUrl: https://prometheus.${DOMAIN_APP}
+        externalUrl: https://prometheus.bykaj.app
         version: v2.55.1 # override 'unsupported Prometheus version' error
         image:
           registry: docker.io
@@ -85,7 +85,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - prometheus.${DOMAIN_APP}
+            - prometheus.bykaj.app
           parentRefs:
             - name: envoy-internal
               namespace: network

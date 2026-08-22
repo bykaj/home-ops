@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./kubernetes/apps/observability/grafana/app
+  path: ./kubernetes/apps/observability/grafana-operator/app
   postBuild:
     substitute:
       APP: *app
@@ -35,7 +35,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/observability/grafana/instance
+  path: ./kubernetes/apps/observability/grafana-operator/instance
   postBuild:
     substitute:
       APP: *app
