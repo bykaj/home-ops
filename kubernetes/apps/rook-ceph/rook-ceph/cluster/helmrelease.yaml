@@ -13,8 +13,19 @@ spec:
   values:
     cephClusterSpec:
       cephConfig:
+        global:
+          bdev_enable_discard: "true" # quote
+          bdev_async_discard_threads: "1" # quote
+          osd_class_update_on_start: "false" # quote
+          device_failure_prediction_mode: local # requires mgr module
+          mon_data_avail_warn: "10" # quote
+        mgr:
+          log_max_recent: "100" # quote
         mon:
           mon_cluster_log_level: info
+        osd:
+          bluestore_slow_ops_warn_threshold: "50" # quote
+          bluestore_slow_ops_warn_lifetime: "300"
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
       crashCollector:
@@ -41,9 +52,16 @@ spec:
             policy: mute
       mgr:
         modules:
+          - name: diskprediction_local
+            enabled: true
+          - name: insights
+            enabled: true
           - name: pg_autoscaler
             enabled: true
+          - name: rook
+            enabled: true
       network:
+        provider: host
         connections:
           requireMsgr2: true
       resources:
@@ -139,6 +157,7 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+            sectionName: https
     cephBlockPools:
       - name: ceph-blockpool
         spec:
