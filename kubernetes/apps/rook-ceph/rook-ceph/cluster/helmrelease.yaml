@@ -47,9 +47,63 @@ spec:
         connections:
           requireMsgr2: true
       resources:
+        mgr:
+          limits:
+            cpu: 500m
+            memory: 1280Mi
+          requests:
+            cpu: 60m
+            memory: 768Mi
+        mon:
+          limits:
+            cpu: 100m
+            memory: 1536Mi
+          requests:
+            cpu: 100m
+            memory: 1024Mi
         osd:
           limits:
-            memory: 8Gi # Required for bootstrap
+            cpu: 500m
+            memory: 5120Mi
+          requests:
+            cpu: 150m
+            memory: 2048Mi
+        # Really don't want these jobs OOMKilled
+        # prepareosd:
+        #   limits:
+        #     cpu: 1000m
+        #     memory: 400Mi
+        #   requests:
+        #     cpu: 50m
+        #     memory: 200Mi
+        mgr-sidecar:
+          limits:
+            cpu: 256m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 40Mi
+        crashcollector:
+          limits:
+            cpu: 100m
+            memory: 64M
+          requests:
+            cpu: 15m
+            memory: 32M
+        logcollector:
+          limits:
+            cpu: 50m
+            memory: 32Mi
+          requests:
+            cpu: 5m
+            memory: 16Mi
+        cleanup:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
       security:
         cephx:
           daemon:
