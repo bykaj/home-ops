@@ -23,6 +23,7 @@ spec:
           log_max_recent: "100" # quote
         mon:
           mon_cluster_log_level: info
+          mon_data_avail_warn: "19" # quote
         osd:
           bluestore_slow_ops_warn_threshold: "50" # quote
           bluestore_slow_ops_warn_lifetime: "300"
@@ -31,8 +32,6 @@ spec:
       crashCollector:
         disable: false
       csi:
-        cephfs:
-          kernelMountOptions: ms_mode=prefer-crc
         readAffinity:
           enabled: false # https://github.com/ceph/ceph-csi/issues/5772
       dashboard:
@@ -50,6 +49,38 @@ spec:
             policy: mute
           AUTH_INSECURE_KEYS_CREATABLE:
             policy: mute
+        livenessProbe:
+          mon:
+            probe:
+              initialDelaySeconds: 30
+              periodSeconds: 30
+              timeoutSeconds: 10
+          mgr:
+            probe:
+              initialDelaySeconds: 30
+              periodSeconds: 30
+              timeoutSeconds: 10
+          osd:
+            probe:
+              initialDelaySeconds: 30
+              periodSeconds: 30
+              timeoutSeconds: 10
+        startupProbe:
+          mon:
+            probe:
+              initialDelaySeconds: 15
+              periodSeconds: 30
+              timeoutSeconds: 10
+          mgr:
+            probe:
+              initialDelaySeconds: 15
+              periodSeconds: 30
+              timeoutSeconds: 10
+          osd:
+            probe:
+              initialDelaySeconds: 15
+              periodSeconds: 30
+              timeoutSeconds: 10
       mgr:
         modules:
           - name: diskprediction_local
@@ -145,6 +176,9 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: true
+      prometheusRuleOverrides:
+        CephNodeInconsistentMTU:
+          disabled: true
     toolbox:
       enabled: true
     route:
