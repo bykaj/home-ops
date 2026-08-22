@@ -16,8 +16,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      CNPG_V18_CURRENT_CLUSTER: "postgres-v18-20260822"
-      CNPG_V18_PREVIOUS_CLUSTER: "postgres-v18-20260723"
+      CNPG_V18_CURRENT_CLUSTER: "postgres-v18-20260822-02"
+      CNPG_V18_PREVIOUS_CLUSTER: "postgres-v18-20260822"
   prune: true
   sourceRef:
     kind: GitRepository
