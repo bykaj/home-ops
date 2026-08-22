@@ -12,7 +12,7 @@ spec:
   values:
     image:
       repository: ghcr.io/rook/ceph
-      cephCommandsTimeoutSeconds: "20"
+      cephCommandsTimeoutSeconds: "60"
       csiRBDProvisionerResource: |
         - name : csi-provisioner
           resource:
