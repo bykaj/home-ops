@@ -11,6 +11,8 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: tailscale-operator
       namespace: network
   interval: 1h
