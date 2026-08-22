@@ -1,5 +1,11 @@
 ---
 customization:
+  extraKernelArgs:
+    # Intel iGPU
+    - i915.enable_guc=3
+    # PCI Passthrough
+    - intel_iommu=on
+    - iommu=pt
   systemExtensions:
     officialExtensions:
       # Intel iGPU
