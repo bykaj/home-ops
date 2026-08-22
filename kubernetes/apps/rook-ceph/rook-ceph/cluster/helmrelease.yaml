@@ -11,35 +11,10 @@ spec:
   interval: 1h
   timeout: 15m
   values:
-    skipUpgradeChecks: true
-    monitoring:
-      enabled: true
-      createPrometheusRules: true
-    toolbox:
-      enabled: false
-    route:
-      dashboard:
-        host:
-          name: rook.${DOMAIN_APP}
-          path: /
-          pathType: PathPrefix
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-    # Keep Ceph on Squid for the chart migration; Tentacle (v20) lands separately.
-    # The chart derives both cephVersion and the toolbox image from cephImage, and
-    # setting cephClusterSpec.cephVersion alongside it renders a duplicate key.
-    cephImage:
-      repository: quay.io/ceph/ceph
-      tag: v19.2.6
     cephClusterSpec:
       cephConfig:
-        global:
-          bdev_enable_discard: "true" # quote
-          bdev_async_discard_threads: "1" # quote
-          osd_class_update_on_start: "false" # quote
-          device_failure_prediction_mode: local # requires mgr module
-          mon_data_avail_warn: "10" # quote
+        mon:
+          mon_cluster_log_level: info
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
       crashCollector:
@@ -54,78 +29,34 @@ spec:
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
+      healthCheck:
+        muteHealthWarning:
+          AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_CLIENT_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_KEYS_ALLOWED:
+            policy: mute
+          AUTH_INSECURE_KEYS_CREATABLE:
+            policy: mute
       mgr:
         modules:
-          - name: diskprediction_local
-            enabled: true
-          - name: insights
-            enabled: true
           - name: pg_autoscaler
             enabled: true
-          - name: rook
-            enabled: true
-      # network:
-      #   provider: host
-      #   connections:
-      #     requireMsgr2: true
+      network:
+        connections:
+          requireMsgr2: true
       resources:
-        mgr:
-          limits:
-            cpu: 500m
-            memory: 1280Mi
-          requests:
-            cpu: 60m
-            memory: 768Mi
-        mon:
-          limits:
-            cpu: 100m
-            memory: 1536Mi
-          requests:
-            cpu: 100m
-            memory: 1024Mi
         osd:
           limits:
-            cpu: 500m
-            memory: 5120Mi
-          requests:
-            cpu: 150m
-            memory: 2048Mi
-        # Really don't want these jobs OOMKilled
-        # prepareosd:
-        #   limits:
-        #     cpu: 1000m
-        #     memory: 400Mi
-        #   requests:
-        #     cpu: 50m
-        #     memory: 200Mi
-        mgr-sidecar:
-          limits:
-            cpu: 256m
-            memory: 100Mi
-          requests:
-            cpu: 50m
-            memory: 40Mi
-        crashcollector:
-          limits:
-            cpu: 100m
-            memory: 64M
-          requests:
-            cpu: 15m
-            memory: 32M
-        logcollector:
-          limits:
-            cpu: 50m
-            memory: 32Mi
-          requests:
-            cpu: 5m
-            memory: 16Mi
-        cleanup:
-          limits:
-            cpu: 500m
-            memory: 1Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+            memory: 8Gi # Required for bootstrap
+      security:
+        cephx:
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+          csi:
+            keyType: aes # aes256k requires kernel 7.0+
       storage:
         useAllNodes: false
         useAllDevices: false
@@ -141,6 +72,20 @@ spec:
           - name: kube-node-03
             devices:
               - name: /dev/sdb
+    monitoring:
+      enabled: true
+      createPrometheusRules: true
+    toolbox:
+      enabled: true
+    route:
+      dashboard:
+        host:
+          name: rook.${DOMAIN_APP}
+          path: /
+          pathType: PathPrefix
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -150,27 +95,29 @@ spec:
         storageClass:
           enabled: true
           name: ceph-block
-          isDefault: true
-          reclaimPolicy: Delete
           allowVolumeExpansion: true
-          volumeBindingMode: Immediate
-          mountOptions: ["discard"]
+          isDefault: true
+          mountOptions:
+            - discard
           parameters:
-            compression_mode: aggressive
             compression_algorithm: zstd
-            imageFormat: "2"
-            imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
-            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
+            compression_mode: passive
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
             csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/controller-publish-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/controller-publish-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
             csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
-            csi.storage.k8s.io/fstype: ext4
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
+            imageFeatures: deep-flatten,exclusive-lock,fast-diff,layering,object-map
+            imageFormat: "2"
+          reclaimPolicy: Delete
+          volumeBindingMode: Immediate
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
-      isDefault: false
       deletionPolicy: Delete
+      isDefault: true
     cephFileSystems: []
     cephObjectStores: []
