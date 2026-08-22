@@ -12,6 +12,8 @@ machine:
         routes:
           - gateway: 10.73.0.254
             network: 0.0.0.0/0
+        vip:
+          ip: 10.73.10.10
   nodeLabels:
     node.kubernetes.io/gpu: 'true'
   type: controlplane
