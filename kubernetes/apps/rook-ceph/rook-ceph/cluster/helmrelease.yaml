@@ -11,6 +11,7 @@ spec:
   interval: 1h
   timeout: 15m
   values:
+    skipUpgradeChecks: true
     monitoring:
       enabled: true
       createPrometheusRules: true
