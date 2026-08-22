@@ -7,6 +7,6 @@ components:
   - ../../components/namespace
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources:
-  - ./rook-ceph/ks.yaml
-  - ./ceph-csi-drivers/ks.yaml
+resources: []
+  # - ./rook-ceph/ks.yaml
+  # - ./ceph-csi-drivers/ks.yaml
