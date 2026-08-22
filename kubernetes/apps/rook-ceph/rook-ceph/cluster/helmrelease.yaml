@@ -67,31 +67,31 @@ spec:
         mgr:
           limits:
             cpu: 500m
-            memory: 1280Mi
+            memory: 720Mi
           requests:
-            cpu: 60m
-            memory: 768Mi
+            cpu: 50m
+            memory: 360Mi
         mon:
           limits:
-            cpu: 100m
-            memory: 1536Mi
+            cpu: 500m
+            memory: 640Mi
           requests:
             cpu: 100m
-            memory: 1024Mi
+            memory: 320Mi
         osd:
           limits:
             cpu: 500m
             memory: 8Gi
           requests:
             cpu: 150m
-        # Really don't want these jobs OOMKilled
-        # prepareosd:
-        #   limits:
-        #     cpu: 1000m
-        #     memory: 400Mi
-        #   requests:
-        #     cpu: 50m
-        #     memory: 200Mi
+            memory: 1Gi
+        prepareosd:
+          limits:
+            cpu: 1000m
+            memory: 400Mi
+          requests:
+            cpu: 50m
+            memory: 200Mi
         mgr-sidecar:
           limits:
             cpu: 256m
