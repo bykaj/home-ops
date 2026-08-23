@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/nfs
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   dependsOn:
     - name: prowlarr
     - name: sabnzbd
@@ -24,8 +24,8 @@ spec:
       APP_GID: "4000"
       APP_UID: "4000"
       APP_NAME: Whisparr
-      VOLSYNC_CACHE_CAPACITY: 5Gi
-      VOLSYNC_CAPACITY: 20Gi
+      KOPIUR_CACHE_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 20Gi
   prune: true
   sourceRef:
     kind: GitRepository

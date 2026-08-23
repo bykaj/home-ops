@@ -53,7 +53,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
+        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: /config
       backups:

@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -19,7 +19,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Spoolman
-      VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CAPACITY: 2Gi
   prune: true
   sourceRef:
     kind: GitRepository

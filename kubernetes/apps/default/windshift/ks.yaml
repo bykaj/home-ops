@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/postgres
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -23,7 +23,7 @@ spec:
       APP: *app
       APP_NAME: Windshift
       APP_SUBDOMAIN: projects
-      VOLSYNC_CAPACITY: 10Gi
+      KOPIUR_CAPACITY: 10Gi
   prune: true
   sourceRef:
     kind: GitRepository
