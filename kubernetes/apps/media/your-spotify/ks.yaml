@@ -22,7 +22,7 @@ spec:
       APP: *app
       APP_NAME: "Your Spotify"
       APP_SUBDOMAIN: sptfy
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi
   sourceRef:
     kind: GitRepository
     name: flux-system

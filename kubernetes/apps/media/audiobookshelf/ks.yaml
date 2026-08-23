@@ -25,7 +25,7 @@ spec:
       APP: *app
       APP_NAME: AudioBookshelf
       APP_SUBDOMAIN: audiobooks
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 1Gi
   sourceRef:
     kind: GitRepository
     name: flux-system

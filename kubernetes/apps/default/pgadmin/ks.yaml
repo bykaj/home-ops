@@ -22,7 +22,7 @@ spec:
       APP_GID: "5050"
       APP_UID: "5050"
       APP_NAME: pgAdmin
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

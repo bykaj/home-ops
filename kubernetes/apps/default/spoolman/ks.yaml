@@ -20,7 +20,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Spoolman
-      VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CAPACITY: 2Gi
   prune: true
   sourceRef:
     kind: GitRepository

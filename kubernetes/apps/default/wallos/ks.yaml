@@ -20,7 +20,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Wallos
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository

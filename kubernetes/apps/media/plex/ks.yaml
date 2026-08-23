@@ -26,7 +26,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Plex
-      VOLSYNC_CAPACITY: 100Gi
+      KOPIUR_CAPACITY: 100Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
   sourceRef:

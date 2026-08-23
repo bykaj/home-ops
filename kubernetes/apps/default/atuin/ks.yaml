@@ -21,7 +21,7 @@ spec:
       APP: *app
       APP_NAME: Atuin
       APP_SUBDOMAIN: sh
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository

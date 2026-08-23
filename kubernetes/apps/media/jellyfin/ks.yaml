@@ -26,7 +26,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Jellyfin
-      VOLSYNC_CAPACITY: 20Gi
+      KOPIUR_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
   prune: true
   sourceRef:

@@ -21,7 +21,7 @@ spec:
       APP: *app
       APP_NAME: Wastebin
       APP_DOMAIN: drup.lol
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

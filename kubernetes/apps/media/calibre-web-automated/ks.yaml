@@ -27,7 +27,7 @@ spec:
       APP_GID: "1000"
       APP_NAME: "Calibre-Web Automated"
       APP_SUBDOMAIN: ebooks
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 1Gi
   sourceRef:
     kind: GitRepository
     name: flux-system
