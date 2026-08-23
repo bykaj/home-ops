@@ -25,8 +25,7 @@ spec:
       APP_GID: "1000"
       APP_NAME: Karakeep
       APP_SUBDOMAIN: links
-      # KOPIUR_CAPACITY: 1Gi
-      KOPIUR_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository
