@@ -8,7 +8,7 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./audiobookshelf/ks.yaml
+  #- ./audiobookshelf/ks.yaml
   #- ./calibre-web-automated/ks.yaml
   - ./immich/ks.yaml
   #- ./jellyfin/ks.yaml
