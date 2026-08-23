@@ -23,7 +23,8 @@ spec:
     substitute:
       APP: *app
       APP_NAME: SABnzbd
-      KOPIUR_CAPACITY: 1Gi
+      # KOPIUR_CAPACITY: 1Gi
+      KOPIUR_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
