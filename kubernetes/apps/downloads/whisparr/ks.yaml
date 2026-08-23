@@ -25,7 +25,7 @@ spec:
       APP_GID: "4000"
       APP_UID: "4000"
       APP_NAME: Whisparr
-      VOLSYNC_CACHE_CAPACITY: 5Gi
+      KOPIUR_CACHE_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 20Gi
   prune: true
   sourceRef:

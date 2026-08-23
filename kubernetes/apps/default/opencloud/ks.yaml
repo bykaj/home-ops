@@ -22,7 +22,7 @@ spec:
       APP_NAME: OpenCloud
       APP_SUBDOMAIN: files
       KOPIUR_CAPACITY: 20Gi
-      VOLSYNC_CACHE_CAPACITY: 5Gi
+      KOPIUR_CACHE_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
