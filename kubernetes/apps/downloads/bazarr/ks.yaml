@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/nfs
-    - ../../../../components/kopiur/backup
+    - ../../../../components/volsync
   dependsOn:
     - name: sonarr
     - name: radarr
@@ -22,7 +22,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Bazarr
-      KOPIUR_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository

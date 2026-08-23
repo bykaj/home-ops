@@ -89,7 +89,7 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: /config
       backups:

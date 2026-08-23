@@ -39,7 +39,7 @@ spec:
         fsGroup: 4000
     persistence:
       config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
           filabridge:
             app:

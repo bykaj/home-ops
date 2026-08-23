@@ -60,7 +60,7 @@ spec:
                   - ALL
     persistence:
       config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
           spoolman:
             app:

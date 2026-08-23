@@ -64,7 +64,7 @@ spec:
             port: 9200
     persistence:
       data:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: /var/lib/opencloud
             subPath: data

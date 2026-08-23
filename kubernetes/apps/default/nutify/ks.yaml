@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../../components/kopiur/backup
+    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -21,7 +21,7 @@ spec:
       APP_UID: "1000"
       APP_GID: "1000"
       APP_NAME: Nutify
-      KOPIUR_CAPACITY: 5Gi
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

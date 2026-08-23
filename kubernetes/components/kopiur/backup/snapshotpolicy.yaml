@@ -3,7 +3,7 @@
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: SnapshotPolicy
 metadata:
-  name: "${KOPIUR_CLAIM:-${APP}}"
+  name: ${APP}
 spec:
   compression:
     compressor: zstd
@@ -25,5 +25,5 @@ spec:
     keepWeekly: 4
   sources:
     - pvc:
-        name: "${KOPIUR_CLAIM:-${APP}}"
+        name: ${APP}
   volumeSnapshotClassName: ${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}

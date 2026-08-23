@@ -75,7 +75,7 @@ spec:
                 memory: 4Gi
     persistence:
       config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         globalMounts:
           - path: *dataPath
       archive:

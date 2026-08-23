@@ -89,7 +89,7 @@ spec:
               - path: /config/processed_books
                 subPath: Apps/Calibre-Web-Automated
       config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        existingClaim: "${VOLSYNC_CLAIM:=${APP}}"
         advancedMounts:
           *name :
             app:
