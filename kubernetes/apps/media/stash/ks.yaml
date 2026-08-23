@@ -12,6 +12,7 @@ spec:
     - ../../../../components/gpu
     - ../../../../components/zeroscaler/nfs
     - ../../../../components/volsync
+    - ../../../../components/kopiur/backup
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: system
