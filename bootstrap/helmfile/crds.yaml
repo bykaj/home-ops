@@ -24,11 +24,11 @@ releases:
   - name: envoy-gateway
     namespace: network
 
-  - name: grafana-operator
-    namespace: observability
-
   - name: kube-prometheus-stack
     namespace: observability
 
   - name: snapshot-controller
     namespace: system
+
+  - name: grafana-operator
+    namespace: observability
