@@ -16,8 +16,6 @@ spec:
           path: /mnt/vault/Backups/Cluster/main/kopiur
   create:
     enabled: true
-  credentialProjection:
-    allowed: true
   encryption:
     passwordSecretRef:
       name: kopiur-repository-secret
