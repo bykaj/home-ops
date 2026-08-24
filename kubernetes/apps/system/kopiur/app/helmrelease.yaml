@@ -10,14 +10,6 @@ spec:
     name: kopiur
   interval: 1h
   values:
-    extraVolumes:
-      - name: repo
-        nfs:
-          path: /mnt/vault/Backups/Cluster/main/kopiur
-          server: ${NAS_HOST}
-    extraVolumeMounts:
-      - name: repo
-        mountPath: /repo
     # Grants the operator ClusterRole secrets create/patch so it can project
     # the repository credentials into mover namespaces (credentialProjection)
     features:
@@ -36,6 +28,8 @@ spec:
         enabled: true
       serviceMonitor:
         enabled: true
+    # Operator runs as the same UID as the movers so catalog scans against the
+    # NFS-backed repository (owned by 4000) succeed
     podSecurityContext:
       runAsNonRoot: true
       runAsUser: 4000
