@@ -10,7 +10,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/nfs
-    - ../../../../components/volsync
     - ../../../../components/kopiur/backup
   dependsOn:
     - name: sonarr
