@@ -13,7 +13,7 @@ resources:
   - ./csi-driver-smb/ks.yaml
   - ./descheduler/ks.yaml
   - ./intel-gpu-resource-driver/ks.yaml
-  - ./kopiur/ks.yaml
+  #- ./kopiur/ks.yaml
   - ./openebs/ks.yaml
   - ./reflector/ks.yaml
   - ./reloader/ks.yaml
