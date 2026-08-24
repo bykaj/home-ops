@@ -10,12 +10,20 @@ spec:
     name: rook-ceph
   interval: 1h
   values:
+    csi:
+      serviceMonitor:
+        enabled: true
+    deleteUnusedCrushRules: false
+    enableDiscoveryDaemon: true
     image:
       repository: ghcr.io/rook/ceph
+    cephCommandsTimeoutSeconds: "60"
     monitoring:
       enabled: true
     resources:
       requests:
-        cpu: 100m # unchangable
-        memory: 128Mi # unchangable
-      limits: {}
+        cpu: 50m
+        memory: 224Mi
+      limits:
+        cpu: 500m
+        memory: 480Mi
