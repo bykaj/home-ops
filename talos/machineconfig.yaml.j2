@@ -56,7 +56,7 @@ machine:
         [ NFSMount_Global_Options ]
         nfsvers=4.2
         hard=True
-        nconnect=16
+        nconnect=8
         noatime=True
         rsize=1048576
         wsize=1048576
@@ -71,11 +71,17 @@ machine:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
     extraConfig:
+      crashLoopBackOff:
+        maxContainerRestartPeriod: 60s
       featureGates:
         ImageVolume: true
         ResourceHealthStatus: true
+      imageMaximumGCAge: 168h
+      maxParallelImagePulls: 3
       maxPods: 150
       serializeImagePulls: false
+      shutdownGracePeriod: 90s
+      shutdownGracePeriodCriticalPods: 60s
     image: ghcr.io/siderolabs/kubelet:v1.36.4
     nodeIP:
       validSubnets:
