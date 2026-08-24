@@ -3,6 +3,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: "${KOPIUR_CLAIM:-${APP}}"
+  labels:
+    # dataSourceRef is immutable on bound claims: never patch existing PVCs,
+    # only create missing ones (new apps / disaster recovery)
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
 spec:
   accessModes:
     - ${KOPIUR_ACCESSMODES:=ReadWriteOnce}

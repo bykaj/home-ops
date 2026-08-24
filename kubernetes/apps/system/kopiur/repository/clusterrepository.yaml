@@ -24,11 +24,14 @@ spec:
   identityDefaults:
     hostnameExpr: namespace
     usernameExpr: policyName
+  maintenance:
+    enabled: true
+    takeoverPolicy: Force
+    # A run wedged on dead NFSv4 state hangs forever (0 CPU, D-state unlinks);
+    # kill it after 6h so the next scheduled run gets a fresh mount
+    failurePolicy:
+      activeDeadlineSeconds: 21600
   moverDefaults:
-    cache:
-      capacity: 1Mi
-      mode: Ephemeral
-      storageClassName: openebs-hostpath
     podSecurityContext:
       fsGroup: 4000
       fsGroupChangePolicy: OnRootMismatch
@@ -36,5 +39,18 @@ spec:
       runAsUser: 4000
       runAsGroup: 4000
     ttlSecondsAfterFinished: 300
+  # Busy repo (~30 apps x hourly): let epochs close sooner than Kopia's 24h
+  # default so index-blob compaction keeps up (TooManyIndexBlobs warning)
+  parameters:
+    epoch:
+      minDuration: 6h
   scheduleDefaults:
     timezone: ${TIMEZONE}
+  # Built-in kopia web UI
+  server:
+    namespace: system
+    readOnly: false
+    podSecurityContext:
+      runAsUser: 4000
+      runAsGroup: 4000
+      fsGroup: 4000
