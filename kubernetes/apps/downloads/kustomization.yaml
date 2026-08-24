@@ -15,12 +15,12 @@ patches:
         value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources: []
+resources:
   # - ./autobrr/ks.yaml
   # - ./bazarr/ks.yaml
   # - ./configarr/ks.yaml
   # - ./prowlarr/ks.yaml
   # # - ./radarr/ks.yaml
-  #- ./sabnzbd/ks.yaml
+  - ./sabnzbd/ks.yaml
   # - ./sonarr/ks.yaml
   # # - ./whisparr/ks.yaml
