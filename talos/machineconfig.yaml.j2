@@ -85,10 +85,9 @@ machine:
       validSubnets:
         - 10.73.10.0/20
   network:
+    disableSearchDomain: true
     nameservers:
       - 10.73.0.254
-    searchDomains:
-      - home.cetana.net
   nodeLabels:
     topology.kubernetes.io/region: main
     topology.kubernetes.io/zone: home
