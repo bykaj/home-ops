@@ -21,6 +21,6 @@ resources:
   # - ./configarr/ks.yaml
   # - ./prowlarr/ks.yaml
   # # - ./radarr/ks.yaml
-  - ./sabnzbd/ks.yaml
+  #- ./sabnzbd/ks.yaml
   # - ./sonarr/ks.yaml
   # # - ./whisparr/ks.yaml
