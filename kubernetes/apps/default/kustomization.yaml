@@ -15,15 +15,15 @@ patches:
         value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources: []
+resources:
   # - ./atuin/ks.yaml
   # - ./changedetection/ks.yaml
   # # - ./filabridge/ks.yaml
   # - ./homepage/ks.yaml
-  # - ./it-tools/ks.yaml
+  - ./it-tools/ks.yaml
   # # - ./karakeep/ks.yaml
-  # - ./kopia/ks.yaml
-  # - ./kopia-volsync/ks.yaml
+  - ./kopia/ks.yaml
+  - ./kopia-volsync/ks.yaml
   # - ./n8n/ks.yaml
   # # - ./nutify/ks.yaml
   # # - ./opencloud/ks.yaml
