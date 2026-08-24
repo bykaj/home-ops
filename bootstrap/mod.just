@@ -69,7 +69,7 @@ apps:
 api-ready:
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
     for n in {{ nodes }}; do
-        until [[ "$(curl -ks -o /dev/null -w '%{http_code}' --connect-timeout 2 "https://${n}:6443/readyz")" == "200" ]]; do
+        until [[ "$(curl -ks -o /dev/null -w '%{http_code}' --connect-timeout 2 "https://${n}:6443/readyz")" == "401" ]]; do
             just log info "Waiting for kube-apiserver. Retrying in 5 seconds..." "stage" "{{ recipe_name() }}" "node" "$n"
             sleep 5
         done
