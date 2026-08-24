@@ -15,13 +15,13 @@ patches:
         value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources:
-  - ./audiobookshelf/ks.yaml
-  # - ./calibre-web-automated/ks.yaml
-  - ./immich/ks.yaml
-  # - ./jellyfin/ks.yaml
-  # - ./komga/ks.yaml
-  # - ./plex/ks.yaml
-  - ./stash/ks.yaml
-  # - ./tautulli/ks.yaml
-  #- ./your-spotify/ks.yaml
+resources: []
+  # - ./audiobookshelf/ks.yaml
+  # # - ./calibre-web-automated/ks.yaml
+  # - ./immich/ks.yaml
+  # # - ./jellyfin/ks.yaml
+  # # - ./komga/ks.yaml
+  # # - ./plex/ks.yaml
+  # - ./stash/ks.yaml
+  # # - ./tautulli/ks.yaml
+  # #- ./your-spotify/ks.yaml
