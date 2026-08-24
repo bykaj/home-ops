@@ -29,6 +29,8 @@ spec:
   dependsOn:
     - name: ceph-csi-drivers
     - name: rook-ceph
+    - name: kopiur
+      namespace: system
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

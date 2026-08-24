@@ -62,18 +62,6 @@ sync-all-es:
     just k8s sync-es "$ns" "$name"; \
   done
 
-[doc('Suspend or resume VolSync')]
-volsync state:
-    flux -n system {{ state }} kustomization volsync
-    flux -n system {{ state }} helmrelease volsync
-    kubectl -n system scale deployment volsync-volsync-perfectra1n --replicas {{ if state != "suspend" { "1" } else { "0" } }}
-
-[doc('Snapshot VolSync PVCs')]
-snapshot:
-  kubectl get replicationsources --no-headers -A | while read -r ns name _; do \
-    kubectl -n "$ns" patch replicationsources "$name" --type merge -p '{"spec":{"trigger":{"manual":"$(date +%s)"}}}'; \
-  done
-
 [doc('Connect to the Rook Ceph Toolbox pod')]
 toolbox:
   #!/usr/bin/env bash
