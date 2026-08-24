@@ -13,25 +13,15 @@ spec:
   values:
     cephClusterSpec:
       cephConfig:
-        global:
-          bdev_enable_discard: "true" # quote
-          bdev_async_discard_threads: "1" # quote
-          osd_class_update_on_start: "false" # quote
-          device_failure_prediction_mode: local # requires mgr module
-          mon_data_avail_warn: "10" # quote
-        mgr:
-          log_max_recent: "100" # quote
         mon:
           mon_cluster_log_level: info
-          mon_data_avail_warn: "19" # quote
-        osd:
-          bluestore_slow_ops_warn_threshold: "50" # quote
-          bluestore_slow_ops_warn_lifetime: "300"
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
       crashCollector:
         disable: false
       csi:
+        cephfs:
+          kernelMountOptions: ms_mode=prefer-crc
         readAffinity:
           enabled: false # https://github.com/ceph/ceph-csi/issues/5772
       dashboard:
@@ -49,108 +39,17 @@ spec:
             policy: mute
           AUTH_INSECURE_KEYS_CREATABLE:
             policy: mute
-        livenessProbe:
-          mon:
-            probe:
-              initialDelaySeconds: 30
-              periodSeconds: 30
-              timeoutSeconds: 10
-          mgr:
-            probe:
-              initialDelaySeconds: 30
-              periodSeconds: 30
-              timeoutSeconds: 10
-          osd:
-            probe:
-              initialDelaySeconds: 30
-              periodSeconds: 30
-              timeoutSeconds: 10
-        startupProbe:
-          mon:
-            probe:
-              initialDelaySeconds: 15
-              periodSeconds: 30
-              timeoutSeconds: 10
-          mgr:
-            probe:
-              initialDelaySeconds: 15
-              periodSeconds: 30
-              timeoutSeconds: 10
-          osd:
-            probe:
-              initialDelaySeconds: 15
-              periodSeconds: 30
-              timeoutSeconds: 10
       mgr:
         modules:
-          - name: diskprediction_local
-            enabled: true
-          - name: insights
-            enabled: true
           - name: pg_autoscaler
-            enabled: true
-          - name: rook
             enabled: true
       network:
         connections:
           requireMsgr2: true
       resources:
-        mgr:
-          limits:
-            cpu: 500m
-            memory: 720Mi
-          requests:
-            cpu: 50m
-            memory: 360Mi
-        mon:
-          limits:
-            cpu: 500m
-            memory: 640Mi
-          requests:
-            cpu: 100m
-            memory: 320Mi
         osd:
           limits:
-            cpu: 500m
-            memory: 8Gi
-          requests:
-            cpu: 150m
-            memory: 1Gi
-        prepareosd:
-          limits:
-            cpu: 1000m
-            memory: 400Mi
-          requests:
-            cpu: 50m
-            memory: 200Mi
-        mgr-sidecar:
-          limits:
-            cpu: 256m
-            memory: 100Mi
-          requests:
-            cpu: 50m
-            memory: 40Mi
-        crashcollector:
-          limits:
-            cpu: 100m
-            memory: 64M
-          requests:
-            cpu: 15m
-            memory: 32M
-        logcollector:
-          limits:
-            cpu: 50m
-            memory: 32Mi
-          requests:
-            cpu: 5m
-            memory: 16Mi
-        cleanup:
-          limits:
-            cpu: 500m
-            memory: 1Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+            memory: 8Gi # Required for bootstrap
       security:
         cephx:
           daemon:
@@ -176,9 +75,6 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: true
-      prometheusRuleOverrides:
-        CephNodeInconsistentMTU:
-          disabled: true
     toolbox:
       enabled: true
     route:
