@@ -16,7 +16,7 @@ spec:
       credentialProjection:
         enabled: true
       kopiaUi:
-        enabled: true
+        enabled: false
     monitoring:
       dashboards:
         enabled: true

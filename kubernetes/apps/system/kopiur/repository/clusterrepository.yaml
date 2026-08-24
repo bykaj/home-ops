@@ -100,10 +100,10 @@ spec:
   scheduleDefaults:
     timezone: ${TIMEZONE}
   # Built-in kopia web UI
-  server:
-    namespace: system
-    readOnly: false
-    podSecurityContext:
-      runAsUser: 4000
-      runAsGroup: 4000
-      fsGroup: 4000
+  # server:
+  #   namespace: system
+  #   readOnly: false
+  #   podSecurityContext:
+  #     runAsUser: 4000
+  #     runAsGroup: 4000
+  #     fsGroup: 4000
