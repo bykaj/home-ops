@@ -9,11 +9,19 @@ spec:
     all: true
   backend:
     filesystem:
-      path: /repo
+      path: /repository
       volume:
         nfs:
           server: ${NAS_HOST}
           path: /mnt/vault/Backups/Cluster/main/kopiur
+  catalog:
+    fallbackNamespace: kube-system
+    retain:
+      # kopiur caps materialized discovered-Snapshot CRs at 1000 (hardcoded)
+      # and truncates in identity-alphabetical order, so the tail of the app
+      # list (sonarr/tautulli/unifi/zwave2mqtt) never got CRs to adopt from.
+      # Keep ~29 identities x 30 comfortably under that cap.
+      perIdentity: 30
   credentialProjection:
     allowed: true
   encryption:
@@ -25,13 +33,47 @@ spec:
     hostnameExpr: namespace
     usernameExpr: policyName
   maintenance:
-    enabled: true
-    takeoverPolicy: Force
+    # schedule requires both quick and full when set; full restates the
+    # existing effective default (daily at scheduleDefaults.timezone 3am).
+    schedule:
+      quick:
+        cron: "0 */3 * * *"
+        jitter: 30m
+      full:
+        cron: "0 3 * * *"
+        jitter: 1h
     # A run wedged on dead NFSv4 state hangs forever (0 CPU, D-state unlinks);
     # kill it after 6h so the next scheduled run gets a fresh mount
     failurePolicy:
       activeDeadlineSeconds: 21600
+    mover:
+      cache:
+        capacity: 20Gi
+        storageClassName: ceph-block
+        metadataCacheSizeMb: 5120
+        contentCacheSizeMb: 2048
+      # Requests only (no limit) - maintenance movers peak ~1919Mi and scale
+      # with repo index size; a limit would turn a slow run into a failed one.
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
   moverDefaults:
+    cache:
+      capacity: 3Gi
+      storageClassName: ceph-block
+      # Persistent so hourly movers reuse a warm kopia index cache instead
+      # of re-pulling it from NFS every run; also promotes the maintenance
+      # mover's cache (spec.maintenance.mover.cache sets no mode of its own).
+      mode: Persistent
+      # Without explicit caps kopia falls back to its own defaults (~5GB
+      # metadata + ~5GB content), which don't fit this volume alongside
+      # KOPIA_LOG_DIR and temp files - a snapshot mover hit ENOSPC
+      # downloading indexes under a 1Gi default (the metadata cache tracks
+      # the shared repo's index, not the app's own data, so even tiny apps
+      # converged on ~2Gi steady state). Cap well inside 3Gi.
+      metadataCacheSizeMb: 400
+      contentCacheSizeMb: 200
     podSecurityContext:
       fsGroup: 4000
       fsGroupChangePolicy: OnRootMismatch
@@ -39,11 +81,22 @@ spec:
       runAsUser: 4000
       runAsGroup: 4000
     ttlSecondsAfterFinished: 300
-  # Busy repo (~30 apps x hourly): let epochs close sooner than Kopia's 24h
-  # default so index-blob compaction keeps up (TooManyIndexBlobs warning)
+    # Requests only (no limit) - scheduled snapshot movers peak 1100-1300Mi
+    # and scale with app data size; a limit would fail large backups mid-run.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+  # The 6h epoch (previously matched to kopiur's default 6h quick cadence,
+  # which brought this down from 4000+ index blobs) still floats 1000-1500
+  # blobs between closes. Lowered to 2h paired with an explicit 3h quick
+  # schedule below; that combination still hasn't cleared the
+  # TooManyIndexBlobs condition (1552 blobs, still >1000 threshold, days
+  # after the 2h change), so drop to 1h to close epochs faster than 25 apps'
+  # worth of hourly-by-default backups can accumulate blobs.
   parameters:
     epoch:
-      minDuration: 6h
+      minDuration: 1h
   scheduleDefaults:
     timezone: ${TIMEZONE}
   # Built-in kopia web UI
