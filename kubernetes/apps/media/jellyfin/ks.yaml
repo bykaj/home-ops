@@ -10,8 +10,8 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gpu
-    - ../../../../components/zeroscaler/nfs
     - ../../../../components/kopiur/backup
+    - ../../../../components/zeroscaler/nfs
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: system
@@ -26,7 +26,6 @@ spec:
       APP: *app
       APP_NAME: Jellyfin
       KOPIUR_CAPACITY: 20Gi
-      KOPIUR_CACHE_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

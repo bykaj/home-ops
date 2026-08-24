@@ -20,6 +20,8 @@ spec:
               repository: ghcr.io/jellyfin/jellyfin
               tag: 10.11.11@sha256:45f648c382a0c8b552582fcea40e95cb17c5d475473a891cba0eb7523fb92112
             env:
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_PublishedServerUrl: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
               TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
@@ -47,10 +49,10 @@ spec:
               claims:
                 - name: gpu
               requests:
-                cpu: 10m
+                cpu: 50m
                 memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 4Gi
     defaultPodOptions:
       resourceClaims:
         - name: gpu
@@ -77,26 +79,26 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: /config
-      # config-cache:
-      #   existingClaim: jellyfin-cache
-      #   globalMounts:
-      #     - path: /config/metadata
       backups:
         type: nfs
         server: "${NAS_HOST}"
         path: /mnt/vault/Backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/Jellyfin
+        advancedMounts:
+          jellyfin:
+            app:
+              - path: /mnt/backups
+                subPath: Apps/Jellyfin
       media:
         type: nfs
         server: "${NAS_HOST}"
         path: /mnt/vault/Media
-        globalMounts:
-          - path: /mnt/media
+        advancedMounts:
+          jellyfin:
+            app:
+              - path: /mnt/media
       tmpfs:
         type: emptyDir
         advancedMounts:
@@ -104,10 +106,10 @@ spec:
             app:
               - path: /cache
                 subPath: cache
-              - path: /config/log
-                subPath: log
               - path: /tmp
                 subPath: tmp
+              - path: /transcode
+                subPath: transcode
     route:
       app:
         annotations:
@@ -131,7 +133,11 @@ spec:
             namespace: network
     service:
       app:
-        controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: ${LB_IP_JELLYFIN}
+        externalTrafficPolicy: Local
         ports:
           http:
+            appProtocol: kubernetes.io/ws
             port: *port
