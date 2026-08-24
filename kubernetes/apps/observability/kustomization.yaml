@@ -17,7 +17,6 @@ resources:
   - ./kube-state-metrics/ks.yaml
   - ./node-exporter/ks.yaml
   - ./prometheus-adapter/ks.yaml
-  - ./robusta/ks.yaml
   - ./silence-operator/ks.yaml
   - ./unpoller/ks.yaml
   - ./victoria-logs/ks.yaml
