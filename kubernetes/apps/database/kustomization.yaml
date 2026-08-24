@@ -6,6 +6,13 @@ namespace: database
 components:
   - ../../components/namespace
   - ../../components/kopiur/secret
+patches:
+  - target:
+      kind: Namespace
+    patch: |
+      - op: add
+        path: /metadata/annotations/kopiur.home-operations.com~1privileged-movers
+        value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:

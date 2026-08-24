@@ -14,13 +14,16 @@ spec:
         nfs:
           server: ${NAS_HOST}
           path: /mnt/vault/Backups/Cluster/main/kopiur
-  create:
-    enabled: true
+  credentialProjection:
+    allowed: true
   encryption:
     passwordSecretRef:
       name: kopiur-repository-secret
       namespace: system
       key: KOPIA_PASSWORD
+  identityDefaults:
+    hostnameExpr: namespace
+    usernameExpr: policyName
   moverDefaults:
     cache:
       capacity: 1Mi

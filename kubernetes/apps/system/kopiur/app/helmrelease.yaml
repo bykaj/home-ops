@@ -10,6 +10,14 @@ spec:
     name: kopiur
   interval: 1h
   values:
+    extraVolumes:
+      - name: repo
+        nfs:
+          path: /mnt/vault/Backups/Cluster/main/kopiur
+          server: ${NAS_HOST}
+    extraVolumeMounts:
+      - name: repo
+        mountPath: /repo
     monitoring:
       dashboards:
         enabled: true
@@ -27,14 +35,6 @@ spec:
       runAsGroup: 4000
       fsGroup: 4000
       fsGroupChangePolicy: OnRootMismatch
-    extraVolumes:
-      - name: repo
-        nfs:
-          server: ${NAS_HOST}
-          path: /mnt/vault/Backups/Cluster/main/kopiur
-    extraVolumeMounts:
-      - name: repo
-        mountPath: /repo
     resources:
       requests:
         cpu: 100m
