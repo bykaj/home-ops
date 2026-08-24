@@ -15,6 +15,6 @@ patches:
         value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources: []
-  # - ./authentik/ks.yaml
-  # - ./oidc-provider-debugger/ks.yaml
+resources:
+  - ./authentik/ks.yaml
+  - ./oidc-provider-debugger/ks.yaml
