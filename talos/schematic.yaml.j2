@@ -1,10 +1,22 @@
 ---
 customization:
+  extraKernelArgs:
+    # Less security for more performance
+    # Ok-ish for homelabs, DON'T use in production
+    - -init_on_alloc
+    - init_on_alloc=0
+    - -init_on_free
+    - init_on_free=0
+    - -selinux
+    - mitigations=off
+    - -slab_nomerge
+    - talos.auditd.disabled=1
   systemExtensions:
     officialExtensions:
       # Intel iGPU
       - siderolabs/i915
       - siderolabs/intel-ucode
+      - siderolabs/mei
       # NFS Performance
       - siderolabs/nfsrahead
       # QEMU Guest Agent for Proxmox

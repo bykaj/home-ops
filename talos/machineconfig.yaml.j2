@@ -39,10 +39,6 @@ machine:
       path: /etc/cri/conf.d/20-customization.part
       permissions: 0o644
       content: |-
-        [plugins]
-          [plugins."io.containerd.grpc.v1.cri"]
-            enable_unprivileged_ports = true
-            enable_unprivileged_icmp = true
         [plugins."io.containerd.cri.v1.images"]
           discard_unpacked_layers = false
         [plugins."io.containerd.cri.v1.runtime"]
@@ -56,13 +52,12 @@ machine:
         [ NFSMount_Global_Options ]
         nfsvers=4.2
         hard=True
-        nconnect=8
+        nconnect=16
         noatime=True
         rsize=1048576
         wsize=1048576
   install:
-    disk: /dev/sda
-    image: factory.talos.dev/installer/660e12c4ae647b84267ea1b54440fb6cdac7545bc4b3c5fe0227285157bc058b:v1.13.9
+    image: factory.talos.dev/installer/050ba1d3e629b6d83202301fdb51e94052d1f29562cf1f69bd8e2125d8c99f71:v1.13.9
     wipe: false
   kernel:
     modules:
@@ -70,6 +65,9 @@ machine:
   kubelet:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
+    extraArgs:
+      image-gc-high-threshold: 80
+      image-gc-low-threshold: 70
     extraConfig:
       crashLoopBackOff:
         maxContainerRestartPeriod: 60s
@@ -87,9 +85,10 @@ machine:
       validSubnets:
         - 10.73.10.0/20
   network:
-    disableSearchDomain: true
     nameservers:
       - 10.73.0.254
+    searchDomains:
+      - home.cetana.net
   nodeLabels:
     topology.kubernetes.io/region: main
     topology.kubernetes.io/zone: home
@@ -124,6 +123,11 @@ cluster:
     key: op://Homelab/talos/CLUSTER_AGGREGATORCA_KEY
   allowSchedulingOnControlPlanes: true
   apiServer:
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+        - level: Metadata
     certSANs:
       - 127.0.0.1
       - 10.73.10.10
@@ -208,10 +212,3 @@ apiVersion: v1alpha1
 kind: WatchdogTimerConfig
 device: /dev/watchdog0
 timeout: 5m
----
-# attempt to reduce / disable the broken Talos OOM "feature"
-apiVersion: v1alpha1
-kind: OOMConfig
-triggerExpression: "false"
-cgroupRankingExpression: "0.0"
-sampleInterval: "5s"
