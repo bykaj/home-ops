@@ -15,7 +15,7 @@ patches:
         value: "true"
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources:
+resources: []
   # - ./autobrr/ks.yaml
   # - ./bazarr/ks.yaml
   # - ./configarr/ks.yaml
