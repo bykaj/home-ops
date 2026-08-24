@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./node-exporter.yaml
   - ./onepassword-connect.yaml
-  # - ./pikvm.yaml
   - ./smartctl-exporter.yaml

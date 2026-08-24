@@ -15,8 +15,6 @@ spec:
       reporting_enabled: "false"
     auth:
       disable_login_form: "false"
-    auth.anonymous:
-      enabled: "true"
     log:
       mode: console
     metrics:
@@ -29,6 +27,8 @@ spec:
       angular_support_enabled: "true"
     server:
       enable_gzip: "true"
+  disableDefaultAdminSecret: true
+  disableDefaultSecurityContext: All
   deployment:
     spec:
       strategy:
@@ -38,20 +38,22 @@ spec:
           containers:
             - name: grafana
               env:
-                - name: GF_SECURITY_ADMIN_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: grafana-secret
-                      key: GF_SECURITY_ADMIN_USER
                 - name: GF_SECURITY_ADMIN_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       name: grafana-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
+                - name: GF_SECURITY_ADMIN_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-secret
+                      key: GF_SECURITY_ADMIN_USER
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
-                capabilities: { drop: ["ALL"] }
+                capabilities:
+                  drop:
+                    - ALL
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -61,11 +63,11 @@ spec:
           volumes:
             - name: grafana-data
               persistentVolumeClaim:
-                claimName: grafana-pvc
+                claimName: grafana
   httpRoute:
     spec:
       hostnames:
-        - grafana.${DOMAIN_APP}
+        - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
       parentRefs:
         - name: envoy-internal
           namespace: network
@@ -77,4 +79,3 @@ spec:
         requests:
           storage: 5Gi
       storageClassName: ceph-block
-  disableDefaultSecurityContext: All
