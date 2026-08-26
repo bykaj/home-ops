@@ -22,6 +22,8 @@ spec:
       APP_NAME: "Your Spotify"
       APP_SUBDOMAIN: sptfy
       KOPIUR_CAPACITY: 5Gi
+      KOPIUR_PUID: "999"
+      KOPIUR_PGID: "999"
   sourceRef:
     kind: GitRepository
     name: flux-system
