@@ -8,15 +8,9 @@ spec:
   credentialProjection:
     enabled: true
   mover:
-    inheritSecurityContextFrom:
-      workloadSelector:
-        podSelector:
-          matchLabels:
-            app.kubernetes.io/name: "${KOPIUR_CLAIM:-${APP}}"
-        container: app
-    # securityContext:
-    #   runAsUser: ${KOPIUR_MOVER_UID:=4000}
-    #   runAsGroup: ${KOPIUR_MOVER_GID:=4000}
+    securityContext:
+      runAsUser: ${KOPIUR_MOVER_UID:=4000}
+      runAsGroup: ${KOPIUR_MOVER_GID:=4000}
   policy:
     onMissingSnapshot: Continue
   source:
