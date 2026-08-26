@@ -12,6 +12,8 @@ spec:
   copyMethod: Snapshot
   credentialProjection:
     enabled: true
+  deletion:
+    onPolicyDelete: Delete
   mover:
     cache:
       capacity: ${KOPIUR_CAPACITY:=5Gi}
