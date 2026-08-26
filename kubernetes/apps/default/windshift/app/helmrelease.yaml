@@ -14,14 +14,14 @@ spec:
       windshift:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/home-operations/postgres-init
-              tag: 18.6@sha256:b6d3af974df781c673d37e49bdddfa14a6f5be28b18d2cb7713f0449bea4057b
-            envFrom: &envFrom
-              - secretRef:
-                  name: windshift-secret
+        # initContainers:
+        #   init-db:
+        #     image:
+        #       repository: ghcr.io/home-operations/postgres-init
+        #       tag: 18.6@sha256:b6d3af974df781c673d37e49bdddfa14a6f5be28b18d2cb7713f0449bea4057b
+        #     envFrom: &envFrom
+        #       - secretRef:
+        #           name: windshift-secret
         containers:
           app:
             image:
@@ -40,7 +40,9 @@ spec:
               WEBAUTHN_RP_NAME: "${APP_NAME}"
               WINDSHIFT_CONTAINER_MEMORY_LIMIT: "2G"
               WINDSHIFT_MEMORY_LIMIT_MB: "2048"
-            envFrom: *envFrom
+            envFrom:
+              - secretRef:
+                  name: windshift-secret
             probes:
               liveness: &probes
                 enabled: true
