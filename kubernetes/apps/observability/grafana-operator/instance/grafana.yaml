@@ -15,6 +15,8 @@ spec:
       reporting_enabled: "false"
     auth:
       disable_login_form: "false"
+    auth.anonymous:
+      enabled: "true"
     log:
       mode: console
     metrics:
@@ -27,8 +29,6 @@ spec:
       angular_support_enabled: "true"
     server:
       enable_gzip: "true"
-  disableDefaultAdminSecret: true
-  disableDefaultSecurityContext: All
   deployment:
     spec:
       strategy:
@@ -51,9 +51,7 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
-                capabilities:
-                  drop:
-                    - ALL
+                capabilities: { drop: ["ALL"] }
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -79,3 +77,4 @@ spec:
         requests:
           storage: 5Gi
       storageClassName: ceph-block
+  disableDefaultSecurityContext: All

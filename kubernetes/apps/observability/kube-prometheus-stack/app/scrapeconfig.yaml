@@ -1,0 +1,62 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: node-exporter
+spec:
+  staticConfigs:
+    - targets:
+        - ${NAS_HOST}:9100
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: node-exporter
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: smartctl-exporter
+spec:
+  staticConfigs:
+    - targets:
+        - ${NAS_HOST}:9633
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: smartctl-exporter
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: jetkvm
+spec:
+  staticConfigs:
+    - targets:
+        - icarus-kvm.home.cetana.net
+        - leonis-kvm.home.cetana.net
+        - zeus-kvm.home.cetana.net
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: jetkvm
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: onepassword-connect
+spec:
+  staticConfigs:
+    - targets:
+        - onepassword-connect.external-secrets.svc.cluster.local:8080
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: onepassword-connect

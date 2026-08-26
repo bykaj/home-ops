@@ -8,22 +8,23 @@ spec:
   route:
     groupBy:
       - "alertname"
+      - "cluster"
       - "job"
     groupInterval: 10m
     groupWait: 1m
     receiver: pushover
-    repeatInterval: 12h
+    repeatInterval: 24h
     routes:
-      - receiver: 'robusta'
-        groupBy: [ '...' ]
-        groupWait: 1s
-        groupInterval: 1s
-        matchers:
-          - name: severity
-            value: ".*"
-            matchType: =~
-        repeatInterval: 4h
-        continue: true
+      # - receiver: 'robusta'
+      #   groupBy: [ '...' ]
+      #   groupWait: 1s
+      #   groupInterval: 1s
+      #   matchers:
+      #     - name: severity
+      #       value: ".*"
+      #       matchType: =~
+      #   repeatInterval: 4h
+      #   continue: true
       - receiver: "null"
         matchers:
           - name: alertname
@@ -53,10 +54,10 @@ spec:
           matchType: =
   receivers:
     - name: "null"
-    - name: robusta
-      webhookConfigs:
-        - url: "http://robusta-runner.observability.svc.cluster.local/api/alerts"
-          sendResolved: true
+    # - name: robusta
+    #   webhookConfigs:
+    #     - url: "http://robusta-runner.observability.svc.cluster.local/api/alerts"
+    #       sendResolved: true
     - name: pushover
       pushoverConfigs:
         - html: true
