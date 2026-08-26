@@ -22,6 +22,8 @@ spec:
       APP_UID: "5050"
       APP_NAME: pgAdmin
       KOPIUR_CAPACITY: 5Gi
+      KOPIUR_PUID: "5050"
+      KOPIUR_PGID: "5050"
   prune: true
   sourceRef:
     kind: GitRepository
