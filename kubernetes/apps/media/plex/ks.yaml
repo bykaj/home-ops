@@ -25,8 +25,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Plex
-      KOPIUR_CAPACITY: 100Gi
-      KOPIUR_CACHE_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 120Gi
   prune: true
   sourceRef:
     kind: GitRepository
