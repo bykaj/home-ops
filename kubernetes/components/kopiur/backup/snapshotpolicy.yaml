@@ -15,6 +15,7 @@ spec:
   mover:
     cache:
       capacity: ${KOPIUR_CAPACITY:=5Gi}
+      mode: Persistent
       storageClassName: ${KOPIUR_CACHE_STORAGECLASS:=openebs-hostpath}
     podSecurityContext:
       runAsUser: ${KOPIUR_PUID:=4000}
