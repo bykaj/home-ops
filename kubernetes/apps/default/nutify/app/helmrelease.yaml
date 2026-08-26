@@ -45,10 +45,10 @@ spec:
                   - SYS_ADMIN
             resources:
               requests:
-                cpu: 15m
-                memory: 384Mi
-              limits:
+                cpu: 20m
                 memory: 512Mi
+              limits:
+                memory: 2Gi
     service:
       app:
         controller: *app
