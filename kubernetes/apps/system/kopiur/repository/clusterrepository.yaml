@@ -58,35 +58,16 @@ spec:
   #       requests:
   #         cpu: 200m
   #         memory: 1Gi
-  # moverDefaults:
-  #   cache:
-  #     capacity: 3Gi
-  #     storageClassName: ceph-block
-  #     # Persistent so hourly movers reuse a warm kopia index cache instead
-  #     # of re-pulling it from NFS every run; also promotes the maintenance
-  #     # mover's cache (spec.maintenance.mover.cache sets no mode of its own).
-  #     mode: Persistent
-  #     # Without explicit caps kopia falls back to its own defaults (~5GB
-  #     # metadata + ~5GB content), which don't fit this volume alongside
-  #     # KOPIA_LOG_DIR and temp files - a snapshot mover hit ENOSPC
-  #     # downloading indexes under a 1Gi default (the metadata cache tracks
-  #     # the shared repo's index, not the app's own data, so even tiny apps
-  #     # converged on ~2Gi steady state). Cap well inside 3Gi.
-  #     metadataCacheSizeMb: 400
-  #     contentCacheSizeMb: 200
-  #   podSecurityContext:
-  #     fsGroup: 4000
-  #     fsGroupChangePolicy: OnRootMismatch
-  #   securityContext:
-  #     runAsUser: 4000
-  #     runAsGroup: 4000
-  #   ttlSecondsAfterFinished: 300
-  #   # Requests only (no limit) - scheduled snapshot movers peak 1100-1300Mi
-  #   # and scale with app data size; a limit would fail large backups mid-run.
-  #   resources:
-  #     requests:
-  #       cpu: 100m
-  #       memory: 512Mi
+  moverDefaults:
+    podSecurityContext:
+      supplementalGroups: [4000]
+    ttlSecondsAfterFinished: 300
+    # Requests only (no limit) - scheduled snapshot movers peak 1100-1300Mi
+    # and scale with app data size; a limit would fail large backups mid-run.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
   # The 6h epoch (previously matched to kopiur's default 6h quick cadence,
   # which brought this down from 4000+ index blobs) still floats 1000-1500
   # blobs between closes. Lowered to 2h paired with an explicit 3h quick
@@ -106,4 +87,4 @@ spec:
     podSecurityContext:
       runAsUser: 4000
       runAsGroup: 4000
-      fsGroup: 4000
+      supplementalGroups: [4000]
