@@ -15,7 +15,7 @@ spec:
           server: ${NAS_HOST}
           path: /mnt/vault/Backups/Cluster/main/kopiur
   catalog:
-    fallbackNamespace: kube-system
+    fallbackNamespace: system
     retain:
       # kopiur caps materialized discovered-Snapshot CRs at 1000 (hardcoded)
       # and truncates in identity-alphabetical order, so the tail of the app
