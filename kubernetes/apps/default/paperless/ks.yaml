@@ -28,6 +28,8 @@ spec:
       APP_NAME: Paperless
       APP_SUBDOMAIN: archive
       KOPIUR_CAPACITY: 1Gi
+      KOPIUR_PUID: "1000"
+      KOPIUR_PGID: "1000"
   prune: true
   sourceRef:
     kind: GitRepository
