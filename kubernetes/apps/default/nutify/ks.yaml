@@ -22,6 +22,8 @@ spec:
       APP_GID: "1000"
       APP_NAME: Nutify
       KOPIUR_CAPACITY: 5Gi
+      KOPIUR_PUID: "1000"
+      KOPIUR_PGID: "1000"
   prune: true
   sourceRef:
     kind: GitRepository
