@@ -19,6 +19,7 @@ spec:
           backoffLimit: 0
           failedJobsHistory: 1
           successfulJobsHistory: 1
+          ttlSecondsAfterFinished: 3600
         pod:
           restartPolicy: OnFailure
           securityContext:
