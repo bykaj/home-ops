@@ -9,6 +9,7 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
+  - ./crd-schema-publisher/ks.yaml
   - ./csi-driver-nfs/ks.yaml
   - ./csi-driver-smb/ks.yaml
   - ./descheduler/ks.yaml
