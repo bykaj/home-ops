@@ -25,7 +25,7 @@ resources:
   - ./kopia-volsync/ks.yaml
   - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
-  # - ./paperless/ks.yaml
+  - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
   - ./spoolman/ks.yaml
   - ./thelounge/ks.yaml
