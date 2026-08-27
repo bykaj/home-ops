@@ -20,6 +20,8 @@ spec:
       APP: *app
       APP_NAME: Wallos
       KOPIUR_CAPACITY: 1Gi
+      KOPIUR_MOVER_UID: "82"
+      KOPIUR_MOVER_GID: "82"
   prune: true
   sourceRef:
     kind: GitRepository
