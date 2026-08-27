@@ -45,8 +45,8 @@ spec:
                 memory: 4Gi
             securityContext:
               readOnlyRootFilesystem: false
-              runAsGroup: 0
-              runAsUser: 0
+              runAsGroup: 4000
+              runAsUser: 4000
     persistence:
       config:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"

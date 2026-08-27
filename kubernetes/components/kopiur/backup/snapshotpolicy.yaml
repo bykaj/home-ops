@@ -12,18 +12,19 @@ spec:
   copyMethod: Snapshot
   credentialProjection:
     enabled: true
-  deletion:
-    onPolicyDelete: Delete
   mover:
     cache:
       capacity: ${KOPIUR_CAPACITY:=5Gi}
       mode: Persistent
       storageClassName: ${KOPIUR_CACHE_STORAGECLASS:=openebs-hostpath}
-    inheritSecurityContextFrom:
-      pvcConsumer: {}
+    securityContext:
+      runAsUser: ${KOPIUR_MOVER_UID:=4000}
+      runAsGroup: ${KOPIUR_MOVER_GID:=4000}
+    # inheritSecurityContextFrom:
+    #   pvcConsumer: {}
     # securityContext:
-    #   runAsUser: ${KOPIUR_PUID:=4000}
-    #   runAsGroup: ${KOPIUR_PGID:=4000}
+    #   runAsUser: ${KOPIUR_MOVER_UID:=4000}
+    #   runAsGroup: ${KOPIUR_MOVER_GID:=4000}
     #   runAsNonRoot: ${KOPIUR_NON_ROOT:=true} # keep the unprivileged guarantee
     #   allowPrivilegeEscalation: false
     #   capabilities:
