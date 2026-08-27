@@ -12,4 +12,4 @@ resources:
   - ./cloudnative-pg
   - ./dragonfly/ks.yaml
   - ./emqx/ks.yaml
-  #- ./meilisearch/ks.yaml
+  - ./meilisearch/ks.yaml
