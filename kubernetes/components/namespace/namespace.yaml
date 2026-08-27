@@ -5,6 +5,7 @@ metadata:
   name: not-used
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
+    kopiur.home-operations.com/privileged-movers: "true"
   labels:
     goldilocks.fairwinds.com/enabled: "true"
     resource.kubernetes.io/admin-access: "true"
