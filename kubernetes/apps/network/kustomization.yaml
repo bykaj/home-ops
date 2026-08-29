@@ -15,4 +15,3 @@ resources:
   - ./external-dns/ks.yaml
   - ./external-services/ks.yaml
   - ./tailscale-operator/ks.yaml
-  - ./whoami/ks.yaml
