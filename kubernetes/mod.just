@@ -6,7 +6,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 
 [doc('Apply local Flux Kustomization')]
 apply-ks ns ks:
-    just kube render-local-ks "{{ ns }}" "{{ ks }}" | kubectl apply --server-side --force-conflicts --field-manager=kustomize-controller -f -
+    just k8s render-local-ks "{{ ns }}" "{{ ks }}" | kubectl apply --server-side --force-conflicts --field-manager=kustomize-controller -f -
 
 [doc('Browse a PVC')]
 browse-pvc ns claim:

@@ -3,6 +3,7 @@ pipx_uvx = true
 
 [env]
 JUST_UNSTABLE = "1"
+FLATE_PATH = "{{config_root}}/kubernetes/flux/cluster"
 KUBECONFIG = "{{config_root}}/kubernetes/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
@@ -14,3 +15,4 @@ LEFTHOOK_OUTPUT = "false"
 "aqua:go-task/task" = ["latest"]
 "aqua:google/yamlfmt" = ["latest"]
 "pipx:flux-local" = ["latest"]
+"github:home-operations/flate" = ["latest"]
