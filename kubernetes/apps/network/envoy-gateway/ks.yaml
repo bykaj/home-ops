@@ -29,8 +29,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cert-manager
-      namespace: cert-manager
     - name: envoy-gateway
   interval: 1h
   path: ./kubernetes/apps/network/envoy-gateway/config
