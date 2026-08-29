@@ -12,10 +12,11 @@ spec:
   values:
     config:
       envoyGateway:
+        extensionApis:
+          enableBackend: true
+          enableLua: true
         provider:
           type: Kubernetes
           kubernetes:
             deploy:
               type: GatewayNamespace
-    global:
-      imageRegistry: mirror.gcr.io
