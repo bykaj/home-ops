@@ -40,6 +40,7 @@
     "flux-system": "pipe",
     "infrastructure": "server",
     "kube-system": "kubernetes",
+    "media": "video",
     "network": "context",
     "observability": "event",
     "rook-ceph": "dump",
@@ -49,15 +50,14 @@
   "sops.defaults.ageKeyFile": "age.key",
   "terminal.integrated.fontSize": 14,
   "vs-kubernetes": {
-    "vs-kubernetes.kubeconfig": "./kubernetes/kubeconfig",
+    "vs-kubernetes.kubeconfig": "${workspaceFolder}/kubernetes/kubeconfig",
     "vs-kubernetes.knownKubeconfigs": [
-      "./kubernetes/kubeconfig"
+      "${workspaceFolder}/kubernetes/kubeconfig"
     ]
   },
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
     "kubernetes": "./kubernetes/**/*.yaml",
-    "https://schemas.bykaj.io/grafana.integreatly.org/grafanadashboard_v1beta1.json": "file:///Users/kaj/Development/home-ops/kubernetes/apps/cert-manager/cert-manager/app/grafanadashboard.yaml"
   },
   "[yaml]": {
     "editor.defaultFormatter": "bluebrown.yamlfmt"
