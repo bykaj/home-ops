@@ -18,7 +18,6 @@ env:
   TALOSCONFIG: '{{.ROOT_DIR}}/talos/talosconfig'
 
 includes:
-  flux: .taskfiles/flux
   workstation: .taskfiles/workstation
 
 tasks:

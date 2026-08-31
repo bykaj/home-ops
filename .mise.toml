@@ -1,6 +1,3 @@
-[settings]
-pipx_uvx = true
-
 [env]
 JUST_UNSTABLE = "1"
 FLATE_PATH = "{{config_root}}/kubernetes/flux/cluster"
@@ -10,9 +7,9 @@ SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
 TALOSCONFIG = "{{config_root}}/talos/talosconfig"
 LEFTHOOK_OUTPUT = "false"
 
+[settings]
+pipx.uvx = true
+
 [tools]
 "aqua:astral-sh/uv" = ["latest"]
 "aqua:go-task/task" = ["latest"]
-"aqua:google/yamlfmt" = ["latest"]
-"pipx:flux-local" = ["latest"]
-"github:home-operations/flate" = ["latest"]
