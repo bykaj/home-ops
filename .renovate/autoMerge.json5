@@ -2,9 +2,8 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "Auto merge container digests",
+      description: "Auto-merge trusted OCI digests",
       matchDatasources: ["docker"],
-      automerge: true,
       matchUpdateTypes: ["digest"],
       matchPackagePrefixes: [
         "ghcr.io/home-operations",
@@ -13,52 +12,34 @@
         "ghcr.io/bjw-s-labs",
         "ghcr.io/bykaj",
       ],
-      ignoreTests: false,
-    },
-    {
-      description: "Auto merge minors and patches",
-      matchDatasources: ["docker"],
       automerge: true,
       automergeType: "pr",
-      matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: [
-        "/kube-prometheus-stack/",
-        "/bykaj/"
-      ],
       ignoreTests: false,
     },
     {
-      description: "Auto-merge GitHub Actions",
-      matchManagers: ["github-actions"],
-      automerge: true,
-      automergeType: "branch",
-      matchUpdateTypes: ["minor", "patch", "digest"],
-      minimumReleaseAge: "3 days",
-      ignoreTests: true,
-    },
-    {
-      description: "Auto-merge trusted GitHub Actions",
-      matchManagers: ["github-actions"],
-      matchPackageNames: [
-        "/^actions\//",
-        "/^renovatebot\//"
-      ],
-      automerge: true,
-      automergeType: "branch",
-      matchUpdateTypes: ["minor", "patch", "digest"],
-      minimumReleaseAge: "1 minute",
-      ignoreTests: true,
-    },
-    {
-      description: "Auto-merge GitHub Releases",
-      matchDatasources: ["github-releases"],
-      automerge: true,
-      automergeType: "branch",
+      description: "Auto-merge high-cadence OCI packages weekly",
+      matchDatasources: ["docker"],
       matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: [
-        "/external-dns/",
-        "/prometheus-operator/"
-      ],
+      matchPackageNames: ["ghcr.io/renovatebot/renovate", "/kube-prometheus-stack/"],
+      automerge: true,
+      automergeType: "pr",
+      ignoreTests: false,
+      schedule: ["before 6am on Monday"],
+    },
+    {
+      description: "Auto-merge Grafana dashboards",
+      matchDatasources: ["custom.grafana-dashboards"],
+      matchUpdateTypes: ["major"],
+      automerge: true,
+      automergeType: "branch",
+      ignoreTests: true,
+    },
+    {
+      description: "Auto-merge Renovate Presets",
+      matchManagers: ["renovate-config"],
+      matchUpdateTypes: ["minor", "patch"],
+      automerge: true,
+      automergeType: "branch",
       ignoreTests: true,
     },
   ],
