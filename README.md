@@ -27,10 +27,10 @@ _Managed with Flux, Renovate, and GitHub Actions_
 
 1. [Overview](#-overview)
 2. [Kubernetes](#-kubernetes)
-    - [Core Components](#core-components)
-    - [GitOps](#gitops)
-    - [Folder Structure](#folder-structure)
-    - [Flux Workflow](#flux-workflow)
+   - [Core Components](#core-components)
+   - [GitOps](#gitops)
+   - [Folder Structure](#folder-structure)
+   - [Flux Workflow](#flux-workflow)
 3. [Cloud Dependencies](#-cloud-dependencies)
 4. [DNS](#-dns)
 5. [Hardware](#-hardware)
@@ -45,7 +45,7 @@ _Managed with Flux, Renovate, and GitHub Actions_
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"> Overview
 
-This is a mono repository for my wildly over-engineered home infrastructure and Kubernetes cluster, because apparently I hate free time. I try to follow Infrastructure as Code (IaC) and GitOps practices using enterprise-grade tools like [Ansible](https://www.ansible.com/), [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)—you know, the same stack Netflix uses, except mine just runs my Plex server and some smart lightbulbs. Ok, I also use some trusty [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) scripts held together by duct tape and prayer.
+This is a mono repository for my wildly over-engineered home infrastructure and Kubernetes cluster, because apparently I hate free time. I try to follow Infrastructure as Code (IaC) and GitOps practices using enterprise-grade tools like [Ansible](https://www.ansible.com/), [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions)—you know, the same stack Netflix uses, except mine just runs my Plex server and some smart lightbulbs. Ok, I also use some trusty [bash](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>) scripts held together by duct tape and prayer.
 
 ---
 
@@ -86,12 +86,16 @@ This Git repository contains the following directories:
 ```sh
 📁 /
 ├── 📁 kubernetes/
-│   ├── 📁 apps/        # Application deployments (organized by namespace)
-│   ├── 📁 components/  # Re-useable kustomize components
-│   └── 📁 flux/        # Flux system configuration
-├── 📁 talos/           # Talos cluster configuration
-├── 📁 bootstrap/       # Initial cluster bootstrap (Helmfile)
-└── 📁 scripts/         # Utility scripts
+│   ├── 📁 apps/          # Application deployments (organized by namespace)
+│   ├── 📁 bootstrap/     # Initial cluster bootstrap (Helmfile)
+│   ├── 📁 components/    # Reusable kustomize components
+│   ├── 📁 flux/          # Flux system configuration
+│   └── 📁 talos/         # Talos cluster configuration
+├── 📁 bootstrap/
+│   └── 📁 workstation/   # Workstation tooling (Brewfile)
+├── 📁 docker/
+│   └── 📁 truenas/       # Docker Compose stacks for TrueNAS
+└── 📁 scripts/           # Utility scripts
 ```
 
 ### Flux Workflow
@@ -112,6 +116,7 @@ graph TD
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f636_200d_1f32b_fe0f/512.gif" alt="😶" width="20" height="20"> Cloud Dependencies
 
 While most of my infrastructure and workloads are self-hosted, I do rely on the cloud for certain key parts:
+
 - [1Password](https://1password.com/) – Password management and Kubernetes secrets injection with [External Secrets](https://external-secrets.io/).
 - [Cloudflare](https://www.cloudflare.com/) – Public DNS, Zero Trust tunnel and hosting Kubernetes schemas.
 - [Fastmail](https://fastmail.com/) – Email hosting.
@@ -120,6 +125,7 @@ While most of my infrastructure and workloads are self-hosted, I do rely on the 
 - ~~[Storj](https://storj.io/)~~ [Backblaze B2](https://backblaze.com/) – S3 object storage for applications and backups.
 
 This helps me avoid three major headaches:
+
 1. **Chicken-and-egg scenarios** – Dependencies that prevent initial system bootstrapping.
 2. **Critical service availability** – Services I need whether my cluster is up or not.
 3. **The "hit by a bus" factor** – Making sure critical apps like email, password management, and photo storage stay accessible to my family and friends when I'm no longer around.
@@ -140,16 +146,16 @@ To complete the setup, I've configured a third (internal) ingress class called `
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="20" height="20"> Hardware
 
-| Device                      | Num | Disks                  | RAM  | Network       | Function                |
-|-----------------------------|-----|------------------------|------|---------------|-------------------------|
-| Lenovo M920q, i5-8500T      | 2   | 1TB NVMe               | 64GB | 10Gb          | Proxmox VE Host         |
-| Self-built 3U, i7-6700K     | 1   | 512GB SSD, 1TB NVMe, 6x14TB SATA (ZFS) | 64GB | 10Gb | Proxmox VE Host, SMB/NFS + Backup Server |
-| UniFi UDM Pro Max           | 1   | 8TB SATA               | -    | 10Gb          | Router & NVR            |
-| UniFi USW Pro HD 24 PoE     | 1   | -                      | -    | 2.5Gb/10Gb    | PoE Core Switch         |
-| UniFi USW Flex 2.5G 5       | 1   | -                      | -    | 2.5Gb         | Switch                  |
-| Home Assistant Yellow       | 1   | 8GB eMMC, 256GB NVMe   | 4GB  | 1Gb           | Home Automation         |
-| JetKVM                      | 3   | 8GB eMMC               | -    | 100Mb         | KVM                     |
-| UniFi UPS 2U                | 1   | -                      | -    | 100Mb         | UPS                     |
+| Device                  | Num | Disks                                  | RAM  | Network    | Function                                 |
+| ----------------------- | --- | -------------------------------------- | ---- | ---------- | ---------------------------------------- |
+| Lenovo M920q, i5-8500T  | 2   | 1TB NVMe                               | 64GB | 10Gb       | Proxmox VE Host                          |
+| Self-built 3U, i7-6700K | 1   | 512GB SSD, 1TB NVMe, 6x14TB SATA (ZFS) | 64GB | 10Gb       | Proxmox VE Host, SMB/NFS + Backup Server |
+| UniFi UDM Pro Max       | 1   | 8TB SATA                               | -    | 10Gb       | Router & NVR                             |
+| UniFi USW Pro HD 24 PoE | 1   | -                                      | -    | 2.5Gb/10Gb | PoE Core Switch                          |
+| UniFi USW Flex 2.5G 5   | 1   | -                                      | -    | 2.5Gb      | Switch                                   |
+| Home Assistant Yellow   | 1   | 8GB eMMC, 256GB NVMe                   | 4GB  | 1Gb        | Home Automation                          |
+| JetKVM                  | 3   | 8GB eMMC                               | -    | 100Mb      | KVM                                      |
+| UniFi UPS 2U            | 1   | -                                      | -    | 100Mb      | UPS                                      |
 
 ---
 
@@ -160,7 +166,7 @@ To complete the setup, I've configured a third (internal) ingress class called `
 - [ ] **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
 - [ ] **Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
 - [ ] **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
-- [X] **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
+- [x] **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
 
 ---
 
