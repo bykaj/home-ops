@@ -32,16 +32,26 @@ directory is not used again until the next rebuild.
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
 `10.73.10.10`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
-along with every other LoadBalancer IP. See the
-[config](../apps/kube-system/cilium/config/) folder.
+along with every other LoadBalancer IP. See the [config](../apps/kube-system/cilium/config/) folder.
 
 ```mermaid
 graph LR
-    client[LAN client] -->|hashed flow| udm["UDM (ASN 64513)"]
-    udm -->|ECMP| k1["kube-node-1 (10.73.10.110)"]
-    udm -->|ECMP| k2["kube-node-2 (10.73.10.111)"]
-    udm -->|ECMP| k3["kube-node-3 (10.73.10.112)"]
-    k1 & k2 & k3 -. "BGP (ASN 64514): VIPs from 10.73.10.0/24" .-> udm
+    client(Client) -->|hashed flow| udm("`**UDM**
+    _ASN 64513_`")
+    udm -->|ECMP| k1("`**kube-node-1**
+    10.73.10.110`")
+    udm -->|ECMP| k2("`**kube-node-2**
+     10.73.10.111`")
+    udm -->|ECMP| k3("`**kube-node-3**
+    10.73.10.112`")
+    udm -->|ECMP| nas("`**nas**
+    10.73.1.10`")
+    k1 & k2 & k3 -. "`**BGP** _ASN 64514_
+    VIPs from 10.73.10.0/24`" .-> udm
+    nas -. "`**BGP** _ASN 64515_
+    VIP 10.73.1.10/32`" .-> udm
+    client@{ shape: browser}
+    nas@{ shape: lin-cyl }
 ```
 
 The VIPs the UDM learns this way:
@@ -52,6 +62,7 @@ The VIPs the UDM learns this way:
 | `10.73.10.12` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
 | `10.73.10.14` | `external.cetana.net`      | `envoy-external` Gateway       |
 | `10.73.10.16` | `services.home.cetana.net` | `envoy-services` Gateway       |
+| `10.73.1.10`  | `nas.home.cetana.net`      | `traefik` Gateway              |
 
 A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
@@ -96,8 +107,8 @@ exit
 
 </details>
 
-`maximum-paths 3` gives true ECMP across the control plane nodes for the
-`kube-api` VIP (FRR's eBGP default is a single best path).
+The `maximum-paths 3` gives true ECMP across the control plane nodes for the
+`kube-api` VIP (FRR's eBGP default is a single best path). The `nas` node is just there for a complete picture; it's not part of the Kubernetes cluster and serves only as a configuration reference.
 
 > [!WARNING]
 > Re-uploading the FRR config briefly bounces established BGP sessions.
@@ -275,8 +286,8 @@ graph LR
 Bootstrap itself restores no application data; that happens declaratively
 once Flux takes over, via [Kopiur](https://github.com/home-operations/kopiur)
 (deployed from [kubernetes/apps/system/](../apps/system/),
-backed by the `nas`
-ClusterRepository: a Kopia NFS repo on `nas.home.cetana.net`).
+backed by the `nas` ClusterRepository: a Kopia NFS repo on
+`nas.home.cetana.net`).
 
 Apps that opt into the `kopiur/backup` component get a PVC whose
 `spec.dataSourceRef` points at a Kopiur `Restore` with `target.populator: {}`
@@ -303,5 +314,4 @@ The helmfiles define no chart versions or values of their own. Each release's
 chart and version are read from the app's `ocirepository.yaml` and its values
 from the app's `helmrelease.yaml` under `kubernetes/apps/` (see
 [helmfile/templates/](helmfile/templates/)). Bootstrap therefore installs
-exactly what Flux will
-later reconcile, and Renovate updates only one place.
+exactly what Flux will later reconcile, and Renovate updates only one place.
