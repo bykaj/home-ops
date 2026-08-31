@@ -32,7 +32,7 @@ The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
 `10.73.10.10`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
 along with every other LoadBalancer IP. See
-[networking.yaml](../kubernetes/apps/kube-system/cilium/app/networking.yaml).
+[networking.yaml](../apps/kube-system/cilium/app/networking.yaml).
 
 ```mermaid
 graph LR
@@ -52,8 +52,7 @@ The VIPs the UDM learns this way:
 | `10.73.10.14` | `external.cetana.net`      | `envoy-external` Gateway       |
 | `10.73.10.16` | `services.home.cetana.net` | `envoy-services` Gateway       |
 
-A static A record in UniFi (under the policy settings; the UI location
-varies by Network release) points the API hostname at the VIP:
+A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
 ```text
 kube-vip.home.cetana.net → 10.73.10.10
@@ -62,7 +61,7 @@ kube-vip.home.cetana.net → 10.73.10.10
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
 (`10.73.10.110-112`) and announces LoadBalancer Service IPs from the
 `10.73.10.0/24` pool. UniFi accepts a single FRR config upload per device
-(Settings → Routing → BGP):
+(Settings → Routing Table → BGP):
 
 <details>
 <summary>FRR config</summary>
@@ -245,8 +244,10 @@ graph LR
 5. **apps** - `helmfile sync` of `helmfile/apps.yaml`, the minimal release
    chain Flux needs before it can take over:
 
+   ```text
    cilium → coredns → spegel → cert-manager → external-secrets →
    onepassword-connect → flux-operator → flux-instance
+   ```
 
    Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages
    these same releases from then on.
@@ -261,7 +262,7 @@ Bootstrap itself restores no application data; that happens declaratively
 once Flux takes over, via [Kopiur](https://github.com/home-operations/kopiur)
 (deployed from [kubernetes/apps/system/](../apps/system/),
 backed by the `nas`
-ClusterRepository: kopia NFS repo on `nas.home.cetana.net`).
+ClusterRepository: a Kopia NFS repo on `nas.home.cetana.net`).
 
 Apps that opt into the `kopiur/backup` component get a PVC whose
 `spec.dataSourceRef` points at a Kopiur `Restore` with `target.populator: {}`
