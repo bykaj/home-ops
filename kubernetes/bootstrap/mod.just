@@ -5,8 +5,8 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-bootstrap_dir := justfile_dir() + '/bootstrap'
 kubernetes_dir := justfile_dir() + '/kubernetes'
+bootstrap_dir := kubernetes_dir + '/bootstrap'
 controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
@@ -69,7 +69,7 @@ apps:
 api-ready:
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
     for n in {{ nodes }}; do
-        until [[ "$(curl -ks -o /dev/null -w '%{http_code}' --connect-timeout 2 "https://${n}:6443/readyz")" == "401" ]]; do
+        until [[ "$(curl -ks -o /dev/null -w '%{http_code}' --connect-timeout 2 "https://${n}:6443/readyz")" == "200" ]]; do
             just log info "Waiting for kube-apiserver. Retrying in 5 seconds..." "stage" "{{ recipe_name() }}" "node" "$n"
             sleep 5
         done

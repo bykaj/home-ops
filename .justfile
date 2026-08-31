@@ -1,20 +1,27 @@
 #!/usr/bin/env -S just --justfile
 
-set quiet := true
+set minimum-version := '1.55.0'
+
+set default-list
+set default-script
+set lazy
+set quiet
+set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-mod bootstrap "bootstrap"
-mod k8s "kubernetes"
-mod talos "talos"
+[group('bootstrap')]
+mod bootstrap "kubernetes/bootstrap"
 
-[private]
-default:
-    just -l
+[group('k8s')]
+mod k8s "kubernetes"
+
+[group('talos')]
+mod talos "kubernetes/talos"
 
 [private]
 log lvl msg *args:
-  gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
+    gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
 
 [private]
 template file *args:
-  minijinja-cli "{{ file }}" {{ args }} | op inject
+    minijinja-cli "{{ file }}" {{ args }} | op inject
