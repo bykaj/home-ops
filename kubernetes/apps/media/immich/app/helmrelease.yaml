@@ -3,13 +3,21 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app immich
+  name: immich
 spec:
   chartRef:
     kind: OCIRepository
     name: immich
   interval: 1h
   values:
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 4000
+        runAsNonRoot: true
+        runAsUser: 4000
     controllers:
       immich:
         annotations:
@@ -32,8 +40,8 @@ spec:
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_TELEMETRY_INCLUDE: "all"
               IMMICH_WORKERS_INCLUDE: "api"
-              REDIS_HOSTNAME: "${REDIS_HOST}"
               REDIS_DBINDEX: "5"
+              REDIS_HOSTNAME: "${REDIS_HOST}"
               TZ: "${TIMEZONE}"
             envFrom: *envFrom
             probes:
@@ -41,22 +49,22 @@ spec:
                 enabled: true
                 custom: true
                 spec:
+                  failureThreshold: 5
                   httpGet:
                     path: /server-info/ping
                     port: &port 2283
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
-                  failureThreshold: 5
               readiness: *probes
               startup:
                 enabled: true
                 custom: true
                 spec:
+                  failureThreshold: 30
                   httpGet:
                     path: /api/server/ping
                     port: *port
-                  failureThreshold: 30
                   periodSeconds: 5
                   successThreshold: 1
                   timeoutSeconds: 1
@@ -68,34 +76,26 @@ spec:
                 memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-    defaultPodOptions:
-      enableServiceLinks: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
+              readOnlyRootFilesystem: true
     persistence:
       backups:
         type: nfs
-        server: "${NAS_HOST}"
         path: /mnt/vault/Backups
+        server: "${NAS_HOST}"
         globalMounts:
           - path: /data/backups
             subPath: Apps/Immich
       library:
         type: nfs
-        server: "${NAS_HOST}"
         path: /mnt/vault/Photos/Library
+        server: "${NAS_HOST}"
         globalMounts:
           - path: *mediaLocation
       import:
         type: nfs
-        server: "${NAS_HOST}"
         path: /mnt/vault/Photos/Import
+        server: "${NAS_HOST}"
         globalMounts:
           - path: /import
       tmpfs:
@@ -114,8 +114,8 @@ spec:
             conditions: ["[STATUS] == 200"]
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Media"
-          gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-immich.svg"
+          gethomepage.dev/name: "${APP_NAME}"
         hostnames:
           - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
@@ -134,11 +134,11 @@ spec:
     serviceMonitor:
       immich:
         enabled: true
-        serviceName: immich
         endpoints:
-          - port: metrics-api
+          - path: /metrics
+            port: metrics-api
             scheme: http
-            path: /metrics
-          - port: metrics-ms
+          - path: /metrics
+            port: metrics-ms
             scheme: http
-            path: /metrics
+        serviceName: immich

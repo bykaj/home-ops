@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app immich-microservices
+  name: immich-microservices
 spec:
   chartRef:
     kind: OCIRepository
@@ -12,6 +12,18 @@ spec:
   dependsOn:
     - name: immich
   values:
+    defaultPodOptions:
+      enableServiceLinks: false
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: "${APP}-gpu"
+      securityContext:
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 4000
+        runAsNonRoot: true
+        runAsUser: 4000
+        supplementalGroups: [44]
     controllers:
       immich-microservices:
         annotations:
@@ -24,8 +36,8 @@ spec:
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_WORKERS_EXCLUDE: "api"
-              REDIS_HOSTNAME: "${REDIS_HOST}"
               REDIS_DBINDEX: "5"
+              REDIS_HOSTNAME: "${REDIS_HOST}"
               TZ: "${TIMEZONE}"
             envFrom:
               - secretRef:
@@ -40,31 +52,19 @@ spec:
                 memory: 8Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-    defaultPodOptions:
-      enableServiceLinks: false
-      resourceClaims:
-        - name: gpu
-          resourceClaimTemplateName: "${APP}-gpu"
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 4000
-        runAsGroup: 4000
-        fsGroup: 4000
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [44]
+              readOnlyRootFilesystem: true
     persistence:
       backups:
         type: nfs
-        server: "${NAS_HOST}"
         path: /mnt/vault/Backups
+        server: "${NAS_HOST}"
         globalMounts:
           - path: /data/backups
             subPath: Apps/Immich
       library:
         type: nfs
-        server: "${NAS_HOST}"
         path: /mnt/vault/Photos/Library
+        server: "${NAS_HOST}"
         globalMounts:
           - path: *mediaLocation
