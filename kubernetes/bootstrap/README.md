@@ -12,7 +12,7 @@ directory is not used again until the next rebuild.
 
 ## Prerequisites
 
-- [mise-en-place](https://mise.jdx.dev) installed on your workstation. See the [instructions](https://mise.jdx.dev/installing-mise.html).
+- The [Mise](https://mise.jdx.dev/) CLI [installed](https://mise.jdx.dev/getting-started.html#installing-mise-cli) on your workstation and [activated](https://mise.jdx.dev/getting-started.html#activate-mise) in your shell.
 - Tools pinned in `.mise/config.toml` installed via `mise install` (talosctl,
   just, minijinja-cli, op, yq, jq, task), plus kubectl, helmfile, kustomize and gum
   on the PATH installed with Homebrew (automatically via a mise postinstall hook).
