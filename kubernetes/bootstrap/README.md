@@ -12,9 +12,10 @@ directory is not used again until the next rebuild.
 
 ## Prerequisites
 
+- [mise-en-place](https://mise.jdx.dev) installed on your workstation. See the [instructions](https://mise.jdx.dev/installing-mise.html).
 - Tools pinned in `.mise/config.toml` installed via `mise install` (talosctl,
   just, minijinja-cli, op, yq, jq, task), plus kubectl, helmfile, kustomize and gum
-  on the PATH installed via `task workstation:brew`.
+  on the PATH installed with Homebrew (automatically via a mise postinstall hook).
 - A signed-in 1Password CLI (`op`). Machine secrets never live in this repo; every
   `op://` reference in the Talos configs and bootstrap manifests is resolved
   at apply time with `op inject`.
