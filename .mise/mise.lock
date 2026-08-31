@@ -167,6 +167,22 @@ version = "0.65.0"
 backend = "npm:oxfmt"
 specifiers = ["0.65.0"]
 
+[[tools."pipx:ansible"]]
+version = "14.3.1"
+backend = "pipx:ansible"
+specifiers = [
+    "14.3.1",
+    "latest",
+]
+
+[[tools."pipx:ansible-core"]]
+version = "2.21.3"
+backend = "pipx:ansible-core"
+specifiers = [
+    "2.21.3",
+    "latest",
+]
+
 [[tools.shellcheck]]
 version = "0.11.0"
 backend = "aqua:koalaman/shellcheck"
