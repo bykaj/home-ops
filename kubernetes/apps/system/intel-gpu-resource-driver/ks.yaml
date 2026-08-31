@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app intel-gpu-resource-driver
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
@@ -20,4 +17,4 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
+  wait: true

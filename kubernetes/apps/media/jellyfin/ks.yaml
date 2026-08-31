@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app jellyfin
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/gpu
     - ../../../../components/kopiur/backup
@@ -31,4 +28,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false

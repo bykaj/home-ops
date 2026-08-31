@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app n8n
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/postgres
     - ../../../../components/kopiur/backup
@@ -25,4 +22,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false

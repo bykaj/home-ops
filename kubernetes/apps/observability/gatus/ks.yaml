@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app gatus
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -22,4 +19,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false

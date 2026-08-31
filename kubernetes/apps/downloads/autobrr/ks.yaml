@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app autobrr
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/zeroscaler/postgres
   dependsOn:
@@ -24,4 +21,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false

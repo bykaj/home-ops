@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app grafana-operator
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/observability/grafana-operator/app
   postBuild:
@@ -27,9 +24,6 @@ kind: Kustomization
 metadata:
   name: &app grafana-instance
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: grafana-operator
     - name: rook-ceph-cluster
@@ -46,4 +40,3 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: observability
-  wait: false

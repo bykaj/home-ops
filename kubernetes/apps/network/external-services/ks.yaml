@@ -3,11 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kvm-icarus
+  name: kvm-icarus
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-icarus
   prune: true
@@ -15,17 +12,13 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kvm-leonis
+  name: kvm-leonis
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-leonis
   prune: true
@@ -33,17 +26,12 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kvm-zeus
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  name: kvm-zeus
   interval: 1h
   path: ./kubernetes/apps/network/external-services/kvm-zeus
   prune: true
@@ -51,35 +39,12 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app octoprint
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  interval: 1h
-  path: ./kubernetes/apps/network/external-services/octoprint
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  wait: false
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app proxmox-backup-server
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  name: proxmox-backup-server
   interval: 1h
   path: ./kubernetes/apps/network/external-services/proxmox-backup-server
   prune: true
@@ -87,17 +52,13 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
 # ---
 # # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
-#   name: &app proxmox-ve
+#   name: proxmox-ve
 # spec:
-#   commonMetadata:
-#     labels:
-#       app.kubernetes.io/name: *app
 #   interval: 1h
 #   path: ./kubernetes/apps/network/external-services/proxmox-ve
 #   prune: true
@@ -105,4 +66,3 @@ spec:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   wait: false

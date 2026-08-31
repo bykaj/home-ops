@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app changedetection
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur/backup
   dependsOn:
@@ -27,4 +24,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false

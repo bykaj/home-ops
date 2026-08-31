@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: &app goldilocks-vpa
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/observability/goldilocks/vpa
   postBuild:
@@ -18,7 +15,6 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -26,9 +22,6 @@ kind: Kustomization
 metadata:
   name: &app goldilocks
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: goldilocks-vpa
   interval: 1h
@@ -42,4 +35,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
