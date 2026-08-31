@@ -31,8 +31,8 @@ directory is not used again until the next rebuild.
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
 `10.73.10.10`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
-along with every other LoadBalancer IP. See
-[networking.yaml](../apps/kube-system/cilium/app/networking.yaml).
+along with every other LoadBalancer IP. See the
+[config](../apps/kube-system/cilium/config/) folder.
 
 ```mermaid
 graph LR
@@ -78,10 +78,17 @@ router bgp 64513
   neighbor 10.73.10.111 peer-group k8s
   neighbor 10.73.10.112 peer-group k8s
 
+  neighbor nas peer-group
+  neighbor nas remote-as 64515
+
+  neighbor 10.73.1.10 peer-group nas
+
   address-family ipv4 unicast
     maximum-paths 3
     neighbor k8s next-hop-self
     neighbor k8s soft-reconfiguration inbound
+    neighbor nas next-hop-self
+    neighbor nas soft-reconfiguration inbound
   exit-address-family
 exit
 ```
@@ -117,16 +124,19 @@ script, run by the `udm-boot` service from
 [unifi-utilities/unifi-common](https://github.com/unifi-utilities/unifi-common)
 (UniFi OS 4.x+):
 
+> [!WARNING]
+> Never pipe a remote script directly into your shell (bash, sh, zsh, etc.).
+> Download it, read it, and only then execute it. Always. No exceptions.
+
 ```sh
 curl -fsL "https://raw.githubusercontent.com/unifi-utilities/unifi-common/HEAD/remote_install.sh" | /bin/bash
 ```
 
-> [!WARNING]
+> [!NOTE]
 > The service unit itself sits on the overlay, so a firmware upgrade can
 > remove it while the scripts in `/data/on_boot.d` remain.
-> After an
-> upgrade, check `systemctl is-enabled udm-boot` and rerun the installer if
-> needed.
+> After an upgrade, check `systemctl is-enabled udm-boot` and rerun the
+> installer if needed.
 
 ## ECMP flow hashing
 
@@ -135,13 +145,16 @@ destination IP only, so a given client always lands on the same node.
 Policy `1` adds ports to the hash and spreads individual connections
 across the ECMP next-hops.
 
-`/data/on_boot.d/30-ecmp-l4-hash.sh`:
+<details>
+<summary><code>/data/on_boot.d/30-ecmp-l4-hash.sh</code></summary>
 
 ```sh
 #!/bin/sh
 echo "net.ipv4.fib_multipath_hash_policy = 1" > /etc/sysctl.d/30-ecmp-l4-hash.conf
 sysctl -w net.ipv4.fib_multipath_hash_policy=1
 ```
+
+</details>
 
 The `sysctl.d` drop-in covers reboots on its own; the boot script recreates
 it after firmware upgrades.
