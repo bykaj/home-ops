@@ -270,7 +270,7 @@ graph LR
 > Every stage is safe to re-run. If bootstrap fails partway, fix the issue
 > and run `just bootstrap cluster` again.
 
-## Data restore (Kopiur)
+## Data restore
 
 Bootstrap itself restores no application data; that happens declaratively
 once Flux takes over, via [Kopiur](https://github.com/home-operations/kopiur)
