@@ -31,7 +31,7 @@ pipx.uvx = true
 [hooks]
 postinstall = [
   "lefthook install",
-  "brew bundle --file {{config_root}}/bootstrap/workstation/Brewfile",
-  "ansible-galaxy install -r {{config_root}}/ansible/requirements.yaml",
+  # "brew bundle --file {{config_root}}/bootstrap/workstation/Brewfile",
+  # "ansible-galaxy install -r {{config_root}}/ansible/requirements.yaml",
 ]
 
