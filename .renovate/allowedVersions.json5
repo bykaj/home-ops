@@ -4,12 +4,24 @@
     {
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgresql/"],
-      allowedVersions: "<19"
+      allowedVersions: "<19",
     },
     {
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgres-init/"],
-      allowedVersions: "<19"
+      allowedVersions: "<19",
     },
-  ]
+    {
+      description: "CoreDNS 1.14.3+ prefetch poisons autopath answers, hold until coredns/coredns#8390 is fixed",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/coredns/charts/coredns"],
+      enabled: false,
+    },
+    {
+      description: "1Password CLI is not resolvable on GitHub, bump manually",
+      matchManagers: ["mise"],
+      matchDepNames: ["1password-cli"],
+      enabled: false,
+    },
+  ],
 }
