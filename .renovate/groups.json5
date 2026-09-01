@@ -3,11 +3,9 @@
   packageRules: [
     {
       description: "1Password Connect Group",
-      groupName: "1Password Connect",
+      groupName: "1password-connect",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/1password/"
-      ],
+      matchPackageNames: ["/1password/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -15,12 +13,9 @@
     },
     {
       description: "Actions Runner Controller Group",
-      groupName: "Actions Runner Controller",
+      groupName: "actions-runner-controller",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/gha-runner-scale-set-controller/",
-        "/gha-runner-scale-set/",
-      ],
+      matchPackageNames: ["/gha-runner-scale-set-controller/", "/gha-runner-scale-set/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -28,27 +23,18 @@
     },
     {
       description: "Barman Cloud Group",
-      groupName: "Barman",
-      matchDatasources: [
-        "docker",
-        "github-tags"
-      ],
-      matchPackageNames: [
-        "/plugin-barman-cloud/",
-      ],
+      groupName: "barman",
+      matchDatasources: ["docker", "github-tags"],
+      matchPackageNames: ["/plugin-barman-cloud/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
     },
     {
       description: "Flux Operator Group",
-      groupName: "Flux Operator",
+      groupName: "flux-operator",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/flux-operator/",
-        "/flux-instance/",
-        "/flux-operator-manifests/"
-      ],
+      matchPackageNames: ["/flux-operator/", "/flux-instance/", "/flux-operator-manifests/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -56,12 +42,9 @@
     },
     {
       description: "Intel Device Plugins Group",
-      groupName: "Intel Device Plugins",
+      groupName: "intel-device-plugins",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/intel-device-plugins-operator/",
-        "/intel-device-plugins-gpu/"
-      ],
+      matchPackageNames: ["/intel-device-plugins-operator/", "/intel-device-plugins-gpu/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -69,7 +52,7 @@
     },
     {
       description: "Kubernetes Group",
-      groupName: "Kubernetes",
+      groupName: "kubernetes",
       matchDatasources: ["docker"],
       matchPackageNames: [
         "/kube-apiserver/",
@@ -85,13 +68,9 @@
     },
     {
       description: "Rook-Ceph Group",
-      groupName: "Rook-Ceph",
+      groupName: "rook-ceph",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/rook-ceph/",
-        "/rook-ceph-cluster/",
-        "/rook\/ceph/"
-      ],
+      matchPackageNames: ["/rook-ceph/", "/rook-ceph-cluster/", "/rook\/ceph/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
@@ -99,28 +78,22 @@
     },
     {
       description: "Talos Group",
-      groupName: "Talos",
+      groupName: "talos",
       matchDatasources: ["docker"],
-      matchPackageNames: [
-        "/installer/"
-      ],
+      matchPackageNames: ["/installer/", "siderolabs/talos"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 2,
+      minimumGroupSize: 3,
     },
-		{
-			description: "Your Spotify Group",
-			groupName: "Your-Spotify",
-			matchDatasources: [
-				"docker",
-			],
-			matchPackageNames: [
-				"/your_spotify/",
-			],
-			group: {
-				commitMessageTopic: "{{{groupName}}} group",
-			},
-		},
+    {
+      description: "Your Spotify Group",
+      groupName: "your-spotify",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/your_spotify/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+    },
   ],
 }
