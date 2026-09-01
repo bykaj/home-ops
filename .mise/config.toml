@@ -24,7 +24,7 @@ pipx.uvx = true
 "pipx:ansible-core" = "2.21.3"
 "shellcheck" = "0.11.0"
 "talos" = "1.13.9"
-"uv" = "0.12.8"
+"uv" = "0.12.9"
 "yq" = "4.53.6"
 "zizmor" = "1.30.0"
 
