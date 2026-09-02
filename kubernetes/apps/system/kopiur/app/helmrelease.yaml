@@ -10,6 +10,14 @@ spec:
     name: kopiur
   interval: 1h
   values:
+    extraVolumes:
+      - name: repository
+        nfs:
+          path: /mnt/vault/Backups/Cluster/main/kopiur
+          server: ${NAS_HOST}
+    extraVolumeMounts:
+      - name: repository
+        mountPath: /repository
     # Grants the operator ClusterRole secrets create/patch so it can project
     # the repository credentials into mover namespaces (credentialProjection)
     features:
