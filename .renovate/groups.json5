@@ -77,9 +77,10 @@
       minimumGroupSize: 2,
     },
     {
+      // After the mise tools catch-all so talos wins its own group; unites the
+      // mise pin, the factory installer image, and the tuppr upgrade version
       description: "Talos Group",
       groupName: "talos",
-      matchDatasources: ["docker"],
       matchPackageNames: ["/installer/", "siderolabs/talos"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
