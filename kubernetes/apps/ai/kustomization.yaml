@@ -9,4 +9,5 @@ replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
   - ./litellm/ks.yaml
+  - ./llmkube/ks.yaml
   - ./open-webui/ks.yaml
