@@ -60,7 +60,7 @@ spec:
         hostnames:
           - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-external
             namespace: network
     service:
       app:
