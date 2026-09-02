@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app open-webui
+spec:
+  components:
+    - ../../../../components/kopiur/backup
+  dependsOn:
+    - name: dragonfly-operator
+      namespace: database
+    - name: authentik-server
+      namespace: security
+  healthCheckExprs:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      failed: status.phase != 'ready'
+      current: status.phase == 'ready'
+  interval: 1h
+  path: ./kubernetes/apps/ai/open-webui/app
+  postBuild:
+    substitute:
+      APP: *app
+      APP_SUBDOMAIN: chat
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
