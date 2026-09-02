@@ -41,6 +41,8 @@ spec:
               # Websockets
               ENABLE_WEBSOCKET_SUPPORT: true
               WEBSOCKET_MANAGER: redis
+              # Memini
+              MEMINI_BASE_URL: "http://memini.ai.svc.cluster.local:8080"
             envFrom:
               - secretRef:
                   name: open-webui-secret
