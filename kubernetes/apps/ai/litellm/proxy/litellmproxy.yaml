@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmproxy_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMProxy
+metadata:
+  name: litellm-proxy
+spec:
+  # renovate: datasource=docker depName=ghcr.io/berriai/litellm
+  image: ghcr.io/berriai/litellm:v1.99.1@sha256:a53a7d3ffebede1925bd3ee8a21e4a7b9b63e2e68ec883af136edcccb6eeb82c
+  replicas: 1
+  generalSettings:
+    health_check_endpoint: /v1/health
+  routerSettings:
+    routing_strategy: simple-shuffle
+    redis_url: os.environ/REDIS_URL
+    num_retries: 3
+    timeout: 600
+    fallbacks:
+      # direct same-model failover
+      - opencode-go/minimax-m3: ["minimaxai/minimax-m3"]
+  litellmSettings:
+    success_callback:
+      - prometheus
+    prometheus_adapter: true
+    cache: true
+    cache_params:
+      type: redis
+      url: os.environ/REDIS_URL
+    drop_params: true
+    merge_reasoning_content_in_choices: true
+    set_verbose: false
+  env:
+    - name: LITELLM_LOG
+      value: INFO
+    - name: LITELLM_MODE
+      value: PRODUCTION
+    - name: REDIS_URL
+      valueFrom:
+        secretKeyRef:
+          name: litellm-proxy-secret
+          key: REDIS_URL
+    - name: LITELLM_MASTER_KEY
+      valueFrom:
+        secretKeyRef:
+          name: litellm-proxy-secret
+          key: LITELLM_MASTER_KEY
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 2Gi
+  service:
+    type: ClusterIP
+    port: 4000
+  route:
+    hostnames:
+      - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+    parentRefs:
+      - name: envoy-internal
+        namespace: network
