@@ -74,7 +74,7 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 3,
+      minimumGroupSize: 2,
     },
     {
       description: "Talos Group",
@@ -84,7 +84,7 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
-      minimumGroupSize: 3,
+      minimumGroupSize: 2,
     },
     {
       description: "Your Spotify Group",
