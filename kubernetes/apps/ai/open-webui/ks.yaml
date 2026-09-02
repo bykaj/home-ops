@@ -10,7 +10,7 @@ spec:
   dependsOn:
     - name: dragonfly-operator
       namespace: database
-    - name: authentik-server
+    - name: authentik
       namespace: security
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
