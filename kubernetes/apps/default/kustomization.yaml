@@ -9,19 +9,19 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./atuin/ks.yaml
-  - ./changedetection/ks.yaml
-  # - ./filabridge/ks.yaml
-  - ./homepage/ks.yaml
+  # - ./atuin/ks.yaml
+  # - ./changedetection/ks.yaml
+  # # - ./filabridge/ks.yaml
+  # - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
-  - ./karakeep/ks.yaml
-  - ./kopia-volsync/ks.yaml
-  - ./n8n/ks.yaml
-  # - ./opencloud/ks.yaml
-  - ./paperless/ks.yaml
-  - ./pgadmin/ks.yaml
-  - ./spoolman/ks.yaml
-  - ./thelounge/ks.yaml
-  - ./wallos/ks.yaml
-  - ./wastebin/ks.yaml
-  - ./windshift/ks.yaml
+  # - ./karakeep/ks.yaml
+  # - ./kopia-volsync/ks.yaml
+  # - ./n8n/ks.yaml
+  # # - ./opencloud/ks.yaml
+  # - ./paperless/ks.yaml
+  # - ./pgadmin/ks.yaml
+  # - ./spoolman/ks.yaml
+  # - ./thelounge/ks.yaml
+  # - ./wallos/ks.yaml
+  # - ./wastebin/ks.yaml
+  # - ./windshift/ks.yaml

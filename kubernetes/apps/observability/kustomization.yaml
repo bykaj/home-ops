@@ -7,14 +7,14 @@ components:
   - ../../components/namespace
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources:
-  - ./blackbox-exporter/ks.yaml
-  - ./gatus/ks.yaml
-  - ./goldilocks/ks.yaml
-  - ./grafana-operator/ks.yaml
-  - ./kromgo/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
-  - ./prometheus-adapter/ks.yaml
-  - ./silence-operator/ks.yaml
-  - ./unpoller/ks.yaml
-  - ./victoria-logs/ks.yaml
+resources: []
+  # - ./blackbox-exporter/ks.yaml
+  # - ./gatus/ks.yaml
+  # - ./goldilocks/ks.yaml
+  # - ./grafana-operator/ks.yaml
+  # - ./kromgo/ks.yaml
+  # - ./kube-prometheus-stack/ks.yaml
+  # - ./prometheus-adapter/ks.yaml
+  # - ./silence-operator/ks.yaml
+  # - ./unpoller/ks.yaml
+  # - ./victoria-logs/ks.yaml
