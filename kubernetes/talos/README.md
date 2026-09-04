@@ -14,6 +14,7 @@ rendered on demand and pushed to nodes with `talosctl`.
 | `nodes/<role>/<node>.yaml.j2`           | Per-node documents (hostname, addresses, BGP router ID, zone)             |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override                                      |
 | `schematic.yaml.j2`                     | Shared [Image Factory](https://factory.talos.dev) schematic               |
+| `version.yaml`                          | Version configuration for Talos and Kubernetes                            |
 | `mod.just`                              | Recipes (`just talos ...`)                                                |
 
 ## Rendering

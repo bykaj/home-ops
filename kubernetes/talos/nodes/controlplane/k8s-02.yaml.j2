@@ -1,0 +1,56 @@
+# k8s-02
+# ------
+# Model: Lenovo M920q (i5-8500T)
+# NICs:
+#   - e1000e: 8c:16:45:b5:17:39
+#   - ixgbe: b4:96:91:0d:7b:98
+#   - ixgbe: b4:96:91:0d:7b:9a
+# Disks:
+#   - nvme-Viper_VP4000M_500GB
+#   - nvme-KINGSTON_SNV3S1000G
+---
+# iGPU access for non-root workloads
+machine:
+  udev:
+    rules:
+      - 'SUBSYSTEM=="drm", KERNEL=="card*", GROUP="44", MODE="0660"'
+      - 'SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"'
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: k8s-02
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  node.kubernetes.io/gpu: "true"
+---
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: net0
+selector:
+  match: link.driver == "ixgbe" && mac(link.permanent_addr).startsWith("b4:96:91:0d:7b:")
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.model == "Viper VP4000M 500GB"
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: system_disk
+  maxSize: 128GiB
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: system_disk
+  grow: true
+  minSize: 20GiB
+

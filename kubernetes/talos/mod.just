@@ -1,77 +1,84 @@
+set default-list
+set default-script
 set quiet
+set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-kubernetes_dir := justfile_dir() + '/kubernetes'
-talos_dir := kubernetes_dir + '/talos'
-controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
-
-[private]
-default:
-    just -l talos
-
+[confirm('Apply Talos config to ' + node + ' [y|N] ?')]
 [doc('Apply Talos config to a node')]
 apply-node node *args:
     just talos render-config "{{ node }}" | talosctl -n "{{ node }}" apply-config -f /dev/stdin {{ args }}
 
-[doc('Apply Talos config to all nodes in the cluster')]
-apply-cluster *args:
-    kubectl get nodes --no-headers | while read -r node _; do \
-      just log info "Applying Talos config to node ${node}"; \
-      just talos apply-node ${node} {{ args }}; \
-    done
+[doc('Download Talos machine image')]
+download-image version node="":
+    export SCHEMATIC="$(just talos schematic-id "{{ node }}")"
+    curl -fL --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors --progress-bar \
+        -o "{{ source_directory() }}/talos-{{ version }}-${SCHEMATIC:0:8}.iso" \
+        "https://factory.talos.dev/image/${SCHEMATIC}/{{ version }}/metal-amd64.iso"
+    just log info "Downloaded Talos" version "{{ version }}" schematic "${SCHEMATIC}"
 
-[doc('Generate kubeconfig for Talos cluster')]
-gen-kubeconfig:
-    talosctl kubeconfig -n "{{ controller }}" -f --force-context-name main {{ justfile_dir() }}
-
-[doc('Generate schematic ID from Talos schematic')]
-gen-schematic-id:
-    curl -sX POST --data-binary @<(just template "{{ talos_dir }}/schematic.yaml.j2") "https://factory.talos.dev/schematics" | jq -r '.id'
+[confirm('Reboot node ' + node + ' [y|N] ?')]
+[doc('Reboot a node')]
+reboot-node node:
+    talosctl -n {{ node }} reboot -m powercycle
 
 [doc('Render Talos config for a node')]
 render-config node:
-    export IS_CONTROLLER="$(just talos machine-controller {{ node }})"; \
-    talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
-      -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
+    export SCHEMATIC="$(just talos schematic-id "{{ node }}")"
+    export TALOS_VERSION="$(just talos talos-version)"
+    export K8S_VERSION="$(just talos k8s-version)"
+    role="controlplane"
+    if [[ -f "{{ source_directory() }}/nodes/workers/{{ node }}.yaml.j2" ]]; then
+        role="workers"
+    fi
+    talosctl machineconfig patch <(just template "{{ source_directory() }}/cluster.yaml.j2" -D "schematic=${SCHEMATIC}" -D "talos_version=${TALOS_VERSION}" -D "k8s_version=${K8S_VERSION}") \
+        -p @<(just template "{{ source_directory() }}/${role}.yaml.j2" -D "schematic=${SCHEMATIC}" -D "talos_version=${TALOS_VERSION}" -D "k8s_version=${K8S_VERSION}") \
+        -p @<(just template "{{ source_directory() }}/nodes/${role}/{{ node }}.yaml.j2")
 
-[doc('Reboot a node')]
-reboot-node node:
-    gum confirm "Reboot node {{ node }}?" && \
-      talosctl -n {{ node }} reboot -m powercycle || exit 0
-
+[confirm('Reset node ' + node + ' [y|N] ?')]
 [doc('Reset a node')]
-reset-node node mode="reboot":
-    gum confirm "Reset node {{ node }}?" && \
-      talosctl -n "{{ node }}" reset --graceful=false {{ if mode == "reboot" { "--reboot" } else { "" } }} || exit 0
+reset-node node *args:
+    talosctl -n "{{ node }}" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }}
 
-[doc('Reset all nodes in the cluster')]
-reset-cluster mode="reboot":
-    kubectl get nodes --no-headers | while read -r node _; do \
-      just log info "Resetting Talos node ${node}";\
-      just talos reset-node ${node} {{ mode }};\
-    done
+[confirm('Shutdown node ' + node + ' [y|N] ?')]
+[doc('Shutdown a node')]
+shutdown-node node *args:
+    talosctl -n "{{ node }}" shutdown --force {{ args }}
 
+[confirm('Upgrade Kubernetes to ' + version + ' [y|N] ?')]
 [doc('Upgrade Kubernetes version on the cluster')]
 upgrade-k8s version:
-    talosctl -n "{{ controller }}" upgrade-k8s --to {{ version }}
+    talosctl -n "$(talosctl config info -o yaml | yq -r -e '.endpoints[0]')" upgrade-k8s --to {{ version }}
 
+[confirm('Upgrade node ' + node + ' [y|N] ?')]
 [doc('Upgrade Talos version on a node')]
-upgrade-node node:
-    talosctl -n "{{ node }}" upgrade -i "$(just talos machine-image {{ node }})" -m powercycle --timeout=10m
+upgrade-node node *args:
+    talosctl -n "{{ node }}" upgrade -i "$(just talos machine-image "{{ node }}")" -m powercycle --timeout=10m {{ args }}
 
-[doc('Download Talos machine image')]
-download-image version schematic:
-    gum spin --title "Downloading Talos {{ version }} ..." -- \
-    curl -sfL --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors \
-        -o "{{ talos_dir }}/talos-{{ version }}-{{ replace_regex(schematic, '^(.{8}).*', '$1') }}.iso" \
-        "https://factory.talos.dev/image/{{ schematic }}/{{ version }}/metal-amd64.iso"
-    just log info "Downloaded Talos" version "{{ version }}" schematic "{{ schematic }}"
+[doc('Fetch Talos version from configuration')]
+[private]
+talos-version:
+    yq eval '.talos_version' "{{ source_directory() }}/version.yaml"
+
+[doc('Fetch Kubernetes version from configuration')]
+[private]
+k8s-version:
+    yq eval '.k8s_version' "{{ source_directory() }}/version.yaml"
 
 [private]
-machine-controller node:
-    just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine) | (.machine.type == "controlplane") // ""'
+schematic-file node="":
+    file="{{ source_directory() }}/schematic.yaml.j2"
+    if [[ -n "{{ node }}" ]]; then
+        for f in "{{ source_directory() }}"/nodes/*/"{{ node }}".schematic.yaml.j2; do
+            [[ -f "$f" ]] && file="$f"
+        done
+    fi
+    echo "$file"
 
-[doc('Get the machine image for a given node')]
 [private]
-machine-image node:
-    talosctl --nodes {{ node }} get machineconfig --output=jsonpath='{.spec}' | yq -e 'select(.machine) | .machine.install.image'
+schematic-id node="":
+    curl -sX POST --data-binary @<(just template "$(just talos schematic-file "{{ node }}")") "https://factory.talos.dev/schematics" | jq -r '.id'
+
+[private]
+machine-image node="":
+    just template "{{ source_directory() }}/cluster.yaml.j2" -D "schematic=$(just talos schematic-id "{{ node }}")" | yq -r -e 'select(.kind == "UnattendedInstallConfig") | .installer.image'

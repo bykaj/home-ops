@@ -1,0 +1,194 @@
+---
+version: v1alpha1
+machine:
+  ca:
+    crt: op://Homelab/talos/MACHINE_CA_CRT
+  features:
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    rbac: true
+  token: op://Homelab/talos/MACHINE_TOKEN
+cluster:
+  ca:
+    crt: op://Homelab/talos/CLUSTER_CA_CRT
+  clusterName: main
+  controlPlane:
+    endpoint: https://k8s-vip.home.cetana.net:6443
+  token: op://Homelab/talos/CLUSTER_TOKEN
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - net0
+bondMode: active-backup
+mtu: 9000
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: bond0
+clientIdentifier: mac
+---
+# IoT VLAN
+apiVersion: v1alpha1
+kind: VLANConfig
+name: bond0.30
+vlanID: 30
+parent: bond0
+mtu: 9000
+---
+apiVersion: v1alpha1
+kind: ResolverConfig
+hostDNS:
+  enabled: true
+  forwardKubeDNSToHost: false
+  resolveMemberNames: true
+nameservers:
+  - address: 10.73.0.254
+---
+apiVersion: v1alpha1
+kind: DiscoveryServiceConfig
+name: default
+endpoint: https://discovery.talos.dev/
+---
+apiVersion: v1alpha1
+kind: DiscoveryIdentityConfig
+clusterID: op://Homelab/talos/CLUSTER_ID
+clusterSecret: op://Homelab/talos/CLUSTER_SECRET
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  image: factory.talos.dev/metal-installer/{{ schematic }}:{{ talos_version }}
+provisioning:
+  wipe: false
+---
+apiVersion: v1alpha1
+kind: FilesystemTrimConfig
+interval: 168h0m0s
+---
+apiVersion: v1alpha1
+kind: FilesystemScrubConfig
+interval: 168h0m0s
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: dm_thin_pool
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd
+parameters:
+  - usermode_helper=disabled
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd_transport_tcp
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nbd
+---
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  fs.inotify.max_user_instances: "8192"         # Watchdog: file watching
+  fs.inotify.max_user_watches: "1048576"        # Watchdog: file watching
+  net.core.default_qdisc: fq                    # FQ pacing qdisc, pairs with BBR
+  net.core.rmem_max: "67108864"                 # Cloudflared / QUIC
+  net.core.wmem_max: "67108864"                 # Cloudflared / QUIC
+  net.ipv4.ip_local_port_range: 1024 65535      # Wider ephemeral port range for outbound connections (default 32768-60999)
+  net.ipv4.neigh.default.gc_thresh1: "4096"     # Prevent ARP cache overflows
+  net.ipv4.neigh.default.gc_thresh2: "8192"     # Prevent ARP cache overflows
+  net.ipv4.neigh.default.gc_thresh3: "16384"    # Prevent ARP cache overflows
+  net.ipv4.ping_group_range: 0 2147483647       # Allow Ping
+  net.ipv4.tcp_congestion_control: bbr          # BBR congestion control (needs the fq qdisc)
+  net.ipv4.tcp_fastopen: "3"                    # Send and accept data in the opening SYN packet
+  net.ipv4.tcp_mtu_probing: "1"                 # Probe MTU when a PMTU black hole is detected
+  net.ipv4.tcp_notsent_lowat: "131072"          # Cap unsent bytes in TCP send buffer (128 KiB) for lower latency
+  net.ipv4.tcp_rmem: 4096 131072 67108864       # TCP receive buffer auto-tuning: min, default, max
+  net.ipv4.tcp_slow_start_after_idle: "0"       # Keep congestion window after idle periods
+  net.ipv4.tcp_window_scaling: "1"              # RFC 1323 window scaling, allows TCP windows > 64 KiB
+  net.ipv4.tcp_wmem: 4096 65536 67108864        # TCP send buffer auto-tuning: min, default, max
+  net.ipv6.conf.all.disable_ipv6: "1"           # Disable IPv6
+  net.ipv6.conf.default.disable_ipv6: "1"       # Disable IPv6
+  net.ipv6.conf.lo.disable_ipv6: "1"            # Disable IPv6
+  sunrpc.tcp_max_slot_table_entries: "128"      # NFS: cap on concurrent RPC requests per TCP connection
+  sunrpc.tcp_slot_table_entries: "128"          # NFS: initial number of concurrent RPC requests per connection
+  user.max_user_namespaces: "11255"             # User Namespaces
+---
+apiVersion: v1alpha1
+kind: EtcFileConfig
+name: nfsmount.conf
+mode: 0o644
+contents: |
+  [ NFSMount_Global_Options ]
+  nfsvers=4.2
+  hard=True
+  nconnect=16
+  noatime=True
+  rsize=1048576
+  wsize=1048576
+---
+apiVersion: v1alpha1
+kind: CRICustomizationConfig
+name: cri-opts
+content: |
+  [plugins]
+    [plugins."io.containerd.grpc.v1.cri"]
+      enable_unprivileged_ports = true
+      enable_unprivileged_icmp = true
+  [plugins."io.containerd.cri.v1.images"]
+    discard_unpacked_layers = false
+  [plugins."io.containerd.cri.v1.runtime"]
+    enable_cdi = true
+    cdi_spec_dirs = ["/var/cdi/static", "/var/cdi/dynamic"]
+    device_ownership_from_security_context = true
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - 10.73.0.0/20
+labels:
+  topology.kubernetes.io/region: main
+  topology.kubernetes.io/zone: home
+---
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  crashLoopBackOff:
+    maxContainerRestartPeriod: 60s
+  imageMaximumGCAge: 168h
+  maxParallelImagePulls: 3
+  serializeImagePulls: false
+  shutdownGracePeriod: 90s
+  shutdownGracePeriodCriticalPods: 60s
+defaultRuntimeSeccompProfileEnabled: true
+image: ghcr.io/siderolabs/kubelet:{{ k8s_version }}
+---
+apiVersion: v1alpha1
+kind: KubeNetworkConfig
+dnsDomain: cluster.local
+podSubnets:
+  - 10.42.0.0/16
+serviceSubnets:
+  - 10.43.0.0/16
+---
+apiVersion: v1alpha1
+kind: KubePrismConfig
+port: 7445
+---
+apiVersion: v1alpha1
+kind: TimeSyncConfig
+ntp:
+  servers:
+    - 0.nl.pool.ntp.org
+    - 1.nl.pool.ntp.org
+    - 2.nl.pool.ntp.org
+    - 3.nl.pool.ntp.org

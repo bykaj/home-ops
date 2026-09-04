@@ -1,0 +1,55 @@
+# k8s-03
+# ------
+# Model: Lenovo M90q Gen 5 (i5-13400T)
+# NICs:
+#   - e1000e: c4:c6:e6:52:cf:b0
+#   - ixgbe: TBD
+#   - ixgbe: TBD
+# Disks:
+#   - nvme-PC801_NVMe_SK_hynix_1TB
+#   - nvme-KINGSTON_SNV3S1000G
+---
+# iGPU access for non-root workloads
+machine:
+  udev:
+    rules:
+      - 'SUBSYSTEM=="drm", KERNEL=="card*", GROUP="44", MODE="0660"'
+      - 'SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"'
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: k8s-03
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  node.kubernetes.io/gpu: "true"
+---
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: net0
+selector:
+  match: link.driver == "e1000e" && mac(link.permanent_addr).startsWith("c4:c6:e6:52:cf:")
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.model == "PC801 NVMe SK hynix 1TB"
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: system_disk
+  maxSize: 128GiB
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: system_disk
+  grow: true
+  minSize: 20GiB

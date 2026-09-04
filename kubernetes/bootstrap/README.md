@@ -22,7 +22,7 @@ directory is not used again until the next rebuild.
 - A valid `talosconfig` at the repo root (mise points `TALOSCONFIG` there).
   The justfile derives the controller endpoint and node list from
   `talosctl config info`, so nothing is hardcoded here.
-- The UDM configuration below. `kube-vip.home.cetana.net` points at the Cilium
+- The UDM configuration below. `k8s-vip.home.cetana.net` points at the Cilium
   LoadBalancer VIP, which exists only once Cilium is installed, so bootstrap
   talks to the controller's node IP directly until the `apps` stage brings
   Cilium up.
@@ -30,7 +30,7 @@ directory is not used again until the next rebuild.
 ## UDM configuration
 
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
-`10.73.10.10`, `externalTrafficPolicy: Local` so only nodes with a
+`10.73.10.1`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
 along with every other LoadBalancer IP. See the [config](../apps/kube-system/cilium/config/) folder.
 
@@ -38,12 +38,12 @@ along with every other LoadBalancer IP. See the [config](../apps/kube-system/cil
 graph LR
     client(Client) -->|hashed flow| udm("`**UDM**
     _ASN 64513_`")
-    udm -->|ECMP| k1("`**kube-node-1**
-    10.73.10.110`")
-    udm -->|ECMP| k2("`**kube-node-2**
-     10.73.10.111`")
-    udm -->|ECMP| k3("`**kube-node-3**
-    10.73.10.112`")
+    udm -->|ECMP| k1("`**k8s-01**
+    10.73.10.10`")
+    udm -->|ECMP| k2("`**k8s-02**
+     10.73.10.20`")
+    udm -->|ECMP| k3("`**k8s-03**
+    10.73.10.30`")
     udm -->|ECMP| nas("`**nas**
     10.73.1.10`")
     k1 & k2 & k3 -. "`**BGP** _ASN 64514_
@@ -56,22 +56,21 @@ graph LR
 
 The VIPs the UDM learns this way:
 
-| VIP           | Hostname                   | Backs                          |
-| ------------- | -------------------------- | ------------------------------ |
-| `10.73.10.10` | `kube-vip.home.cetana.net` | `kube-api` Service (apiserver) |
-| `10.73.10.12` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
-| `10.73.10.14` | `external.cetana.net`      | `envoy-external` Gateway       |
-| `10.73.10.16` | `services.home.cetana.net` | `envoy-services` Gateway       |
-| `10.73.1.10`  | `nas.home.cetana.net`      | `traefik` Gateway              |
+| VIP          | Hostname                   | Backs                          |
+| ------------ | -------------------------- | ------------------------------ |
+| `10.73.10.1` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
+| `10.73.10.5` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
+| `10.73.10.6` | `external.cetana.net`      | `envoy-external` Gateway       |
+| `10.73.1.10` | `nas.home.cetana.net`      | `traefik` Gateway              |
 
 A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
 ```text
-kube-vip.home.cetana.net → 10.73.10.10
+k8s-vip.home.cetana.net → 10.73.10.1
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
-(`10.73.10.110-112`) and announces LoadBalancer Service IPs from the
+(`10.73.10.10-30`) and announces LoadBalancer Service IPs from the
 `10.73.10.0/24` pool. UniFi accepts a single FRR config upload per device
 (Settings → Routing Table → BGP):
 
@@ -86,9 +85,9 @@ router bgp 64513
   neighbor k8s peer-group
   neighbor k8s remote-as 64514
 
-  neighbor 10.73.10.110 peer-group k8s
-  neighbor 10.73.10.111 peer-group k8s
-  neighbor 10.73.10.112 peer-group k8s
+  neighbor 10.73.10.10 peer-group k8s
+  neighbor 10.73.10.20 peer-group k8s
+  neighbor 10.73.10.30 peer-group k8s
 
   neighbor nas peer-group
   neighbor nas remote-as 64515
@@ -113,18 +112,18 @@ The `maximum-paths 3` gives true ECMP across the control plane nodes for the
 > [!WARNING]
 > Re-uploading the FRR config briefly bounces established BGP sessions.
 
-To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.10.10/32`
+To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.10.1/32`
 showing an ECMP path per healthy apiserver in `vtysh -c "show ip route"`,
-and `curl -k https://kube-vip.home.cetana.net:6443/livez`. In
-`vtysh -c "show ip bgp 10.73.10.10"` every path should carry the
-`multipath` tag; `ip route show 10.73.10.10` should list one `nexthop`
+and `curl -k https://k8s-vip.home.cetana.net:6443/livez`. In
+`vtysh -c "show ip bgp 10.73.10.1"` every path should carry the
+`multipath` tag; `ip route show 10.73.10.1` should list one `nexthop`
 line per node (a single flat line means multipath is not installed in the
 kernel).
 
 > [!NOTE]
-> `kube-vip.home.cetana.net` rides the Cilium `kube-api` LoadBalancer, so the named API
+> `k8s-vip.home.cetana.net` rides the Cilium `kube-api` LoadBalancer, so the named API
 > endpoint depends on Cilium being healthy. If the CNI is ever down, reach
-> the API directly at `https://10.73.10.110-112:6443` and the Talos API at
+> the API directly at `https://10.73.10.10-30:6443` and the Talos API at
 > the same node addresses; neither depends on the CNI.
 
 ## UDM boot scripts
@@ -176,7 +175,7 @@ it after firmware upgrades.
 > node in the SAN to vary:
 >
 > ```sh
-> openssl s_client -connect kube-vip.home.cetana.net:6443 </dev/null 2>/dev/null \
+> openssl s_client -connect k8s-vip.home.cetana.net:6443 </dev/null 2>/dev/null \
 >   | openssl x509 -noout -ext subjectAltName
 > ```
 
@@ -252,9 +251,9 @@ graph LR
    etcd reports the cluster already exists.
 3. **kubeconfig** - Fetches the kubeconfig with `talosctl kubeconfig`, then
    rewrites the server address to the controller's node IP: the generated
-   `https://kube-vip.home.cetana.net:6443` points at the Cilium VIP, which does not
+   `https://k8s-vip.home.cetana.net:6443` points at the Cilium VIP, which does not
    exist yet. The final stage re-fetches the kubeconfig so the endpoint
-   returns to `kube-vip.home.cetana.net` once Cilium is serving it.
+   returns to `k8s-vip.home.cetana.net` once Cilium is serving it.
 4. **base** - Waits for every control plane apiserver to answer `/readyz`
    and for nodes to register (they stay `Ready=False` until the CNI is
    installed), then applies:
