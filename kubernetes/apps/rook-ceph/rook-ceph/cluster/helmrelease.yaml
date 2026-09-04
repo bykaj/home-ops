@@ -159,7 +159,7 @@ spec:
           csi:
             keyType: aes # aes256k requires kernel 7.0+
       storage:
-        devicePathFilter: /dev/disk/by-id/KINGSTON_SNV3S1000G_.*
+        devicePathFilter: /dev/disk/by-id/nvme-KINGSTON_SNV3S1000G_.*
         useAllDevices: false
         useAllNodes: true
     monitoring:
