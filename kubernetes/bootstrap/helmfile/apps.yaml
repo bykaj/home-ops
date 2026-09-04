@@ -28,24 +28,22 @@ releases:
         args:
           - wait
           - --for=create
-          # TODO: uncomment this when BGP peering is enabled
-          # - crd/ciliumbgpadvertisements.cilium.io
-          # - crd/ciliumbgpclusterconfigs.cilium.io
-          # - crd/ciliumbgppeerconfigs.cilium.io
+          - crd/ciliumbgpadvertisements.cilium.io
+          - crd/ciliumbgpclusterconfigs.cilium.io
+          - crd/ciliumbgppeerconfigs.cilium.io
           - crd/ciliumloadbalancerippools.cilium.io
           - --timeout=2m
         events:
           - postsync
         showlogs: true
-      - # Apply Cilium network configuration
+      - # Apply cilium network configuration
         command: kubectl
         args:
           - apply
           - --namespace={{ .Release.Namespace }}
           - --server-side
           - --force-conflicts
-          - --kustomize
-          - ../../kubernetes/apps/{{ .Release.Namespace }}/{{ .Release.Name }}/config/
+          - --kustomize=../../apps/kube-system/cilium/config/
         events:
           - postsync
         showlogs: true
@@ -91,7 +89,7 @@ releases:
           - apply
           - --server-side
           - --force-conflicts
-          - --filename=../../kubernetes/apps/{{ .Release.Namespace }}/{{ .Release.Name }}/app/clustersecretstore.yaml
+          - --filename=../../apps/{{ .Release.Namespace }}/{{ .Release.Name }}/app/clustersecretstore.yaml
         events:
           - postsync
         showlogs: true

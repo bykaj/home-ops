@@ -29,7 +29,15 @@ apiVersion: v1alpha1
 kind: LinkAliasConfig
 name: net0
 selector:
-  match: link.driver == "ixgbe" && mac(link.permanent_addr).startsWith("a0:36:9f:41:12:")
+  match: link.driver == "ixgbe" && mac(link.permanent_addr).startsWith("a0:36:9f:41:12:30")
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - net0
+bondMode: active-backup
+mtu: 1500
 ---
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig

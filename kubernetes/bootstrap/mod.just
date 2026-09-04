@@ -5,10 +5,8 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-kubernetes_dir := justfile_dir() + '/kubernetes'
-bootstrap_dir := kubernetes_dir + '/bootstrap'
-controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
-nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
+controller := `talosctl config info -o yaml | yq -r -e '.endpoints[0]'`
+nodes := `talosctl config info -o yaml | yq -r -e '.nodes | join (" ")'`
 
 [confirm('Bootstrap cluster? [y|N]')]
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
