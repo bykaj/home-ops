@@ -19,8 +19,8 @@ spec:
       masquerade: true
       preallocateMaps: true
     bpfClockProbe: true
-    # bgpControlPlane:
-    #   enabled: true
+    bgpControlPlane:
+      enabled: true
     cgroup:
       automount:
         enabled: false
@@ -29,17 +29,12 @@ spec:
       exclusive: false
     dashboards:
       enabled: true
-    # devices: bond+
+    devices: bond+
     enableIPv4BIGTCP: true
     endpointRoutes:
       enabled: true
     envoy:
       enabled: false
-    gatewayAPI:
-      enabled: false
-      # enabled: true
-      # enableAlpn: true
-      # xffNumTrustedHops: 1
     hubble:
       enabled: false
     ipam:
@@ -54,7 +49,8 @@ spec:
     loadBalancer:
       algorithm: maglev
       mode: dsr
-    localRedirectPolicy: true
+    localRedirectPolicies:
+      enabled: true
     operator:
       dashboards:
         enabled: true
@@ -93,3 +89,6 @@ spec:
           - NET_ADMIN
           - SYS_ADMIN
           - SYS_RESOURCE
+    socketLB:
+      enabled: true
+      hostNamespaceOnly: true

@@ -30,7 +30,7 @@ directory is not used again until the next rebuild.
 ## UDM configuration
 
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
-`10.73.10.1`, `externalTrafficPolicy: Local` so only nodes with a
+`10.73.10.100`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
 along with every other LoadBalancer IP. See the [config](../apps/kube-system/cilium/config/) folder.
 
@@ -56,17 +56,17 @@ graph LR
 
 The VIPs the UDM learns this way:
 
-| VIP          | Hostname                   | Backs                          |
-| ------------ | -------------------------- | ------------------------------ |
-| `10.73.10.1` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
-| `10.73.10.5` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
-| `10.73.10.6` | `external.cetana.net`      | `envoy-external` Gateway       |
-| `10.73.1.10` | `nas.home.cetana.net`      | `traefik` Gateway              |
+| VIP            | Hostname                   | Backs                          |
+| -------------- | -------------------------- | ------------------------------ |
+| `10.73.10.100` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
+| `10.73.10.110` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
+| `10.73.10.120` | `external.cetana.net`      | `envoy-external` Gateway       |
+| `10.73.1.10`   | `nas.home.cetana.net`      | `traefik` Gateway              |
 
 A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
 ```text
-k8s-vip.home.cetana.net → 10.73.10.1
+k8s-vip.home.cetana.net → 10.73.10.100
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
@@ -112,11 +112,11 @@ The `maximum-paths 3` gives true ECMP across the control plane nodes for the
 > [!WARNING]
 > Re-uploading the FRR config briefly bounces established BGP sessions.
 
-To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.10.1/32`
+To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.10.100/32`
 showing an ECMP path per healthy apiserver in `vtysh -c "show ip route"`,
 and `curl -k https://k8s-vip.home.cetana.net:6443/livez`. In
-`vtysh -c "show ip bgp 10.73.10.1"` every path should carry the
-`multipath` tag; `ip route show 10.73.10.1` should list one `nexthop`
+`vtysh -c "show ip bgp 10.73.10.100"` every path should carry the
+`multipath` tag; `ip route show 10.73.10.100` should list one `nexthop`
 line per node (a single flat line means multipath is not installed in the
 kernel).
 

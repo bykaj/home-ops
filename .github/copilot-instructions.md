@@ -55,10 +55,10 @@ just k8s sync hr
 
 ```bash
 # Apply config to a specific node
-just talos apply-node 10.73.10.110
+just talos apply-node 10.73.10.10
 
 # Upgrade Talos on a specific node
-just talos upgrade-node 10.73.10.110
+just talos upgrade-node 10.73.10.10
 
 # Upgrade Kubernetes version
 just talos upgrade-k8s 1.30.0

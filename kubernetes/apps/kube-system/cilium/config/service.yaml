@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: kube-api
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: kube-vip.home.cetana.net
-    lbipam.cilium.io/ips: 10.73.10.10
+    external-dns.alpha.kubernetes.io/hostname: k8s-vip.home.cetana.net
+    lbipam.cilium.io/ips: 10.73.10.100
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
