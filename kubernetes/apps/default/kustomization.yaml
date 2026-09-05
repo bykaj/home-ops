@@ -15,7 +15,6 @@ resources:
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
-  - ./kopia-volsync/ks.yaml
   - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
