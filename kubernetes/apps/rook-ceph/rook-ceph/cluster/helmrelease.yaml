@@ -23,7 +23,6 @@ spec:
           log_max_recent: "100" # quote
         mon:
           mon_cluster_log_level: info
-          mon_data_avail_warn: "19" # quote
         osd:
           bluestore_slow_ops_warn_threshold: "50" # quote
           bluestore_slow_ops_warn_lifetime: "300"
@@ -158,16 +157,16 @@ spec:
             keyGeneration: 2
           csi:
             keyType: aes # aes256k requires kernel 7.0+
-    storage:
-      useAllNodes: false
-      useAllDevices: false
-      nodes:
-        - name: k8s-01
-          devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
-        - name: k8s-02
-          devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
-        - name: k8s-03
-          devicePathFilter: "^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.*"
+      storage:
+        useAllNodes: false
+        useAllDevices: false
+        nodes:
+          - name: k8s-01
+            devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
+          - name: k8s-02
+            devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
+          - name: k8s-03
+            devicePathFilter: "^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.*"
     monitoring:
       enabled: true
       createPrometheusRules: true
