@@ -15,7 +15,7 @@ resources:
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
-  - ./n8n/ks.yaml
+  # - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
