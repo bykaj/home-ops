@@ -14,20 +14,3 @@ spec:
     namespace: flux-system
   targetNamespace: external-secrets
   wait: true
-# ---
-# # yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: cluster-secrets
-#   labels:
-#     substitution.flux.home.arpa/disabled: "true"
-# spec:
-#   interval: 1h
-#   path: ./kubernetes/apps/external-secrets/external-secrets/cluster-secrets
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#     namespace: flux-system
-#   wait: true
