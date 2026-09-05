@@ -161,13 +161,13 @@ spec:
     storage:
       useAllNodes: false
       useAllDevices: false
-      devicePathFilter:
-        - ^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.* # k8s-01 + k8s-02
-        - ^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.* # k8s-03
       nodes:
         - name: k8s-01
+          devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
         - name: k8s-02
+          devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
         - name: k8s-03
+          devicePathFilter: "^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.*"
     monitoring:
       enabled: true
       createPrometheusRules: true
