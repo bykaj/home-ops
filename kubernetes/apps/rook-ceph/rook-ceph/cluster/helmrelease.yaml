@@ -158,21 +158,16 @@ spec:
             keyGeneration: 2
           csi:
             keyType: aes # aes256k requires kernel 7.0+
-      storage:
-        config:
-          osdsPerDevice: "1"
-        nodes:
-          - name: k8s-01
-            devices:
-              - name: "Viper VP4000M 500GB"
-          - name: k8s-02
-            devices:
-              - name: "Viper VP4000M 500GB"
-          - name: k8s-03
-            devices:
-              - name: "PC801 NVMe SK hynix 1TB"
-        useAllDevices: false
-        useAllNodes: false
+    storage:
+      useAllNodes: false
+      useAllDevices: false
+      devicePathFilter:
+        - ^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.* # k8s-01 + k8s-02
+        - ^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.* # k8s-03
+      nodes:
+        - name: k8s-01
+        - name: k8s-02
+        - name: k8s-03
     monitoring:
       enabled: true
       createPrometheusRules: true
