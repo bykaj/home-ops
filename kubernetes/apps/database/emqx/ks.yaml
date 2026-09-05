@@ -17,7 +17,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app emqx-cluster
+  name: emqx-cluster
 spec:
   dependsOn:
     - name: emqx-operator

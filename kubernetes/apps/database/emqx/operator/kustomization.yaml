@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./grafanadashboard.yaml
-  - ./secret.sops.yaml
   - ./helmrepository.yaml
   - ./helmrelease.yaml
