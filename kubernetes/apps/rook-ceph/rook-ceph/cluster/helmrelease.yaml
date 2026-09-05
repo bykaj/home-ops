@@ -159,9 +159,20 @@ spec:
           csi:
             keyType: aes # aes256k requires kernel 7.0+
       storage:
-        devicePathFilter: /dev/disk/by-id/nvme-KINGSTON_SNV3S1000G_.*
+        config:
+          osdsPerDevice: "1"
+        nodes:
+          - name: k8s-01
+            devices:
+              - name: "Viper VP4000M 500GB"
+          - name: k8s-02
+            devices:
+              - name: "Viper VP4000M 500GB"
+          - name: k8s-03
+            devices:
+              - name: "PC801 NVMe SK hynix 1TB"
         useAllDevices: false
-        useAllNodes: true
+        useAllNodes: false
     monitoring:
       enabled: true
       createPrometheusRules: true
