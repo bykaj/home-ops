@@ -93,6 +93,16 @@ spec:
       network:
         connections:
           requireMsgr2: true
+      placement:
+        all:
+          tolerations:
+            - key: tuppr.home-operations.com/outdated
+              operator: Exists
+        osd:
+          tolerations:
+            - key: tuppr.home-operations.com/outdated
+              operator: Exists
+              effect: PreferNoSchedule
       resources:
         mgr:
           limits:
