@@ -43,7 +43,9 @@ spec:
               REDIS_DBINDEX: "5"
               REDIS_HOSTNAME: "${REDIS_HOST}"
               TZ: "${TIMEZONE}"
-            envFrom: *envFrom
+            envFrom:
+              - secretRef:
+                  name: immich-secret
             probes:
               liveness: &probes
                 enabled: true
