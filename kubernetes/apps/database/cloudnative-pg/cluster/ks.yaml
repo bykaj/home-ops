@@ -13,7 +13,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      CNPG_V18_CURRENT_CLUSTER: "postgres-v18-20260904-01"
+      CNPG_V18_CURRENT_CLUSTER: "postgres-v18-20260905-01"
       CNPG_V18_PREVIOUS_CLUSTER: "postgres-v18-20260824-01"
   prune: true
   sourceRef:
