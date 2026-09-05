@@ -7,8 +7,8 @@ components:
   - ../../components/namespace
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources: []
-  # - ./litellm/ks.yaml
-  # - ./llmkube/ks.yaml
-  # - ./memini/ks.yaml
-  # - ./open-webui/ks.yaml
+resources:
+  - ./litellm/ks.yaml
+  - ./llmkube/ks.yaml
+  - ./memini/ks.yaml
+  - ./open-webui/ks.yaml
