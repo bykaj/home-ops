@@ -20,7 +20,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.3.10896@sha256:4f1d88882a9883cc525e7c84b22c67c57416b7d3b35c3412329eeb07786433a7
             env:
-              PLEX_ADVERTISE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}:443,https://${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}:443,http://${LB_IP_PLEX}:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
+              PLEX_ADVERTISE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}:443,https://${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net:443,http://${LB_IP_PLEX}:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
               PLEX_NO_AUTH_NETWORKS: "${LAN_CIDR},${POD_CIDR},${SERVICE_CIDR},${TAILSCALE_CIDR}"
               PLEX_PREFERENCE_1: "AllowMediaDeletion=0"
               PLEX_PREFERENCE_2: "EnableIPv6=0"
@@ -78,7 +78,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             paths:
               - path: /
                 service:
@@ -126,11 +126,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-plex.svg"
           gethomepage.dev/widget.type: "plex"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_PLEX_TOKEN}}` }}"
           gethomepage.dev/widget.fields: '["streams", "tv", "movies", "albums"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

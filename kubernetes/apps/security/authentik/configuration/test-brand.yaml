@@ -22,12 +22,11 @@ entries:
     id: test-brand
     identifiers:
       default: false
-      domain: "test.${DOMAIN_DEV}"
+      domain: "test.bykaj.dev"
     attrs:
       branding_title: Test
       branding_logo: https://cdn.cetana.id/media/public/brand/logo_cetana_id.svg
       branding_favicon: https://cdn.cetana.id/media/public/brand/icon_cetana_id.png
       branding_default_flow_background: https://cdn.cetana.id/media/public/brand/cetana-flow-backgound.jpg
-      flow_authentication:
-        !Find [authentik_flows.flow, [slug, cetana-authentication-flow]]
+      flow_authentication: !Find [authentik_flows.flow, [slug, cetana-authentication-flow]]
       flow_invalidation: !Find [authentik_flows.flow, [slug, cetana-invalidation-flow]]

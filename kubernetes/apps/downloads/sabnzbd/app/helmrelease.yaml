@@ -28,8 +28,8 @@ spec:
                 {{ .Release.Name }}.downloads.svc,
                 {{ .Release.Name }}.downloads.svc.cluster,
                 {{ .Release.Name }}.downloads.svc.cluster.local,
-                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}},
-                ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app},
+                ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             envFrom:
               - secretRef:
                   name: sabnzbd-secret
@@ -67,7 +67,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             paths:
               - path: /
                 service:
@@ -127,11 +127,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-sabnzbd.svg"
           gethomepage.dev/widget.type: "sabnzbd"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_SABNZBD_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["rate", "queue", "timeleft"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network

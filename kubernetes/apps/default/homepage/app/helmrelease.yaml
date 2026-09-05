@@ -23,7 +23,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               LOG_LEVEL: "info"
-              HOMEPAGE_ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              HOMEPAGE_ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
             envFrom:
               - secretRef:
                   name: &secret homepage-secret
@@ -110,7 +110,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network

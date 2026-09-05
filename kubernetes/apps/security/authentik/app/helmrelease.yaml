@@ -93,7 +93,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - "auth.${DOMAIN_ID}"
+            - "auth.cetana.id"
           parentRefs:
             - name: envoy-external
               namespace: network

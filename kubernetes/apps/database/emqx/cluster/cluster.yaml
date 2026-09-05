@@ -60,12 +60,12 @@ spec:
             secretName: emqx-bootstrap-secret
         - name: emqx-tls
           secret:
-            secretName: "${DOMAIN_IO/./-}-tls"
+            secretName: "bykaj-io-tls"
       minAvailable: 1
   listenersServiceTemplate:
     metadata:
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: "mqtt.${DOMAIN_IO}"
+        external-dns.alpha.kubernetes.io/hostname: "mqtt.bykaj.io"
         lbipam.cilium.io/ips: "${LB_IP_EMQX}"
         gatus.home-operations.com/endpoint: |-
           group: infrastructure

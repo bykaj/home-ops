@@ -9,7 +9,7 @@ metadata:
       conditions: ["[STATUS] == 404"]
       group: infrastructure
 spec:
-  hostnames: ["flux-webhook.${DOMAIN_IO}"]
+  hostnames: ["flux-webhook.bykaj.io"]
   parentRefs:
     - name: envoy-external
       namespace: network

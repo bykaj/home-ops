@@ -11,16 +11,16 @@ spec:
   targets:
     staticConfig:
       static:
-        - gw-adam.home.${DOMAIN_NET}
-        - gw-anna.home.${DOMAIN_NET}
-        - gw-hue.home.${DOMAIN_NET}
-        - gw-sip.home.${DOMAIN_NET}
-        - homeassistant.home.${DOMAIN_NET}
-        - icarus.home.${DOMAIN_NET}
-        - leonis.home.${DOMAIN_NET}
-        - nas.home.${DOMAIN_NET}
-        - security_system.home.${DOMAIN_NET}
-        - zeus.home.${DOMAIN_NET}
+        - gw-adam.home.cetana.net
+        - gw-anna.home.cetana.net
+        - gw-hue.home.cetana.net
+        - gw-sip.home.cetana.net
+        - homeassistant.home.cetana.net
+        - icarus.home.cetana.net
+        - leonis.home.cetana.net
+        - nas.home.cetana.net
+        - security_system.home.cetana.net
+        - zeus.home.cetana.net
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1

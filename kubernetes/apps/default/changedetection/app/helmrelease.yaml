@@ -20,7 +20,7 @@ spec:
               repository: ghcr.io/dgtlmoon/changedetection.io
               tag: 0.60.2@sha256:9458e933634f0ad8a777b92c3c71734e3e06b86aae7de3a6aad410427e254e81
             env:
-              BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               DISABLE_VERSION_CHECK: "true"
               FETCH_WORKERS: "10"
               HIDE_REFERER: "true"
@@ -80,7 +80,7 @@ spec:
               runAsUser: 999
               runAsGroup: 999
               allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
+              capabilities: { drop: [ALL] }
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -114,11 +114,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-changedetection.svg"
           gethomepage.dev/widget.type: "changedetectionio"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_CHANGEDETECTION_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["diffsDetected", "totalObserved"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network

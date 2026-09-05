@@ -111,11 +111,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-stash.svg"
           gethomepage.dev/widget.type: "stash"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_STASH_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["scenes", "movies", "performers", "studios"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network

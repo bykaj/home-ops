@@ -5,7 +5,7 @@ kind: HTTPRoute
 metadata:
   name: &app coder
 spec:
-  hostnames: ["${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"]
+  hostnames: ["${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"]
   parentRefs:
     - name: envoy-internal
       namespace: network
@@ -24,7 +24,7 @@ spec:
 #   name: coder-wildcard
 # spec:
 #   hostnames:
-#     - "*.coder.${DOMAIN_DEV}"
+#     - "*.coder.bykaj.dev"
 #   parentRefs:
 #     - name: envoy-internal
 #       namespace: network

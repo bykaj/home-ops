@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: &app postgres
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "db.${DOMAIN_IO}"
+    external-dns.alpha.kubernetes.io/hostname: "db.bykaj.app"
     lbipam.cilium.io/ips: "${LB_IP_POSTGRES}"
 spec:
   type: LoadBalancer

@@ -17,16 +17,11 @@ spec:
               key: CF_API_TOKEN
         selector:
           dnsZones:
-            - ${DOMAIN_APP}
-            - ${DOMAIN_DEV}
-            - ${DOMAIN_ID}
-            - ${DOMAIN_IO}
-            - ${DOMAIN_NET}
-            - ${DOMAIN_ST}
-            - ${DOMAIN_LOL}
-            - ${DOMAIN_PICS}
-            - ${DOMAIN_PHOTOS}
-
+            - bykaj.app
+            - bykaj.dev
+            - cetana.id
+            - drup.lol
+            - kaj.pics
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1

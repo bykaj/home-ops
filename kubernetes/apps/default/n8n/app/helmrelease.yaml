@@ -39,7 +39,7 @@ spec:
               N8N_EMAIL_MODE: "smtp"
               N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "false"
               N8N_HIDE_USAGE_PAGE: "true"
-              N8N_HOST: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              N8N_HOST: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               N8N_LOG_LEVEL: "info"
               N8N_LOG_OUTPUT: "console"
               N8N_METRICS: "true"
@@ -48,7 +48,7 @@ spec:
               N8N_PROXY_HOPS: "1"
               N8N_RUNNERS_ENABLED: "true"
               N8N_SMTP_PORT: "587"
-              WEBHOOK_URL: "https://${APP_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_IO}/"
+              WEBHOOK_URL: "https://${APP_SUBDOMAIN:=${APP}}-webhook.bykaj.io/"
             envFrom:
               - secretRef:
                   name: n8n-secret
@@ -90,7 +90,7 @@ spec:
     route:
       *app :
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -102,7 +102,7 @@ spec:
         annotations:
           gatus.home-operations.com/enabled: "false"
         hostnames:
-          - "${APP_SUBDOMAIN:=${APP}}-webhook.${DOMAIN_IO}"
+          - "${APP_SUBDOMAIN:=${APP}}-webhook.bykaj.io"
         parentRefs:
           - name: envoy-external
             namespace: network

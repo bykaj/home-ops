@@ -27,7 +27,7 @@ spec:
               DATA_DIR: &dataDir "/data"
               DISABLE_NEW_RELEASE_CHECK: "true"
               MEILI_ADDR: "http://meilisearch.database:7700"
-              NEXTAUTH_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              NEXTAUTH_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               RATE_LIMITING_ENABLED: "true"
               TZ: "${TIMEZONE}"
               # Asset storage config
@@ -61,7 +61,7 @@ spec:
               CRAWLER_STORE_SCREENSHOT: "true"
               CRAWLER_FULL_PAGE_SCREENSHOT: "true"
               CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
-              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.${DOMAIN_APP}"
+              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.bykaj.app"
               # OCR config
               OCR_LANGS: "eng,nld"
               OCR_USE_LLM: "true"
@@ -138,11 +138,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-karakeep.svg"
           gethomepage.dev/widget.type: "karakeep"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_KARAKEEP_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["bookmarks", "favorites", "lists", "highlights"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

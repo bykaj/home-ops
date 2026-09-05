@@ -14,7 +14,7 @@ spec:
       repo: github://bykaj/home-ops
       statusChecks: true
       prComments: true
-      publicUrl: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+      publicUrl: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
       mcp: true
       verifyImages: true
     secret:
@@ -28,7 +28,7 @@ spec:
         - name: envoy-external
           namespace: network
       hostnames:
-        - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
     monitoring:
       serviceMonitor:
         enabled: true

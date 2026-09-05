@@ -11,15 +11,12 @@ spec:
   interval: 1h
   values:
     domainFilters:
-      - ${DOMAIN_APP}
-      - ${DOMAIN_DEV}
-      - ${DOMAIN_ID}
-      - ${DOMAIN_IO}
-      - ${DOMAIN_LOL}
-      - ${DOMAIN_NET}
-      - ${DOMAIN_PICS}
-      - ${DOMAIN_PHOTOS}
-      - ${DOMAIN_ST}
+      - bykaj.app
+      - bykaj.dev
+      - cetana.id
+      - bykaj.io
+      - drup.lol
+      - kaj.pics
     env:
       - name: CF_API_TOKEN
         valueFrom:
@@ -53,6 +50,3 @@ spec:
     triggerLoopOnEvent: true
     txtOwnerId: main
     txtPrefix: "k8s."
-
-
-

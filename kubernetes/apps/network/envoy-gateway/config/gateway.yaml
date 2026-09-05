@@ -5,7 +5,7 @@ kind: Gateway
 metadata:
   name: envoy-external
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname external.${DOMAIN_NET}
+    external-dns.alpha.kubernetes.io/target: &hostname external.bykaj.app
     gatus.home-operations.com/endpoint: |-
       alerts:
         - type: pushover
@@ -36,23 +36,17 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            name: ${DOMAIN_APP/./-}-tls
+            name: bykaj-app-tls
           - kind: Secret
-            name: ${DOMAIN_DEV/./-}-tls
+            name: bykaj-dev-tls
           - kind: Secret
-            name: ${DOMAIN_ID/./-}-tls
+            name: cetana-id-tls
           - kind: Secret
-            name: ${DOMAIN_IO/./-}-tls
+            name: bykaj-io-tls
           - kind: Secret
-            name: ${DOMAIN_LOL/./-}-tls
+            name: drup-lol-tls
           - kind: Secret
-            name: ${DOMAIN_PICS/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_PHOTOS/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_NET/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_ST/./-}-tls
+            name: kaj-pics-tls
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/gateway.networking.k8s.io/gateway_v1.json
 apiVersion: gateway.networking.k8s.io/v1
@@ -60,7 +54,7 @@ kind: Gateway
 metadata:
   name: envoy-internal
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname internal.home.${DOMAIN_NET}
+    external-dns.alpha.kubernetes.io/target: &hostname internal.bykaj.app
     gatus.home-operations.com/endpoint: |-
       alerts:
         - type: pushover
@@ -91,22 +85,16 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            name: ${DOMAIN_APP/./-}-tls
+            name: bykaj-app-tls
           - kind: Secret
-            name: ${DOMAIN_DEV/./-}-tls
+            name: bykaj-dev-tls
           - kind: Secret
-            name: coder-${DOMAIN_DEV/./-}-tls
+            name: coder-bykaj-dev-tls
           - kind: Secret
-            name: ${DOMAIN_ID/./-}-tls
+            name: cetana-id-tls
           - kind: Secret
-            name: ${DOMAIN_IO/./-}-tls
+            name: bykaj-io-tls
           - kind: Secret
-            name: ${DOMAIN_LOL/./-}-tls
+            name: drup-lol-tls
           - kind: Secret
-            name: ${DOMAIN_PICS/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_PHOTOS/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_NET/./-}-tls
-          - kind: Secret
-            name: ${DOMAIN_ST/./-}-tls
+            name: kaj-pics-tls

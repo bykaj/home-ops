@@ -6,7 +6,7 @@ metadata:
   name: nas-kopia-ui
 spec:
   hostnames:
-    - kopia.${DOMAIN_APP}
+    - kopia.bykaj.app
   parentRefs:
     - name: envoy-internal
       namespace: network

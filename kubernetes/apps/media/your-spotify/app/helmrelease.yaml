@@ -23,8 +23,8 @@ spec:
             env:
               # Don't use 'Spotify' in any domain name.
               # Ref: https://github.com/Yooooomi/your_spotify/pull/254
-              API_ENDPOINT: &apiEndpoint "https://${APP_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
-              CLIENT_ENDPOINT: "https://${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
+              API_ENDPOINT: &apiEndpoint "https://${APP_SUBDOMAIN:=${APP}}-api.bykaj.app"
+              CLIENT_ENDPOINT: "https://${APP_SUBDOMAIN:=${APP}}.bykaj.app"
               MONGO_ENDPOINT: "mongodb://your-spotify-mongodb:27017/your_spotify"
               PORT: &serverPort 8080
               TIMEZONE: "${TIMEZONE}"
@@ -110,7 +110,7 @@ spec:
     route:
       server:
         hostnames:
-          - "${APP_SUBDOMAIN:=${APP}}-api.${DOMAIN_APP}"
+          - "${APP_SUBDOMAIN:=${APP}}-api.bykaj.app"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -120,7 +120,7 @@ spec:
                 port: *serverPort
       web:
         hostnames:
-          - "${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}"
+          - "${APP_SUBDOMAIN:=${APP}}.bykaj.app"
         parentRefs:
           - name: envoy-internal
             namespace: network

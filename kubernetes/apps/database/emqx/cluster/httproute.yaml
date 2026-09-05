@@ -6,7 +6,7 @@ metadata:
   name: &app emqx-dashboard
 spec:
   hostnames:
-    - "emqx.${DOMAIN_APP}"
+    - "emqx.bykaj.app"
   parentRefs:
     - name: envoy-internal
       namespace: network

@@ -57,9 +57,9 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: "Tools"
           gethomepage.dev/name: "${APP_NAME}"
-          gethomepage.dev/icon: "sh-it-tools.svg"   # LOL
+          gethomepage.dev/icon: "sh-it-tools.svg" # LOL
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

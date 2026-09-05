@@ -4,7 +4,7 @@
 - Downloads: []
 - Infrastructure:
     - UniFi:
-        href: https://gateway.home.${DOMAIN_NET}
+        href: https://gateway.home.cetana.net
         icon: unifi.png
         description: UniFi UDM Pro Max
     - Cloudflared:
@@ -13,24 +13,24 @@
         description: Cloudflared Tunnel
         widget:
           type: cloudflared
-          accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}
-          tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}
-          key: {{HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN}}
+          accountid: { { HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID } }
+          tunnelid: { { HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID } }
+          key: { { HOMEPAGE_VAR_CLOUDFLARE_API_TOKEN } }
 - Monitoring:
     - Alertmanager:
-        href: https://alertmanager.${DOMAIN_APP}
+        href: https://alertmanager.bykaj.app
         icon: alertmanager.png
         description: Alertmanager Dashboard
     - Grafana:
-        href: https://grafana.${DOMAIN_APP}
+        href: https://grafana.bykaj.app
         icon: grafana.png
         # description: This is my service
     - Goldilocks:
-        href: https://goldilocks.${DOMAIN_APP}
+        href: https://goldilocks.bykaj.app
         icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
         description: Helps identify a starting point for resource requests and limits
     - Prometheus:
-        href: https://prometheus.${DOMAIN_APP}
+        href: https://prometheus.bykaj.app
         icon: prometheus.png
         # description: This is my service
     - Crowdsec:
@@ -43,16 +43,16 @@
         icon: truenas-scale.png
         # description: This is my service
         widget:
-            type: truenas
-            url: https://${NAS_HOST}
-            # username:
-            # password:
-            key: {{HOMEPAGE_VAR_TRUENAS_API_KEY}}
+          type: truenas
+          url: https://${NAS_HOST}
+          # username:
+          # password:
+          key: { { HOMEPAGE_VAR_TRUENAS_API_KEY } }
     - Rook-Ceph:
-        href: https://rook.${DOMAIN_APP}
+        href: https://rook.bykaj.app
         icon: ceph.png
         # description: This is my service
     - Scrutiny:
-        href: https://scrutiny.${DOMAIN_APP}
+        href: https://scrutiny.bykaj.app
         icon: scrutiny.png
         description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds

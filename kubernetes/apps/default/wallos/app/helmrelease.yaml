@@ -44,7 +44,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             paths:
               - path: /
                 service:
@@ -83,11 +83,11 @@ spec:
           gethomepage.dev/name: "${APP_NAME}"
           gethomepage.dev/icon: "sh-wallos.svg"
           gethomepage.dev/widget.type: "wallos"
-          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          gethomepage.dev/widget.url: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
           gethomepage.dev/widget.key: "{{ `{{HOMEPAGE_VAR_WALLOS_API_KEY}}` }}"
           gethomepage.dev/widget.fields: '["activeSubscriptions", "nextRenewingSubscription", "thisMonthlyCost", "nextMonthlyCost"]'
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network

@@ -29,14 +29,14 @@ spec:
               tag: 0.8.7
             env:
               ALLOW_LOCAL_CONNECTIONS: "true"
-              ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               ATTACHMENT_PATH: "/data/attachments"
-              BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               LOG_LEVEL: "info"
               PORT: &port 8080
               TZ: "${TIMEZONE}"
               USE_PROXY: "true"
-              WEBAUTHN_RP_ID: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+              WEBAUTHN_RP_ID: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               WEBAUTHN_RP_NAME: "${APP_NAME}"
               WINDSHIFT_CONTAINER_MEMORY_LIMIT: "2G"
               WINDSHIFT_MEMORY_LIMIT_MB: "2048"
@@ -94,7 +94,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

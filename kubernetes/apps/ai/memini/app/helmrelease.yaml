@@ -88,7 +88,7 @@ spec:
           - name: envoy-internal
             namespace: network
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
     serviceMonitor:
       main:
         enabled: true

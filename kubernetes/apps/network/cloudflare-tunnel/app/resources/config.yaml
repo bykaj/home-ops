@@ -1,45 +1,33 @@
 ---
 ingress:
   - &config
-    hostname: "${DOMAIN_APP}"
+    hostname: "bykaj.app"
     originRequest:
       http2Origin: true
       keepAliveTimeout: 3600s
-      originServerName: "external.${DOMAIN_NET}"
+      originServerName: "external.bykaj.app"
       tcpKeepAlive: 7200s
     service: https://envoy-external.network.svc.cluster.local
   - <<: *config
-    hostname: "*.${DOMAIN_APP}"
+    hostname: "*.bykaj.app"
   - <<: *config
-    hostname: "${DOMAIN_DEV}"
+    hostname: "bykaj.dev"
   - <<: *config
-    hostname: "*.${DOMAIN_DEV}"
+    hostname: "*.bykaj.dev"
   - <<: *config
-    hostname: "${DOMAIN_ID}"
+    hostname: "cetana.id"
   - <<: *config
-    hostname: "*.${DOMAIN_ID}"
+    hostname: "*.cetana.id"
   - <<: *config
-    hostname: "${DOMAIN_IO}"
+    hostname: "bykaj.io"
   - <<: *config
-    hostname: "*.${DOMAIN_IO}"
+    hostname: "*.bykaj.io"
   - <<: *config
-    hostname: "${DOMAIN_LOL}"
+    hostname: "drup.lol"
   - <<: *config
-    hostname: "*.${DOMAIN_LOL}"
+    hostname: "*.drup.lol"
   - <<: *config
-    hostname: "${DOMAIN_NET}"
+    hostname: "kaj.pics"
   - <<: *config
-    hostname: "*.${DOMAIN_NET}"
-  - <<: *config
-    hostname: "${DOMAIN_PICS}"
-  - <<: *config
-    hostname: "*.${DOMAIN_PICS}"
-  - <<: *config
-    hostname: "${DOMAIN_PHOTOS}"
-  - <<: *config
-    hostname: "*.${DOMAIN_PHOTOS}"
-  - <<: *config
-    hostname: "${DOMAIN_ST}"
-  - <<: *config
-    hostname: "*.${DOMAIN_ST}"
+    hostname: "*.kaj.pics"
   - service: http_status:404

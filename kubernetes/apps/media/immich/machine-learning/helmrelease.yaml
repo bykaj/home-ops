@@ -81,7 +81,7 @@ spec:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             paths:
               - path: /
                 service:

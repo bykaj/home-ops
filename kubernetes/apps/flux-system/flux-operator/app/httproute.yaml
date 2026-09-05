@@ -6,7 +6,7 @@ metadata:
   name: flux-operator
 spec:
   hostnames:
-    - flux-operator.${DOMAIN_APP}
+    - flux-operator.bykaj.app
   parentRefs:
     - name: envoy-internal
       namespace: network

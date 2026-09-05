@@ -65,7 +65,7 @@ spec:
   httpRoute:
     spec:
       hostnames:
-        - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+        - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
       parentRefs:
         - name: envoy-internal
           namespace: network

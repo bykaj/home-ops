@@ -35,7 +35,7 @@ spec:
               OC_ENABLE_OCM: false
               OC_INSECURE: false
               OC_LOG_LEVEL: "info"
-              OC_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.${DOMAIN_APP}}"
+              OC_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"
               PROXY_TLS: false
             envFrom:
               - secretRef:
@@ -78,7 +78,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

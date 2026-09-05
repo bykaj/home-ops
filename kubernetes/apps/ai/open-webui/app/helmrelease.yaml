@@ -27,7 +27,7 @@ spec:
               OAUTH_PROVIDER_NAME: "Cetana ID"
               OPENID_PROVIDER_URL: https://auth.cetana.id/application/o/open-webui/.well-known/openid-configuration
               OAUTH_SCOPES: openid email profile
-              OPENID_REDIRECT_URI: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}/oauth/oidc/callback
+              OPENID_REDIRECT_URI: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}/oauth/oidc/callback
               # Features
               ENABLE_LOGIN_FORM: false
               ENABLE_OLLAMA_API: false
@@ -60,7 +60,7 @@ spec:
     route:
       app:
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-external
             namespace: network

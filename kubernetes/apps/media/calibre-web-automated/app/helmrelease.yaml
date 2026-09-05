@@ -47,8 +47,8 @@ spec:
               limits:
                 memory: 512Mi
             securityContext:
-              allowPrivilegeEscalation: true  # because S6 overlay
-              readOnlyRootFilesystem: false   # because S6 overlay
+              allowPrivilegeEscalation: true # because S6 overlay
+              readOnlyRootFilesystem: false # because S6 overlay
               capabilities:
                 drop:
                   - ALL
@@ -61,15 +61,15 @@ spec:
                   - DAC_OVERRIDE
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: false   # because S6 overlay
-        runAsUser: 0          # because S6 overlay
-        runAsGroup: 0         # because S6 overlay
+        runAsNonRoot: false # because S6 overlay
+        runAsUser: 0 # because S6 overlay
+        runAsGroup: 0 # because S6 overlay
         seccompProfile: { type: RuntimeDefault }
     ingress:
       ts:
         className: tailscale
         hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.${TAILSCALE_DOMAIN}
+          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
             paths:
               - path: /
                 service:
@@ -117,7 +117,7 @@ spec:
     route:
       *name :
         hostnames:
-          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.${DOMAIN_APP}}"
+          - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -131,4 +131,3 @@ spec:
         ports:
           http:
             port: *port
-
