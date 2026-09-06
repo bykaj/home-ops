@@ -48,4 +48,4 @@ metadata:
   name: nas
 spec:
   externalCIDRs:
-    - 10.73.10.1/32
+    - 10.73.1.10/32
