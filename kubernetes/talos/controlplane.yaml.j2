@@ -15,7 +15,7 @@ cluster:
     key: op://Homelab/talos/CLUSTER_AGGREGATORCA_KEY
   etcd:
     advertisedSubnets:
-      - 10.73.10.0/24
+      - 10.73.20.0/24
     ca:
       crt: op://Homelab/talos/CLUSTER_ETCD_CA_CRT
       key: op://Homelab/talos/CLUSTER_ETCD_CA_KEY
@@ -129,5 +129,5 @@ allowedKubernetesNamespaces:
 ---
 apiVersion: v1alpha1
 kind: Layer2VIPConfig
-name: 10.73.10.100
+name: 10.73.20.100
 link: bond0

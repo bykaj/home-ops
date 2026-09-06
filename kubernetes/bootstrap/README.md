@@ -30,7 +30,7 @@ directory is not used again until the next rebuild.
 ## UDM configuration
 
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
-`10.73.10.100`, `externalTrafficPolicy: Local` so only nodes with a
+`10.73.20.100`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
 along with every other LoadBalancer IP. See the [config](../apps/kube-system/cilium/config/) folder.
 
@@ -39,15 +39,15 @@ graph LR
     client(Client) -->|hashed flow| udm("`**UDM**
     _ASN 64513_`")
     udm -->|ECMP| k1("`**k8s-01**
-    10.73.10.10`")
+    10.73.20.10`")
     udm -->|ECMP| k2("`**k8s-02**
-     10.73.10.20`")
+    10.73.20.20`")
     udm -->|ECMP| k3("`**k8s-03**
-    10.73.10.30`")
+    10.73.20.30`")
     udm -->|ECMP| nas("`**nas**
     10.73.1.10`")
     k1 & k2 & k3 -. "`**BGP** _ASN 64514_
-    VIPs from 10.73.10.0/24`" .-> udm
+    VIPs from 10.73.20.0/24`" .-> udm
     nas -. "`**BGP** _ASN 64515_
     VIP 10.73.1.10/32`" .-> udm
     client@{ shape: browser}
@@ -58,20 +58,20 @@ The VIPs the UDM learns this way:
 
 | VIP            | Hostname                   | Backs                          |
 | -------------- | -------------------------- | ------------------------------ |
-| `10.73.10.100` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
-| `10.73.10.110` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
-| `10.73.10.120` | `external.cetana.net`      | `envoy-external` Gateway       |
+| `10.73.20.100` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
+| `10.73.20.110` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
+| `10.73.20.120` | `external.cetana.net`      | `envoy-external` Gateway       |
 | `10.73.1.10`   | `nas.home.cetana.net`      | `traefik` Gateway              |
 
 A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
 ```text
-k8s-vip.home.cetana.net → 10.73.10.100
+k8s-vip.home.cetana.net → 10.73.20.100
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
-(`10.73.10.10-30`) and announces LoadBalancer Service IPs from the
-`10.73.10.0/24` pool. UniFi accepts a single FRR config upload per device
+(`10.73.20.10-30`) and announces LoadBalancer Service IPs from the
+`10.73.20.0/24` pool. UniFi accepts a single FRR config upload per device
 (Settings → Routing Table → BGP):
 
 <details>
@@ -85,9 +85,9 @@ router bgp 64513
   neighbor k8s peer-group
   neighbor k8s remote-as 64514
 
-  neighbor 10.73.10.10 peer-group k8s
-  neighbor 10.73.10.20 peer-group k8s
-  neighbor 10.73.10.30 peer-group k8s
+  neighbor 10.73.20.10 peer-group k8s
+  neighbor 10.73.20.20 peer-group k8s
+  neighbor 10.73.20.30 peer-group k8s
 
   neighbor nas peer-group
   neighbor nas remote-as 64515
@@ -112,18 +112,18 @@ The `maximum-paths 3` gives true ECMP across the control plane nodes for the
 > [!WARNING]
 > Re-uploading the FRR config briefly bounces established BGP sessions.
 
-To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.10.100/32`
+To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.20.100/32`
 showing an ECMP path per healthy apiserver in `vtysh -c "show ip route"`,
 and `curl -k https://k8s-vip.home.cetana.net:6443/livez`. In
-`vtysh -c "show ip bgp 10.73.10.100"` every path should carry the
-`multipath` tag; `ip route show 10.73.10.100` should list one `nexthop`
+`vtysh -c "show ip bgp 10.73.20.100"` every path should carry the
+`multipath` tag; `ip route show 10.73.20.100` should list one `nexthop`
 line per node (a single flat line means multipath is not installed in the
 kernel).
 
 > [!NOTE]
 > `k8s-vip.home.cetana.net` rides the Cilium `kube-api` LoadBalancer, so the named API
 > endpoint depends on Cilium being healthy. If the CNI is ever down, reach
-> the API directly at `https://10.73.10.10-30:6443` and the Talos API at
+> the API directly at `https://10.73.20.10-30:6443` and the Talos API at
 > the same node addresses; neither depends on the CNI.
 
 ## UDM boot scripts
