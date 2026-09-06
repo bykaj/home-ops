@@ -20,7 +20,8 @@ spec:
               protocol: TCP
     - toEndpoints:
         - matchLabels:
-            k8s:app: postgres-rw
+            io.kubernetes.pod.namespace: database
+            cnpg.io/cluster: postgres
       toPorts:
         - ports:
             - port: "5432"
