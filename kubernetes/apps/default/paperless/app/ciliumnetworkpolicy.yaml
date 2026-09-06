@@ -13,15 +13,16 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            k8s:app: dragonfly
+            app.kubernetes.io/name: dragonfly
+            io.kubernetes.pod.namespace: database
       toPorts:
         - ports:
             - port: "6379"
               protocol: TCP
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: database
             cnpg.io/cluster: postgres
+            io.kubernetes.pod.namespace: database
       toPorts:
         - ports:
             - port: "5432"
