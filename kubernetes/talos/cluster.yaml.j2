@@ -13,19 +13,19 @@ cluster:
     crt: op://Homelab/talos/CLUSTER_CA_CRT
   clusterName: main
   controlPlane:
-    endpoint: https://k8s-vip.home.cetana.net:6443
+    endpoint: https://k8s.internal:6443
   token: op://Homelab/talos/CLUSTER_TOKEN
 ---
 apiVersion: v1alpha1
 kind: VLANConfig
-name: bond0.10
-vlanID: 10
+name: bond0.20
+vlanID: 20
 parent: bond0
 mtu: 1500
 ---
 apiVersion: v1alpha1
 kind: DHCPv4Config
-name: bond0.10
+name: bond0.20
 clientIdentifier: mac
 ---
 apiVersion: v1alpha1
@@ -35,7 +35,7 @@ hostDNS:
   forwardKubeDNSToHost: true # Requires Cilium socketLB features
   resolveMemberNames: true
 nameservers:
-  - address: 10.73.0.254
+  - address: 10.73.20.1
 searchDomains:
   domains: []
   disableDefault: true

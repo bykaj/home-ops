@@ -33,7 +33,7 @@ apiVersion: v1alpha1
 kind: KubeAPIServerConfig
 certExtraSANs:
   - 127.0.0.1 # KubePrism
-  - k8s-vip.home.cetana.net
+  - k8s.internal
 extraArgs:
   enable-aggregator-routing: "true"
   feature-gates: HPAScaleToZero=true

@@ -22,7 +22,7 @@ directory is not used again until the next rebuild.
 - A valid `talosconfig` at the repo root (mise points `TALOSCONFIG` there).
   The justfile derives the controller endpoint and node list from
   `talosctl config info`, so nothing is hardcoded here.
-- The UDM configuration below. `k8s-vip.home.cetana.net` points at the Cilium
+- The UDM configuration below. `k8s.internal` points at the Cilium
   LoadBalancer VIP, which exists only once Cilium is installed, so bootstrap
   talks to the controller's node IP directly until the `apps` stage brings
   Cilium up.
@@ -56,17 +56,17 @@ graph LR
 
 The VIPs the UDM learns this way:
 
-| VIP            | Hostname                   | Backs                          |
-| -------------- | -------------------------- | ------------------------------ |
-| `10.73.20.100` | `k8s-vip.home.cetana.net`  | `kube-api` Service (apiserver) |
-| `10.73.20.110` | `internal.home.cetana.net` | `envoy-internal` Gateway       |
-| `10.73.20.120` | `external.cetana.net`      | `envoy-external` Gateway       |
-| `10.73.1.10`   | `nas.home.cetana.net`      | `traefik` Gateway              |
+| VIP            | Hostname             | Backs                          |
+| -------------- | -------------------- | ------------------------------ |
+| `10.73.20.100` | `k8s.internal`       | `kube-api` Service (apiserver) |
+| `10.73.20.110` | `internal.bykaj.app` | `envoy-internal` Gateway       |
+| `10.73.20.120` | `external.bykaj.app` | `envoy-external` Gateway       |
+| `10.73.1.10`   | `nas.internal`       | `traefik` Gateway              |
 
 A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
 
 ```text
-k8s-vip.home.cetana.net → 10.73.20.100
+k8s.internal → 10.73.20.100
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
@@ -114,14 +114,14 @@ The `maximum-paths 3` gives true ECMP across the control plane nodes for the
 
 To verify: `vtysh -c "show bgp summary"` on the UDM, `10.73.20.100/32`
 showing an ECMP path per healthy apiserver in `vtysh -c "show ip route"`,
-and `curl -k https://k8s-vip.home.cetana.net:6443/livez`. In
+and `curl -k https://k8s.internal:6443/livez`. In
 `vtysh -c "show ip bgp 10.73.20.100"` every path should carry the
 `multipath` tag; `ip route show 10.73.20.100` should list one `nexthop`
 line per node (a single flat line means multipath is not installed in the
 kernel).
 
 > [!NOTE]
-> `k8s-vip.home.cetana.net` rides the Cilium `kube-api` LoadBalancer, so the named API
+> `k8s.internal` rides the Cilium `kube-api` LoadBalancer, so the named API
 > endpoint depends on Cilium being healthy. If the CNI is ever down, reach
 > the API directly at `https://10.73.20.10-30:6443` and the Talos API at
 > the same node addresses; neither depends on the CNI.
@@ -175,7 +175,7 @@ it after firmware upgrades.
 > node in the SAN to vary:
 >
 > ```sh
-> openssl s_client -connect k8s-vip.home.cetana.net:6443 </dev/null 2>/dev/null \
+> openssl s_client -connect k8s.internal:6443 </dev/null 2>/dev/null \
 >   | openssl x509 -noout -ext subjectAltName
 > ```
 
@@ -251,9 +251,9 @@ graph LR
    etcd reports the cluster already exists.
 3. **kubeconfig** - Fetches the kubeconfig with `talosctl kubeconfig`, then
    rewrites the server address to the controller's node IP: the generated
-   `https://k8s-vip.home.cetana.net:6443` points at the Cilium VIP, which does not
+   `https://k8s.internal:6443` points at the Cilium VIP, which does not
    exist yet. The final stage re-fetches the kubeconfig so the endpoint
-   returns to `k8s-vip.home.cetana.net` once Cilium is serving it.
+   returns to `k8s.internal` once Cilium is serving it.
 4. **base** - Waits for every control plane apiserver to answer `/readyz`
    and for nodes to register (they stay `Ready=False` until the CNI is
    installed), then applies:
@@ -286,7 +286,7 @@ Bootstrap itself restores no application data; that happens declaratively
 once Flux takes over, via [Kopiur](https://github.com/home-operations/kopiur)
 (deployed from [kubernetes/apps/system/](../apps/system/),
 backed by the `nas` ClusterRepository: a Kopia NFS repo on
-`nas.home.cetana.net`).
+`nas.internal`).
 
 Apps that opt into the `kopiur/backup` component get a PVC whose
 `spec.dataSourceRef` points at a Kopiur `Restore` with `target.populator: {}`
