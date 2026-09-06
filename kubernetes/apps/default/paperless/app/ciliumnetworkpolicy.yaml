@@ -18,6 +18,13 @@ spec:
         - ports:
             - port: "6379"
               protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app: postgresql
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
   ingress:
     - fromEndpoints:
         - matchLabels:
