@@ -20,7 +20,7 @@ spec:
               protocol: TCP
     - toEndpoints:
         - matchLabels:
-            k8s:app: postgresql
+            k8s:app: postgres-rw
       toPorts:
         - ports:
             - port: "5432"
