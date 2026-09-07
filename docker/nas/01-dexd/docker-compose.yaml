@@ -4,7 +4,8 @@ services:
   dexd:
     container_name: dexd
     environment:
-      DEFAULT_TARGET: 10.73.2.100
+      DEFAULT_TARGET: proxy.bykaj.app
+      TXT_PREFIX: dck.
       UNIFI_API_KEY: ${UNIFI_API_KEY}
       UNIFI_HOST: https://gateway.home.cetana.net
     image: ghcr.io/ishioni/dexd:0.4.3
