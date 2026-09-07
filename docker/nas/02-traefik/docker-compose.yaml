@@ -1,4 +1,5 @@
 ---
+name: traefik
 networks:
   apps:
     name: apps
@@ -20,7 +21,7 @@ services:
       - --providers.docker.exposedByDefault=false
     container_name: traefik
     environment:
-      - CF_API_TOKEN=${CF_API_TOKEN}
+      - CLOUDFLARE_DNS_API_TOKEN=${CF_API_TOKEN}
     image: traefik:v3.7.12
     networks:
       - apps
