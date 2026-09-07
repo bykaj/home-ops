@@ -29,10 +29,6 @@ services:
       traefik.udp.services.bootimus-tftp.loadbalancer.server.port: "69"
     networks:
       apps:
-    ports:
-      - "69:69/udp"
-      - "8080:8080/tcp"
-      - "8880:8880/tcp"
     volumes:
       - /mnt/vault/Applications/bootimus/data:/data
     cap_add:
