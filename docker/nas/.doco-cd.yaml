@@ -5,7 +5,7 @@ auto_discovery:
   depth: 1
   delete: true
 external_secrets:
-  CF_API_KEY: op://Homelab/doco-cd/CF_API_KEY
+  CF_API_TOKEN: op://Homelab/doco-cd/CF_API_TOKEN
   UNIFI_API_KEY: op://Homelab/unifi/UNIFI_API_KEY
 force_recreate: false
 reconciliation:

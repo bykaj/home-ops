@@ -1,0 +1,5 @@
+all:
+  children:
+    nas:
+      hosts:
+        nas.home.cetana.net:

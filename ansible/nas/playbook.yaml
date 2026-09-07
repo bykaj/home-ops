@@ -1,6 +1,6 @@
 ---
 - name: Bootstrap TrueNAS
-  hosts: all
+  hosts: nas
   become: true
   gather_facts: false
   vars:

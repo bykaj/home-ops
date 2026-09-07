@@ -20,7 +20,7 @@ services:
       - --providers.docker.exposedByDefault=false
     container_name: traefik
     environment:
-      - CLOUDFLARE_API_KEY=${CF_API_KEY}
+      - CLOUDFLARE_API_KEY=${CF_API_TOKEN}
     image: traefik:v3.7.12
     networks:
       - apps
