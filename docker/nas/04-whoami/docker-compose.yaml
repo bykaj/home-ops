@@ -1,0 +1,14 @@
+---
+name: whoami
+services:
+  whoami:
+    container_name: whoami
+    image: traefik/whoami:latest
+    labels:
+      dexd.enabled: "true"
+      traefik.enable: "true"
+      traefik.http.routers.whoami.rule: Host(`whoami.bykaj.app`)
+      traefik.http.services.whoami.loadbalancer.server.port: "80"
+    networks:
+      - apps
+    restart: unless-stopped
