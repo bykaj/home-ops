@@ -7,7 +7,7 @@ services:
       DEFAULT_TARGET: 10.73.2.100
       UNIFI_API_KEY: ${UNIFI_API_KEY}
       UNIFI_HOST: https://gateway.home.cetana.net
-    image: ghcr.io/ishioni/dexd:0.4.3
+    image: ghcr.io/ishioni/dexd:0.4.4
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
