@@ -1,0 +1,13 @@
+---
+working_dir: ./docker/nas
+auto_discovery:
+  enabled: true
+  depth: 1
+  delete: true
+external_secrets:
+  CF_API_KEY: op://Homelab/doco-cd/CF_API_KEY
+  UNIFI_API_KEY: op://Homelab/unifi/UNIFI_API_KEY
+force_recreate: false
+reconciliation:
+  enabled: true
+  interval: 3600
