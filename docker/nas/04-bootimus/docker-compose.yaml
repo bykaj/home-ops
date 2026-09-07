@@ -13,17 +13,13 @@ services:
       BOOTIMUS_HTTP_PORT: 8080
       BOOTIMUS_ADMIN_PORT: 8880
       BOOTIMUS_SERVER_ADDR: 0.0.0.0
-      BOOTIMUS_WINDOWS_SMB_ENABLED: "true"
+      BOOTIMUS_WINDOWS_SMB_ENABLED: "false"
     labels:
       dexd.enabled: "true"
       traefik.enable: "true"
       # TCP: Admin on 8880
       traefik.http.routers.bootimus.rule: Host(`bootimus.bykaj.app`)
       traefik.http.services.bootimus.loadbalancer.server.port: "8880"
-      # TCP: SMB on 445
-      traefik.tcp.routers.bootimus-smb.rule: HostSNI(`*`)
-      traefik.tcp.routers.bootimus-smb.entrypoints: smb
-      traefik.tcp.services.bootimus-smb.loadbalancer.server.port: "445"
       # TCP: HTTP on 8080
       traefik.tcp.routers.bootimus-http.rule: HostSNI(`*`)
       traefik.tcp.routers.bootimus-http.entrypoints: web-alt
@@ -37,7 +33,6 @@ services:
       - "69:69/udp"
       - "8080:8080/tcp"
       - "8880:8880/tcp"
-      - "445:445/tcp"
     volumes:
       - /mnt/vault/Applications/bootimus/data:/data
     cap_add:
