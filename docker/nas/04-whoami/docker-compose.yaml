@@ -1,5 +1,9 @@
 ---
 name: whoami
+networks:
+  apps:
+    name: apps
+    external: true
 services:
   whoami:
     container_name: whoami
