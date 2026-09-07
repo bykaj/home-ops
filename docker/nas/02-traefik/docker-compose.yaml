@@ -18,6 +18,9 @@ services:
       - --entrypoints.websecure.http.tls=true
       - --entrypoints.websecure.http.tls.certResolver=cf
       - --entrypoints.websecure.http.tls.domains[0].main=*.bykaj.app
+      - --entryPoints.tftp.address=:69/udp
+      - --entryPoints.web-alt.address=:8080
+      - --entryPoints.smb.address=:445
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
     container_name: traefik
@@ -27,8 +30,11 @@ services:
     networks:
       - apps
     ports:
-      - 10.73.2.100:80:80
-      - 10.73.2.100:443:443
+      - "10.73.2.100:80:80"
+      - "10.73.2.100:443:443"
+      - "10.73.2.100:69:69/udp"
+      - "10.73.2.100:8080:8080"
+      - "10.73.2.100:445:445"
     volumes:
       - acme:/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro

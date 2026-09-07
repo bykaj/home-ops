@@ -1,0 +1,49 @@
+name: bootimus
+networks:
+  apps:
+    name: apps
+    external: true
+services:
+  bootimus:
+    container_name: bootimus
+    image: garybowers/bootimus:0.1.76@sha256:045445f0a74a4c8f15cda9594a7c3f20ce15c37aaef6d83bac1990fce76ee919
+    environment:
+      BOOTIMUS_DATA_DIR: /data
+      BOOTIMUS_TFTP_PORT: 69
+      BOOTIMUS_HTTP_PORT: 8080
+      BOOTIMUS_ADMIN_PORT: 8880
+      BOOTIMUS_SERVER_ADDR: 0.0.0.0
+      BOOTIMUS_WINDOWS_SMB_ENABLED: "true"
+    labels:
+      dexd.enabled: "true"
+      traefik.enable: "true"
+      # TCP: Admin on 8880
+      traefik.http.routers.bootimus.rule: Host(`bootimus.bykaj.app`)
+      traefik.http.services.bootimus.loadbalancer.server.port: "8880"
+      # TCP: SMB on 445
+      traefik.tcp.routers.bootimus-smb.rule: HostSNI(`*`)
+      traefik.tcp.routers.bootimus-smb.entrypoints: smb
+      traefik.tcp.services.bootimus-smb.loadbalancer.server.port: "445"
+      # TCP: HTTP on 8080
+      traefik.tcp.routers.bootimus-http.rule: HostSNI(`*`)
+      traefik.tcp.routers.bootimus-http.entrypoints: web-alt
+      traefik.tcp.services.bootimus-http.loadbalancer.server.port: "8080"
+      # UDP: TFTP on 69
+      traefik.udp.routers.bootimus-tftp.entrypoints: tftp
+      traefik.udp.services.bootimus-tftp.loadbalancer.server.port: "69"
+    networks:
+      apps:
+    ports:
+      - "69:69/udp"
+      - "8080:8080/tcp"
+      - "8880:8880/tcp"
+      - "445:445/tcp"
+    volumes:
+      - /mnt/vault/Applications/bootimus/data:/data
+    cap_add:
+      - NET_BIND_SERVICE
+    restart: unless-stopped
+    # Uncomment to disable database mode
+    # command: ["serve", "--db-disable"]
+    # Uncomment to reset the admin password, remember to comment out afterwards
+    # command: ["serve", "--reset-admin-password"]
