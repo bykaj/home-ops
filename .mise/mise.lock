@@ -176,12 +176,9 @@ specifiers = [
 ]
 
 [[tools."pipx:ansible-core"]]
-version = "2.21.3"
+version = "2.21.4"
 backend = "pipx:ansible-core"
-specifiers = [
-    "2.21.3",
-    "latest",
-]
+specifiers = ["2.21.4"]
 
 [[tools.shellcheck]]
 version = "0.11.0"
