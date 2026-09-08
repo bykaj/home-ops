@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${APP}
+  annotations:
+    # Required for same-path/same-serverName rebuilds via bootstrap.recovery.
+    # The default check blocks recovery when the destination archive is non-empty,
+    # which is exactly the case when the rebuilt cluster reuses the same Barman
+    # path. Safe here because the recovered cluster inherits the source's
+    # system_identifier and writes new WAL on a new timeline (no name collisions).
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
+spec:
+  bootstrap:
+    recovery:
+      source: &archive ${APP}-backup-archive
+      database: ${POSTGRES_DATABASE:=${APP}}
+      owner: ${POSTGRES_USERNAME:=${APP}}
+  enableSuperuserAccess: true
+  externalClusters:
+    - name: *archive
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: ${APP}
+          serverName: ${APP}
+  imageName: ${POSTGRES_IMAGE:=ghcr.io/cloudnative-pg/postgresql:18.6-standard-trixie@sha256:c2a773217853c6e0ffe7da9c37ea456466efb20cf844f27511a73fa6a81e3152}
+  instances: 3
+  maxSyncReplicas: 1
+  minSyncReplicas: 1
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: ${APP}
+        serverName: ${APP}
+  postgresql:
+    parameters:
+      max_connections: "500"
+      max_wal_size: "5GB"
+      synchronous_commit: "on"
+  primaryUpdateStrategy: unsupervised
+  resources:
+    requests:
+      memory: 512Mi
+  storage:
+    size: 5Gi
+    storageClass: openebs-hostpath
