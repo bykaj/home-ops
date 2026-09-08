@@ -9,7 +9,7 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./autobrr/ks.yaml
+  #- ./autobrr/ks.yaml
   - ./bazarr/ks.yaml
   - ./configarr/ks.yaml
   - ./prowlarr/ks.yaml
