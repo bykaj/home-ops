@@ -19,7 +19,7 @@ services:
     labels:
       dexd.enabled: "true"
       traefik.enable: "true"
-      traefik.http.routers.garage-s3.rule: Host(`s3.bykaj.app`)
+      traefik.http.routers.garage-s3.rule: Host(`s3.bykaj.io`)
       traefik.http.services.garage-s3.loadbalancer.server.port: "9000"
     networks:
       - apps

@@ -18,6 +18,7 @@ services:
       - --entrypoints.websecure.http.tls=true
       - --entrypoints.websecure.http.tls.certResolver=cf
       - --entrypoints.websecure.http.tls.domains[0].main=*.bykaj.app
+      - --entrypoints.websecure.http.tls.domains[1].main=*.bykaj.io
       - --entryPoints.tftp.address=:69/udp
       - --entryPoints.web-alt.address=:8080
       - --entryPoints.smb.address=:445
