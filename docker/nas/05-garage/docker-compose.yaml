@@ -32,15 +32,15 @@ services:
   garage-ui:
     container_name: garage-ui
     environment:
-      GARAGE_UI_AUTH_OIDC_ADMIN_ROLE: "admin"
+      GARAGE_UI_AUTH_OIDC_ADMIN_ROLE: "Administrators"
       GARAGE_UI_AUTH_OIDC_CLIENT_ID: ${GARAGE_UI_OIDC_CLIENT_ID}
       GARAGE_UI_AUTH_OIDC_CLIENT_SECRET: ${GARAGE_UI_OIDC_CLIENT_SECRET}
       GARAGE_UI_AUTH_OIDC_COOKIE_SECURE: "true"
       GARAGE_UI_AUTH_OIDC_ENABLED: "true"
       GARAGE_UI_AUTH_OIDC_ISSUER_URL: "https://auth.cetana.id/application/o/garage/"
       GARAGE_UI_AUTH_OIDC_PROVIDER_NAME: "Cetana ID"
-      GARAGE_UI_AUTH_OIDC_ROLE_ATTRIBUTE_PATH: "garage"
-      GARAGE_UI_AUTH_OIDC_SCOPES: "openid email profile groups garage"
+      GARAGE_UI_AUTH_OIDC_ROLE_ATTRIBUTE_PATH: "groups"
+      GARAGE_UI_AUTH_OIDC_SCOPES: "openid email profile groups"
       GARAGE_UI_GARAGE_ADMIN_ENDPOINT: "http://garage:9002"
       GARAGE_UI_GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
       GARAGE_UI_GARAGE_ENDPOINT: "http://garage:9000"
