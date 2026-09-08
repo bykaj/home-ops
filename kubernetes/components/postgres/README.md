@@ -40,7 +40,7 @@ spec:
       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
       current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 1h
-  path: ./kubernetes/apps/base/.../myapp
+  path: ./kubernetes/apps/.../myapp
   postBuild:
     substitute:
       APP: *app
