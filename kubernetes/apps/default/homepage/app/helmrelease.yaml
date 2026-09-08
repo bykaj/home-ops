@@ -21,7 +21,7 @@ spec:
               repository: ghcr.io/gethomepage/homepage
               tag: v2.2.0@sha256:753eeb0cc22ab7baad39ed47cbd1aae14e193dd1b264e965f193a9ea1d1e1bdd
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
               LOG_LEVEL: "info"
               HOMEPAGE_ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
             envFrom:

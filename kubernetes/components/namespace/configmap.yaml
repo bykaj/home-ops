@@ -4,8 +4,6 @@ kind: ConfigMap
 metadata:
   name: cluster-config
 data:
-  # Settings
-  TIMEZONE: Europe/Amsterdam
   # Servers
   DB_HOST: postgres-rw.database.svc.cluster.local
   MQTT_HOST: emqx-headless.database.svc.cluster.local

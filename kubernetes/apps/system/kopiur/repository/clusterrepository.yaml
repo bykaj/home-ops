@@ -53,7 +53,7 @@ spec:
     epoch:
       minDuration: 1h
   scheduleDefaults:
-    timezone: ${TIMEZONE}
+    timezone: Europe/Amsterdam
   server:
     auth:
       secretRef:

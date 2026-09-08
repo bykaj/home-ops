@@ -17,7 +17,7 @@ spec:
           reloader.stakater.com/auto: "true"
         cronjob:
           schedule: "0 0/12 * * *" # Runs every 12 hours
-          timeZone: "${TIMEZONE}"
+          timeZone: "Europe/Amsterdam"
           concurrencyPolicy: Forbid
           successfulJobsHistory: 1
           failedJobsHistory: 1
@@ -27,7 +27,7 @@ spec:
               repository: ghcr.io/raydak-labs/configarr
               tag: 1.30.2@sha256:ec585b6d2530f6090ee26fdcc9701f279666c24dc96c9087208e88ec867c2416
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: configarr-secret

@@ -20,7 +20,7 @@ spec:
               repository: gotson/komga
               tag: 1.26.3@sha256:6c2a967bbe9acefd05933b2eb498f34afe96a83c6f7f8ab0acb512a1bb3ab50f
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
               SERVER_PORT: &port 8080
             probes:
               liveness: &probes

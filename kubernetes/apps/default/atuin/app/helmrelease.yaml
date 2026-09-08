@@ -22,7 +22,7 @@ spec:
               ATUIN_PORT: &port 80
               ATUIN_OPEN_REGISTRATION: "true"
               ATUIN_DB_URI: sqlite:///config/atuin.db
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             args:
               - start
             probes:

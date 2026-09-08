@@ -33,7 +33,7 @@ spec:
               MAILKEEP__METADATA_PATH: /data
               MAILKEEP__STORAGE_PATH: /storage
               RUST_LOG: INFO
-              TZ: ${TIMEZONE}
+              TZ: Europe/Amsterdam
             envFrom:
               - secretRef:
                   name: mailkeep-secret

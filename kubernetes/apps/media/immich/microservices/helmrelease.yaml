@@ -38,7 +38,7 @@ spec:
               IMMICH_WORKERS_EXCLUDE: "api"
               REDIS_DBINDEX: "5"
               REDIS_HOSTNAME: "${REDIS_HOST}"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: immich-secret

@@ -23,7 +23,7 @@ spec:
             env:
               PGID: "${APP_GID}"
               PUID: "${APP_UID}"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: calibre-web-automated-secret

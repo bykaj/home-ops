@@ -29,7 +29,7 @@ spec:
               PLEX_PREFERENCE_5: "ButlerDatabaseBackupPath=/mnt/backups"
               PLEX_PREFERENCE_6: "RelayEnabled=0"
               PLEX_PREFERENCE_7: "sendCrashReports=0"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: plex-secret

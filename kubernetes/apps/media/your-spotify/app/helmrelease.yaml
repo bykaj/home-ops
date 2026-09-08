@@ -27,7 +27,7 @@ spec:
               CLIENT_ENDPOINT: "https://${APP_SUBDOMAIN:=${APP}}.bykaj.app"
               MONGO_ENDPOINT: "mongodb://your-spotify-mongodb:27017/your_spotify"
               PORT: &serverPort 8080
-              TIMEZONE: "${TIMEZONE}"
+              TIMEZONE: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: your-spotify-secret

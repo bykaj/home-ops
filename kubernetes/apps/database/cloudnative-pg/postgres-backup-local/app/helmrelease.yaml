@@ -43,7 +43,7 @@ spec:
               POSTGRES_EXTRA_OPTS: "-b -C -c -Z6"
               POSTGRES_HOST: "${DB_HOST}"
               SCHEDULE: "@daily"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: postgres-backup-local-secret

@@ -22,7 +22,7 @@ spec:
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_PublishedServerUrl: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             probes:
               liveness: &probes
                 enabled: true

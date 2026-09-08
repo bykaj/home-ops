@@ -28,7 +28,7 @@ spec:
               PLAYWRIGHT_DRIVER_URL: ws://localhost:3000/?token=$(TOKEN)&blockAds=true&launch={"stealth":true}
               PORT: &port 5000
               SCREENSHOT_MAX_HEIGHT: "16000"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
               USE_X_SETTINGS: "1"
             envFrom:
               - secretRef:
@@ -64,7 +64,7 @@ spec:
                   secretKeyRef:
                     name: *secret
                     key: TOKEN
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             probes:
               liveness:
                 enabled: true

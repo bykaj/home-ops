@@ -27,7 +27,7 @@ spec:
               HOST: "0.0.0.0"
               METADATA_PATH: "/config/metadata"
               PORT: &port 80
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: audiobookshelf-secret

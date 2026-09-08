@@ -34,7 +34,7 @@ spec:
               BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               LOG_LEVEL: "info"
               PORT: &port 8080
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
               USE_PROXY: "true"
               WEBAUTHN_RP_ID: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               WEBAUTHN_RP_NAME: "${APP_NAME}"

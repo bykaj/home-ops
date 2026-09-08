@@ -29,7 +29,7 @@ spec:
               MEILI_ADDR: "http://meilisearch.database:7700"
               NEXTAUTH_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               RATE_LIMITING_ENABLED: "true"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
               # Asset storage config
               ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
               # Authentication config

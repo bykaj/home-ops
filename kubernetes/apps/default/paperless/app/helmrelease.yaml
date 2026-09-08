@@ -36,7 +36,7 @@ spec:
               PAPERLESS_FILENAME_FORMAT: "{ created }-{ correspondent }-{ title }"
               PAPERLESS_PORT: &port 8000
               PAPERLESS_TASK_WORKERS: "2"
-              PAPERLESS_TIME_ZONE: "${TIMEZONE}"
+              PAPERLESS_TIME_ZONE: "Europe/Amsterdam"
               PAPERLESS_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               PAPERLESS_WEBSERVER_WORKERS: "2"
               # Configure folders

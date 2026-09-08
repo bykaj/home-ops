@@ -23,7 +23,7 @@ spec:
               PGID: "${APP_GID:-1000}"
               PUID: "${APP_UID:-1000}"
               UMASK: "002"
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Amsterdam"
             probes:
               liveness: &probes
                 enabled: true
