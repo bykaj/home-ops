@@ -7,3 +7,34 @@ resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
   - ./database.yaml
+patches:
+  - # vchord extension for Immich's smart-search pgvector-style indexing
+    target:
+      group: postgresql.cnpg.io
+      version: v1
+      kind: Cluster
+    patch: |-
+      apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      metadata:
+        name: not-used
+      spec:
+        postgresql:
+          extensions:
+            - name: vchord
+              image:
+                reference: ghcr.io/tensorchord/vchord-scratch:pg18-v1.1.1@sha256:bdea43bed2a414e21bbf71767bf6f0739747ac480b267b51772dc214ac28dcb3
+              dynamic_library_path:
+                - /usr/lib/postgresql/18/lib
+              extension_control_path:
+                - /usr/share/postgresql/18/
+          parameters:
+            archive_timeout: "1min"
+            autovacuum_analyze_scale_factor: "0.05"
+            autovacuum_vacuum_cost_limit: "1000"
+            autovacuum_vacuum_scale_factor: "0.1"
+            effective_io_concurrency: "200"
+            random_page_cost: "1.2"
+            shared_buffers: "256MB"
+            work_mem: "16MB"
+          shared_preload_libraries: ["vchord.so"]
