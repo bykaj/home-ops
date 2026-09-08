@@ -32,7 +32,7 @@ spec:
               DB_URL:
                 valueFrom:
                   secretKeyRef:
-                    name: "${APP}-postgres-app"
+                    name: "immich-postgres-app"
                     key: uri
               IMMICH_ALLOW_SETUP: "false"
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
