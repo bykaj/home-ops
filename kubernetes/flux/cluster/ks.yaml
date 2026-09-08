@@ -75,8 +75,8 @@ spec:
       # to mark it as a brand-new cluster with no existing data. The component
       # default is bootstrap.recovery from Barman; this label opts out for net-new
       # apps that have no backup yet to recover from.
-      # $${...} escape preserves the variable through outer (cluster-apps) substitution
-      # so the inner (app) Kustomization's postBuild can resolve APP/POSTGRES_USERNAME.
+      # WARNING: when using postBuild in `cluster-apps`, double escape the vars with `$$`
+      # to survive the first (outer) postBuild substitution.
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
@@ -93,8 +93,8 @@ spec:
                   path: /spec/bootstrap
                   value:
                     initdb:
-                      database: $${POSTGRES_DATABASE:=$${APP}}
-                      owner: $${POSTGRES_USERNAME:=$${APP}}
+                      database: ${POSTGRES_DATABASE:=${APP}}
+                      owner: ${POSTGRES_USERNAME:=${APP}}
                 - op: remove
                   path: /spec/externalClusters
       target:
