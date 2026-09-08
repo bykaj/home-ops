@@ -14,6 +14,15 @@ browse-pvc ns claim:
         --image=mirror.gcr.io/alpine:latest \
         --overrides='{"spec":{"containers":[{"name":"browse-pvc-{{ claim }}","image":"mirror.gcr.io/alpine:latest","stdin":true,"tty":true,"command":["/bin/sh"],"workingDir":"/mnt","volumeMounts":[{"mountPath":"/mnt","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ claim }}"}}]}}'
 
+[doc('Manual database backup')]
+db-backup ns app:
+    kubectl apply -f - <<EOF
+    apiVersion: postgresql.cnpg.io/v1
+    kind: Backup
+    metadata: { name: {{ app }}-postgres-manual, namespace: {{ ns }} }
+    spec: { cluster: { name: {{ app }}-postgres }, method: plugin, pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
+    EOF
+
 [doc('Debug a node')]
 debug-node node:
     trap 'kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug --field-selector spec.nodeName={{ node }} --ignore-not-found --wait=false' EXIT
@@ -41,15 +50,15 @@ sync resource:
 
 [doc('Sync single Flux HelmRelease')]
 sync-hr ns name:
-  kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite hr "{{ name }}" reconcile.fluxcd.io/requestedAt="$(date +%s)" reconcile.fluxcd.io/forceAt="$(date +%s)"; \
+    kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite hr "{{ name }}" reconcile.fluxcd.io/requestedAt="$(date +%s)" reconcile.fluxcd.io/forceAt="$(date +%s)"; \
 
 [doc('Sync single Flux Kustomizations')]
 sync-ks ns name:
-  kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite ks "{{ name }}" reconcile.fluxcd.io/requestedAt="$(date +%s)"; \
+    kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite ks "{{ name }}" reconcile.fluxcd.io/requestedAt="$(date +%s)"; \
 
 [doc('Sync single ExternalSecret')]
 sync-es ns name:
-  kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite es "{{ name }}" force-sync="$(date +%s)"; \
+    kubectl -n "{{ ns }}" annotate --field-manager flux-client-side-apply --overwrite es "{{ name }}" force-sync="$(date +%s)"; \
 
 [doc('Connect to the Rook Ceph Toolbox pod')]
 toolbox:

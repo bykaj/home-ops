@@ -71,6 +71,12 @@ pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
 EOF
 ```
 
+Also added as a Just recipe:
+
+```sh
+just k8s db-backup ${NAMESPACE} ${APP}
+```
+
 ## Backups
 
 Daily full backups via the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/${POSTGRES_DATABASE}/` prefix. `retentionPolicy: 14d`.
