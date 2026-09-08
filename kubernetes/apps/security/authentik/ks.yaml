@@ -21,16 +21,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app authentik
-  labels:
-    components.postgres/cnpg: init
 spec:
   components:
     - ../../../../components/postgres
-    - ../../../../components/zeroscaler/postgres
   dependsOn:
     - name: authentik-configuration
-    - name: cloudnative-pg-cluster
-      namespace: database
     - name: dragonfly-cluster
       namespace: database
   healthCheckExprs:
@@ -43,7 +38,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      ZEROSCALER_NAME: authentik-server
       APP_NAME: Authentik
   prune: true
   sourceRef:
