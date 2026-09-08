@@ -66,7 +66,8 @@ kubectl apply -f - <<EOF
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
 metadata: { name: ${APP}-initial, namespace: ${NAMESPACE} }
-spec: { cluster: { name: ${APP} }, method: barmanObjectStore }
+spec: { cluster: { name: ${APP}-postgres }, method: plugin,
+pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
 EOF
 ```
 
