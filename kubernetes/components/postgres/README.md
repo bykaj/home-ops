@@ -4,12 +4,12 @@ CloudNativePG-backed Postgres component. Default Postgres for all apps in this r
 
 ## Substitution variables
 
-| Variable            | Default                     | Notes                                                               |
-| ------------------- | --------------------------- | ------------------------------------------------------------------- |
-| `APP`               | _(required)_                | Name of the consuming app — used for cluster, secret, backup paths. |
-| `POSTGRES_USERNAME` | `${APP}`                    | Username created on initial bootstrap.                              |
-| `POSTGRES_DATABASE` | `${APP}`                    | Database name created on initial bootstrap.                         |
-| `POSTGRES_IMAGE`    | `[cnpg.io](./cluster.yaml)` | Specific PostgreSQL image for this clusrer.                         |
+| Variable            | Default                      | Notes                                                               |
+| ------------------- | ---------------------------- | ------------------------------------------------------------------- |
+| `APP`               | _(required)_                 | Name of the consuming app — used for cluster, secret, backup paths. |
+| `POSTGRES_USERNAME` | `${APP}`                     | Username created on initial bootstrap.                              |
+| `POSTGRES_DATABASE` | `${APP}`                     | Database name created on initial bootstrap.                         |
+| `POSTGRES_IMAGE`    | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this clusrer.                         |
 
 ## Bootstrap behavior
 
