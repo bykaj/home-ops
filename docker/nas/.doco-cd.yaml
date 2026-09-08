@@ -6,6 +6,10 @@ auto_discovery:
   delete: true
 external_secrets:
   CF_API_TOKEN: op://Homelab/doco-cd/CF_API_TOKEN
+  GARAGE_ADMIN_TOKEN: op://Homelab/garage/ADMIN_TOKEN
+  GARAGE_RPC_SECRET: op://Homelab/garage/RPC_SECRET
+  GARAGE_UI_OIDC_CLIENT_ID: op://Homelab/garage/OIDC_CLIENT_ID
+  GARAGE_UI_OIDC_CLIENT_SECRET: op://Homelab/garage/OIDC_CLIENT_SECRET
   UNIFI_API_KEY: op://Homelab/unifi/UNIFI_API_KEY
 force_recreate: false
 reconciliation:
