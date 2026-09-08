@@ -34,6 +34,11 @@ spec:
               repository: ghcr.io/immich-app/immich-machine-learning
               tag: v3.1.0-openvino
             env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: uri
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               MPLCONFIGDIR: "/cache/matplotlib"
               REDIS_DBINDEX: "5"

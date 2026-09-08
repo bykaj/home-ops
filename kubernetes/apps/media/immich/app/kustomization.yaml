@@ -6,7 +6,6 @@ resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
   - ./helmrelease.yaml
-  - ./database.yaml
 patches:
   - # vchord extension for Immich's smart-search pgvector-style indexing
     target:

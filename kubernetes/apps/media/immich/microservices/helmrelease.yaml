@@ -34,6 +34,11 @@ spec:
               repository: ghcr.io/immich-app/immich-server
               tag: v3.1.0@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb
             env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: uri
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_WORKERS_EXCLUDE: "api"
               REDIS_DBINDEX: "5"
