@@ -4,15 +4,20 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app windshift
+  labels:
+    components.postgres/cnpg: init
 spec:
   components:
-    - ../../../../components/zeroscaler/postgres
     - ../../../../components/kopiur/backup
+    - ../../../../components/postgres
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: cloudnative-pg-cluster
-      namespace: database
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/default/windshift/app
   postBuild:

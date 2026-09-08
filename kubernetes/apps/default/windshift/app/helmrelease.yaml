@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: windshift
+  dependsOn: []
   interval: 1h
   values:
     controllers:
