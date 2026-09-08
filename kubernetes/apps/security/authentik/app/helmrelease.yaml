@@ -13,6 +13,27 @@ spec:
   values:
     global:
       env:
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: authentik-postgres-rw.security
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-app
+              key: dbname
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-app
+              key: password
+        - name: AUTHENTIK_POSTGRESQL__USER
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-app
+              key: username
+        - name: AUTHENTIK_POSTGRESQL__USE_PGBOUNCER
+          value: "true"
+        - name: AUTHENTIK_POSTGRESQL__SSLMODE
+          value: require
         - name: AUTHENTIK_REDIS__DB
           value: "1"
         - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
@@ -51,10 +72,6 @@ spec:
           geoip: "/geoip/GeoLite2-City.mmdb"
           asn: "/geoip/GeoLite2-ASN.mmdb"
       log_level: "info"
-      postgresql:
-        host: "${DB_HOST}"
-      redis:
-        host: "${REDIS_HOST}"
     geoip:
       enabled: false
       editionIds: "GeoLite2-City GeoLite2-ASN"
@@ -70,12 +87,6 @@ spec:
         limits:
           memory: 256Mi
     server:
-      # initContainers:
-      #   - name: init-db
-      #     image: ghcr.io/home-operations/postgres-init:18.6@sha256:b6d3af974df781c673d37e49bdddfa14a6f5be28b18d2cb7713f0449bea4057b
-      #     envFrom:
-      #       - secretRef:
-      #           name: *secret
       metrics: &metrics
         prometheus:
           serviceMonitor:
@@ -89,7 +100,7 @@ spec:
           memory: 512Mi
         limits:
           memory: 2Gi
-      replicas: 2
+      replicas: 1
       route:
         main:
           enabled: true
@@ -119,7 +130,7 @@ spec:
       pdb:
         enabled: true
         minAvailable: 1
-      replicas: 2
+      replicas: 1
       resources:
         requests:
           cpu: 80m
