@@ -18,7 +18,6 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Autobrr
-      POSTGRES_INSTANCES: "1"
   prune: true
   sourceRef:
     kind: GitRepository
