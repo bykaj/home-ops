@@ -14,27 +14,6 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-config:
-            image:
-              repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 2.11.2@sha256:2e18fa6af75c94fb9aff610fba3386e7d518b0d639ecf0948aecaa071b126be0
-            command: ["/bin/bash", "-c"]
-            args:
-              - |
-                export USER_FOLDER=$(echo "/var/lib/pgadmin/storage/$PGADMIN_DEFAULT_EMAIL" | sed 's/@/_/g')
-                echo "Creating user folder $USER_FOLDER.";
-                mkdir -p $USER_FOLDER;
-                cp /tmp/secrets/.pgpass $USER_FOLDER/.pgpass;
-                chown 5050:5050 $USER_FOLDER/.pgpass;
-                chmod 600 $USER_FOLDER/.pgpass;
-                echo "Done."
-            env:
-              PGADMIN_DEFAULT_EMAIL:
-                valueFrom:
-                  secretKeyRef:
-                    name: &secret pgadmin-secret
-                    key: PGADMIN_DEFAULT_EMAIL
         containers:
           app:
             image:
@@ -51,10 +30,9 @@ spec:
               PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
               PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
-              PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
             envFrom:
               - secretRef:
-                  name: *secret
+                  name: pgadmin-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -90,24 +68,13 @@ spec:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: /var/lib/pgadmin
-      secrets:
-        type: secret
-        name: *secret
-        advancedMounts:
-          *app :
-            init-config:
-              - path: /tmp/secrets/.pgpass
-                subPath: pgpass
-            app:
-              - path: /pgadmin4/servers.json
-                subPath: servers.json
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault/Backups
+        path: /mnt/vault/Backups/Apps
         globalMounts:
           - path: /mnt/backups
-            subPath: Apps/pgAdmin
+            subPath: pgAdmin
       tmpfs:
         type: emptyDir
         globalMounts:
