@@ -13,7 +13,7 @@ CloudNativePG-backed Postgres component. Default Postgres for all apps in this r
 
 ## Bootstrap behavior
 
-The component's `Cluster` CR defaults to `bootstrap.recovery` from Barman at `s3://postgresql/${APP}/`. A torn-down cluster (delete the `Cluster` CR + PVCs) rebuilds itself from the latest base backup + replays WAL. Same-path same-`serverName` rebuilds work because of the `cnpg.io/skipEmptyWalArchiveCheck: enabled` annotation — the recovered cluster inherits the source's `system_identifier` and writes new WAL on a new timeline (no name collisions).
+The component's `Cluster` CR defaults to `bootstrap.recovery` from Barman at `s3://postgresql/${APP}/${POSTGRES_DATABASE}/`. A torn-down cluster (delete the `Cluster` CR + PVCs) rebuilds itself from the latest base backup + replays WAL. Same-path same-`serverName` rebuilds work because of the `cnpg.io/skipEmptyWalArchiveCheck: enabled` annotation — the recovered cluster inherits the source's `system_identifier` and writes new WAL on a new timeline (no name collisions).
 
 That default works for any app that already has a Barman base backup at the destination. For a brand-new app with **no** prior backup, use the init flow instead.
 
@@ -72,7 +72,7 @@ EOF
 
 ## Backups
 
-Daily full backups via the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/` prefix. `retentionPolicy: 14d`.
+Daily full backups via the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/${POSTGRES_DATABASE}/` prefix. `retentionPolicy: 14d`.
 
 ## Connecting from an app
 

@@ -3,7 +3,7 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: ${APP}
+  name: garage-s3
 spec:
   configuration:
     data:
@@ -12,7 +12,7 @@ spec:
     endpointURL: "https://s3.bykaj.io"
     s3Credentials:
       accessKeyId:
-        name: &secret ${APP}-postgres
+        name: &secret plugin-barman-cloud-secret
         key: S3_ACCESS_KEY_ID
       secretAccessKey:
         name: *secret
@@ -23,4 +23,4 @@ spec:
     wal:
       compression: bzip2
       maxParallel: 8
-  retentionPolicy: 14d
+  retentionPolicy: 30d

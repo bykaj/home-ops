@@ -7,7 +7,7 @@ metadata:
 spec:
   backupOwnerReference: self
   cluster:
-    name: ${APP}
+    name: ${APP}-postgres
   method: plugin
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
