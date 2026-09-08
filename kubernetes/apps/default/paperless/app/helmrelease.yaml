@@ -32,6 +32,24 @@ spec:
               PAPERLESS_TIME_ZONE: "Europe/Amsterdam"
               PAPERLESS_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               PAPERLESS_WEBSERVER_WORKERS: "2"
+              # Database configuration
+              PAPERLESS_DBENGINE: "postgresql"
+              PAPERLESS_DBHOST: "${APP}-postgres-rw.default"
+              PAPERLESS_DBNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: dbname
+              PAPERLESS_DBPASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: password
+              PAPERLESS_DBUSER:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: username
               # Configure folders
               PAPERLESS_CONSUMPTION_DIR: &consumePath /mnt/archive/consume
               PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data
@@ -44,8 +62,6 @@ spec:
               # Configure OCR
               PAPERLESS_OCR_LANGUAGE: nld+eng
               PAPERLESS_OCR_LANGUAGES: nld
-              # Configure database
-              PAPERLESS_DBHOST: "${DB_HOST}"
               # Configure user permissions
               USERMAP_UID: "${APP_UID}"
               USERMAP_GID: "${APP_GID}"
