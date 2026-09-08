@@ -1,6 +1,6 @@
 # postgres
 
-CloudNativePG-backed Postgres component. Default Postgres for all apps in this repo (replaces the previous CrunchyData PGO setup that was retired due to the Snowflake acquisition).
+CloudNative-PG backed PostgreSQL component. Default PostgreSQL for all apps in this repo.
 
 ## Substitution variables
 
@@ -30,7 +30,7 @@ kind: Kustomization
 metadata:
   name: &app myapp
   labels:
-    components.postgres/cnpg: init # <-- add this for net-new only
+    components.postgres/cnpg: init # <-- add this for initialization only
 spec:
   components:
     - ../../../../components/postgres
@@ -47,6 +47,7 @@ spec:
       # Optional overrides; defaults to ${APP}
       # POSTGRES_DATABASE: myapp-db
       # POSTGRES_USERNAME: myapp-user
+      # Complete image override; defaults to the standard from CNPG
       # POSTGRES_IMAGE: ghcr.io/tensorchord/cloudnative-vectorchord:18.6
   prune: true
   sourceRef:
