@@ -9,7 +9,7 @@ CloudNativePG-backed Postgres component. Default Postgres for all apps in this r
 | `APP`               | _(required)_                 | Name of the consuming app — used for cluster, secret, backup paths. |
 | `POSTGRES_USERNAME` | `${APP}`                     | Username created on initial bootstrap.                              |
 | `POSTGRES_DATABASE` | `${APP}`                     | Database name created on initial bootstrap.                         |
-| `POSTGRES_IMAGE`    | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this clusrer.                         |
+| `POSTGRES_IMAGE`    | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this cluster.                         |
 
 ## Bootstrap behavior
 
@@ -55,9 +55,9 @@ spec:
     namespace: flux-system
 ```
 
-What the label does (via the patch in [`clusters/main/apps.yaml`](../../clusters/main/apps.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-app` Secret as usual.
+What the label does (via the patch in [`flux/cluster/ks.yaml`](../../flux/cluster/ks.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-app` Secret as usual.
 
-**After the first scheduled backup lands** (Sunday 01:30 cron, or after manually creating a one-shot `Backup` CR), **remove the `cnpg: init` label**. Future cluster rebuilds will then follow the default `recovery` path. Keeping the label after a backup exists is harmless during normal operation (bootstrap is only consulted at cluster creation), but it would prevent a rebuild from restoring data if you ever destroy and recreate the cluster.
+**After the first scheduled backup lands** (Daily at night, or after manually creating a one-shot `Backup` CR), **remove the `cnpg: init` label**. Future cluster rebuilds will then follow the default `recovery` path. Keeping the label after a backup exists is harmless during normal operation (bootstrap is only consulted at cluster creation), but it would prevent a rebuild from restoring data if you ever destroy and recreate the cluster.
 
 To force an immediate backup so you can drop the label sooner:
 
@@ -65,7 +65,7 @@ To force an immediate backup so you can drop the label sooner:
 kubectl apply -f - <<EOF
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
-metadata: { name: ${APP}-initial, namespace: ${NAMESPACE} }
+metadata: { name: ${APP}-postgres-initial, namespace: ${NAMESPACE} }
 spec: { cluster: { name: ${APP}-postgres }, method: plugin,
 pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
 EOF
