@@ -18,6 +18,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Autobrr
+      POSTGRES_BACKUP_SCHEDULE: "21 0 * * *"
   prune: true
   sourceRef:
     kind: GitRepository

@@ -24,6 +24,7 @@ spec:
       APP_NAME: Windshift
       APP_SUBDOMAIN: projects
       KOPIUR_CAPACITY: 10Gi
+      POSTGRES_BACKUP_SCHEDULE: "54 0 * * *"
   prune: true
   sourceRef:
     kind: GitRepository

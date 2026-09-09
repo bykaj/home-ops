@@ -4,12 +4,13 @@ CloudNative-PG backed PostgreSQL component. Default PostgreSQL for all apps in t
 
 ## Substitution variables
 
-| Variable            | Default                      | Notes                                                               |
-| ------------------- | ---------------------------- | ------------------------------------------------------------------- |
-| `APP`               | _(required)_                 | Name of the consuming app — used for cluster, secret, backup paths. |
-| `POSTGRES_USERNAME` | `${APP}`                     | Username created on initial bootstrap.                              |
-| `POSTGRES_DATABASE` | `${APP}`                     | Database name created on initial bootstrap.                         |
-| `POSTGRES_IMAGE`    | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this cluster.                         |
+| Variable                   | Default                      | Notes                                                               |
+| -------------------------- | ---------------------------- | ------------------------------------------------------------------- |
+| `APP`                      | _(required)_                 | Name of the consuming app — used for cluster, secret, backup paths. |
+| `POSTGRES_USERNAME`        | `${APP}`                     | Username created on initial bootstrap.                              |
+| `POSTGRES_DATABASE`        | `${APP}`                     | Database name created on initial bootstrap.                         |
+| `POSTGRES_IMAGE`           | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this cluster.                         |
+| `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *`                 | Cron schedule for local NFS backup.                                 |
 
 ## Bootstrap behavior
 
@@ -72,7 +73,7 @@ pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
 EOF
 ```
 
-Also added as a Just recipe:
+Also added as a Just recipe in [`mod.just`](../../mod.just):
 
 ```sh
 just k8s db-backup ${NAMESPACE} ${APP}
@@ -80,7 +81,10 @@ just k8s db-backup ${NAMESPACE} ${APP}
 
 ## Backups
 
-Daily full backups via the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/${POSTGRES_DATABASE}/` prefix. `retentionPolicy: 14d`.
+Daily full backups via:
+
+- the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/${POSTGRES_DATABASE}/` prefix. `retentionPolicy: 14d`.
+- a [prodrigestivill/docker-postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) container to a local NFS share with a retention of 7 days, 4 weeks and 6 months.
 
 ## Connecting from an app
 

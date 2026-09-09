@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ${APP}-postgres-backup-local
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: ${APP}-postgres-backup-local
+  interval: 1h
+  values:
+    controllers:
+      postgres-backup-local:
+        type: cronjob
+        cronjob:
+          schedule: "${POSTGRES_BACKUP_SCHEDULE:=23 0 * * *}"
+          ttlSecondsAfterFinished: 43200
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 4000
+            runAsGroup: 4000
+            runAsNonRoot: true
+            fsGroup: 4000
+            fsGroupChangePolicy: OnRootMismatch
+          enableServiceLinks: false
+        containers:
+          app:
+            image:
+              repository: docker.io/prodrigestivill/postgres-backup-local
+              tag: 18@sha256:f70742ebe42b2277689b028d1fd15aa80f77cffa01da163cc9f85a6ff1866e7f
+            command:
+              - /backup.sh
+            env:
+              BACKUP_DIR: "/backups/${APP}"
+              BACKUP_KEEP_DAYS: "7"
+              BACKUP_KEEP_MINS: "7200"
+              BACKUP_KEEP_MONTHS: "6"
+              BACKUP_KEEP_WEEKS: "4"
+              BACKUP_LATEST_TYPE: "symlink"
+              POSTGRES_EXTRA_OPTS: "-b -C -c -Z6"
+              POSTGRES_DB:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: dbname
+              POSTGRES_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-superuser"
+                    key: host
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-superuser"
+                    key: password
+              POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-superuser"
+                    key: username
+              SCHEDULE: "${POSTGRES_BACKUP_SCHEDULE:=23 0 * * *}"
+              TZ: "Europe/Amsterdam"
+    persistence:
+      backups:
+        type: nfs
+        server: "${NAS_HOST}"
+        path: /mnt/vault/Backups/Database
+        globalMounts:
+          - path: /backups

@@ -14,6 +14,10 @@ browse-pvc ns claim:
         --image=mirror.gcr.io/alpine:latest \
         --overrides='{"spec":{"containers":[{"name":"browse-pvc-{{ claim }}","image":"mirror.gcr.io/alpine:latest","stdin":true,"tty":true,"command":["/bin/sh"],"workingDir":"/mnt","volumeMounts":[{"mountPath":"/mnt","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ claim }}"}}]}}'
 
+[doc('Derive a pseudo-random cron minute (0-59) from a name')]
+cron-minute name:
+    echo $(( $(echo -n "{{ name }}" | cksum | cut -d' ' -f1) % 60 ))
+
 [doc('Manual database backup')]
 db-backup ns app:
     kubectl apply -f - <<EOF
