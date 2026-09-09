@@ -29,6 +29,7 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
+      APP_NAME: "Paperless"
       APP_SUBDOMAIN: archive
       KOPIUR_CAPACITY: 1Gi
       KOPIUR_MOVER_UID: "1000"
