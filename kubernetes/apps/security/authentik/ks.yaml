@@ -24,6 +24,7 @@ metadata:
 spec:
   components:
     - ../../../../components/dragonfly
+    - ../../../../components/dragonfly/authentication
     - ../../../../components/postgres
   dependsOn:
     - name: authentik-configuration
