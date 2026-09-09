@@ -61,7 +61,7 @@ spec:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: username
-              ConnectionStrings__DefaultConnection: "Host=$(POSTGRES_HOST);Database=$(POSTGRES_DBNAME);Username=$(POSTGRES_USERNAME);Password=$(POSTGRES_PASSWORD);"
+              ConnectionStrings__DefaultConnection: "Host=${POSTGRES_HOST};Database=${POSTGRES_DBNAME};Username=${POSTGRES_USERNAME};Password=${POSTGRES_PASSWORD};"
               DatabaseMaintenance__Enabled: "true"
               DatabaseMaintenance__DailyExecutionTime: "02:00"
               DatabaseMaintenance__TimeoutMinutes: "30"
