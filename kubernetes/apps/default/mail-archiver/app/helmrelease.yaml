@@ -23,7 +23,7 @@ spec:
             env:
               # General
               AllowedHosts: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
-              TimeZone__DisplayTimeZoneId: $(TZ)
+              TimeZone__DisplayTimeZoneId: Europe/Amsterdam
               TZ: Europe/Amsterdam
               # Authentication
               Authentication__CookieName: MailArchiverAuth
@@ -40,28 +40,28 @@ spec:
               Upload__MaxFileSizeGB: "10"
               Upload__KeepAliveTimeoutHours: "4"
               Upload__RequestHeadersTimeoutHours: "2"
-              # Database
-              POSTGRES_DBNAME:
+              # Database (C_ for rendering before ConnectionStrings__*)
+              C_DB_DBNAME:
                 valueFrom:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: dbname
-              POSTGRES_HOST:
+              C_DB_HOST:
                 valueFrom:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: host
-              POSTGRES_PASSWORD:
+              C_DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: password
-              POSTGRES_USERNAME:
+              C_DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: username
-              ConnectionStrings__DefaultConnection: "Host=${POSTGRES_HOST};Database=${POSTGRES_DBNAME};Username=${POSTGRES_USERNAME};Password=${POSTGRES_PASSWORD};"
+              ConnectionStrings__DefaultConnection: "Host=$(C_DB_HOST);Database=$(C_DB_DBNAME);Username=$(C_DB_USERNAME);Password=$(C_DB_PASSWORD);"
               DatabaseMaintenance__Enabled: "true"
               DatabaseMaintenance__DailyExecutionTime: "02:00"
               DatabaseMaintenance__TimeoutMinutes: "30"
