@@ -125,16 +125,11 @@ spec:
             port: *port
           metrics-api:
             port: 8081
-          metrics-ms:
-            port: 8082
     serviceMonitor:
       immich:
         enabled: true
         endpoints:
           - path: /metrics
             port: metrics-api
-            scheme: http
-          - path: /metrics
-            port: metrics-ms
             scheme: http
         serviceName: immich

@@ -40,6 +40,7 @@ spec:
                     name: "immich-postgres-app"
                     key: uri
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
+              IMMICH_TELEMETRY_INCLUDE: "all"
               IMMICH_WORKERS_EXCLUDE: "api"
               REDIS_HOSTNAME: "immich-dragonfly"
               TZ: "Europe/Amsterdam"
@@ -69,3 +70,17 @@ spec:
         server: "${NAS_HOST}"
         globalMounts:
           - path: *mediaLocation
+    service:
+      immich-microservices:
+        controller: immich-microservices
+        ports:
+          metrics-ms:
+            port: 8082
+    serviceMonitor:
+      immich-microservices:
+        enabled: true
+        endpoints:
+          - path: /metrics
+            port: metrics-ms
+            scheme: http
+        serviceName: immich-microservices
