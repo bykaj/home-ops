@@ -31,7 +31,10 @@ spec:
               RATE_LIMITING_ENABLED: "true"
               TZ: "Europe/Amsterdam"
               # Asset storage config
+              ASSET_STORE_S3_BUCKET: "karakeep"
+              ASSET_STORE_S3_ENDPOINT: "https://s3.bykaj.io"
               ASSET_STORE_S3_FORCE_PATH_STYLE: "true"
+              ASSET_STORE_S3_REGION: "eu-west"
               # Authentication config
               DISABLE_PASSWORD_AUTH: "true"
               DISABLE_SIGNUPS: "false"
