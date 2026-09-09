@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: ${APP}-postgres-backup-local
+  dependsOn: []
   interval: 1h
   values:
     controllers:
