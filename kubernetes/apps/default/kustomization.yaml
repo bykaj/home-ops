@@ -16,7 +16,7 @@ resources:
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
   - ./mail-archiver/ks.yaml
-  - ./mailkeep/ks.yaml
+  # - ./mailkeep/ks.yaml
   # - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
   - ./paperless/ks.yaml

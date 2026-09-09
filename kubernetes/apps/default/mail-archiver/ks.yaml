@@ -22,6 +22,8 @@ spec:
       APP: *app
       APP_NAME: "Mail Archiver"
       KOPIUR_CAPACITY: 1Gi
+      KOPIUR_MOVER_UID: "0"
+      KOPIUR_MOVER_GID: "0"
       POSTGRES_BACKUP_SCHEDULE: "18 0 * * *"
   prune: true
   sourceRef:
