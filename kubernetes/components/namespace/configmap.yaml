@@ -7,7 +7,6 @@ data:
   # Servers
   MQTT_HOST: emqx-headless.database.svc.cluster.local
   NAS_HOST: nas.internal
-  REDIS_HOST: dragonfly.database.svc.cluster.local
   # Network CIDRs
   LAN_CIDR: 10.73.0.0/20
   POD_CIDR: 10.42.0.0/16

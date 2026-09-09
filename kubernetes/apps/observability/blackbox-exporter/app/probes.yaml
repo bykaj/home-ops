@@ -48,18 +48,3 @@ spec:
     staticConfig:
       static:
         - ${NAS_HOST}:445
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
-apiVersion: monitoring.coreos.com/v1
-kind: Probe
-metadata:
-  name: redis
-spec:
-  jobName: redis_probe
-  module: tcp_connect
-  prober:
-    url: blackbox-exporter.observability.svc.cluster.local:9115
-  targets:
-    staticConfig:
-      static:
-        - ${REDIS_HOST}:6379
