@@ -20,15 +20,15 @@ spec:
               repository: ghcr.io/home-operations/sonarr
               tag: 4.0.19.3011@sha256:47d56de90c81eb2a8f0d36771328a95e7299609579b88db82b1473c314f26a47
             env:
-              TZ: "Europe/Amsterdam"
               SONARR__APP__INSTANCENAME: Sonarr
-              SONARR__APP__THEME: auto
               SONARR__AUTH__METHOD: External
               SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
               SONARR__LOG__DBENABLED: "False"
               SONARR__LOG__LEVEL: info
-              SONARR__SERVER__PORT: &port 80
+              SONARR__SERVER__ALLOWEDHOSTS: "*"
+              SONARR__SERVER__PORT: &port 8989
               SONARR__UPDATE__BRANCH: develop
+              TZ: "Europe/Amsterdam"
             envFrom:
               - secretRef:
                   name: sonarr-secret
