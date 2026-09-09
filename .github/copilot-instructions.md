@@ -13,7 +13,7 @@ This is a GitOps-managed Kubernetes cluster running on Talos Linux VMs hosted on
   - Rook-Ceph for distributed block storage
   - OpenEBS for local container-attached storage
   - TrueNAS for NFS/SMB shares (virtualized separately)
-- **GitOps**: Flux v2 with SOPS encryption for secrets
+- **GitOps**: Flux v2 with External Secrets for runtime secrets
 - **DNS**: Split-horizon DNS with ExternalDNS for internal/external resolution
 - **Ingress**: Envoy Gateway with Cloudflare Tunnel
 
@@ -101,13 +101,11 @@ spec:
 
 ### Secrets Management
 
-Three layers of secrets management:
+One layers of secrets management:
 
-1. **SOPS** for encrypting secrets in Git using AGE encryption
-2. **External Secrets Operator** with 1Password Connect for runtime secrets
-3. **Age key** stored in `age.key` (not in Git)
+1. **External Secrets Operator** with 1Password Connect for runtime secrets
 
-Never commit plaintext secrets. Always use SOPS or External Secrets.
+Never commit plaintext secrets. Always use External Secrets.
 
 ## Environment Configuration
 
@@ -115,7 +113,6 @@ Required environment variables:
 
 - `KUBECONFIG`: Points to cluster kubeconfig file
 - `TALOSCONFIG`: Points to Talos configuration
-- `SOPS_AGE_KEY_FILE`: Points to AGE encryption key
 
 ## Prerequisites & Tools
 
@@ -126,7 +123,6 @@ Core tools used in this repository:
 - `kubectl`: Kubernetes CLI
 - `talosctl`: Talos CLI
 - `helmfile`: Helm deployment tool
-- `sops`: Secret encryption
 - `op`: 1Password CLI
 - `minijinja-cli`: Template rendering
 - `gum`: Interactive prompts
