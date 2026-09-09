@@ -14,7 +14,7 @@ resources:
   # - ./filabridge/ks.yaml
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
-  - ./karakeep/ks.yaml
+  #- ./karakeep/ks.yaml
   - ./mailkeep/ks.yaml
   # - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
