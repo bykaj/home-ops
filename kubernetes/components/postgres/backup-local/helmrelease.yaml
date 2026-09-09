@@ -68,6 +68,8 @@ spec:
       backups:
         type: nfs
         server: "${NAS_HOST}"
-        path: /mnt/vault/Backups/Database
-        globalMounts:
-          - path: /backups
+        path: /mnt/vault/Backups
+        advancedMounts:
+          postgres-backup-local:
+            - path: /backups
+              subPath: Database
