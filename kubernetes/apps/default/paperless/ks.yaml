@@ -6,14 +6,18 @@ metadata:
   name: &app paperless
 spec:
   components:
+    - ../../../../components/dragonfly
     - ../../../../components/postgres
     - ../../../../components/kopiur/backup
+    - ../../../../components/zeroscaler/smb
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: dragonfly-cluster
-      namespace: database
   healthCheckExprs:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      failed: status.phase != 'ready'
+      current: status.phase == 'ready'
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
@@ -25,7 +29,6 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      APP_NAME: Paperless
       APP_SUBDOMAIN: archive
       KOPIUR_CAPACITY: 1Gi
       KOPIUR_MOVER_UID: "1000"

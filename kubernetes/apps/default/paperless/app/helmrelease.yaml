@@ -28,6 +28,7 @@ spec:
               # Configure application
               PAPERLESS_FILENAME_FORMAT: "{ created }-{ correspondent }-{ title }"
               PAPERLESS_PORT: &port 8000
+              PAPERLESS_REDIS: "redis://${APP}-dragonfly:6379"
               PAPERLESS_TASK_WORKERS: "2"
               PAPERLESS_TIME_ZONE: "Europe/Amsterdam"
               PAPERLESS_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
