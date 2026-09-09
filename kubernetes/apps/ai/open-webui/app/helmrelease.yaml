@@ -41,6 +41,7 @@ spec:
               # Websockets
               ENABLE_WEBSOCKET_SUPPORT: true
               WEBSOCKET_MANAGER: redis
+              WEBSOCKET_REDIS_URL: "redis://:${APP}-dragonfly:6379"
               # Memini
               MEMINI_BASE_URL: "http://memini.ai.svc.cluster.local:8080"
             envFrom:

@@ -23,12 +23,15 @@ metadata:
   name: &app authentik
 spec:
   components:
+    - ../../../../components/dragonfly
     - ../../../../components/postgres
   dependsOn:
     - name: authentik-configuration
-    - name: dragonfly-cluster
-      namespace: database
   healthCheckExprs:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      failed: status.phase != 'ready'
+      current: status.phase == 'ready'
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
@@ -39,6 +42,7 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Authentik
+      DRAGONFLY_PASSWORD_SECRET: authentik-dragonfly-password
       POSTGRES_BACKUP_SCHEDULE: "43 0 * * *"
   prune: true
   sourceRef:

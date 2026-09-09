@@ -34,8 +34,11 @@ spec:
           value: "true"
         - name: AUTHENTIK_POSTGRESQL__SSLMODE
           value: require
-        - name: AUTHENTIK_REDIS__DB
-          value: "1"
+        - name: AUTHENTIK_REDIS__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ${APP}-dragonfly-password
+              key: password
         - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
           value: "s3"
         - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
@@ -73,7 +76,7 @@ spec:
           asn: "/geoip/GeoLite2-ASN.mmdb"
       log_level: "info"
       redis:
-        host: "${REDIS_HOST}"
+        host: "${APP}-dragonfly"
     geoip:
       enabled: false
       editionIds: "GeoLite2-City GeoLite2-ASN"
@@ -107,7 +110,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - "auth.cetana.id"
+            - auth.cetana.id
           parentRefs:
             - name: envoy-external
               namespace: network

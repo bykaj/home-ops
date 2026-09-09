@@ -41,11 +41,7 @@ spec:
                     key: uri
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               MPLCONFIGDIR: "/cache/matplotlib"
-              REDIS_DBINDEX: "5"
-              REDIS_HOSTNAME: "${REDIS_HOST}"
-            envFrom:
-              - secretRef:
-                  name: immich-secret
+              REDIS_HOSTNAME: "immich-dragonfly"
             probes:
               liveness: &probes
                 enabled: true

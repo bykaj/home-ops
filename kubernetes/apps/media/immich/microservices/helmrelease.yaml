@@ -41,12 +41,8 @@ spec:
                     key: uri
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_WORKERS_EXCLUDE: "api"
-              REDIS_DBINDEX: "5"
-              REDIS_HOSTNAME: "${REDIS_HOST}"
+              REDIS_HOSTNAME: "immich-dragonfly"
               TZ: "Europe/Amsterdam"
-            envFrom:
-              - secretRef:
-                  name: immich-secret
             resources:
               claims:
                 - name: gpu

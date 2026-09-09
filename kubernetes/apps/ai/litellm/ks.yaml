@@ -23,6 +23,8 @@ kind: Kustomization
 metadata:
   name: &app litellm-proxy
 spec:
+  components:
+    - ../../../../components/dragonfly
   dependsOn:
     - name: dragonfly-operator
       namespace: database

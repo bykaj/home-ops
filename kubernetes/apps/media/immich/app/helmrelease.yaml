@@ -38,12 +38,8 @@ spec:
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_TELEMETRY_INCLUDE: "all"
               IMMICH_WORKERS_INCLUDE: "api"
-              REDIS_DBINDEX: "5"
-              REDIS_HOSTNAME: "${REDIS_HOST}"
+              REDIS_HOSTNAME: "immich-dragonfly"
               TZ: "Europe/Amsterdam"
-            envFrom:
-              - secretRef:
-                  name: immich-secret
             probes:
               liveness: &probes
                 enabled: true

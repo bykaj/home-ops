@@ -6,9 +6,14 @@ metadata:
   name: &app immich
 spec:
   components:
+    - ../../../../components/dragonfly
     - ../../../../components/postgres
     - ../../../../components/zeroscaler/nfs
   healthCheckExprs:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      failed: status.phase != 'ready'
+      current: status.phase == 'ready'
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
