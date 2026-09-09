@@ -1,0 +1,132 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app mail-archiver
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: mail-archiver
+  interval: 1h
+  values:
+    controllers:
+      mail-archiver:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/s1t5/mailarchiver
+              tag: 2608.1@sha256:bc785711068469e23a09227c065fb7f62a2ebc37d8755241ab6648b3ba89fe4e
+            env:
+              # General
+              AllowedHosts: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
+              TimeZone__DisplayTimeZoneId: $(TZ)
+              TZ: Europe/Amsterdam
+              # Authentication
+              Authentication__CookieName: MailArchiverAuth
+              Authentication__CookieSameSite: Lax
+              Authentication__SessionTimeoutMinutes: "60"
+              # Mail Sync
+              MailSync__IntervalMinutes: "15"
+              MailSync__TimeoutMinutes: "60"
+              MailSync__ConnectionTimeoutSeconds: "180"
+              MailSync__CommandTimeoutSeconds: "300"
+              MailSync__AlwaysForceFullSync: "false"
+              MailSync__IgnoreSelfSignedCert: "false"
+              # Upload
+              Upload__MaxFileSizeGB: "10"
+              Upload__KeepAliveTimeoutHours: "4"
+              Upload__RequestHeadersTimeoutHours: "2"
+              # Database
+              POSTGRES_DBNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: dbname
+              POSTGRES_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: host
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: password
+              POSTGRES_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-postgres-app"
+                    key: username
+              ConnectionStrings__DefaultConnection: "Host=$(POSTGRES_HOST);Database=$(POSTGRES_DBNAME);Username=$(POSTGRES_USERNAME);Password=$(POSTGRES_PASSWORD);"
+              DatabaseMaintenance__Enabled: "true"
+              DatabaseMaintenance__DailyExecutionTime: "02:00"
+              DatabaseMaintenance__TimeoutMinutes: "30"
+              # Npgsql
+              Npgsql__CommandTimeout: "900"
+              # OIDC Configuration
+              OAuth__Enabled: "true"
+              OAuth__Authority: "https://auth.cetana.id/application/o/mail-archiver/"
+              OAuth__DisplayName: "Cetana ID"
+              OAuth__ClientScopes__0: "openid"
+              OAuth__ClientScopes__1: "profile"
+              OAuth__ClientScopes__2: "email"
+              OAuth__DisablePasswordLogin: "true"
+              OAuth__AutoApproveUsers: "true"
+            envFrom:
+              - secretRef:
+                  name: mail-archiver-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 5000
+                    httpHeaders:
+                      - name: Host
+                        value: ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                    httpHeaders:
+                      - name: Host
+                        value: ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 20m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+    persistence:
+      data:
+        existingClaim: ${KOPIUR_CLAIM:=${APP}}
+        globalMounts:
+          - path: /app/DataProtection-Keys
+    route:
+      app:
+        hostnames:
+          - ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
