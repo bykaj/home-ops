@@ -17,51 +17,49 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/bazarr
-              tag: 1.6.0@sha256:cd63bbd0986c93e238eb8b9442604d249f0d4080099b389f822abe2062044417
-            env:
-              TZ: "Europe/Amsterdam"
-              BAZARR__INSTANCE_NAME: *app
-              BAZARR__PORT: &port 6767
-              BAZARR__APPLICATION_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
-              BAZARR__LOG_LEVEL: info
-              BAZARR__AUTH__METHOD: External
-              BAZARR__AUTH__REQUIRED: DisabledForLocalAddresses
-            envFrom:
-              - secretRef:
-                  name: bazarr-secret
+              repository: ghcr.io/lavx/bazarr
+              tag: 2.6.2@sha256:9ce6db2e5453f78ebc9aae53520f6e5813e80cd96595a58279c7cef6c9111bd2
+            command:
+              - python
+            args:
+              - docker/supervisor.py
+              - --no-update
+              - --config
+              - /config
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /health
-                    port: *port
-                  initialDelaySeconds: 0
+                    port: &port 6767
                   periodSeconds: 10
-                  timeoutSeconds: 3
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               startup:
                 enabled: true
-                custom: true
                 spec:
-                  httpGet:
-                    path: /health
-                    port: *port
+                  failureThreshold: 30
                   periodSeconds: 10
-                  timeoutSeconds: 3
-                  failureThreshold: 60
+            resources:
+              requests:
+                cpu: 15m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 1Gi
+              capabilities:
+                drop:
+                  - ALL
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
