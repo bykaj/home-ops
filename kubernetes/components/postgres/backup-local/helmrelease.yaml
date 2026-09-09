@@ -71,5 +71,6 @@ spec:
         path: /mnt/vault/Backups
         advancedMounts:
           postgres-backup-local:
-            - path: /backups
-              subPath: Database
+            app:
+              - path: /backups
+                subPath: Database
