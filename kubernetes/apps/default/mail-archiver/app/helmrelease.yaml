@@ -65,8 +65,6 @@ spec:
               DatabaseMaintenance__Enabled: "true"
               DatabaseMaintenance__DailyExecutionTime: "02:00"
               DatabaseMaintenance__TimeoutMinutes: "30"
-              # Npgsql
-              Npgsql__CommandTimeout: "900"
               # OIDC Configuration
               OAuth__Enabled: "true"
               OAuth__Authority: "https://auth.cetana.id/application/o/mail-archiver/"
