@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.1.0-openvino
+              tag: v3.2.0-openvino
             env:
               DB_URL:
                 valueFrom:
