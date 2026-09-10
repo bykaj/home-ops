@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/hotio/whisparr
-              tag: v3-v3.5.0@sha256:1e19e245a63c9a322d96f307e477b5700f0c9ca9d123ef26a5640500e0edfd72
+              tag: v3-v3.5.0@sha256:b18ba2049123f1480a557b23954f1055b86f2625436f0bc51ccaa012030d9ba3
             env:
               PGID: "${APP_GID:-1000}"
               PUID: "${APP_UID:-1000}"
