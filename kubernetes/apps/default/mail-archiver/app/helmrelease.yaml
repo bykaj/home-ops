@@ -42,28 +42,28 @@ spec:
               Upload__KeepAliveTimeoutHours: "4"
               Upload__RequestHeadersTimeoutHours: "2"
               # Database
-              # Vars starting with '_*' are rendered before and used in 'ConnectionStrings__DefaultConnection'
-              _DB_DBNAME:
+              # Vars starting with 'AA_*' are rendered before and used in 'ConnectionStrings__DefaultConnection'
+              AA_DB_DBNAME:
                 valueFrom:
                   secretKeyRef:
                     name: &secret "${APP}-postgres-app"
                     key: dbname
-              _DB_HOST:
+              AA_DB_HOST:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: host
-              _DB_PASSWORD:
+              AA_DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: password
-              _DB_USERNAME:
+              AA_DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
                     key: username
-              ConnectionStrings__DefaultConnection: "Host=$(_DB_HOST);Database=$(_DB_DBNAME);Username=$(_DB_USERNAME);Password=$(_DB_PASSWORD);"
+              ConnectionStrings__DefaultConnection: "Host=$(AA_DB_HOST);Database=$(AA_DB_DBNAME);Username=$(AA_DB_USERNAME);Password=$(AA_DB_PASSWORD);"
               DatabaseMaintenance__Enabled: "true"
               DatabaseMaintenance__DailyExecutionTime: "02:00"
               DatabaseMaintenance__TimeoutMinutes: "30"
