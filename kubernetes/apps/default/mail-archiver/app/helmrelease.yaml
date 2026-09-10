@@ -22,9 +22,10 @@ spec:
               tag: 2608.1@sha256:bc785711068469e23a09227c065fb7f62a2ebc37d8755241ab6648b3ba89fe4e
             env:
               # General
-              AllowedHosts: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
-              TimeZone__DisplayTimeZoneId: Europe/Amsterdam
-              TZ: Europe/Amsterdam
+              AllowedHosts: &hostname "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
+              LocalImport__AllowedPaths__0: /data/import
+              TimeZone__DisplayTimeZoneId: &timezone Europe/Amsterdam
+              TZ: *timezone
               # Authentication
               Authentication__CookieName: MailArchiverAuth
               Authentication__CookieSameSite: Lax
@@ -40,31 +41,33 @@ spec:
               Upload__MaxFileSizeGB: "10"
               Upload__KeepAliveTimeoutHours: "4"
               Upload__RequestHeadersTimeoutHours: "2"
-              # Database (C_ for rendering before ConnectionStrings__*)
-              C_DB_DBNAME:
+              # Database
+              # Vars starting with '_*' are rendered before and used in 'ConnectionStrings__DefaultConnection'
+              _DB_DBNAME:
                 valueFrom:
                   secretKeyRef:
-                    name: "${APP}-postgres-app"
+                    name: &secret "${APP}-postgres-app"
                     key: dbname
-              C_DB_HOST:
+              _DB_HOST:
                 valueFrom:
                   secretKeyRef:
-                    name: "${APP}-postgres-app"
+                    name: *secret
                     key: host
-              C_DB_PASSWORD:
+              _DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: "${APP}-postgres-app"
+                    name: *secret
                     key: password
-              C_DB_USERNAME:
+              _DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
-                    name: "${APP}-postgres-app"
+                    name: *secret
                     key: username
-              ConnectionStrings__DefaultConnection: "Host=$(C_DB_HOST);Database=$(C_DB_DBNAME);Username=$(C_DB_USERNAME);Password=$(C_DB_PASSWORD);"
+              ConnectionStrings__DefaultConnection: "Host=$(_DB_HOST);Database=$(_DB_DBNAME);Username=$(_DB_USERNAME);Password=$(_DB_PASSWORD);"
               DatabaseMaintenance__Enabled: "true"
               DatabaseMaintenance__DailyExecutionTime: "02:00"
               DatabaseMaintenance__TimeoutMinutes: "30"
+              Npgsql__CommandTimeout: "900"
               # OIDC Configuration
               OAuth__Enabled: "true"
               OAuth__Authority: "https://auth.cetana.id/application/o/mail-archiver/"
@@ -87,7 +90,7 @@ spec:
                     port: &port 5000
                     httpHeaders:
                       - name: Host
-                        value: ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+                        value: *hostname
                   initialDelaySeconds: 30
                   periodSeconds: 10
                   timeoutSeconds: 5
@@ -102,7 +105,7 @@ spec:
                     port: *port
                     httpHeaders:
                       - name: Host
-                        value: ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+                        value: *hostname
                   failureThreshold: 30
                   periodSeconds: 5
             resources:
@@ -120,13 +123,24 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       data:
-        existingClaim: ${KOPIUR_CLAIM:=${APP}}
+        type: nfs
+        server: ${NAS_HOST}
+        path: /mnt/vault/Applications/mail-archiver
+        advancedMounts:
+          mail-archiver:
+            app:
+              - path: /app/DataProtection-Keys
+                subPath: data
+              - path: /data/import
+                subPath: import
+      tmpfs:
+        type: emptyDir
         globalMounts:
-          - path: /app/DataProtection-Keys
+          - path: /tmp
     route:
       app:
         hostnames:
-          - ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+          - *hostname
         parentRefs:
           - name: envoy-internal
             namespace: network
