@@ -3,31 +3,36 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: nut-exporter-ups-2u
   labels:
-    app.kubernetes.io/component: nut-exporter
-    app.kubernetes.io/instance: ups-2u
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: servers
     app.kubernetes.io/name: nut-exporter
+    prometheus: kube-prometheus
+  name: nut-exporter-network
 spec:
   endpoints:
-    - metricRelabelings:
+    - interval: 30s
+      metricRelabelings:
         - action: replace
-          replacement: ups-2u
+          replacement: network
+          sourceLabels:
+            - instance
           targetLabel: instance
-        # - action: replace
-        #   replacement: rak
-        #   targetLabel: ups
+        - action: replace
+          replacement: network
+          sourceLabels:
+            - server
+          targetLabel: server
         - action: labeldrop
           regex: (pod)
       params:
-        ups:
-          - ups
         server:
-          - 10.73.0.50
+          - ${NUT_HOST}
       path: /ups_metrics
       port: metrics
       scheme: http
-  jobLabel: app.kubernetes.io/instance
+      scrapeTimeout: 30s
+  jobLabel: nut-exporter
   namespaceSelector:
     matchNames:
       - observability
