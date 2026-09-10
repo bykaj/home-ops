@@ -26,6 +26,8 @@ spec:
         - action: labeldrop
           regex: (pod)
       params:
+        ups:
+          - ups-2u
         server:
           - ${NUT_HOST}
       path: /ups_metrics
