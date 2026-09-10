@@ -94,4 +94,4 @@ spec:
         enabled: true
     grafanaDashboards:
       enabled: true
-      folder: llm
+      folder: ai
