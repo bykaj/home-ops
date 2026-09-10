@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nut-exporter
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: nut-exporter
+  interval: 1h
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 4000
+        runAsGroup: 4000
+        fsGroup: 4000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      nut-exporter:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          nut-exporter:
+            image:
+              repository: ghcr.io/druggeri/nut_exporter
+              tag: 3.3.0@sha256:276460d141c732772f8b1fcd785a7de272473e6d39fd85c32b163efc2999cb9a
+            args:
+              # All vars
+              - --nut.vars_enable=
+            env:
+              TZ: Europe/Amsterdam
+            envFrom:
+              - secretRef:
+                  name: nut-exporter-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    service:
+      nut-exporter:
+        controller: nut-exporter
+        ports:
+          metrics:
+            protocol: TCP
+            port: 9199
