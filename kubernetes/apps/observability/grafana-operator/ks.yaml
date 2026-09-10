@@ -26,8 +26,8 @@ metadata:
 spec:
   dependsOn:
     - name: grafana-operator
-    - name: openebs
-      namespace: system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/observability/grafana-operator/instance
   postBuild:
