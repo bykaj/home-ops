@@ -30,5 +30,5 @@ spec:
       enabled: true
       grafanaOperator:
         enabled: true
-        spec:
-          folderRef: victoria-logs
+        # spec:
+        #   folderRef: victoria-logs
