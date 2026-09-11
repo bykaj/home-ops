@@ -6,6 +6,7 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
+  deletionPolicy: WaitForTermination
   interval: 1h
   patches:
     - # Add postBuild substitutions to all Kustomizations
@@ -43,6 +44,7 @@ spec:
         metadata:
           name: not-used
         spec:
+          deletionPolicy: WaitForTermination
           patches:
             - patch: |-
                 apiVersion: helm.toolkit.fluxcd.io/v2

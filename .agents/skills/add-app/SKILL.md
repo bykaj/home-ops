@@ -270,7 +270,7 @@ Convention: `metadata.name` is `<app>`, the generated Secret is `<app>-secret`, 
 
 Add `./<app>/ks.yaml` to `kubernetes/apps/<namespace>/kustomization.yaml` `resources`, in alphabetical position among the app entries (`namespace.yaml` stays first; leave existing entries where they are).
 
-**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `flux-alerts` and `kopiur/secret` components and the literal `name: _` in namespace.yaml (kustomize renames it) — and register the directory in `kubernetes/flux/cluster`'s apps kustomization if namespaces are listed there.
+**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `flux-alerts` and `kopiur/secret` components and the literal `name: _` in namespace.yaml (kustomize renames it) — and register the directory in `kubernetes/clusters/main`'s apps kustomization if namespaces are listed there.
 
 ## Step 4: Verify
 

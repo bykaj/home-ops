@@ -25,7 +25,7 @@ spec:
         kind: GitRepository
         url: https://github.com/bykaj/home-ops
         ref: refs/heads/main
-        path: kubernetes/flux/cluster
+        path: kubernetes/clusters/main
         interval: 1h
       commonMetadata:
         labels:

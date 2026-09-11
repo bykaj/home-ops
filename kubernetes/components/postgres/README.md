@@ -57,7 +57,7 @@ spec:
     namespace: flux-system
 ```
 
-What the label does (via the patch in [`flux/cluster/ks.yaml`](../../flux/cluster/ks.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-app` Secret as usual.
+What the label does (via the patch in [`clusters/main/apps.yaml`](../../clusters/main/apps.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-app` Secret as usual.
 
 **After the first scheduled backup lands** (Daily at night, or after manually creating a one-shot `Backup` CR), **remove the `cnpg: init` label**. Future cluster rebuilds will then follow the default `recovery` path. Keeping the label after a backup exists is harmless during normal operation (bootstrap is only consulted at cluster creation), but it would prevent a rebuild from restoring data if you ever destroy and recreate the cluster.
 
