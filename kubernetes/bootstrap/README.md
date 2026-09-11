@@ -13,9 +13,7 @@ directory is not used again until the next rebuild.
 ## Prerequisites
 
 - The [Mise](https://mise.jdx.dev/) CLI [installed](https://mise.jdx.dev/getting-started.html#installing-mise-cli) on your workstation and [activated](https://mise.jdx.dev/getting-started.html#activate-mise) in your shell.
-- Tools pinned in `.mise/config.toml` installed via `mise install` (talosctl,
-  just, minijinja-cli, op, yq, jq, task), plus kubectl, helmfile, kustomize and gum
-  on the PATH installed with Homebrew (automatically via a mise postinstall hook).
+- Tools pinned in `.mise/config.toml` installed via `mise install`. These are available for MacOS (arm64/amd64), Windows (x64) and Linux (arm64/amd64).
 - A signed-in 1Password CLI (`op`). Machine secrets never live in this repo; every
   `op://` reference in the Talos configs and bootstrap manifests is resolved
   at apply time with `op inject`.
@@ -191,7 +189,7 @@ records of their own.
 
 > [!IMPORTANT]
 > Externally published apps (`plex`, anything else behind the Cloudflare
-> tunnel) are CNAMEs to `external.cetana.net` in public DNS, and the UDM has
+> tunnel) are CNAMEs to `external.bykaj.app` in public DNS, and the UDM has
 > no HTTPS record for those names. The browser's HTTPS query is forwarded
 > upstream, where Cloudflare answers with its own HTTPS record, and
 > browsers then use that record and connect through Cloudflare, even
@@ -211,8 +209,8 @@ CONF_DIR=/run/dnsmasq.dhcp.conf.d
 for i in $(seq 1 30); do [ -d "$CONF_DIR" ] && break; sleep 2; done
 [ -d "$CONF_DIR" ] || exit 0
 cat > "$CONF_DIR/custom.conf" <<RR
-dns-rr=external.cetana.net,65,00010000010006026833026832
-dns-rr=internal.home.cetana.net,65,00010000010006026833026832
+dns-rr=external.bykaj.app,65,00010000010006026833026832
+dns-rr=internal.bykaj.app,65,00010000010006026833026832
 RR
 [ -f /run/dnsmasq-main.pid ] && kill "$(cat /run/dnsmasq-main.pid)" 2>/dev/null
 exit 0
@@ -231,8 +229,8 @@ it with the new config.
 To verify:
 
 ```sh
-dig +short @10.73.0.254 internal.home.cetana.net HTTPS   # expect: 1 . alpn="h3,h2"
-curl --http3-only -sk -o /dev/null -w '%{http_version}\n' https://internal.home.cetana.net/
+dig +short @10.73.0.254 internal.bykaj.app HTTPS   # expect: 1 . alpn="h3,h2"
+curl --http3-only -sk -o /dev/null -w '%{http_version}\n' https://internal.bykaj.app/
 ```
 
 ## Stages
@@ -312,5 +310,5 @@ to sit `Pending` for as long as their volume takes to restore.
 The helmfiles define no chart versions or values of their own. Each release's
 chart and version are read from the app's `ocirepository.yaml` and its values
 from the app's `helmrelease.yaml` under `kubernetes/apps/` (see
-[helmfile/templates/](helmfile/templates/)). Bootstrap therefore installs
+[helmfile/templates/](./helmfile/templates/)). Bootstrap therefore installs
 exactly what Flux will later reconcile, and Renovate updates only one place.
