@@ -23,6 +23,14 @@ spec:
               PGID: "${APP_GID:-1000}"
               PUID: "${APP_UID:-1000}"
               UMASK: "002"
+              WHISPARR__APP__INSTANCENAME: Whisparr
+              WHISPARR__APP__THEME: dark
+              WHISPARR__AUTH__METHOD: External
+              WHISPARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              WHISPARR__LOG__DBENABLED: "False"
+              WHISPARR__LOG__LEVEL: info
+              WHISPARR__SERVER__ALLOWEDHOSTS: "*"
+              WHISPARR__SERVER__PORT: &port 6969
               TZ: "Europe/Amsterdam"
             probes:
               liveness: &probes
@@ -31,7 +39,7 @@ spec:
                 spec:
                   httpGet:
                     path: /ping
-                    port: &port 6969
+                    port: *port
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
