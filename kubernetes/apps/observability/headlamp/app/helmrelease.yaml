@@ -40,7 +40,7 @@ spec:
           - |
             kubectl config set-cluster main --server=https://kubernetes.default.svc --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             kubectl config set-credentials main --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-            kubectl config set-context main --cluster=main --user=admin
+            kubectl config set-context main --cluster=main --user=main
             kubectl config use-context main
         env:
           - name: KUBERNETES_SERVICE_HOST
