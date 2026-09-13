@@ -1,41 +1,200 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "config:recommended",
-    "docker:enableMajor",
-    "helpers:pinGitHubActionDigests",
-    "github>bykaj/home-ops//.renovate/allowedVersions.json5",
-    "github>bykaj/home-ops//.renovate/autoMerge.json5",
-    "github>bykaj/home-ops//.renovate/changelogs.json5",
-    "github>bykaj/home-ops//.renovate/customManagers.json5",
-    "github>bykaj/home-ops//.renovate/grafanaDashboards.json5",
-    "github>bykaj/home-ops//.renovate/groups.json5",
-    "github>bykaj/home-ops//.renovate/labels.json5",
-    "github>bykaj/home-ops//.renovate/overrides.json5",
-    "github>bykaj/home-ops//.renovate/semanticCommits.json5",
-    ":automergeBranch",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
-    ":semanticCommits",
+    "github>home-operations/renovate-presets#8.1.0",
+    "github>home-operations/renovate-presets//apps/cnpg.json5#8.1.0",
+    "github>home-operations/renovate-presets//apps/grafanaDashboards.json5#8.1.0",
+    "github>home-operations/renovate-presets//apps/llamacpp.json5#8.1.0",
+    "github>home-operations/renovate-presets//apps/searxng.json5#8.1.0",
+    "github>home-operations/renovate-presets//apps/talosFactory.json5#8.1.0",
     ":timezone(Europe/Amsterdam)",
   ],
-  dependencyDashboardTitle: "Renovate Dashboard 🤖",
-  suppressNotifications: [
-    "prEditedNotification",
-    "prIgnoreNotification",
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ["before 3am on the first day of the month"],
+    commitMessageExtra: "({{manager}})",
+    additionalBranchPrefix: "{{manager}}-",
+  },
+  // hostRules: [
+  //   {
+  //     description: "Authenticate against the ocharted OCI registry",
+  //     matchHost: "ocharted.turbo.ac",
+  //     hostType: "docker",
+  //     username: "{{ secrets.OCHARTED_USERNAME }}",
+  //     password: "{{ secrets.OCHARTED_PASSWORD }}",
+  //   },
+  // ],
+  packageRules: [
+    //
+    // Allowed versions rules
+    //
+    {
+      description: "Keep PostgreSQL on version 18.x",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/postgresql/"],
+      allowedVersions: "<19",
+    },
+    //
+    // Auto-merge rules
+    //
+    {
+      description: "Auto-merge trusted OCI digests",
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["digest"],
+      matchPackagePrefixes: [
+        "/bjw-s/",
+        "/bjw-s-labs/",
+        "/bykaj/",
+        "/home-operations/",
+        "/onedr0p/",
+      ],
+      automerge: true,
+      automergeType: "pr",
+      ignoreTests: false,
+    },
+    {
+      description: "Auto-merge high-cadence OCI packages weekly",
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["minor", "patch"],
+      matchPackageNames: ["/kube-prometheus-stack/"],
+      automerge: true,
+      automergeType: "pr",
+      ignoreTests: false,
+      schedule: ["before 6am on Monday"],
+    },
+    {
+      description: "Auto-merge GitHub Actions",
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      automerge: true,
+      automergeType: "branch",
+      minimumReleaseAge: "3 days",
+      ignoreTests: true,
+    },
+    {
+      description: "Auto-merge trusted GitHub Actions",
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["/^actions\\//", "/^renovatebot\\//"],
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      automerge: true,
+      automergeType: "branch",
+      minimumReleaseAge: "1 minute",
+      ignoreTests: true,
+    },
+    {
+      description: "Auto-merge Grafana dashboards",
+      matchDatasources: ["custom.grafana-dashboards"],
+      matchUpdateTypes: ["major"],
+      automerge: true,
+      automergeType: "branch",
+      ignoreTests: true,
+    },
+    {
+      description: "Auto-merge Renovate Presets",
+      matchManagers: ["renovate-config"],
+      matchUpdateTypes: ["minor", "patch"],
+      automerge: true,
+      automergeType: "branch",
+      ignoreTests: true,
+    },
+    //
+    // Grouping rules
+    //
+    {
+      description: "Actions Runner Controller Group",
+      groupName: "actions-runner-controller",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/gha-runner-scale-set-controller/", "/gha-runner-scale-set/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Flux Operator Group",
+      groupName: "flux-operator",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/flux-operator/", "/flux-instance/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Kubernetes Group",
+      groupName: "kubernetes",
+      matchDatasources: ["docker"],
+      matchPackageNames: [
+        "/kube-apiserver/",
+        "/kube-controller-manager/",
+        "/kube-proxy/",
+        "/kube-scheduler/",
+        "/kubelet/",
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 5,
+    },
+    {
+      description: "Mise Tools Group",
+      matchManagers: ["mise"],
+      groupName: "mise tools",
+      groupSlug: "mise-tools",
+    },
+    {
+      description: "Rook-Ceph Group",
+      groupName: "rook-ceph",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/rook-ceph/", "/rook-ceph-cluster/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      // After the mise tools catch-all so talos wins its own group; unites the
+      // mise pin, the factory installer image, and the tuppr upgrade version
+      description: "Talos Group",
+      groupName: "talos",
+      matchPackageNames: ["siderolabs/talos"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "1Password CLI is not resolvable on GitHub, bump manually",
+      matchManagers: ["mise"],
+      matchDepNames: ["1password-cli"],
+      enabled: false,
+    },
+    //
+    // Labeling rules
+    //
+    {
+      matchUpdateTypes: ["major"],
+      addLabels: ["type/major"],
+    },
+    {
+      matchUpdateTypes: ["minor"],
+      addLabels: ["type/minor"],
+    },
+    {
+      matchUpdateTypes: ["patch"],
+      addLabels: ["type/patch"],
+    },
+    {
+      matchUpdateTypes: ["digest"],
+      addLabels: ["type/digest"],
+    },
+    //
+    // Override rules
+    //
+    {
+      description: "Override weird Whisparr versioning",
+      matchPackageNames: ["ghcr.io/hotio/whisparr"],
+      versioning: "regex:^v(?<compatibility>\\d+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+    },
   ],
-  ignorePaths: [
-    "**/*.sops.*",
-    "**/archive/**",
-    "**/assets/**",
-  ],
-  flux: {
-    managerFilePatterns: ["/\\.yaml(?:\\.j2)?$/"],
-  },
-  "helm-values": {
-    managerFilePatterns: ["/\\.yaml(?:\\.j2)?$/"],
-  },
-  kubernetes: {
-    managerFilePatterns: ["/\\.yaml(?:\\.j2)?$/"],
-  },
 }
