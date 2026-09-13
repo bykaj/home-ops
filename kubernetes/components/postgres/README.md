@@ -4,13 +4,12 @@ CloudNative-PG backed PostgreSQL component. Default PostgreSQL for all apps in t
 
 ## Substitution variables
 
-| Variable                   | Default                      | Notes                                                               |
-| -------------------------- | ---------------------------- | ------------------------------------------------------------------- |
-| `APP`                      | _(required)_                 | Name of the consuming app — used for cluster, secret, backup paths. |
-| `POSTGRES_USERNAME`        | `${APP}`                     | Username created on initial bootstrap.                              |
-| `POSTGRES_DATABASE`        | `${APP}`                     | Database name created on initial bootstrap.                         |
-| `POSTGRES_IMAGE`           | [_see YAML_](./cluster.yaml) | Specific PostgreSQL image for this cluster.                         |
-| `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *`                 | Cron schedule for local NFS backup.                                 |
+| Variable                   | Default      | Notes                                                               |
+| -------------------------- | ------------ | ------------------------------------------------------------------- |
+| `APP`                      | _(required)_ | Name of the consuming app — used for cluster, secret, backup paths. |
+| `POSTGRES_USERNAME`        | `${APP}`     | Username created on initial bootstrap.                              |
+| `POSTGRES_DATABASE`        | `${APP}`     | Database name created on initial bootstrap.                         |
+| `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *` | Cron schedule for local NFS backup.                                 |
 
 ## Bootstrap behavior
 
@@ -48,8 +47,6 @@ spec:
       # Optional overrides; defaults to ${APP}
       # POSTGRES_DATABASE: myapp-db
       # POSTGRES_USERNAME: myapp-user
-      # Complete image override; defaults to the standard from CNPG
-      # POSTGRES_IMAGE: ghcr.io/tensorchord/cloudnative-vectorchord:18.6
   prune: true
   sourceRef:
     kind: GitRepository
