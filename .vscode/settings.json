@@ -11,10 +11,20 @@
   "editor.stickyScroll.enabled": false,
   "explorer.autoReveal": true,
   "files.associations": {
-      "**/*.json5": "json5",
-      "**/*.just": "just"
+    "**/*.json5": "json5",
+    "**/*.just": "just"
   },
   "files.trimTrailingWhitespace": true,
+  "json5.schemaDownload.enable": true,
+  "json5.schemaDownload.trustedDomains": {
+    "docs.renovatebot.com": true
+  },
+  "json5.schemas": [
+    {
+      "fileMatch": [".renovaterc.json5", ".renovate/*.json5"],
+      "url": "https://docs.renovatebot.com/renovate-schema.json"
+    }
+  ],
   "material-icon-theme.files.associations": {
     "*.gotmpl": "smarty",
     "*.sops.yaml": "lock",
@@ -50,14 +60,12 @@
   "sops.defaults.ageKeyFile": "age.key",
   "terminal.integrated.fontSize": 14,
   "vs-kubernetes": {
-    "vs-kubernetes.kubeconfig": "${workspaceFolder}/kubernetes/kubeconfig",
-    "vs-kubernetes.knownKubeconfigs": [
-      "${workspaceFolder}/kubernetes/kubeconfig"
-    ]
+    "vs-kubernetes.knownKubeconfigs": ["${workspaceFolder}/kubernetes/kubeconfig"],
+    "vs-kubernetes.kubeconfig": "${workspaceFolder}/kubernetes/kubeconfig"
   },
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
-    "kubernetes": "./kubernetes/**/*.yaml",
+    "kubernetes": "./kubernetes/**/*.yaml"
   },
   "[yaml]": {
     "editor.defaultFormatter": "bluebrown.yamlfmt"
