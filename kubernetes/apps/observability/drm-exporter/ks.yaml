@@ -6,7 +6,7 @@ metadata:
   name: drm-exporter
 spec:
   interval: 1h
-  path: ./kubernetes/apps/kube-system/drm-exporter/app
+  path: ./kubernetes/apps/observability/drm-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository
