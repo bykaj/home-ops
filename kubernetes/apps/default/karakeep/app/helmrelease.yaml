@@ -82,7 +82,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 10m
+                cpu: 50m
               limits:
                 memory: 2Gi
       chrome:
