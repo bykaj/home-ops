@@ -24,14 +24,23 @@ spec:
               PUID: "${APP_UID:-1000}"
               UMASK: "002"
               WHISPARR__APP__INSTANCENAME: Whisparr
-              WHISPARR__APP__THEME: dark
+              WHISPARR__APP__THEME: auto
               WHISPARR__AUTH__METHOD: External
               WHISPARR__AUTH__REQUIRED: DisabledForLocalAddresses
               WHISPARR__LOG__DBENABLED: "False"
               WHISPARR__LOG__LEVEL: info
-              WHISPARR__SERVER__ALLOWEDHOSTS: "*"
+              WHISPARR__SERVER__ALLOWEDHOSTS: >-
+                {{ .Release.Name }},
+                {{ .Release.Name }}.downloads,
+                {{ .Release.Name }}.downloads.svc,
+                {{ .Release.Name }}.downloads.svc.cluster,
+                {{ .Release.Name }}.downloads.svc.cluster.local,
+                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
               WHISPARR__SERVER__PORT: &port 6969
               TZ: "Europe/Amsterdam"
+            envFrom:
+              - secretRef:
+                  name: whisparr-secret
             probes:
               liveness: &probes
                 enabled: true
