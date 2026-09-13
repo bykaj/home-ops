@@ -65,7 +65,7 @@ spec:
   listenersServiceTemplate:
     metadata:
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: "mqtt.bykaj.io"
+        external-dns.kubernetes.io/hostname: "mqtt.bykaj.io"
         lbipam.cilium.io/ips: "${LB_IP_EMQX}"
         gatus.home-operations.com/endpoint: |-
           group: infrastructure
