@@ -30,7 +30,7 @@ spec:
           namespace: network
       rules:
         - backendRefs:
-            - identifier: app
+            - name: headlamp
               port: 80
     initContainers:
       - # Generate kubeconfig file. Can be removed when https://github.com/kubernetes-sigs/headlamp/issues/1826 is resolved
