@@ -13,6 +13,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_SUBDOMAIN: logs
   prune: true
   sourceRef:
     kind: GitRepository
