@@ -5,7 +5,7 @@ kind: Gateway
 metadata:
   name: envoy-external
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname external.bykaj.app
+    external-dns.kubernetes.io/target: &hostname external.bykaj.app
     gatus.home-operations.com/endpoint: |-
       alerts:
         - type: pushover
@@ -40,9 +40,9 @@ spec:
           - kind: Secret
             name: bykaj-dev-tls
           - kind: Secret
-            name: cetana-id-tls
-          - kind: Secret
             name: bykaj-io-tls
+          - kind: Secret
+            name: cetana-id-tls
           - kind: Secret
             name: drup-lol-tls
           - kind: Secret
@@ -54,7 +54,7 @@ kind: Gateway
 metadata:
   name: envoy-internal
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname internal.bykaj.app
+    external-dns.kubernetes.io/target: &hostname internal.bykaj.app
     gatus.home-operations.com/endpoint: |-
       alerts:
         - type: pushover
@@ -89,11 +89,11 @@ spec:
           - kind: Secret
             name: bykaj-dev-tls
           - kind: Secret
+            name: bykaj-io-tls
+          - kind: Secret
             name: coder-bykaj-dev-tls
           - kind: Secret
             name: cetana-id-tls
-          - kind: Secret
-            name: bykaj-io-tls
           - kind: Secret
             name: drup-lol-tls
           - kind: Secret
