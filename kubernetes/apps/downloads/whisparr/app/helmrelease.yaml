@@ -29,13 +29,7 @@ spec:
               WHISPARR__AUTH__REQUIRED: DisabledForLocalAddresses
               WHISPARR__LOG__DBENABLED: "False"
               WHISPARR__LOG__LEVEL: info
-              WHISPARR__SERVER__ALLOWEDHOSTS: >-
-                {{ .Release.Name }},
-                {{ .Release.Name }}.downloads,
-                {{ .Release.Name }}.downloads.svc,
-                {{ .Release.Name }}.downloads.svc.cluster,
-                {{ .Release.Name }}.downloads.svc.cluster.local,
-                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
+              WHISPARR__SERVER__ALLOWEDHOSTS: "*"
               WHISPARR__SERVER__PORT: &port 6969
               TZ: "Europe/Amsterdam"
             envFrom:
@@ -49,9 +43,6 @@ spec:
                   httpGet:
                     path: /ping
                     port: *port
-                    httpHeaders:
-                      - name: Host
-                        value: localhost
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
