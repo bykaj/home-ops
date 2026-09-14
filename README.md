@@ -177,6 +177,7 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
   - 5 × 4TB HGST Ultrastar 7K4000 (SAS), 1 × 5-wide RAIDZ2
 - **Fast pool**
   - 2 × 1TB Crucial MX500 (SSD)
+- **Network** — Intel X520-DA2, 10G
 - **Out-of-band** — JetKVM with ATX extension
 
 ### Networking
