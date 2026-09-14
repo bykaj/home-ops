@@ -90,7 +90,7 @@ This Git repository contains the following directories:
 │   ├── 📁 flux/          # Flux system configuration
 │   └── 📁 talos/         # Talos cluster configuration
 ├── 📁 docker/
-│   └── 📁 truenas/       # Docker Compose stacks for TrueNAS
+│   └── 📁 nas/       # Docker Compose stacks for TrueNAS
 └── 📁 scripts/           # Utility scripts
 ```
 
