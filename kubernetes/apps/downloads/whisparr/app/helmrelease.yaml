@@ -26,10 +26,9 @@ spec:
               WHISPARR__APP__INSTANCENAME: Whisparr
               WHISPARR__APP__THEME: auto
               WHISPARR__AUTH__METHOD: External
-              WHISPARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              WHISPARR__AUTH__REQUIRED: Enabled
               WHISPARR__LOG__DBENABLED: "False"
               WHISPARR__LOG__LEVEL: info
-              WHISPARR__SERVER__ALLOWEDHOSTS: "*"
               WHISPARR__SERVER__PORT: &port 6969
               TZ: "Europe/Amsterdam"
             envFrom:
