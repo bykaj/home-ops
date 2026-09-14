@@ -6,7 +6,6 @@ metadata:
   name: &app mail-archiver
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/postgres
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
