@@ -172,11 +172,11 @@ spec:
         useAllDevices: false
         nodes:
           - name: k8s-01
-            devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
+            devicePathFilter: "^/dev/disk/by-id/nvme-WDC_PC_SN530_SDBPNPZ-1T00.*"
           - name: k8s-02
-            devicePathFilter: "^/dev/disk/by-id/nvme-Viper_VP4000M_500GB_.*"
+            devicePathFilter: "^/dev/disk/by-id/nvme-Micron_2450.*"
           - name: k8s-03
-            devicePathFilter: "^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB_.*"
+            devicePathFilter: "^/dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB.*"
     monitoring:
       enabled: true
       createPrometheusRules: true
