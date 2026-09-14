@@ -21,6 +21,8 @@ services:
       traefik.enable: "true"
       traefik.http.routers.garage-s3.rule: Host(`s3.bykaj.io`)
       traefik.http.services.garage-s3.loadbalancer.server.port: "9000"
+      traefik.http.routers.garage-s3-admin.rule: Host(`s3-admin.bykaj.io`)
+      traefik.http.services.garage-s3-admin.loadbalancer.server.port: "9002"
     networks:
       - apps
     restart: unless-stopped
