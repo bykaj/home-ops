@@ -50,7 +50,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f331/512.gif" alt="🌱" width="20" height="20"> Kubernetes
 
-My Kubernetes cluster is deployed on a three [Proxmox VE](https://www.proxmox.com) node cluster with a [Talos](https://www.talos.dev) virtual machine on every node. This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate virtualized [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
+My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
 There is a template available at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
 
@@ -89,8 +89,6 @@ This Git repository contains the following directories:
 │   ├── 📁 components/    # Reusable kustomize components
 │   ├── 📁 flux/          # Flux system configuration
 │   └── 📁 talos/         # Talos cluster configuration
-├── 📁 bootstrap/
-│   └── 📁 workstation/   # Workstation tooling (Brewfile)
 ├── 📁 docker/
 │   └── 📁 truenas/       # Docker Compose stacks for TrueNAS
 └── 📁 scripts/           # Utility scripts
@@ -120,7 +118,7 @@ While most of my infrastructure and workloads are self-hosted, I do rely on the 
 - [Fastmail](https://fastmail.com/) – Email hosting.
 - [GitHub](https://github.com/) – Hosting this repository and continuous integration/deployments.
 - [Pushover](https://pushover.net/) – Kubernetes alerts and application notifications.
-- ~~[Storj](https://storj.io/)~~ [Backblaze B2](https://backblaze.com/) – S3 object storage for applications and backups.
+- [Backblaze B2](https://backblaze.com/) – S3 object storage for applications and backups.
 
 This helps me avoid three major headaches:
 
@@ -136,32 +134,72 @@ I could tackle the first two problems by spinning up another Kubernetes cluster 
 
 My cluster implements a split-horizon DNS configuration using two [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) instances, each handling different DNS zones. This setup allows me to maintain separate private and public DNS records while orchestrating them through distinct ingress classes.
 
-The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [EExternalDNS Webhook Provider for UniFi](https://github.com/home-operations/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class—`internal` for private DNS management and `external` for public DNS synchronization—ensuring precise control over which DNS platform receives updates.
+The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [ExternalDNS Webhook Provider for UniFi](https://github.com/home-operations/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class—`internal` for private DNS management and `external` for public DNS synchronization—ensuring precise control over which DNS platform receives updates.
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="20" height="20"> Hardware
 
-| Device                  | Num | Disks                                  | RAM  | Network    | Function                                 |
-| ----------------------- | --- | -------------------------------------- | ---- | ---------- | ---------------------------------------- |
-| Lenovo M920q, i5-8500T  | 2   | 1TB NVMe                               | 64GB | 10Gb       | Proxmox VE Host                          |
-| Self-built 3U, i7-6700K | 1   | 512GB SSD, 1TB NVMe, 6x14TB SATA (ZFS) | 64GB | 10Gb       | Proxmox VE Host, SMB/NFS + Backup Server |
-| UniFi UDM Pro Max       | 1   | 8TB SATA                               | -    | 10Gb       | Router & NVR                             |
-| UniFi USW Pro HD 24 PoE | 1   | -                                      | -    | 2.5Gb/10Gb | PoE Core Switch                          |
-| UniFi USW Flex 2.5G 5   | 1   | -                                      | -    | 2.5Gb      | Switch                                   |
-| Home Assistant Yellow   | 1   | 8GB eMMC, 256GB NVMe                   | 4GB  | 1Gb        | Home Automation                          |
-| JetKVM                  | 3   | 8GB eMMC                               | -    | 100Mb      | KVM                                      |
-| UniFi UPS 2U            | 1   | -                                      | -    | 100Mb      | UPS                                      |
+### Compute
+
+**k8s-01** · Talos/Kubernetes
+
+- **System** — Lenovo M920x (i9-9900T), 64GB RAM
+- **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
+- **Rook-Ceph** — WD PC SN530, 1TB (NVMe)
+- **Network** — Intel X520-DA2, 10G
+- **Out-of-band** — JetKVM with DC extension
+
+**k8s-02** · Talos/Kubernetes
+
+- **System** — Lenovo M920x (i9-9900T), 64GB RAM
+- **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
+- **Rook-Ceph** — Micron 2450, 1TB (NVMe)
+- **Network** — Intel X520-DA2, 10G
+- **Out-of-band** — JetKVM with DC extension
+
+**k8s-03** · Talos/Kubernetes
+
+- **System** — Lenovo M90q Gen 5 (i5-13400T), 64GB RAM
+- **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
+- **Rook-Ceph** — SK hynix PC801, 1TB (NVMe)
+- **Network** — Intel X520-DA2, 10G _(soon)_
+- **Out-of-band** — JetKVM with DC extension
+
+### Storage
+
+**NAS** · TrueNAS SCALE
+
+- **System** — Self-built 3U (i7-6700K), 64GB RAM
+- **Boot** — WD Red SA500, 500GB (SSD)
+- **Bulk pool**
+  - 6 × 14TB Toshiba MG09 (SATA), 1 × 6-wide RAIDZ2
+  - 5 × 4TB HGST Ultrastar 7K4000 (SAS), 1 × 5-wide RAIDZ2
+- **Fast pool**
+  - 2 × 1TB Crucial MX500 (SSD)
+- **Out-of-band** — JetKVM with ATX extension
+
+### Networking
+
+**Server Rack** · 12U
+
+- **UniFi UDM Pro Max** — 10G router & NVR, 1 × 8TB Seagate SkyHawk AI (SATA)
+- **UniFi USW Aggregation** — 10G aggregation switch
+- **UniFi USW Pro HD 24 PoE** — 2.5G/10G PoE++ core switch
+
+### Power
+
+**UniFi UPS 2U** — 1500VA rackmount UPS
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
 
-- [ ] **Upgrading to more powerful hardware** – I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.
-- [ ] **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.
-- [ ] **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
-- [ ] **Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.
-- [ ] **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
+- [x] **Upgrading to more powerful hardware** – ~~I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.~~ --> Upgraded to 2 × M920x and 1 × M90q G5
+- ~~[ ] **Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.~~ --> No more virtalization, cluster is now bare-metal.
+- [x] **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
+- ~~[ ] **Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.~~ --> not with this hardware.
+- [x] **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
 - [x] **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
 
 ---
