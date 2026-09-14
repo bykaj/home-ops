@@ -73,7 +73,7 @@ There is a template available at [onedr0p/cluster-template](https://github.com/o
 
 Flux watches the cluster in my [kubernetes](./kubernetes/) folder (see [Folder Structure](#folder-structure) below) and makes the changes to my cluster based on the state of my Git repository.
 
-The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
+The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or more Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
 
 [Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged Flux applies the changes to my cluster.
 
@@ -96,7 +96,7 @@ This Git repository contains the following directories:
 
 ### Flux Workflow
 
-This is a high-level look how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `plex` won't be deployed or upgraded until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
+This is a high-level look at how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `plex` won't be deployed or upgraded until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
 
 ```mermaid
 graph TD
@@ -126,7 +126,7 @@ This helps me avoid three major headaches:
 2. **Critical service availability** – Services I need whether my cluster is up or not.
 3. **The "hit by a bus" factor** – Making sure critical apps like email, password management, and photo storage stay accessible to my family and friends when I'm no longer around.
 
-I could tackle the first two problems by spinning up another Kubernetes cluster in the cloud and deploying alternative apps like [HCVault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/). But honestly, maintaining another cluster and babysitting more workloads would be way more work and cost. Something about free time.
+I could tackle the first two problems by spinning up another Kubernetes cluster in the cloud and deploying alternative apps like [HashiCorp Vault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/). But honestly, maintaining another cluster and babysitting more workloads would be way more work and expense. Something about free time.
 
 ---
 
@@ -163,7 +163,7 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 - **System** — Lenovo M90q Gen 5 (i5-13400T), 64GB RAM
 - **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
 - **Rook-Ceph** — SK hynix PC801, 1TB (NVMe)
-- **Network** — Intel X520-DA2, 10G _(soon)_
+- **Network** — Intel X520-DA2, 10G
 - **Out-of-band** — JetKVM with DC extension
 
 ### Storage
@@ -171,12 +171,12 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 **NAS** · TrueNAS SCALE
 
 - **System** — Self-built 3U (i7-6700K), 64GB RAM
-- **Boot** — WD Red SA500, 500GB (SSD)
+- **OS** — WD Red SA500, 500GB (SSD)
 - **Bulk pool**
   - 6 × 14TB Toshiba MG09 (SATA), 1 × 6-wide RAIDZ2
-  - 5 × 4TB HGST Ultrastar 7K4000 (SAS), 1 × 5-wide RAIDZ2
+  - 5 × 4TB HGST Ultrastar 7K4000 (SAS), 1 × 5-wide RAIDZ1
 - **Fast pool**
-  - 2 × 1TB Crucial MX500 (SSD)
+  - 2 × 1TB Crucial MX500 (SSD), mirrored
 - **Network** — Intel X520-DA2, 10G
 - **Out-of-band** — JetKVM with ATX extension
 
@@ -184,20 +184,20 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 
 **Server Rack** · 12U
 
-- **UniFi UDM Pro Max** — 10G router & NVR, 1 × 8TB Seagate SkyHawk AI (SATA)
+- **UniFi UDM Pro Max** — 2.5G/10G router & NVR, 1 × 8TB Seagate SkyHawk AI (SATA)
 - **UniFi USW Aggregation** — 10G aggregation switch
 - **UniFi USW Pro HD 24 PoE** — 2.5G/10G PoE++ core switch
 
 ### Power
 
-**UniFi UPS 2U** — 1500VA rackmount UPS
+- **UniFi UPS 2U** — 1500VA rackmount UPS
 
 ---
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
 
-- [x] **Upgrading to more powerful hardware** – ~~I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.~~ — Upgraded to 2 × M920x and 1 × M90q G5
-- [ ] ~~**Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.~~ — No more virtalization, cluster is now bare-metal.
+- [x] **Upgrading to more powerful hardware** – ~~I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.~~ — Upgraded to 2 × M920x and 1 × M90q G5, from 15 to 48 CPU cores.
+- [ ] ~~**Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.~~ — No more virtualization, cluster is now bare-metal. The fighting between PVE and Ceph for disk I/O was ... not great.
 - [x] **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
 - [ ] ~~**Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.~~ — Not with this hardware.
 - [x] **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
