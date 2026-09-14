@@ -32,6 +32,14 @@ spec:
   identityDefaults:
     hostnameExpr: namespace
     usernameExpr: policyName
+  maintenance:
+    schedule:
+      quick:
+        cron: 0 * * * *
+        jitter: 10m
+      full:
+        cron: 0 3 * * *
+        jitter: 1h
   moverDefaults:
     podSecurityContext:
       supplementalGroups: [4000]
