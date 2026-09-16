@@ -52,8 +52,6 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
-There is a template available at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) if you want to try and follow along with some of the practices I use here.
-
 ### Core Components
 
 - [actions-runner-controller](https://github.com/actions/actions-runner-controller) – Self-hosted GitHub runners.
@@ -90,7 +88,7 @@ This Git repository contains the following directories:
 │   ├── 📁 flux/          # Flux system configuration
 │   └── 📁 talos/         # Talos cluster configuration
 ├── 📁 docker/
-│   └── 📁 nas/           # Docker Compose stacks for TrueNAS
+│   └── 📁 nas/           # Docker Compose stacks for external servers
 └── 📁 scripts/           # Utility scripts
 ```
 
@@ -208,6 +206,8 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f64f/512.gif" alt="🙏" width="20" height="20"> Gratitude and Thanks
 
 A lot of inspiration for my cluster comes from the people that have shared their clusters using the [k8s-at-home](https://github.com/topics/k8s-at-home) GitHub topic. Be sure to check out the [Kubesearch](http://kubesearch.dev) tool for ideas on how to deploy applications or get ideas on what you can deploy.
+
+If you want to try and follow along with some of the practices I use here, there is a template available at [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template).
 
 For learning the basics of running and maintaining a Kubernetes cluster, particularly [K3s](https://k3s.io/), I highly recommend starting with [Jim's Garage](https://youtube.com/@jims-garage) excellent [Kubernetes at Home](https://youtube.com/playlist?list=PLXHMZDvOn5sVXjb88kYXSI7UMx4rhQwOj&si=E6qRPZ915IXQYGL0) series. Once you're comfortable with the basics and ready to automate your deployments, [Techno Tim's](https://www.youtube.com/@TechnoTim) [K3s Ansible guide](https://github.com/techno-tim/k3s-ansible) provides a great foundation for automated cluster rollouts. Thanks to both [@JamesTurland](https://github.com/JamesTurland) and [@timothystewart6](https://github.com/timothystewart6) for these great resources!
 
