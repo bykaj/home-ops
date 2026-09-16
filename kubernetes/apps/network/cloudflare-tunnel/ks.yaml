@@ -15,8 +15,6 @@ spec:
     substituteFrom:
       - kind: Secret
         name: cloudflare-tunnel-id-secret
-      - kind: ConfigMap
-        name: cluster-config
   prune: true
   sourceRef:
     kind: GitRepository

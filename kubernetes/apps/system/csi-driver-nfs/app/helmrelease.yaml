@@ -16,7 +16,7 @@ spec:
       create: true
       name: nfs-slow
       parameters:
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         share: /mnt/vault/Cluster
       mountOptions:
         - nfsvers=4.2

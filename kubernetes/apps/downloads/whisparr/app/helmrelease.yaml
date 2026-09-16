@@ -65,20 +65,20 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Whisparr
       downloads:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Downloads
         globalMounts:
           - path: /mnt/downloads
       media:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Private
         globalMounts:
           - path: /mnt/private

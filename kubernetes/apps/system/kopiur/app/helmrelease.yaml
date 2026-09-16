@@ -14,7 +14,7 @@ spec:
       - name: repository
         nfs:
           path: /mnt/vault/Backups/Cluster/main/kopiur
-          server: ${NAS_HOST}
+          server: nas.internal
     extraVolumeMounts:
       - name: repository
         mountPath: /repository

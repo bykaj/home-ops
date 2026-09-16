@@ -4,11 +4,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: default
 components:
-  - ../../components/namespace
+  - ../../components/alerts
   - ../../components/kopiur/secret
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
+  - ./namespace.yaml
   - ./atuin/ks.yaml
   - ./changedetection/ks.yaml
   # - ./filabridge/ks.yaml
@@ -16,7 +17,6 @@ resources:
   - ./it-tools/ks.yaml
   - ./karakeep/ks.yaml
   - ./mail-archiver/ks.yaml
-  # - ./mailkeep/ks.yaml
   # - ./n8n/ks.yaml
   # - ./opencloud/ks.yaml
   - ./paperless/ks.yaml

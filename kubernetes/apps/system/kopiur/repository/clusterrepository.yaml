@@ -12,7 +12,7 @@ spec:
       path: /repository
       volume:
         nfs:
-          server: ${NAS_HOST}
+          server: nas.internal
           path: /mnt/vault/Backups/Cluster/main/kopiur
   catalog:
     fallbackNamespace: system

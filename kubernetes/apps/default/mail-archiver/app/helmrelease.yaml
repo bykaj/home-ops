@@ -124,7 +124,7 @@ spec:
     persistence:
       data:
         type: nfs
-        server: ${NAS_HOST}
+        server: nas.internal
         path: /mnt/vault/Applications/mail-archiver
         advancedMounts:
           mail-archiver:

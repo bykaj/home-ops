@@ -82,20 +82,20 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Radarr
       downloads:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Downloads
         globalMounts:
           - path: /mnt/downloads
       media:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Media
         globalMounts:
           - path: /mnt/media

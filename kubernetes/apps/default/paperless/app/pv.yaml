@@ -21,7 +21,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: ${APP}-smb-archive
     volumeAttributes:
-      source: //${NAS_HOST}/Archive
+      source: //nas.internal/Archive
     nodeStageSecretRef:
       name: smb-credentials
       namespace: system
@@ -48,7 +48,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: ${APP}-smb-backups
     volumeAttributes:
-      source: //${NAS_HOST}/Backups
+      source: //nas.internal/Backups
     nodeStageSecretRef:
       name: smb-credentials
       namespace: system

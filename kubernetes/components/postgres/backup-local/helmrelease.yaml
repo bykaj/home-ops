@@ -67,7 +67,7 @@ spec:
     persistence:
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups/Database
         advancedMounts:
           *name :

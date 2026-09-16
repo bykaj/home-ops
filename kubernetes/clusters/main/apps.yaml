@@ -9,28 +9,12 @@ spec:
   deletionPolicy: WaitForTermination
   interval: 1h
   patches:
-    - # Add postBuild substitutions to all Kustomizations
-      patch: |-
-        apiVersion: kustomize.toolkit.fluxcd.io/v1
-        kind: Kustomization
-        metadata:
-          name: not-used
-        spec:
-          postBuild:
-            substituteFrom:
-              - name: cluster-config
-                kind: ConfigMap
-      target:
-        kind: Kustomization
-        version: v1
-        group: kustomize.toolkit.fluxcd.io
-        labelSelector: substitution.flux.home.arpa/disabled notin (true)
     - # Add default timings to all Kustomizations
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
-          name: not-used
+          name: _
         spec:
           retryInterval: 2m
           timeout: 15m
@@ -42,7 +26,7 @@ spec:
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
-          name: not-used
+          name: _
         spec:
           deletionPolicy: WaitForTermination
           patches:
@@ -50,7 +34,7 @@ spec:
                 apiVersion: helm.toolkit.fluxcd.io/v2
                 kind: HelmRelease
                 metadata:
-                  name: not-used
+                  name: _
                 spec:
                   install:
                     crds: CreateReplace
@@ -83,7 +67,7 @@ spec:
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
-          name: not-used
+          name: _
         spec:
           patches:
             - target:

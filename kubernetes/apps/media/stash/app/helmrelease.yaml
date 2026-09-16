@@ -80,14 +80,14 @@ spec:
             subPath: metadata
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Stash
       media:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Private
         globalMounts:
           - path: /mnt/private

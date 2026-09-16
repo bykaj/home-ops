@@ -29,7 +29,7 @@ spec:
         ups:
           - ups-2u
         server:
-          - ${NUT_HOST}
+          - ups.internal
       path: /ups_metrics
       port: metrics
       scheme: http

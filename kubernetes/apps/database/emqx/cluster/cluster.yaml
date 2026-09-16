@@ -66,10 +66,10 @@ spec:
     metadata:
       annotations:
         external-dns.kubernetes.io/hostname: "mqtt.bykaj.io"
-        lbipam.cilium.io/ips: "${LB_IP_EMQX}"
+        lbipam.cilium.io/ips: "10.73.20.202"
         gatus.home-operations.com/endpoint: |-
           group: infrastructure
-          url: tcp://${MQTT_HOST}:1883
+          url: tcp://emqx-headless.database.svc.cluster.local:1883
           interval: 1m
           ui:
             hide-url: true

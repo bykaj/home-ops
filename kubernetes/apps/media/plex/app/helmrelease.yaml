@@ -20,12 +20,12 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.4.10903@sha256:fdc6fe82bc7d8acd08fc0aa581fcb76722803ba5905e2537135a697347dd6149
             env:
-              PLEX_ADVERTISE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}:443,https://${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net:443,http://${LB_IP_PLEX}:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
-              PLEX_NO_AUTH_NETWORKS: "${LAN_CIDR},${POD_CIDR},${SERVICE_CIDR},${TAILSCALE_CIDR}"
+              PLEX_ADVERTISE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}:443,https://${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net:443,http://10.73.20.200:32400,http://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:32400"
+              PLEX_NO_AUTH_NETWORKS: "10.73.0.0/20,10.42.0.0/16,10.43.0.0/16,100.64.0.0/10"
               PLEX_PREFERENCE_1: "AllowMediaDeletion=0"
               PLEX_PREFERENCE_2: "EnableIPv6=0"
               PLEX_PREFERENCE_3: "FriendlyName=Media Server"
-              PLEX_PREFERENCE_4: "LanNetworksBandwidth=${LAN_CIDR}"
+              PLEX_PREFERENCE_4: "LanNetworksBandwidth=10.73.0.0/20"
               PLEX_PREFERENCE_5: "ButlerDatabaseBackupPath=/mnt/backups"
               PLEX_PREFERENCE_6: "RelayEnabled=0"
               PLEX_PREFERENCE_7: "sendCrashReports=0"
@@ -94,14 +94,14 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups
             subPath: Apps/Plex
       media:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Media
         globalMounts:
           - path: /mnt/media
@@ -164,7 +164,7 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: "${LB_IP_PLEX}"
+          lbipam.cilium.io/ips: "10.73.20.200"
         externalTrafficPolicy: Local
         ports:
           http:

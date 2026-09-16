@@ -78,20 +78,20 @@ spec:
       backups:
         type: nfs
         path: /mnt/vault/Backups
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         globalMounts:
           - path: /data/backups
             subPath: Apps/Immich
       library:
         type: nfs
         path: /mnt/vault/Photos/Library
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         globalMounts:
           - path: *mediaLocation
       import:
         type: nfs
         path: /mnt/vault/Photos/Import
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         globalMounts:
           - path: /import
       tmpfs:

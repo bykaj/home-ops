@@ -69,7 +69,7 @@ spec:
           - path: /var/lib/pgadmin
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups/Apps
         globalMounts:
           - path: /mnt/backups

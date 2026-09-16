@@ -81,7 +81,7 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         globalMounts:
           - path: /mnt/backups

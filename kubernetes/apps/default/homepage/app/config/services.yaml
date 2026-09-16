@@ -39,12 +39,12 @@
         description: Crowd-based cyber security threat detection & mitigation
 - Storage:
     - TrueNAS:
-        href: https://${NAS_HOST}
+        href: https://nas.internal
         icon: truenas-scale.png
         # description: This is my service
         widget:
           type: truenas
-          url: https://${NAS_HOST}
+          url: https://nas.internal
           # username:
           # password:
           key: { { HOMEPAGE_VAR_TRUENAS_API_KEY } }

@@ -4,9 +4,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: development
 components:
-  - ../../components/namespace
+  - ../../components/alerts
   - ../../components/kopiur/secret
 replacements:
   - path: ../../components/replacements/ks.yaml
-resources: []
+resources:
+  - ./namespace.yaml
   # - ./coder/ks.yaml

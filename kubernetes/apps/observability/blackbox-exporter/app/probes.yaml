@@ -32,7 +32,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${NAS_HOST}:2049
+        - nas.internal:2049
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
@@ -47,4 +47,4 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${NAS_HOST}:445
+        - nas.internal:445

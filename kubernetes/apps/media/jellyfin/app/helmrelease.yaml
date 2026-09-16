@@ -84,7 +84,7 @@ spec:
           - path: /config
       backups:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Backups
         advancedMounts:
           jellyfin:
@@ -93,7 +93,7 @@ spec:
                 subPath: Apps/Jellyfin
       media:
         type: nfs
-        server: "${NAS_HOST}"
+        server: "nas.internal"
         path: /mnt/vault/Media
         advancedMounts:
           jellyfin:
@@ -135,7 +135,7 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: ${LB_IP_JELLYFIN}
+          lbipam.cilium.io/ips: 10.73.20.201
         externalTrafficPolicy: Local
         ports:
           http:

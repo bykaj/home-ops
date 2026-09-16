@@ -15,8 +15,6 @@ spec:
     substituteFrom:
       - name: tailscale-user-secret
         kind: Secret
-      - name: cluster-config
-        kind: ConfigMap
   prune: true
   sourceRef:
     kind: GitRepository
