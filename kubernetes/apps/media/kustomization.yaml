@@ -6,8 +6,6 @@ namespace: media
 components:
   - ../../components/alerts
   - ../../components/kopiur/secret
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./namespace.yaml
   - ./audiobookshelf/ks.yaml

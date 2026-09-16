@@ -6,8 +6,6 @@ namespace: system
 components:
   - ../../components/alerts
   - ../../components/kopiur/secret
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./namespace.yaml
   - ./crd-schema-publisher/ks.yaml

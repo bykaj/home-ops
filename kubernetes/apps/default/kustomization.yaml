@@ -6,8 +6,6 @@ namespace: default
 components:
   - ../../components/alerts
   - ../../components/kopiur/secret
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./namespace.yaml
   - ./atuin/ks.yaml
