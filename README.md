@@ -52,6 +52,8 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
+The bootstrap process is explained in the [bootstrap](./bootstrap/) folder.
+
 ### Core Components
 
 - [actions-runner-controller](https://github.com/actions/actions-runner-controller) – Self-hosted GitHub runners.
@@ -81,14 +83,14 @@ This Git repository contains the following directories:
 
 ```sh
 📁 /
+├── 📁 bootstrap/         # Initial workstation, cluster and NAS bootstrap
+├── 📁 docker/
+│   └── 📁 nas/           # Docker Compose stacks for supporting apps
 ├── 📁 kubernetes/
 │   ├── 📁 apps/          # Application deployments (organized by namespace)
-│   ├── 📁 bootstrap/     # Initial cluster bootstrap (Helmfile)
 │   ├── 📁 components/    # Reusable kustomize components
-│   ├── 📁 flux/          # Flux system configuration
+│   ├── 📁 cluster/       # Flux system configuration
 │   └── 📁 talos/         # Talos cluster configuration
-├── 📁 docker/
-│   └── 📁 nas/           # Docker Compose stacks for external servers
 └── 📁 scripts/           # Utility scripts
 ```
 
