@@ -42,6 +42,8 @@ spec:
       max_connections: "500"
       max_wal_size: "5GB"
       synchronous_commit: "on"
+      wal_receiver_timeout: "30s"
+      wal_sender_timeout: "30s"
   primaryUpdateStrategy: unsupervised
   resources:
     requests:
