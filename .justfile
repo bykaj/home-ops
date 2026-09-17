@@ -11,7 +11,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 
 # Bootstrap Recipes
 [group('bootstrap')]
-mod bootstrap "kubernetes/bootstrap"
+mod bootstrap "bootstrap"
 
 # Kubernetes Recipes
 [group('k8s')]

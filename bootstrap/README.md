@@ -1,22 +1,18 @@
 # Bootstrap
 
-Everything needed to take freshly installed Talos nodes to a cluster that Flux
-manages on its own. The entire process is driven by a single command:
+Takes freshly installed Talos nodes all the way to a fully self-managed Flux cluster, and provisions a fresh TrueNAS server with the supporting applications it needs, all handled by Doco-CD.
 
-```sh
-just bootstrap cluster
-```
+More information per area:
 
-Once it completes, Flux reconciles the rest of the repository and this
-directory is not used again until the next rebuild.
+- [Kubernetes Cluster](./kubernetes/)
+- [Docker Applications](./docker/)
 
 ## Prerequisites
 
 - The [Mise](https://mise.jdx.dev/) CLI [installed](https://mise.jdx.dev/getting-started.html#installing-mise-cli) on your workstation and [activated](https://mise.jdx.dev/getting-started.html#activate-mise) in your shell.
 - Tools pinned in `.mise/config.toml` installed via `mise install`. These are available for MacOS (arm64/amd64), Windows (x64) and Linux (arm64/amd64).
 - A signed-in 1Password CLI (`op`). Machine secrets never live in this repo; every
-  `op://` reference in the Talos configs and bootstrap manifests is resolved
-  at apply time with `op inject`.
+  `op://` reference in the configs and bootstrap manifests is resolved at apply time with `op inject`.\
 - A valid `talosconfig` at the repo root (mise points `TALOSCONFIG` there).
   The justfile derives the controller endpoint and node list from
   `talosctl config info`, so nothing is hardcoded here.
@@ -30,7 +26,7 @@ directory is not used again until the next rebuild.
 The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
 `10.73.20.100`, `externalTrafficPolicy: Local` so only nodes with a
 healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
-along with every other LoadBalancer IP. See the [config](../apps/kube-system/cilium/config/) folder.
+along with every other LoadBalancer IP. See the [config](../../kubernetes/apps/kube-system/cilium/config/) folder.
 
 ```mermaid
 graph LR
@@ -59,12 +55,14 @@ The VIPs the UDM learns this way:
 | `10.73.20.100` | `k8s.internal`       | `kube-api` Service (apiserver) |
 | `10.73.20.110` | `internal.bykaj.app` | `envoy-internal` Gateway       |
 | `10.73.20.120` | `external.bykaj.app` | `envoy-external` Gateway       |
-| `10.73.1.10`   | `nas.internal`       | `traefik` Gateway              |
 
-A static A record in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put it this time after a new Network release) points the API hostname at the VIP:
+Static A records in UniFi (under Settings → Policy Table → DNS, or wherever Ubiquiti decides to put
+it this time after a new Network release) points the API hostname at the VIP and the reverse-proxy
+at the Traefik gateway:
 
 ```text
 k8s.internal → 10.73.20.100
+proxy.bykaj.app → 10.73.2.100
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
@@ -105,7 +103,7 @@ exit
 </details>
 
 The `maximum-paths 3` gives true ECMP across the control plane nodes for the
-`kube-api` VIP (FRR's eBGP default is a single best path). The `nas` node is just there for a complete picture; it's not part of the Kubernetes cluster and serves only as a configuration reference.
+`kube-api` VIP (FRR's eBGP default is a single best path).
 
 > [!WARNING]
 > Re-uploading the FRR config briefly bounces established BGP sessions.
@@ -232,83 +230,3 @@ To verify:
 dig +short @10.73.0.254 internal.bykaj.app HTTPS   # expect: 1 . alpn="h3,h2"
 curl --http3-only -sk -o /dev/null -w '%{http_version}\n' https://internal.bykaj.app/
 ```
-
-## Stages
-
-`just bootstrap cluster` runs these stages in order (see [mod.just](mod.just)):
-
-```mermaid
-graph LR
-    nodes --> k8s --> kubeconfig --> base --> apps
-```
-
-1. **nodes** - Renders each node's Talos config (`talos/*.j2` templates plus
-   1Password injection) and applies it with `talosctl apply-config --insecure`.
-   Nodes that are already configured are skipped, so the stage is idempotent.
-2. **k8s** - Runs `talosctl bootstrap` against the controller, retrying until
-   etcd reports the cluster already exists.
-3. **kubeconfig** - Fetches the kubeconfig with `talosctl kubeconfig`, then
-   rewrites the server address to the controller's node IP: the generated
-   `https://k8s.internal:6443` points at the Cilium VIP, which does not
-   exist yet. The final stage re-fetches the kubeconfig so the endpoint
-   returns to `k8s.internal` once Cilium is serving it.
-4. **base** - Waits for every control plane apiserver to answer `/readyz`
-   and for nodes to register (they stay `Ready=False` until the CNI is
-   installed), then applies:
-   - `kustomize/` - bootstrap Secrets rendered through `op inject`, plus
-     their namespaces: 1Password Connect credentials and token plus the
-     Cloudflare tunnel ID (`manifests/`). These exist before their
-     controllers so nothing deadlocks on a missing Secret.
-   - `helmfile/crds.yaml` - CRDs extracted from upstream charts
-     (envoy-gateway, grafana-operator, kopiur, kube-prometheus-stack) and applied
-     directly. Installing CRDs out-of-band means Flux Kustomizations that
-     consume CRD-backed resources don't need `dependsOn` chains.
-5. **apps** - `helmfile sync` of `helmfile/apps.yaml`, the minimal release
-   chain Flux needs before it can take over:
-
-   ```text
-   cilium → coredns → spegel → cert-manager → external-secrets →
-   onepassword-connect → flux-operator → flux-instance
-   ```
-
-   Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages
-   these same releases from then on.
-
-> [!TIP]
-> Every stage is safe to re-run. If bootstrap fails partway, fix the issue
-> and run `just bootstrap cluster` again.
-
-## Data restore
-
-Bootstrap itself restores no application data; that happens declaratively
-once Flux takes over, via [Kopiur](https://github.com/home-operations/kopiur)
-(deployed from [kubernetes/apps/system/](../apps/system/),
-backed by the `nas` ClusterRepository: a Kopia NFS repo on
-`nas.internal`).
-
-Apps that opt into the `kopiur/backup` component get a PVC whose
-`spec.dataSourceRef` points at a Kopiur `Restore` with `target.populator: {}`
-(see [kubernetes/components/kopiur/backup/](../components/kopiur/backup/)).
-That makes the `Restore` a
-passive volume-populator source: when Flux applies the app on a fresh
-cluster, the PVC is provisioned by restoring the latest snapshot for the
-app's SnapshotPolicy from the repository. The PVC stays unbound while the
-restore mover Job runs, so the app's pod simply stays `Pending` until the
-data is back; no ordering logic needed anywhere.
-
-Because the `Restore`s use `onMissingSnapshot: Continue`, an app with no
-snapshot yet (a brand-new app, or a deliberately fresh start) comes up with
-an empty volume instead of failing; the same manifests handle first deploy
-and disaster recovery ("deploy-or-restore").
-
-Each `Restore` pins the snapshot it resolved on first reconciliation and
-never silently retargets, even if a schedule fires mid-restore. Expect pods
-to sit `Pending` for as long as their volume takes to restore.
-
-## Single source of truth
-
-The helmfiles define no chart versions or values of their own. Each release's
-chart and version are read from the app's `ocirepository.yaml` and its values
-from the app's `helmrelease.yaml` under `kubernetes/apps/` (see
-[helmfile/templates/](./helmfile/templates/)). Bootstrap therefore installs
-exactly what Flux will later reconcile, and Renovate updates only one place.

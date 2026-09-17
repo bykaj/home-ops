@@ -12,6 +12,11 @@ nodes := `talosctl config info -o yaml | yq -r -e '.nodes | join (" ")'`
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
 cluster: nodes k8s (kubeconfig "node") base apps kubeconfig
 
+[confirm('Bootstrap TrueNAS? [y|N]')]
+[doc('Bootstrap TrueNAS applications')]
+nas:
+    ansible-playbook -i "{{ source_directory() }}/docker/ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/playbook.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+
 [private]
 nodes:
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
@@ -48,17 +53,17 @@ kubeconfig lb="cilium":
 [private]
 base: api-ready nodes-ready
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
-    if ! kustomize build {{ source_directory() }}/kustomize/manifests | just template - | kubectl apply --server-side --force-conflicts -f -; then
+    if ! kustomize build {{ source_directory() }}/kubernetes/kustomize/manifests | just template - | kubectl apply --server-side --force-conflicts -f -; then
         just log fatal "Failed to apply manifests" "stage" "{{ recipe_name() }}"
     fi
-    if ! helmfile -f "{{ source_directory() }}/helmfile/crds.yaml" template -q | yq ea -r -e 'select(.kind == "CustomResourceDefinition")' | kubectl apply --server-side --force-conflicts -f -; then
+    if ! helmfile -f "{{ source_directory() }}/kubernetes/helmfile/crds.yaml" template -q | yq ea -r -e 'select(.kind == "CustomResourceDefinition")' | kubectl apply --server-side --force-conflicts -f -; then
         just log fatal "Failed to apply base crds" "stage" "{{ recipe_name() }}"
     fi
 
 [private]
 apps:
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
-    if ! helmfile -f "{{ source_directory() }}/helmfile/apps.yaml" sync --hide-notes; then
+    if ! helmfile -f "{{ source_directory() }}/kubernetes/helmfile/apps.yaml" sync --hide-notes; then
         just log fatal "Failed to sync helmfile" "stage" "{{ recipe_name() }}"
     fi
 
