@@ -1,6 +1,7 @@
 # Bootstrap
 
-Takes freshly installed Talos nodes all the way to a fully self-managed Flux cluster, and provisions a fresh TrueNAS server with the supporting applications it needs, all handled by Doco-CD.
+Takes freshly installed Talos nodes all the way to a fully self-managed Flux cluster, and provisions
+a fresh TrueNAS server with the supporting applications it needs, all handled by Doco-CD.
 
 More information per area:
 
@@ -9,10 +10,13 @@ More information per area:
 
 ## Prerequisites
 
-- The [Mise](https://mise.jdx.dev/) CLI [installed](https://mise.jdx.dev/getting-started.html#installing-mise-cli) on your workstation and [activated](https://mise.jdx.dev/getting-started.html#activate-mise) in your shell.
-- Tools pinned in `.mise/config.toml` installed via `mise install`. These are available for MacOS (arm64/amd64), Windows (x64) and Linux (arm64/amd64).
-- A signed-in 1Password CLI (`op`). Machine secrets never live in this repo; every
-  `op://` reference in the configs and bootstrap manifests is resolved at apply time with `op inject`.\
+- The [Mise](https://mise.jdx.dev/) CLI
+  [installed](https://mise.jdx.dev/getting-started.html#installing-mise-cli) on your workstation and
+  [activated](https://mise.jdx.dev/getting-started.html#activate-mise) in your shell.
+- Tools pinned in `.mise/config.toml` installed via `mise install`. These are available for MacOS
+  (arm64/amd64), Windows (x64) and Linux (arm64/amd64).
+- A signed-in 1Password CLI (`op`). Machine secrets never live in this repo; every `op://` reference
+  in the configs and bootstrap manifests is resolved at apply time with `op inject`.
 - A valid `talosconfig` at the repo root (mise points `TALOSCONFIG` there).
   The justfile derives the controller endpoint and node list from
   `talosctl config info`, so nothing is hardcoded here.
@@ -23,10 +27,10 @@ More information per area:
 
 ## UDM configuration
 
-The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`,
-`10.73.20.100`, `externalTrafficPolicy: Local` so only nodes with a
-healthy apiserver attract traffic). Cilium announces it to the UDM over BGP
-along with every other LoadBalancer IP. See the [config](../../kubernetes/apps/kube-system/cilium/config/) folder.
+The Kubernetes API is fronted by a Cilium LoadBalancer Service (`kube-api`, `10.73.20.100`,
+`externalTrafficPolicy: Local` so only nodes with a healthy apiserver attract traffic). Cilium
+announces it to the UDM over BGP along with every other LoadBalancer IP. See the
+[config](../../kubernetes/apps/kube-system/cilium/config/) folder.
 
 ```mermaid
 graph LR
