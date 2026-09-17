@@ -13,6 +13,10 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 [group('bootstrap')]
 mod bootstrap "bootstrap"
 
+# Specific Docker recipes
+[group('docker')]
+mod docker "docker"
+
 # Specific Kubernetes recipes
 [group('k8s')]
 mod k8s "kubernetes"

@@ -1,0 +1,30 @@
+---
+- name: Restart Doco-CD
+  hosts: nas
+  become: true
+  gather_facts: false
+  vars:
+    ansible_user: truenas_admin
+    ansible_python_interpreter: auto_silent
+
+  tasks:
+    - name: doco-cd
+      vars:
+        dococd_config_dir: /home/truenas_admin/.config/doco-cd
+      block:
+        - name: doco-cd | Restart
+          community.docker.docker_compose_v2:
+            project_src: "{{ dococd_config_dir }}"
+            files:
+              - docker-compose.yaml
+            state: restarted
+          when: not ansible_check_mode
+
+        - name: doco-cd | Wait for healthy
+          community.docker.docker_container_info:
+            name: doco-cd
+          register: dococd_info
+          until: dococd_info.container.State.Health.Status == "healthy"
+          retries: 30
+          delay: 10
+          when: not ansible_check_mode

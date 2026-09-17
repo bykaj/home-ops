@@ -43,6 +43,6 @@ pipx.uvx = true
 [hooks]
 postinstall = [
   "lefthook install",
-  "ansible-galaxy install -r {{config_root}}/bootstrap/docker/ansible/requirements.yaml",
+  "ansible-galaxy install -r {{config_root}}/ansible/requirements.yaml",
 ]
 

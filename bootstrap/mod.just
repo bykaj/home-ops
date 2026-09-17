@@ -15,7 +15,7 @@ cluster: nodes k8s (kubeconfig "node") base apps kubeconfig
 [confirm('Bootstrap TrueNAS? [y|N]')]
 [doc('Bootstrap TrueNAS applications')]
 nas:
-    ansible-playbook -i "{{ source_directory() }}/docker/ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/playbook.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/bootstrap.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
 
 [private]
 nodes:
