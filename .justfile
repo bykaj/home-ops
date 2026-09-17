@@ -9,15 +9,15 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-# Bootstrap Recipes
+# Bootstrap workstation, cluster and NAS recipes
 [group('bootstrap')]
 mod bootstrap "bootstrap"
 
-# Kubernetes Recipes
+# Specific Kubernetes recipes
 [group('k8s')]
 mod k8s "kubernetes"
 
-# Talos Recipes
+# Specific Talos recipes
 [group('talos')]
 mod talos "kubernetes/talos"
 
