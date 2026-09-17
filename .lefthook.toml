@@ -45,7 +45,7 @@ glob = [".mise.toml", ".mise/config.toml"]
 # only decides the bootstrap case where no lockfile exists yet — without it a
 # fresh lock would pick up musl and windows entries nothing installs, and
 # those arches are where upstreams most often miss assets or signatures.
-run = 'mise lock -p linux-x64,linux-arm64,macos-arm64 && { for f in {staged_files}; do l="$(dirname "$f")/mise.lock"; [ -f "$l" ] && git add "$l"; done; true; }'
+run = 'mise lock -p linux-x64,linux-arm64,macos-x64,macos-arm64,windows-x64 && { for f in {staged_files}; do l="$(dirname "$f")/mise.lock"; [ -f "$l" ] && git add "$l"; done; true; }'
 
 [pre-commit.commands.actionlint]
 glob = [".github/workflows/*.yaml"]
