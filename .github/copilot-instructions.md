@@ -4,33 +4,33 @@ This guide helps AI agents understand key aspects of this GitOps-managed Kuberne
 
 ## Architecture Overview
 
-This is a GitOps-managed Kubernetes cluster running on Talos Linux VMs hosted on Proxmox VE infrastructure, with the following key components:
+This is a GitOps-managed Kubernetes cluster running on bare-metal Talos Linux nodes (3-node cluster, `k8s-01`/`k8s-02`/`k8s-03` — no hypervisor), with the following key components:
 
 - **OS**: Talos Linux (immutable, minimal Kubernetes OS)
 - **Container Runtime**: containerd
-- **CNI**: Cilium (eBPF-based networking)
+- **CNI**: Cilium (eBPF-based networking; announces LoadBalancer Service IPs to the UDM router over BGP)
 - **Storage**:
   - Rook-Ceph for distributed block storage
   - OpenEBS for local container-attached storage
-  - TrueNAS for NFS/SMB shares (virtualized separately)
-- **GitOps**: Flux v2 with External Secrets for runtime secrets
-- **DNS**: Split-horizon DNS with ExternalDNS for internal/external resolution
-- **Ingress**: Envoy Gateway with Cloudflare Tunnel
+  - A separate physical TrueNAS server for NFS/SMB shares, bulk storage and backups
+- **GitOps**: Flux v2 (cluster) + doco-cd (Docker Compose on the NAS), with Renovate opening dependency-update PRs across the whole repo
+- **Secrets**: External Secrets Operator + 1Password Connect for runtime secrets
+- **DNS**: Split-horizon DNS with two ExternalDNS instances (`internal` ingress class → UniFi UDM, `external` ingress class → Cloudflare)
+- **Ingress**: Envoy Gateway (`envoy-internal`/`envoy-external` Gateways) with Cloudflare Tunnel for public exposure
 
 ## Repository Structure
 
-```
+```text
 ├── kubernetes/
 │   ├── apps/          # Application deployments (organized by namespace)
-│   ├── bootstrap/     # Initial cluster bootstrap (Helmfile)
-│   ├── components/    # Reusable kustomize components
-│   ├── flux/          # Flux system configuration
-│   └── talos/         # Talos cluster configuration
-├── bootstrap/
-│   └── workstation/   # Workstation tooling (Brewfile)
+│   ├── clusters/main/  # Top-level Flux Kustomization (cluster-apps) that applies apps/
+│   ├── components/    # Reusable kustomize components (kopiur, postgres, dragonfly, ...)
+│   └── talos/          # Talos machine-config templates (Jinja) and node definitions
+├── bootstrap/           # Ansible + just recipes that bring up the cluster and NAS from scratch
 ├── docker/
-│   └── truenas/       # Docker Compose stacks for TrueNAS
-└── scripts/           # Utility scripts
+│   └── nas/             # Docker Compose stacks deployed to the NAS via doco-cd (GitOps)
+├── ansible/              # Playbooks/inventory used by bootstrap and NAS reconciliation
+└── scripts/              # Utility scripts (VM management, Talos image download)
 ```
 
 ## Critical Workflows
@@ -53,78 +53,80 @@ just k8s sync hr
 
 ### Talos Operations
 
+Nodes are addressed by hostname (`k8s-01`, `k8s-02`, `k8s-03`), matching the config templates under `kubernetes/talos/nodes/`:
+
 ```bash
 # Apply config to a specific node
-just talos apply-node 10.73.20.10
+just talos apply-node k8s-01
 
 # Upgrade Talos on a specific node
-just talos upgrade-node 10.73.20.10
+just talos upgrade-node k8s-01
 
-# Upgrade Kubernetes version
-just talos upgrade-k8s 1.30.0
-
-# Generate kubeconfig
-just talos gen-kubeconfig
+# Upgrade Kubernetes version cluster-wide
+just talos upgrade-k8s 1.34.0
 ```
+
+Kubeconfig is fetched as part of `just bootstrap cluster`, not via a standalone Talos recipe.
 
 ## Application Patterns
 
 ### Flux Application Structure
 
-Applications follow this standard pattern:
+Applications live at `kubernetes/apps/<namespace>/<app>/` and follow this standard pattern:
 
-```
-app-name/
+```text
+<app>/
 ├── ks.yaml                   # Flux Kustomization
 └── app/
     ├── kustomization.yaml    # Kustomize configuration
-    ├── ocirepository.yaml    # OCI repository reference for the chart
-    ├── helmrelease.yaml      # Helm chart deployment
-    └── other resources...
+    ├── ocirepository.yaml    # Pins the app-template chart version
+    ├── helmrelease.yaml      # Helm chart deployment (bjw-s-labs/app-template)
+    ├── externalsecret.yaml   # Optional — 1Password-backed secrets
+    └── resources/            # Optional — files wired in via configMapGenerator
 ```
+
+Flux's top-level `cluster-apps` Kustomization (`kubernetes/clusters/main/apps.yaml`) applies `kubernetes/apps` recursively and patches shared defaults (retry/timeout, HelmRelease install/upgrade strategy) onto every Kustomization/HelmRelease it manages, so individual apps should not redeclare them.
 
 ### Application Dependencies
 
 Flux handles dependencies between components with:
 
 1. `dependsOn` in Flux Kustomizations
-2. `needs` in Helmfile releases
+2. `dependsOn` in HelmReleases
 
-Example from a HelmRelease:
+Example from a Flux Kustomization:
 
 ```yaml
 spec:
   dependsOn:
     - name: rook-ceph-cluster
-      namespace: rook-ceph
 ```
 
 ### Secrets Management
 
-One layers of secrets management:
+Two independent layers, both backed by 1Password — never commit plaintext secrets:
 
-1. **External Secrets Operator** with 1Password Connect for runtime secrets
-
-Never commit plaintext secrets. Always use External Secrets.
+1. **Kubernetes**: External Secrets Operator + 1Password Connect (`ClusterSecretStore: onepassword-connect`) populate Kubernetes Secrets from `ExternalSecret` resources.
+2. **Docker Compose (NAS)**: doco-cd resolves `op://` references declared in `docker/<host>/.doco-cd.yaml` and injects them as env vars at deploy time.
 
 ## Environment Configuration
 
-Required environment variables:
-
-- `KUBECONFIG`: Points to cluster kubeconfig file
-- `TALOSCONFIG`: Points to Talos configuration
+Tool versions and required environment variables (`KUBECONFIG`, `TALOSCONFIG`, `FLATE_PATH`, `MINIJINJA_CONFIG_FILE`) are managed by [mise](https://mise.jdx.dev) via `.mise/config.toml` — running `mise install`/activating mise in the shell sets these automatically; there's no need to export them manually.
 
 ## Prerequisites & Tools
 
-Core tools used in this repository:
+Core tools used in this repository (full pinned list in `.mise/config.toml`, installed via `mise install`):
 
 - `just`: Primary command runner
 - `flux`: Flux CD CLI
-- `kubectl`: Kubernetes CLI
+- `kubectl` / `kustomize` / `kubeconform`: Kubernetes manifest tooling
 - `talosctl`: Talos CLI
-- `helmfile`: Helm deployment tool
-- `op`: 1Password CLI
+- `helm` / `helmfile`: Helm chart tooling
+- `op`: 1Password CLI (secret resolution via `op inject`)
 - `minijinja-cli`: Template rendering
+- `yq` / `jq`: YAML/JSON processing
+- `lefthook`: Git hooks (formatting/linting on commit)
+- `ansible`: Bootstrap and NAS provisioning
 - `gum`: Interactive prompts
 
 ## YAML Sorting Rules
