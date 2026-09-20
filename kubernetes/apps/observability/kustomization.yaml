@@ -8,7 +8,7 @@ components:
 resources:
   - ./namespace.yaml
   - ./blackbox-exporter/ks.yaml
-  - ./drm-exporter/ks.yaml
+  # - ./drm-exporter/ks.yaml
   - ./gatus/ks.yaml
   - ./goldilocks/ks.yaml
   - ./grafana-operator/ks.yaml
