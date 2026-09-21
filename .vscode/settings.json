@@ -60,8 +60,8 @@
   "sops.defaults.ageKeyFile": "age.key",
   "terminal.integrated.fontSize": 14,
   "vs-kubernetes": {
-    "vs-kubernetes.knownKubeconfigs": ["${workspaceFolder}/kubernetes/kubeconfig"],
-    "vs-kubernetes.kubeconfig": "${workspaceFolder}/kubernetes/kubeconfig"
+    "vs-kubernetes.knownKubeconfigs": ["${workspaceFolder}/kubeconfig"],
+    "vs-kubernetes.kubeconfig": "${workspaceFolder}/kubeconfig"
   },
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
