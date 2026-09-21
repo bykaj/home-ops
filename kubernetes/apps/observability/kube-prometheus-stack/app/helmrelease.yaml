@@ -51,6 +51,17 @@ spec:
             - name: envoy-internal
               namespace: network
       prometheusSpec:
+        # TODO: remove when k8s-03 NIC is upgraded
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - k8s-01
+                        - k8s-02
         externalUrl: https://prometheus.bykaj.app
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
