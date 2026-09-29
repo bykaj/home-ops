@@ -228,29 +228,29 @@ url = "https://github.com/mitsuhiko/minijinja/releases/download/2.24.0/minijinja
 url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/511868857"
 
 [[tools."github:postfinance/topf"]]
-version = "0.6.0"
+version = "0.6.1"
 backend = "github:postfinance/topf"
-specifiers = ["v0.6.0"]
+specifiers = ["v0.6.1"]
 
 [tools."github:postfinance/topf"."platforms.linux-arm64"]
-checksum = "sha256:7e5d4bf21f07ba91b83c4653eb65dd3cf5ee67aa8fa4131ca403b38791476367"
-url = "https://github.com/postfinance/topf/releases/download/v0.6.0/topf_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/542955869"
+checksum = "sha256:5e7098153ca06ad5577b4f5d5cd380b1de7d7b65505bd8aa160c9181a2b101c5"
+url = "https://github.com/postfinance/topf/releases/download/v0.6.1/topf_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/597558298"
 
 [tools."github:postfinance/topf"."platforms.linux-x64"]
-checksum = "sha256:458df4b25f4181a31ed361c0592194f7eb9e6e7b13e7096f8745453afdeaadfb"
-url = "https://github.com/postfinance/topf/releases/download/v0.6.0/topf_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/542955866"
+checksum = "sha256:6f399e527cb8588b02d7d28eae9a61c49680f4cd5e82d98be7a5c5001c80d341"
+url = "https://github.com/postfinance/topf/releases/download/v0.6.1/topf_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/597558300"
 
 [tools."github:postfinance/topf"."platforms.macos-arm64"]
-checksum = "sha256:48b22175d61eadba0c287411c34a90f73dbaa716fd792b7b28625d3edbf870e2"
-url = "https://github.com/postfinance/topf/releases/download/v0.6.0/topf_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/542955870"
+checksum = "sha256:e7d894ad2b1303ee4e00ebcd5d3a057690497a31694d03c1f533ceaae348fc9d"
+url = "https://github.com/postfinance/topf/releases/download/v0.6.1/topf_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/597558301"
 
 [tools."github:postfinance/topf"."platforms.macos-x64"]
-checksum = "sha256:b4c76fb5985c2e0c73d6a365a5ae7a45f97f9d61cb502a01b1ee82e63da0b1cd"
-url = "https://github.com/postfinance/topf/releases/download/v0.6.0/topf_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/542955865"
+checksum = "sha256:cc15ef60d1d6ec852285fac64f3cac4fed18e6ffd59c996dd403d38ac8872233"
+url = "https://github.com/postfinance/topf/releases/download/v0.6.1/topf_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/postfinance/topf/releases/assets/597558295"
 
 [[tools.gum]]
 version = "2.0.2"
