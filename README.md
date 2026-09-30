@@ -148,7 +148,7 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 - **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
 - **Rook-Ceph** — Micron 7300 PRO, 480GB (NVMe)
 - **Network** — Intel X520-DA2, 10G
-- **Out-of-band** — JetKVM with DC extension
+- **Out-of-band** — JetKVM + DC Power Control Extension
 
 ### Storage
 
@@ -162,7 +162,7 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 - **Fast pool**
   - 2 × 1TB Crucial MX500 (SSD), mirrored
 - **Network** — Intel X520-DA2, 10G
-- **Out-of-band** — JetKVM with ATX extension
+- **Out-of-band** — JetKVM + ATX Extension Board
 
 ### Networking
 
