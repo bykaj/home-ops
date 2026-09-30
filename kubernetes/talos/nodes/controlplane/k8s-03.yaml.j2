@@ -3,7 +3,7 @@
 # Model: Lenovo M90q Gen 5 (i5-13400T, 64GB)
 # NICs:
 #   - eno1:     c4:c6:e6:52:cf:b0 (e1000e)
-#   - enp1s0f0: Soon(tm) (ixgbe)
+#   - enp1s0f0: b4:96:91:15:cc:28 (ixgbe)
 #   - enp1s0f1: Soon(tm) (ixgbe)
 # Disks:
 #   - nvme0n1:  /dev/disk/by-id/nvme-PC801_NVMe_SK_hynix_1TB
@@ -32,10 +32,17 @@ selector:
   match: link.driver == "e1000e" && mac(link.permanent_addr).startsWith("c4:c6:e6:52:cf:b0")
 ---
 apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: net1
+selector:
+  match: link.driver == "ixgbe" && mac(link.permanent_addr).startsWith("b4:96:91:15:cc:28")
+---
+apiVersion: v1alpha1
 kind: BondConfig
 name: bond0
 links:
   - net0
+  - net1
 bondMode: active-backup
 mtu: 1500
 ---
