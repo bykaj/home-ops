@@ -23,3 +23,7 @@ spec:
         enabled: true
         name: rook-ceph.rbd.csi.ceph.com
         snapshotPolicy: volumeSnapshot
+    operatorConfig:
+      driverSpecDefaults:
+        imageSet:
+          name: rook-csi-operator-image-set-configmap # managed by Rook; cephcsi >= v3.17.1 is required for aes256k keys
