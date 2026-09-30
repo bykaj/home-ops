@@ -142,13 +142,13 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 
 ### Compute
 
-**Cluster** · 3 × Talos/Kubernetes control-plane nodes
+**Cluster** · Talos/Kubernetes
 
-- **Systems** — 2 × Lenovo M920x (i9-9900T), 1 × Lenovo M90q Gen 5 (i5-13400T), 64GB RAM each
-- **OS & Local Storage** — Kingston NV3, 1TB (NVMe) per node
-- **Rook-Ceph** — Micron 7300 PRO, 480GB (NVMe) per node, 3× replicated
-- **Network** — Intel X520-DA2, 10G per node
-- **Out-of-band** — JetKVM with DC extension per node
+- **Systems** — 2 × Lenovo M920x (i9-9900T), 1 × Lenovo M90q Gen 5 (i5-13400T), 64GB RAM
+- **OS & Local Storage** — Kingston NV3, 1TB (NVMe)
+- **Rook-Ceph** — Micron 7300 PRO, 480GB (NVMe)
+- **Network** — Intel X520-DA2, 10G
+- **Out-of-band** — JetKVM with DC extension
 
 ### Storage
 
