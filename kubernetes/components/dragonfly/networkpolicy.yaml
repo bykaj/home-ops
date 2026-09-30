@@ -22,3 +22,21 @@ spec:
       ports:
         - port: 9999
           protocol: TCP
+    # Selecting these pods denies all other ingress, so the app and the operator need explicit access
+    - from:
+        - podSelector: {}
+      ports:
+        - port: 6379
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: database
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: dragonfly-operator
+      ports:
+        - port: 6379
+          protocol: TCP
+        - port: 9999
+          protocol: TCP
