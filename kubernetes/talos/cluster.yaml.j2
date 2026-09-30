@@ -90,6 +90,8 @@ params:
   net.core.rmem_max: "67108864"                 # Cloudflared / QUIC
   net.core.wmem_max: "67108864"                 # Cloudflared / QUIC
   net.ipv4.ip_local_port_range: 1024 65535      # Wider ephemeral port range for outbound connections (default 32768-60999)
+  # Keep fixed host ports out of the wider ephemeral range (etcd, cilium/hubble, kubeprism, node-exporter, kubelet, CSI probes; Talos defaults 30000-32767,50000-50001)
+  net.ipv4.ip_local_reserved_ports: 2379-2381,4240,4244,6443,7445,9100,9234,9879,9890-9891,9962-9964,10248-10260,19809,29642-29653,30000-32767,50000-50001
   net.ipv4.neigh.default.gc_thresh1: "4096"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh2: "8192"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh3: "16384"    # Prevent ARP cache overflows
