@@ -168,7 +168,7 @@ spec:
             keyGeneration: 2
             keyType: aes256k
       storage:
-        devicePathFilter: "^/dev/disk/by-id/nvme-Micron_7300_MTFDHBA480TDF_.*"
+        devicePathFilter: "^/dev/disk/by-id/nvme-(Micron_7300_)?MTFDHBA480TDF_.*" # model string differs per drive batch
         useAllDevices: false
         useAllNodes: true
     monitoring:
