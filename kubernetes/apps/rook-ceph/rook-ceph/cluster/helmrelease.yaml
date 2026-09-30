@@ -105,10 +105,10 @@ spec:
         mon:
           limits:
             cpu: 500m
-            memory: 640Mi
+            memory: 2Gi
           requests:
             cpu: 100m
-            memory: 320Mi
+            memory: 512Mi
         osd:
           limits:
             cpu: 500m
@@ -154,22 +154,23 @@ spec:
       security:
         cephx:
           allowedCiphers:
-            - aes256k
+            - aes256k # Talos 1.14 kernel has the libceph aes256k backport (siderolabs/pkgs@84c1b87)
           daemon:
             keyRotationPolicy: KeyGeneration
             keyGeneration: 2
           csi:
-            keyType: aes256k # Talos 1.14 kernel has the libceph aes256k backport (siderolabs/pkgs@84c1b87)
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keepPriorKeyCountMax: 0
+            keyType: aes256k
+          rbdMirrorPeer:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keyType: aes256k
       storage:
-        useAllNodes: false
+        devicePathFilter: "^/dev/disk/by-id/nvme-Micron_7300_MTFDHBA480TDF_.*"
         useAllDevices: false
-        nodes:
-          - name: k8s-01
-            devicePathFilter: "^/dev/disk/by-id/nvme-Micron_7300_.*"
-          - name: k8s-02
-            devicePathFilter: "^/dev/disk/by-id/nvme-Micron_7300_.*"
-          - name: k8s-03
-            devicePathFilter: "^/dev/disk/by-id/nvme-Micron_7300_.*"
+        useAllNodes: true
     monitoring:
       enabled: true
       createPrometheusRules: true
