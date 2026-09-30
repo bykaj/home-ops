@@ -34,6 +34,11 @@ _Managed with Flux, Renovate, and GitHub Actions_
 3. [Cloud Dependencies](#-cloud-dependencies)
 4. [DNS](#-dns)
 5. [Hardware](#-hardware)
+   - [Compute](#compute)
+   - [Storage](#storage)
+   - [Networking](#networking)
+   - [Power](#power)
+   - [Eye candy](#eye-candy)
 6. [Future Plans](#-future-plans)
 7. [Gratitude and Thanks](#-gratitude-and-thanks)
 8. [License](#-license)
@@ -175,6 +180,13 @@ The first ExternalDNS instance manages private DNS records, syncing them to my U
 ### Power
 
 - **UniFi UPS 2U** — 1500VA rackmount UPS
+
+### Eye candy
+
+<details>
+  <summary>Expand to look in my basement</summary>
+  <img src="https://github.com/bykaj/home-ops/blob/main/assets/images/rack.jpg?raw=true" width="400px">
+</details>
 
 ---
 
