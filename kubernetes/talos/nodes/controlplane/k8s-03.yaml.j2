@@ -29,12 +29,6 @@ apiVersion: v1alpha1
 kind: LinkAliasConfig
 name: net0
 selector:
-  match: link.driver == "e1000e" && mac(link.permanent_addr).startsWith("c4:c6:e6:52:cf:b0")
----
-apiVersion: v1alpha1
-kind: LinkAliasConfig
-name: net1
-selector:
   match: link.driver == "ixgbe" && mac(link.permanent_addr).startsWith("b4:96:91:15:cc:28")
 ---
 apiVersion: v1alpha1
@@ -42,7 +36,6 @@ kind: BondConfig
 name: bond0
 links:
   - net0
-  - net1
 bondMode: active-backup
 mtu: 1500
 ---
