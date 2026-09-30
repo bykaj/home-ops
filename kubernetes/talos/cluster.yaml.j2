@@ -89,7 +89,7 @@ params:
   net.core.default_qdisc: fq                    # FQ pacing qdisc, pairs with BBR
   net.core.rmem_max: "67108864"                 # Cloudflared / QUIC
   net.core.wmem_max: "67108864"                 # Cloudflared / QUIC
-  net.ipv4.ip_local_port_range: 1024 65535      # Wider ephemeral port range for outbound connections (default 32768-60999)
+  net.ipv4.ip_local_port_range: 32768 60999     # Kernel default, keeps fixed host ports (e.g. node-exporter 9100) out of the ephemeral range
   net.ipv4.neigh.default.gc_thresh1: "4096"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh2: "8192"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh3: "16384"    # Prevent ARP cache overflows
