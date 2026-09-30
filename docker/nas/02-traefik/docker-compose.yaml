@@ -35,6 +35,7 @@ services:
       - "10.73.2.100:443:443"
       - "10.73.2.100:69:69/udp"
       - "10.73.2.100:8080:8080"
+    restart: unless-stopped
     volumes:
       - acme:/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
