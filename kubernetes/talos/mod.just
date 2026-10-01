@@ -24,9 +24,9 @@ nvme-power node state="4":
     kubectl debug node/{{ node }} -n default --image=mirror.gcr.io/alpine:latest --profile=sysadmin --attach -q -- sh -euc ' \
         apk add -q nvme-cli >/dev/null; \
         dev=$(grep -l MTFDHBA480TDF /host/sys/class/nvme/nvme*/model | cut -d/ -f6); \
-        nvme set-feature /dev/$dev -f 0x02 -v {{ state }} --save; \
-        nvme get-feature /dev/$dev -f 0x02 -s 0 -H; \
-        nvme get-feature /dev/$dev -f 0x02 -s 2'
+        nvme set-feature /dev/$dev --feature-id=0x02 --value={{ state }} --save; \
+        nvme get-feature /dev/$dev --feature-id=0x02 --sel=0 -H; \
+        nvme get-feature /dev/$dev --feature-id=0x02 --sel=2'
 
 [confirm('Reboot node ' + node + ' [y|N] ?')]
 [doc('Reboot a node')]
