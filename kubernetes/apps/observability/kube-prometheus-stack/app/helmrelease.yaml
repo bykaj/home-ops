@@ -105,6 +105,47 @@ spec:
                 expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
                 labels:
                   severity: critical
+      nvme-rules:
+        groups:
+          - name: nvme
+            rules:
+              - alert: NvmeTemperatureHigh
+                annotations:
+                  description: >-
+                    {{ $labels.model }} ({{ $labels.chip }}) on {{ $labels.nodename }} is at {{ $value | humanize }}°C,
+                    within 2°C of its warning threshold. For the k8s-03 Micron, consider `just talos nvme-power k8s-03`.
+                  summary: NVMe drive is running hot.
+                expr: |
+                  (
+                    node_hwmon_temp_celsius{chip=~"nvme_.+",sensor="temp1"}
+                    >= on (instance, chip, sensor)
+                    (node_hwmon_temp_max_celsius{chip=~"nvme_.+",sensor="temp1"} - 2)
+                  )
+                  * on (instance, chip) group_left (model, serial)
+                    label_replace(node_nvme_info, "chip", "nvme_$1", "device", "(.+)")
+                  * on (instance) group_left (nodename) node_uname_info
+                for: 5m
+                labels:
+                  severity: warning
+              - alert: NvmeTemperatureCritical
+                annotations:
+                  description: >-
+                    {{ $labels.model }} ({{ $labels.chip }}) on {{ $labels.nodename }} is at {{ $value | humanize }}°C,
+                    at or above its warning threshold. The drive may throttle or refuse I/O. For the k8s-03 Micron,
+                    run `just talos nvme-power k8s-03` and/or pause Ceph recovery (`ceph osd set nobackfill/norecover`).
+                  summary: NVMe drive is overheating.
+                expr: |
+                  (
+                    node_hwmon_temp_celsius{chip=~"nvme_.+",sensor="temp1"}
+                    >= on (instance, chip, sensor)
+                    node_hwmon_temp_max_celsius{chip=~"nvme_.+",sensor="temp1"}
+                  )
+                  * on (instance, chip) group_left (model, serial)
+                    label_replace(node_nvme_info, "chip", "nvme_$1", "device", "(.+)")
+                  * on (instance) group_left (nodename) node_uname_info
+                for: 1m
+                labels:
+                  severity: critical
       oom-rules:
         groups:
           - name: oom
@@ -115,13 +156,13 @@ spec:
                 expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
                 labels:
                   severity: critical
-      # zfs-rules:
-      #   groups:
-      #     - name: zfs
-      #       rules:
-      #         - alert: ZfsUnexpectedPoolState
-      #           annotations:
-      #             summary: ZFS pool {{$labels.zpool}} on {{$labels.instance}} is in a unexpected state {{$labels.state}}
-      #           expr: node_zfs_zpool_state{state!="online"} > 0
-      #           labels:
-      #             severity: critical
+      zfs-rules:
+        groups:
+          - name: zfs
+            rules:
+              - alert: ZfsUnexpectedPoolState
+                annotations:
+                  summary: ZFS pool {{$labels.zpool}} on {{$labels.instance}} is in a unexpected state {{$labels.state}}
+                expr: node_zfs_zpool_state{state!="online"} > 0
+                labels:
+                  severity: critical
