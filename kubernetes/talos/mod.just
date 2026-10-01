@@ -17,6 +17,17 @@ download-image version node="":
         "https://factory.talos.dev/image/${SCHEMATIC}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "${SCHEMATIC}"
 
+[confirm('Set Micron NVMe power state on ' + node + ' to PS' + state + ' (saved across reboots) [y|N] ?')]
+[doc('Set the Ceph Micron NVMe power state (0 = 8.25W full, 4 = 4.25W coolest)')]
+nvme-power node state="4":
+    trap 'kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug --field-selector spec.nodeName={{ node }} --ignore-not-found --wait=false' EXIT
+    kubectl debug node/{{ node }} -n default --image=mirror.gcr.io/alpine:latest --profile=sysadmin --attach -q -- sh -euc ' \
+        apk add -q nvme-cli >/dev/null; \
+        dev=$(grep -l MTFDHBA480TDF /host/sys/class/nvme/nvme*/model | cut -d/ -f6); \
+        nvme set-feature /dev/$dev -f 0x02 -v {{ state }} --save; \
+        nvme get-feature /dev/$dev -f 0x02 -s 0 -H; \
+        nvme get-feature /dev/$dev -f 0x02 -s 2'
+
 [confirm('Reboot node ' + node + ' [y|N] ?')]
 [doc('Reboot a node')]
 reboot-node node:
