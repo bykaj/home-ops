@@ -40,6 +40,7 @@ spec:
         - k8s-01-kvm.home.cetana.net
         - k8s-02-kvm.home.cetana.net
         - k8s-03-kvm.home.cetana.net
+        - nas-kvm.home.cetana.net
   metricsPath: /metrics
   relabelings:
     - action: replace
