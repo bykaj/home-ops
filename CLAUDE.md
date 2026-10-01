@@ -80,7 +80,7 @@ Deployed GitOps-style by [doco-cd](https://github.com/kimdre/doco-cd), which pol
 
 ### GitOps flow
 
-Renovate watches the entire repository for dependency updates (chart versions, image tags, Talos/K8s versions, tool versions in `.mise/config.toml`, GitHub Actions, etc.) and opens PRs (`.renovaterc.json5`, extends `home-operations/renovate-presets`). Merging a PR to `main` is what actually changes cluster/NAS state: Flux reconciles `kubernetes/apps` on its own interval, and doco-cd polls and redeploys `docker/nas` stacks hourly. There is no separate "deploy" step — pushing to `main` is the deploy.
+Renovate watches the entire repository for dependency updates (chart versions, image tags, Talos/K8s versions, tool versions in `.mise/config.toml`, GitHub Actions, etc.) and opens PRs (`.renovaterc.json5`, extends `home-operations/renovate-presets`). Merging a PR to `main` is what actually changes cluster/NAS state: every push triggers Flux immediately through a GitHub webhook `Receiver` (`kubernetes/apps/flux-system/flux-instance/app/receiver.yaml`), so there's no need to run `flux reconcile` after a merge; just verify the result. doco-cd polls and redeploys `docker/nas` stacks hourly. There is no separate "deploy" step — pushing to `main` is the deploy.
 
 ### Secrets
 
