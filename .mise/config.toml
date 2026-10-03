@@ -10,7 +10,7 @@ LEFTHOOK_OUTPUT = "false"
 pipx.uvx = true
 
 [tools]
-"1password-cli" = "2.39.0"
+"1password-cli" = "2.40.0"
 "actionlint" = "1.7.12"
 "cloudflared" = "2026.9.3"
 "flux2" = "2.9.6"
