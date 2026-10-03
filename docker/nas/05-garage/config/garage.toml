@@ -1,3 +1,4 @@
+metadata_auto_snapshot_interval = "6h"
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
 db_engine = "lmdb"
