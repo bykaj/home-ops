@@ -23,7 +23,7 @@ spec:
               NUT_EXPORTER__LOG_LEVEL: debug
               NUT_EXPORTER_SERVER: ups.internal
               NUT_EXPORTER_VARIABLES: >-
-                battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,output.voltage,output.voltage.nominal,ups.realpower,ups.load,ups.status
+                battery.charge,battery.runtime,battery.voltage,input.frequency,input.voltage,input.voltage.nominal,output.current,output.voltage,ups.load,ups.power,ups.realpower,ups.realpower.nominal,ups.status,ups.temperature
               TZ: Europe/Amsterdam
             envFrom:
               - secretRef:
