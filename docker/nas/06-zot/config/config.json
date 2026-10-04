@@ -94,7 +94,7 @@
             "scopes": ["openid", "profile", "email", "groups"],
             "claimMapping": {
               "username": "preferred_username",
-              "groups": "Administrators"
+              "groups": "groups"
             }
           }
         }
