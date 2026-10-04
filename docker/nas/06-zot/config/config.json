@@ -54,6 +54,7 @@
               "actions": ["read", "delete"]
             }
           ],
+          "anonymousPolicy": ["read"],
           "defaultPolicy": ["read"]
         },
         "docker-hub/**": {
