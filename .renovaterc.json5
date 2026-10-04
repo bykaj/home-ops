@@ -206,5 +206,11 @@
       matchPackageNames: ["ghcr.io/hotio/whisparr"],
       versioning: "regex:^v(?<compatibility>\\d+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
     },
+    {
+      description: "Override nut-upsd versioning, the -rN suffix is the Alpine package release",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/instantlinux/nut-upsd/"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-r(?<build>\\d+)$",
+    },
   ],
 }
