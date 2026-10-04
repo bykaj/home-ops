@@ -597,6 +597,11 @@ version = "2.21.4"
 backend = "pipx:ansible-core"
 specifiers = ["2.21.4"]
 
+[[tools."pipx:yamllint"]]
+version = "1.38.0"
+backend = "pipx:yamllint"
+specifiers = ["1.38.0"]
+
 [[tools.ripgrep]]
 version = "15.2.0"
 backend = "aqua:BurntSushi/ripgrep"

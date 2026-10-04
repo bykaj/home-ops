@@ -5,12 +5,16 @@ ignore: |
 extends: default
 
 rules:
+  braces:
+    max-spaces-inside: 1
+    min-spaces-inside: 0
   brackets:
     max-spaces-inside: 1
     min-spaces-inside: 0
   comments:
     require-starting-space: true
     min-spaces-from-content: 1
+  comments-indentation: disable
   indentation:
     spaces: consistent
     indent-sequences: consistent
@@ -19,6 +23,7 @@ rules:
   quoted-strings:
     quote-type: double
     required: false
+    allow-quoted-quotes: true
   truthy:
     allowed-values:
       - "true"
