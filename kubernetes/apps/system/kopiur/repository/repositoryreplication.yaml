@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/kopiur.home-operations.com/repositoryreplication_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: RepositoryReplication
+metadata:
+  name: nas-offsite
+spec:
+  sourceRef:
+    kind: ClusterRepository
+    name: nas
+  destination:
+    b2:
+      auth:
+        secretRef:
+          name: kopiur-repository-secret
+      bucket: bykaj-backups
+      prefix: cluster/main/
+  schedule:
+    cron: "30 1 * * *" # Runs every day at 01:30
+  sync:
+    deleteExtra: true
+    parallel: 8
+  suspend: false
