@@ -20,7 +20,7 @@ spec:
               repository: ghcr.io/druggeri/nut_exporter
               tag: 3.3.0@sha256:276460d141c732772f8b1fcd785a7de272473e6d39fd85c32b163efc2999cb9a
             env:
-              NUT_EXPORTER__LOG_LEVEL: debug
+              NUT_EXPORTER__LOG_LEVEL: info
               NUT_EXPORTER_SERVER: 127.0.0.1
               NUT_EXPORTER_VARIABLES: >-
                 battery.charge,battery.runtime,battery.voltage,input.frequency,input.voltage,input.voltage.nominal,output.current,output.voltage,ups.load,ups.power,ups.realpower,ups.realpower.nominal,ups.status,ups.temperature
