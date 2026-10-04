@@ -9,7 +9,7 @@ spec:
     - ../../../../components/dragonfly
     - ../../../../components/postgres
     - ../../../../components/kopiur/backup
-    - ../../../../components/zeroscaler/smb
+    - ../../../../components/zeroscaler/nfs
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -27,13 +27,13 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      APP_UID: "1000"
-      APP_GID: "1000"
+      APP_UID: "4000"
+      APP_GID: "4000"
       APP_NAME: "Paperless"
       APP_SUBDOMAIN: archive
       KOPIUR_CAPACITY: 1Gi
-      KOPIUR_MOVER_UID: "1000"
-      KOPIUR_MOVER_GID: "1000"
+      KOPIUR_MOVER_UID: "4000"
+      KOPIUR_MOVER_GID: "4000"
       POSTGRES_BACKUP_SCHEDULE: "57 0 * * *"
   prune: true
   sourceRef:
