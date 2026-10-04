@@ -11,6 +11,10 @@ external_secrets:
   GARAGE_UI_OIDC_CLIENT_ID: op://Homelab/garage/OIDC_CLIENT_ID
   GARAGE_UI_OIDC_CLIENT_SECRET: op://Homelab/garage/OIDC_CLIENT_SECRET
   UNIFI_API_KEY: op://Homelab/unifi/UNIFI_API_KEY
+  ZOT_HTPASSWD: op://Homelab/zot/HTPASSWD
+  ZOT_OIDC_CLIENT_ID: op://Homelab/zot/OIDC_CLIENT_ID
+  ZOT_OIDC_CLIENT_SECRET: op://Homelab/zot/OIDC_CLIENT_SECRET
+  ZOT_SESSION_KEYS: op://Homelab/zot/SESSION_KEYS
 force_recreate: false
 reconciliation:
   enabled: true

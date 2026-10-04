@@ -1,0 +1,149 @@
+{
+  "distSpecVersion": "1.1.0",
+  "storage": {
+    "gc": true,
+    "gcDelay": "1h",
+    "gcInterval": "24h",
+    "retention": {
+      "dryRun": false,
+      "delay": "24h",
+      "policies": [
+        {
+          "repositories": ["docker-hub/**", "ghcr/**"],
+          "deleteReferrers": true,
+          "deleteUntagged": true,
+          "keepUntagged": {
+            "pulledWithin": "2920h"
+          },
+          "keepTags": [
+            {
+              "patterns": [".*"],
+              "pulledWithin": "4380h"
+            }
+          ]
+        },
+        {
+          "repositories": ["**"],
+          "deleteReferrers": true,
+          "deleteUntagged": true,
+          "keepTags": [
+            {
+              "patterns": [".*"]
+            }
+          ]
+        }
+      ]
+    },
+    "rootDirectory": "/var/lib/registry"
+  },
+  "http": {
+    "accessControl": {
+      "repositories": {
+        "**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"]
+        },
+        "bykaj/**": {
+          "policies": [
+            {
+              "users": ["registry-push"],
+              "actions": ["read", "create", "update"]
+            },
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ],
+          "defaultPolicy": ["read"]
+        },
+        "docker-hub/**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"],
+          "policies": [
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ]
+        },
+        "ghcr/**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"],
+          "policies": [
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ]
+        }
+      }
+    },
+    "address": "0.0.0.0",
+    "auth": {
+      "apikey": true,
+      "htpasswd": {
+        "path": "/etc/zot/htpasswd"
+      },
+      "openid": {
+        "callbackAllowOrigins": ["https://registry.bykaj.app"],
+        "providers": {
+          "oidc": {
+            "name": "Cetana ID",
+            "issuer": "https://auth.cetana.id/application/o/zot-registry/",
+            "credentialsFile": "/etc/zot/openid-credentials.json",
+            "scopes": ["openid", "profile", "email", "groups"],
+            "claimMapping": {
+              "username": "preferred_username",
+              "groups": "groups"
+            }
+          }
+        }
+      },
+      "sessionKeysFile": "/etc/zot/sessionKeys.json"
+    },
+    "externalUrl": "https://registry.bykaj.app",
+    "port": "5000"
+  },
+  "log": {
+    "level": "info"
+  },
+  "extensions": {
+    "search": {
+      "enable": true
+    },
+    "sync": {
+      "enable": true,
+      "registries": [
+        {
+          "urls": ["https://index.docker.io"],
+          "onDemand": true,
+          "tlsVerify": true,
+          "maxRetries": 3,
+          "retryDelay": "5m",
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/docker-hub"
+            }
+          ]
+        },
+        {
+          "urls": ["https://ghcr.io"],
+          "onDemand": true,
+          "tlsVerify": true,
+          "maxRetries": 3,
+          "retryDelay": "5m",
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/ghcr"
+            }
+          ]
+        }
+      ]
+    },
+    "ui": {
+      "enable": true
+    }
+  }
+}

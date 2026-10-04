@@ -1,0 +1,43 @@
+---
+configs:
+  zot_htpasswd:
+    environment: ZOT_HTPASSWD
+  zot_oidc_credentials:
+    content: |
+      {"clientid": "${ZOT_OIDC_CLIENT_ID}", "clientsecret": "${ZOT_OIDC_CLIENT_SECRET}"}
+  zot_session_keys:
+    environment: ZOT_SESSION_KEYS
+name: zot
+networks:
+  apps:
+    name: apps
+    external: true
+services:
+  zot:
+    configs:
+      - source: zot_htpasswd
+        target: /etc/zot/htpasswd
+      - source: zot_oidc_credentials
+        target: /etc/zot/openid-credentials.json
+      - source: zot_session_keys
+        target: /etc/zot/sessionKeys.json
+    container_name: zot
+    image: ghcr.io/project-zot/zot-linux-amd64:v2.1.21
+    labels:
+      dexd.enabled: "true"
+      traefik.enable: "true"
+      traefik.http.routers.zot.rule: Host(`registry.bykaj.app`)
+      traefik.http.services.zot.loadbalancer.server.port: "5000"
+    networks:
+      - apps
+    restart: unless-stopped
+    volumes:
+      - ./config/config.json:/etc/zot/config.json:ro
+      - data:/var/lib/registry
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      device: /mnt/vault/Applications/zot/data
+      o: bind
+      type: none
