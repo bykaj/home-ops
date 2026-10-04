@@ -29,7 +29,7 @@ spec:
         ups:
           - ups-2u
         server:
-          - ups.internal
+          - 127.0.0.1
       path: /ups_metrics
       port: metrics
       scheme: http
