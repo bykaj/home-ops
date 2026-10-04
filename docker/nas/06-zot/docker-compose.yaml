@@ -6,7 +6,8 @@ configs:
     content: |
       {"clientid": "${ZOT_OIDC_CLIENT_ID}", "clientsecret": "${ZOT_OIDC_CLIENT_SECRET}"}
   zot_session_keys:
-    environment: ZOT_SESSION_KEYS
+    content: |
+      {"hashKey": "${ZOT_SESSION_HASH_KEY}", "encryptKey": "${ZOT_SESSION_ENCRYPT_KEY}"}
 name: zot
 networks:
   apps:
