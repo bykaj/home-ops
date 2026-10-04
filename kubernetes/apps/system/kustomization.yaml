@@ -9,7 +9,6 @@ components:
 resources:
   - ./namespace.yaml
   - ./crd-schema-publisher/ks.yaml
-  - ./csi-driver-smb/ks.yaml
   - ./descheduler/ks.yaml
   - ./intel-gpu-resource-driver/ks.yaml
   - ./k8tz/ks.yaml
