@@ -11,12 +11,13 @@ _Managed with Flux, Renovate, and GitHub Actions_
 [![Flux](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fflux_version&style=for-the-badge&logo=flux&logoColor=white&color=blue&label=flux)](https://fluxcd.io)&nbsp;
 [![Renovate](https://img.shields.io/github/actions/workflow/status/bykaj/home-ops/renovate.yaml?branch=main&label=renovate&logo=renovate&logoColor=white&style=for-the-badge&color=blue)](https://github.com/bykaj/home-ops/actions/workflows/renovate.yaml)
 
-[![Age-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_age_days&style=for-the-badge&label=Age)](https://github.com/kashalls/kromgo)&nbsp;
-[![Uptime-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_uptime_days&style=for-the-badge&label=Uptime)](https://github.com/kashalls/kromgo)&nbsp;
-[![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_node_count&style=for-the-badge&label=Nodes)](https://github.com/kashalls/kromgo)&nbsp;
-[![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_pod_count&style=for-the-badge&label=Pods)](https://github.com/kashalls/kromgo)&nbsp;
-[![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_cpu_usage&style=for-the-badge&label=CPU)](https://github.com/kashalls/kromgo)&nbsp;
-[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_memory_usage&style=for-the-badge&label=Memory)](https://github.com/kashalls/kromgo)
+[![Age-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_age_days&style=for-the-badge&label=Age)](https://github.com/home-operations/kromgo)&nbsp;
+[![Uptime-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_uptime_days&style=for-the-badge&label=Uptime)](https://github.com/home-operations/kromgo)&nbsp;
+[![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_node_count&style=for-the-badge&label=Nodes)](https://github.com/home-operations/kromgo)&nbsp;
+[![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_pod_count&style=for-the-badge&label=Pods)](https://github.com/home-operations/kromgo)&nbsp;
+[![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_cpu_usage&style=for-the-badge&label=CPU)](https://github.com/home-operations/kromgo)&nbsp;
+[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_memory_usage&style=for-the-badge&label=Memory)](https://github.com/home-operations/kromgo)&nbsp;
+[![Power](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fcluster_power_usage&style=for-the-badge&label=Power)](https://github.com/home-operations/kromgo)
 
 </div>
 
