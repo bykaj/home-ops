@@ -52,10 +52,10 @@ spec:
                     name: "${APP}-postgres-app"
                     key: username
               # Configure folders
-              PAPERLESS_CONSUMPTION_DIR: &consumePath /mnt/archive/consume
+              PAPERLESS_CONSUMPTION_DIR: /mnt/archive/consume
               PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data
-              PAPERLESS_EXPORT_DIR: &exportPath /mnt/archive/export
-              PAPERLESS_MEDIA_ROOT: &mediaPath /mnt/archive/media
+              PAPERLESS_EXPORT_DIR: /mnt/archive/export
+              PAPERLESS_MEDIA_ROOT: /mnt/archive/media
               # Configure folder importer
               PAPERLESS_CONSUMER_POLLING: "15"
               PAPERLESS_CONSUMER_RECURSIVE: "true"
@@ -86,24 +86,23 @@ spec:
               limits:
                 memory: 4Gi
     persistence:
+      archive:
+        type: nfs
+        path: /mnt/vault/Archive
+        server: nas.internal
+        globalMounts:
+          - path: /mnt/archive
+      backups:
+        type: nfs
+        path: /mnt/vault/Backups
+        server: nas.internal
+        globalMounts:
+          - path: /mnt/backups
+            subPath: Apps/Paperless
       config:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: *dataPath
-      archive:
-        existingClaim: ${APP}-smb-archive
-        globalMounts:
-          - path: *consumePath
-            subPath: consume
-          - path: *exportPath
-            subPath: export
-          - path: *mediaPath
-            subPath: media
-      backups:
-        existingClaim: ${APP}-smb-backups
-        globalMounts:
-          - path: /mnt/backups
-            subPath: Apps/Paperless
       tmpfs:
         type: emptyDir
         globalMounts:
