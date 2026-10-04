@@ -11,8 +11,6 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Kromgo
-      APP_DOMAIN: stats.bykaj.io
-      GATUS_PATH: /talos_version
   prune: true
   sourceRef:
     kind: GitRepository
