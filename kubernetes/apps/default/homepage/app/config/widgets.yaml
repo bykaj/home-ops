@@ -22,7 +22,7 @@
     # focus: true # Optional, will set focus to the search bar on page load
 - openmeteo:
     label: Home
-    latitude: {{HOMEPAGE_VAR_LATITUDE}}
-    longitude: {{HOMEPAGE_VAR_LONGITUDE}}
+    latitude: { { HOMEPAGE_VAR_LATITUDE } }
+    longitude: { { HOMEPAGE_VAR_LONGITUDE } }
     units: metric
     cache: 5 # Time in minutes to cache API responses, to stay within limits
