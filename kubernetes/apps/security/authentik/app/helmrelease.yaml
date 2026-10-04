@@ -97,8 +97,7 @@ spec:
           serviceMonitor:
             enabled: true
       pdb:
-        enabled: true
-        minAvailable: 1
+        enabled: false
       resources:
         requests:
           cpu: 100m
@@ -133,8 +132,7 @@ spec:
     worker:
       metrics: *metrics
       pdb:
-        enabled: true
-        minAvailable: 1
+        enabled: false
       replicas: 1
       resources:
         requests:
