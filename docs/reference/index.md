@@ -10,3 +10,4 @@ description: Lookup material for day-to-day operations
 - [Cloud Dependencies](cloud-dependencies.md): the external services the
   platform relies on, and why
 - [Glossary](glossary.md): terms and acronyms used in these docs
+- [Future Plans](future-plans.md): what's planned next, and what earlier plans became

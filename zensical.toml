@@ -55,8 +55,8 @@ nav = [
     { "Tooling & Validation" = "reference/tooling.md" },
     { "Cloud Dependencies" = "reference/cloud-dependencies.md" },
     { "Glossary" = "reference/glossary.md" },
+    { "Future Plans" = "reference/future-plans.md" },
   ] },
-  { "Future Plans" = "future-plans.md" },
 ]
 
 [project.theme]
