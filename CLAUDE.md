@@ -58,7 +58,7 @@ Each app lives at `kubernetes/apps/<namespace>/<app>/`:
     ├── kustomization.yaml
     ├── ocirepository.yaml     # pins the app-template chart version (oci://ghcr.io/bjw-s-labs/helm/app-template)
     ├── helmrelease.yaml       # values: controllers/service/route/persistence, built on bjw-s-labs/app-template
-    ├── externalsecret.yaml    # optional — pulls 1Password fields via the onepassword-connect ClusterSecretStore
+    ├── externalsecret.yaml    # optional — pulls 1Password fields via the onepassword ClusterSecretStore
     └── resources/              # optional — files wired in via configMapGenerator
 ```
 
@@ -72,7 +72,11 @@ Deployed GitOps-style by [doco-cd](https://github.com/kimdre/doco-cd), which pol
 
 ### `bootstrap/` and `ansible/` — initial provisioning
 
-`bootstrap/mod.just` orchestrates cluster bring-up end to end (Talos config → K8s bootstrap → kubeconfig → base CRDs/manifests → apps via helmfile) and NAS bootstrap (Ansible playbook using `ansible/inventory.yaml`). `bootstrap/README.md` documents the manual bootstrap process this automates.
+`bootstrap/mod.just` orchestrates cluster bring-up end to end (Talos config → K8s bootstrap → kubeconfig → base CRDs/manifests → apps via helmfile) and NAS bootstrap (Ansible playbook using `ansible/inventory.yaml`). The stages are documented in `docs/runbooks/bootstrap.md`.
+
+### `docs/` — documentation site
+
+Technical documentation lives in `docs/` as a [Zensical](https://zensical.org) site, published to GitHub Pages at https://docs.bykaj.com by `.github/workflows/docs.yaml` on every push to `main`. It is the single source of truth; the directory READMEs are short pointers into it. When a change alters behavior the docs describe (apps added/removed/enabled, components, networking/DNS, storage/backups, Talos, `just` recipes), update the affected pages in the same change and add new pages to the `nav` in `zensical.toml`. Validate with `zensical build --strict` (also checks internal links and anchors) or preview with `just docs`. `docs/**` is excluded from oxfmt because Python-Markdown needs 4-space list/admonition indents.
 
 ### `.agents/` — shared agent conventions
 
@@ -84,4 +88,4 @@ Renovate watches the entire repository for dependency updates (chart versions, i
 
 ### Secrets
 
-Runtime secrets never live in Git. In Kubernetes, External Secrets Operator + 1Password Connect (`ClusterSecretStore: onepassword-connect`) inject them as Kubernetes Secrets from `ExternalSecret` resources. In Docker Compose land, doco-cd resolves `op://` references declared in `docker/<host>/.doco-cd.yaml` at deploy time. `op` (1Password CLI) is also used locally for `just template`/bootstrap flows via `op inject`.
+Runtime secrets never live in Git. In Kubernetes, External Secrets Operator + 1Password Connect (`ClusterSecretStore: onepassword`) inject them as Kubernetes Secrets from `ExternalSecret` resources. In Docker Compose land, doco-cd resolves `op://` references declared in `docker/<host>/.doco-cd.yaml` at deploy time. `op` (1Password CLI) is also used locally for `just template`/bootstrap flows via `op inject`.

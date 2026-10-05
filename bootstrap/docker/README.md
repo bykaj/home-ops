@@ -1,11 +1,12 @@
 # Docker
 
-The entire process is driven by a single command:
+Provisions the TrueNAS server with Ansible. Once it completes, doco-cd reconciles `docker/nas/` and
+nothing here is used again until the next provisioning.
 
 ```sh
 just bootstrap nas
 ```
 
-This starts the provisioning of the TrueNAS server with Ansible. Once it completes, Doco-CD
-reconciles the rest of the repository and this directory is not used again until the next
-provisioning.
+See the [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/#nas)
+([source](../../docs/runbooks/bootstrap.md)) and the [Docker](https://docs.bykaj.com/docker/)
+page ([source](../../docs/docker/index.md)).

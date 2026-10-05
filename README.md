@@ -19,6 +19,8 @@ _Managed with Flux, Renovate, and GitHub Actions_
 [![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_memory_usage%3Fformat%3Dshields&style=for-the-badge&label=MEM)](https://github.com/home-operations/kromgo)&nbsp;
 [![Power](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_power_usage%3Fformat%3Dshields&style=for-the-badge&label=PWR)](https://github.com/home-operations/kromgo)
 
+📖 **Documentation:** [docs.bykaj.com](https://docs.bykaj.com)
+
 </div>
 
 ---
@@ -29,9 +31,6 @@ _Managed with Flux, Renovate, and GitHub Actions_
 1. [Overview](#-overview)
 2. [Kubernetes](#-kubernetes)
    - [Core Components](#core-components)
-   - [GitOps](#gitops)
-   - [Folder Structure](#folder-structure)
-   - [Flux Workflow](#flux-workflow)
 3. [Cloud Dependencies](#-cloud-dependencies)
 4. [DNS](#-dns)
 5. [Hardware](#-hardware)
@@ -40,9 +39,8 @@ _Managed with Flux, Renovate, and GitHub Actions_
    - [Networking](#networking)
    - [Power](#power)
    - [Eye candy](#eye-candy)
-6. [Future Plans](#-future-plans)
-7. [Gratitude and Thanks](#-gratitude-and-thanks)
-8. [License](#-license)
+6. [Gratitude and Thanks](#-gratitude-and-thanks)
+7. [License](#-license)
 
 </details>
 
@@ -58,7 +56,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
-The bootstrap process is explained in the [bootstrap](./bootstrap/) folder.
+How it all fits together, from the [GitOps flow](https://docs.bykaj.com/architecture/gitops/) to [bootstrapping the cluster](https://docs.bykaj.com/runbooks/bootstrap/), is covered in the [documentation](https://docs.bykaj.com).
 
 ### Core Components
 
@@ -75,43 +73,7 @@ The bootstrap process is explained in the [bootstrap](./bootstrap/) folder.
 - [rook](https://github.com/rook/rook) – Distributed block storage with Ceph for persistent storage.
 - [spegel](https://github.com/spegel-org/spegel) – Stateless local OCI registry mirror.
 
-### GitOps
-
-Flux watches the cluster in my [kubernetes](./kubernetes/) folder (see [Folder Structure](#folder-structure) below) and makes the changes to my cluster based on the state of my Git repository.
-
-The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or more Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
-
-[Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged Flux applies the changes to my cluster.
-
-### Folder Structure
-
-This Git repository contains the following directories:
-
-```sh
-📁 /
-├── 📁 bootstrap/         # Initial workstation, cluster and NAS bootstrap
-├── 📁 docker/
-│   └── 📁 nas/           # Docker Compose stacks for supporting apps
-├── 📁 kubernetes/
-│   ├── 📁 apps/          # Application deployments (organized by namespace)
-│   ├── 📁 components/    # Reusable kustomize components
-│   ├── 📁 cluster/       # Flux system configuration
-│   └── 📁 talos/         # Talos cluster configuration
-└── 📁 scripts/           # Utility scripts
-```
-
-### Flux Workflow
-
-This is a high-level look at how Flux deploys my applications with dependencies. In most cases a `HelmRelease` will depend on other `HelmRelease`'s, in other cases a `Kustomization` will depend on other `Kustomization`'s, and in rare situations an app can depend on a `HelmRelease` and a `Kustomization`. The example below shows that `plex` won't be deployed or upgraded until the `rook-ceph-cluster` Helm release is installed or in a healthy state.
-
-```mermaid
-graph TD
-    A>Kustomization: rook-ceph] -->|Creates| B[HelmRelease: rook-ceph]
-    A>Kustomization: rook-ceph] -->|Creates| C[HelmRelease: rook-ceph-cluster]
-    C>HelmRelease: rook-ceph-cluster] -->|Depends on| B>HelmRelease: rook-ceph]
-    D>Kustomization: plex] -->|Creates| E(HelmRelease: plex)
-    E>HelmRelease: plex] -->|Depends on| C>HelmRelease: rook-ceph-cluster]
-```
+Everything else that runs in the cluster is listed in the [application catalog](https://docs.bykaj.com/kubernetes/applications/).
 
 ---
 
@@ -133,6 +95,8 @@ This helps me avoid three major headaches:
 3. **The "hit by a bus" factor** – Making sure critical apps like email, password management, and photo storage stay accessible to my family and friends when I'm no longer around.
 
 I could tackle the first two problems by spinning up another Kubernetes cluster in the cloud and deploying alternative apps like [HashiCorp Vault](https://www.vaultproject.io/), [Vaultwarden](https://github.com/dani-garcia/vaultwarden), [ntfy](https://ntfy.sh/), and [Gatus](https://gatus.io/). But honestly, maintaining another cluster and babysitting more workloads would be way more work and expense. Something about free time.
+
+The [documentation](https://docs.bykaj.com/reference/cloud-dependencies/) lists what each service is used for in more detail.
 
 ---
 
@@ -192,16 +156,7 @@ The Docker apps on my NAS get their (LAN-only) records from [dexd](https://githu
   <img src="https://github.com/bykaj/home-ops/blob/main/assets/images/rack.jpg?raw=true" width="400px">
 </details>
 
----
-
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f52e/512.gif" alt="🔮" width="20" height="20"> Future Plans
-
-- [x] **Upgrading to more powerful hardware** – ~~I'm planning to replace my current Lenovo M920q units and self-built server with three [Minisforum MS-01](https://www.minisforum.com/products/minisforum-ms-01?variant=49669512429874) units as Proxmox VE hosts.~~ — Upgraded to 2 × M920x and 1 × M90q G5, from 15 to 48 CPU cores.
-- [ ] ~~**Building a distributed storage foundation** – The new hardware will enable me to implement Ceph distributed block storage directly on my Proxmox VE cluster, creating true high availability. My Kubernetes cluster can then leverage this same storage layer using only the `rook-ceph-operator` as an entry point, eliminating the need for separate storage components within Kubernetes.~~ — No more virtualization, cluster is now bare-metal. The fighting between PVE and Ceph for disk I/O was ... not great.
-- [x] **Expanding network capacity** – I'll add an aggregation switch (most likely the [UniFi USW-Aggregation](https://eu.store.ui.com/eu/en/products/usw-aggregation)) since my current 10Gb SFP+ ports are at capacity. This also aligns with networking best practices.
-- [ ] ~~**Optimizing inter-node connectivity** – I'm implementing 20Gb Thunderbolt networking between cluster nodes, plus dedicated 10Gb SFP+ connections for virtualized Kubernetes nodes to the aggregation switch.~~ — Not with this hardware.
-- [x] **Dedicated NAS hardware** – TrueNAS will move from its current virtualized setup with hardware passthrough to running bare-metal on my existing 3U server.
-- [x] **Better power management** – I'll upgrade to a more powerful UPS and add a managed PDU for improved power distribution and management.
+Per-node details (disks, NICs, Talos volumes) are in the [hardware documentation](https://docs.bykaj.com/hardware/), and what's planned next lives under [Future Plans](https://docs.bykaj.com/reference/future-plans/).
 
 ---
 

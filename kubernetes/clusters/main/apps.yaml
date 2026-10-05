@@ -55,7 +55,7 @@ spec:
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
-    - # Net-new CNPG cluster: plain initdb instead of Barman recovery (see components/postgres/README.md)
+    - # Net-new CNPG cluster: plain initdb instead of Barman recovery (see docs/runbooks/new-database.md)
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
