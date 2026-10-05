@@ -67,7 +67,7 @@ and watches routes on **all** Gateways, plus Services:
 
 Externally published apps therefore get a LAN record too, pointing at
 `envoy-external`'s LoadBalancer IP. Inside the house, they skip Cloudflare,
-with one exception for HTTP/3-capable browsers (see
+unless a browser uses its own DNS over HTTPS (see
 [below](#http3-discovery)).
 
 ## Public records (Cloudflare)
@@ -133,14 +133,31 @@ that the UDM resolves to the gateways need no records of their own.
 
 The records are written by a [UDM boot script](udm-boot-scripts.md#http3-https-records).
 
-!!! important "Externally published apps take the tunnel on the LAN"
+!!! note "Externally published apps stay local on the LAN"
 
     Externally published apps (Plex, and anything else behind the Cloudflare
-    tunnel) are CNAMEs to `external.bykaj.app` in public DNS, and the UDM has no
-    HTTPS record for those names. The browser's HTTPS query goes upstream,
-    Cloudflare answers with its own HTTPS record, and the browser connects
-    through Cloudflare even though the A/AAAA answer is the internal gateway
-    IP. LAN traffic to those apps rides the tunnel instead of the local path.
+    tunnel) also have a LAN record on the UDM: a CNAME to `external.bykaj.app`,
+    which carries the HTTPS record. LAN browsers therefore connect straight to
+    the `envoy-external` gateway and never touch Cloudflare.
+
+    The exception is a browser with its own Secure DNS (DNS over HTTPS) turned
+    on. It bypasses the UDM, gets Cloudflare's public answer, and rides the
+    tunnel. In-cluster clients resolve through CoreDNS and the UDM, so they
+    stay local too. Only Gatus, which deliberately resolves through 1.1.1.1 to
+    test the public path, goes through Cloudflare.
+
+To check which path a request took, follow the `envoy-external` access log
+while opening the app:
+
+```sh
+kubectl -n network logs -l gateway.envoyproxy.io/owning-gateway-name=envoy-external -c envoy -f --since=1s \
+  | grep --line-buffered '"plex.bykaj.app"' \
+  | jq -c '{client: .downstream_remote_address, xff: ."x-forwarded-for", proto: .protocol}'
+```
+
+A LAN `client` address with no cloudflared pod IP in `xff` means the request
+went direct. Your public IP as `client`, with a cloudflared pod in `xff`, means
+it came through the tunnel.
 
 Verify with the commands below. Query the type as `TYPE65`: older dig
 releases (including the 9.10 bundled with macOS) don't know `HTTPS` and silently
