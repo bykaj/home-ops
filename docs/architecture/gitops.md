@@ -57,10 +57,11 @@ CRD-backed resources don't need `dependsOn` chains.
 
 ## NAS: doco-cd
 
-[doco-cd](https://github.com/kimdre/doco-cd) runs on the NAS and polls `main`
-every hour (`reconciliation.interval: 3600`). It auto-discovers stacks one
-directory deep under `docker/nas/` and deletes stacks whose directory
-disappears. See [Docker](../docker/index.md).
+[doco-cd](https://github.com/kimdre/doco-cd) runs on the NAS. A GitHub push
+webhook triggers a deploy on every push to `main`, and it also polls `main`
+every hour as a fallback (`reconciliation.interval: 3600`). It auto-discovers
+stacks one directory deep under `docker/nas/` and deletes stacks whose
+directory disappears. See [Docker](../docker/index.md#webhook).
 
 ## Dependency updates: Renovate
 

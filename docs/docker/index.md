@@ -15,7 +15,9 @@ NAS-local (BGP, hardware exporters).
 file lives in `docker/nas/.doco-cd/`) and is configured by
 [`docker/nas/.doco-cd.yaml`](https://github.com/bykaj/home-ops/blob/main/docker/nas/.doco-cd.yaml):
 
-- polls `bykaj/home-ops` `main` every hour
+- deploys on every push to `main` through a GitHub webhook (see
+  [Webhook](#webhook)), and polls `bykaj/home-ops` `main` every hour as a
+  fallback
 - auto-discovers stacks one directory deep under `docker/nas/`
 - deletes stacks whose directory disappears
 - resolves `op://` secrets from 1Password and passes them to compose as
@@ -30,11 +32,30 @@ sets the order.
     stack and create a new one, including its anonymous volumes. Keep
     directory names stable.
 
-To redeploy immediately instead of waiting for the next poll:
+To redeploy without a push, for example after a failed deploy:
 
 ```sh
 just docker reconcile-nas   # restarts doco-cd on the NAS via Ansible
 ```
+
+### Webhook
+
+GitHub sends push events for `bykaj/home-ops` to
+`https://doco-cd-webhook.bykaj.io/v1/webhook`. The NAS is LAN-only, so the
+request goes through the cluster: Cloudflare Tunnel → `envoy-external` → an
+Envoy Gateway `Backend` in the `network` namespace that points at doco-cd on
+the NAS (`nas.internal:8880`). The `HTTPRoute` only matches `/v1/webhook`, so doco-cd's
+REST API stays off the internet. See
+[`kubernetes/apps/network/doco-cd-webhook/`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/doco-cd-webhook).
+
+doco-cd checks each request's HMAC-SHA256 signature against
+`WEBHOOK_SECRET_FILE` (`~/.config/doco-cd/webhook_secret` on the NAS). The
+GitHub webhook must use the same secret, with content type
+`application/json` and only the push event.
+
+Gatus checks the route with a `GET`, which doco-cd answers with
+`405 Method Not Allowed`. That status means the whole path from Cloudflare to
+the NAS is up.
 
 ## Ingress and DNS
 
