@@ -602,6 +602,11 @@ version = "1.38.0"
 backend = "pipx:yamllint"
 specifiers = ["1.38.0"]
 
+[[tools."pipx:zensical"]]
+version = "0.0.67"
+backend = "pipx:zensical"
+specifiers = ["0.0.67"]
+
 [[tools.ripgrep]]
 version = "15.2.0"
 backend = "aqua:BurntSushi/ripgrep"

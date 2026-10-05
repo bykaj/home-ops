@@ -25,3 +25,6 @@ talosconfig
 .claude/settings.local.json
 *.iso
 Brewfile.lock.json
+
+# Docs
+site/

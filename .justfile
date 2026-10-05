@@ -13,6 +13,11 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 [group('bootstrap')]
 mod bootstrap "bootstrap"
 
+[doc('Serve the docs site locally with live reload')]
+[group('docs')]
+docs:
+    zensical serve
+
 # Specific Docker recipes
 [group('docker')]
 mod docker "docker"

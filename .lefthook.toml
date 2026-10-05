@@ -30,6 +30,8 @@ stage_fixed = true
 [pre-commit.commands.format-markdown]
 glob = ["*.md", "*.markdown", "*.mdx"]
 run = "oxfmt {staged_files}"
+# Zensical (Python-Markdown) needs 4-space list/definition indents that oxfmt rewrites to 2
+exclude = ["docs/**"]
 stage_fixed = true
 
 [pre-commit.commands.format-yaml]
