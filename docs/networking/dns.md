@@ -93,9 +93,12 @@ creates a CNAME in UniFi from the container's Traefik `Host()` rule to the
 reverse proxy:
 
 ```text
-registry.bykaj.app → proxy.bykaj.io → 10.73.2.100   # Traefik on the NAS
-s3.bykaj.io        → proxy.bykaj.io
+registry.bykaj.app → docker.bykaj.app → 10.73.2.100   # Traefik on the NAS
+s3.bykaj.io        → docker.bykaj.app
 ```
+
+`docker.bykaj.app` follows the Gateway naming (`internal.bykaj.app`,
+`external.bykaj.app`): it names the entry point for the Compose stacks.
 
 NAS services are LAN-only. dexd writes nothing to Cloudflare. See
 [Docker](../docker/index.md#ingress-and-dns).
@@ -108,7 +111,7 @@ before the cluster or the NAS stacks do, or because nothing else owns them:
 | Record | Type | Target | Purpose |
 | --- | --- | --- | --- |
 | `k8s.internal` | A | `10.73.20.100` | Kubernetes API (`kube-api` LoadBalancer) |
-| `proxy.bykaj.io` | A | `10.73.2.100` | Traefik on the NAS; target of every dexd record |
+| `docker.bykaj.app` | A | `10.73.2.100` | Traefik on the NAS; target of every dexd record |
 | `nas.internal`, `nas` | CNAME | `nas.home.cetana.net` | NAS (NFS server, Kopia repository) |
 | `k8s-01`, `k8s-02`, `k8s-03` | CNAME | `k8s-0N.home.cetana.net` | Nodes |
 | `ups.internal` | A | `10.73.0.50` | UPS |
