@@ -122,6 +122,11 @@ before the cluster or the NAS stacks do, or because nothing else owns them:
     filters, so it is ignored. The record has to exist before Cilium does
     anyway, during [bootstrap](../runbooks/bootstrap.md).
 
+    The annotation is kept on purpose. If the API endpoint ever moves to a
+    hostname inside one of the managed zones, changing the annotation is
+    enough: `external-dns-unifi` then picks it up (the UniFi instance watches
+    Services) without anyone having to remember to add it.
+
 ## HTTP/3 discovery
 
 Envoy Gateway serves HTTP/3 (`http3: {}` in the `ClientTrafficPolicy`, UDP 443
