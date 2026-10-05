@@ -46,7 +46,6 @@ volume. See [Backups](../storage/backups.md) for the full lifecycle.
 | `KOPIUR_SNAPSHOTCLASS` | `csi-ceph-blockpool` | |
 | `KOPIUR_CACHE_STORAGECLASS` | `openebs-hostpath` | |
 | `KOPIUR_MOVER_UID` / `KOPIUR_MOVER_GID` | `4000` | Must match the file ownership in the volume |
-| `KOPIUR_NON_ROOT` | `true` | |
 
 ## `postgres`
 

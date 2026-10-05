@@ -59,9 +59,17 @@ spec:
 
 !!! tip "What not to add"
 
-    `wait`, `timeout`, `retryInterval`, `commonMetadata` and HelmRelease
-    install/upgrade strategies are injected by `cluster-apps`. See
-    [cluster-wide defaults](../architecture/gitops.md#cluster-wide-defaults).
+    `timeout`, `retryInterval`, `deletionPolicy` and the HelmRelease
+    install/upgrade strategies are injected by `cluster-apps` (see
+    [cluster-wide defaults](../architecture/gitops.md#cluster-wide-defaults)).
+    `commonMetadata` isn't used: the chart already sets the
+    `app.kubernetes.io/*` labels.
+
+    `wait` is **not** injected. Leave it unset for a normal app. Set
+    `wait: true` only when another Kustomization `dependsOn` this one and it
+    has no `healthChecks`/`healthCheckExprs`, as the operator Kustomizations
+    (CloudNative-PG, Dragonfly, Rook-Ceph and others) do. With health checks
+    defined, leave `wait` unset, because `wait: true` makes Flux ignore them.
 
 ## The HelmRelease
 

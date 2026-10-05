@@ -39,7 +39,8 @@ A brand-new database needs one extra label on first deploy. See
 
 ## Connecting from an app
 
-CNPG generates a `${APP}-app` Secret with the keys `uri`, `jdbc-uri`,
+CNPG names everything after the `Cluster`, `${APP}-postgres`. It generates a
+`${APP}-postgres-app` Secret with the keys `uri`, `jdbc-uri`,
 `username`, `password`, `host`, `port`, `dbname` and `pgpass`. In an
 app-template HelmRelease:
 
@@ -48,11 +49,11 @@ env:
   DATABASE_URL:
     valueFrom:
       secretKeyRef:
-        name: "{{ .Release.Name }}-app"
+        name: "{{ .Release.Name }}-postgres-app"
         key: uri
 ```
 
-`uri` points at the read-write primary Service `${APP}-rw`. There is no
+`uri` points at the read-write primary Service `${APP}-postgres-rw`. There is no
 PgBouncer `Pooler`. Apps connect directly.
 
 ## Bootstrap behavior
@@ -73,7 +74,7 @@ so names don't collide.
   `retentionPolicy: 14d`.
 - **Local dumps** with
   [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local)
-  to an NFS share on the NAS, keeping 7 daily, 4 weekly and 6 monthly.
+  to an NFS share on the NAS, keeping 7 daily, 4 weekly and 1 monthly.
 
 Trigger a manual base backup with `just k8s db-backup <namespace> <app>`.
 

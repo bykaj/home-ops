@@ -54,7 +54,7 @@ spec:
     namespace: flux-system
 ```
 
-What the label does (via the patch in [`clusters/main/apps.yaml`](../../clusters/main/apps.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-app` Secret as usual.
+What the label does (via the patch in [`clusters/main/apps.yaml`](../../clusters/main/apps.yaml)): strips `spec.bootstrap.recovery` and `spec.externalClusters`, replacing `bootstrap` with a plain `initdb` that creates a database + owner role named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into the `${APP}-postgres-app` Secret as usual.
 
 > [!WARNING]
 > The patch's `${...}` vars are substituted by the app's own Flux Kustomization. If `cluster-apps` ever gains a `postBuild`, escape them as `$${...}` in the patch so they survive that first (outer) substitution.
@@ -84,11 +84,11 @@ just k8s db-backup ${NAMESPACE} ${APP}
 Daily full backups via:
 
 - the `ScheduledBackup` resource (see [`scheduledbackup.yaml`](./scheduledbackup.yaml)). Continuous WAL archiving to the same `s3://postgresql/${APP}/${POSTGRES_DATABASE}/` prefix. `retentionPolicy: 14d`.
-- a [prodrigestivill/docker-postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) container to a local NFS share with a retention of 7 days, 4 weeks and 6 months.
+- a [prodrigestivill/docker-postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) container to a local NFS share with a retention of 7 days, 4 weeks and 1 month.
 
 ## Connecting from an app
 
-CNPG generates a `${APP}-app` Secret with these keys: `uri`, `jdbc-uri`, `username`, `password`, `host`, `port`, `dbname`, `pgpass`.
+CNPG generates a `${APP}-postgres-app` Secret (named after the `${APP}-postgres` `Cluster`) with these keys: `uri`, `jdbc-uri`, `username`, `password`, `host`, `port`, `dbname`, `pgpass`.
 
 Standard app-template pattern:
 
@@ -96,11 +96,11 @@ Standard app-template pattern:
 DATABASE_URL:
   valueFrom:
     secretKeyRef:
-      name: "{{ .Release.Name }}-app"
+      name: "{{ .Release.Name }}-postgres-app"
       key: uri
 ```
 
-The `uri` points at the cluster's read-write primary service `${APP}-rw`. There is no `Pooler` / PgBouncer in this component — apps connect directly. If transaction-mode pooling is ever needed (e.g. authentik at scale), add a `Pooler` CRD per cluster as a follow-up.
+The `uri` points at the cluster's read-write primary service `${APP}-postgres-rw`. There is no `Pooler` / PgBouncer in this component — apps connect directly. If transaction-mode pooling is ever needed (e.g. authentik at scale), add a `Pooler` CRD per cluster as a follow-up.
 
 ## Health check expression
 
