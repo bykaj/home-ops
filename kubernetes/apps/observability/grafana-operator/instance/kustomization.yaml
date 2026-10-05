@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./grafana.yaml
   - ./grafanadatasource.yaml
-  - ./mutatingadmissionpolicy.yaml
   - ./servicemonitor.yaml

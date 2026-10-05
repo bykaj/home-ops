@@ -9,7 +9,7 @@
       "delay": "24h",
       "policies": [
         {
-          "repositories": ["docker-hub/**", "ghcr/**"],
+          "repositories": ["docker-hub/**", "ghcr/**", "k8s/**", "quay/**"],
           "deleteReferrers": true,
           "deleteUntagged": true,
           "keepUntagged": {
@@ -68,6 +68,26 @@
           ]
         },
         "ghcr/**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"],
+          "policies": [
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ]
+        },
+        "quay/**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"],
+          "policies": [
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ]
+        },
+        "k8s/**": {
           "anonymousPolicy": ["read"],
           "defaultPolicy": ["read"],
           "policies": [
@@ -138,6 +158,32 @@
             {
               "prefix": "**",
               "destination": "/ghcr"
+            }
+          ]
+        },
+        {
+          "urls": ["https://quay.io"],
+          "onDemand": true,
+          "tlsVerify": true,
+          "maxRetries": 3,
+          "retryDelay": "5m",
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/quay"
+            }
+          ]
+        },
+        {
+          "urls": ["https://registry.k8s.io"],
+          "onDemand": true,
+          "tlsVerify": true,
+          "maxRetries": 3,
+          "retryDelay": "5m",
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/k8s"
             }
           ]
         }

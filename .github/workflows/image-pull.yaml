@@ -85,6 +85,50 @@ jobs:
           IMAGE: ${{ matrix.image }}
         run: talosctl --nodes "$NODE" image pull "$IMAGE"
 
+      # Digest pulls are stored untagged in Zot; requesting the tag makes its on-demand sync record it
+      - name: Register Tag in Zot
+        env:
+          IMAGE: ${{ matrix.image }}
+          ZOT_URL: https://registry.bykaj.app
+        run: |
+          ref="${IMAGE%%@*}"
+          name="${ref%:*}"
+          tag="${ref##*:}"
+          if [[ "$name" == "$ref" || "$tag" == */* ]]; then
+            echo "No tag in $IMAGE, skipping"
+            exit 0
+          fi
+
+          registry="${name%%/*}"
+          if [[ "$registry" != *.* && "$registry" != *:* && "$registry" != localhost ]]; then
+            registry="docker.io"
+            name="docker.io/$name"
+          fi
+          repo="${name#*/}"
+
+          case "$registry" in
+            docker.io)
+              prefix="docker-hub"
+              [[ "$repo" != */* ]] && repo="library/$repo"
+              ;;
+            ghcr.io) prefix="ghcr" ;;
+            quay.io) prefix="quay" ;;
+            registry.k8s.io) prefix="k8s" ;;
+            *)
+              echo "$registry is not mirrored by Zot, skipping"
+              exit 0
+              ;;
+          esac
+
+          url="$ZOT_URL/v2/$prefix/$repo/manifests/$tag"
+          if curl -fsS -o /dev/null --retry 3 \
+            -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json" \
+            "$url"; then
+            echo "Registered $prefix/$repo:$tag in Zot"
+          else
+            echo "::warning::Failed to register $prefix/$repo:$tag in Zot"
+          fi
+
   success:
     if: ${{ !cancelled() }}
     needs: pull
