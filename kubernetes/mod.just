@@ -34,7 +34,7 @@ debug-node node:
 
 [doc('Delete local Flux Kustomization')]
 delete-ks ns ks:
-    just kube render-local-ks "{{ ns }}" "{{ ks }}" | kubectl delete -f -
+    just k8s render-local-ks "{{ ns }}" "{{ ks }}" | kubectl delete -f -
 
 [doc('Prune pods in Failed, Pending, or Succeeded state')]
 prune-pods:

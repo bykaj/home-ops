@@ -8,7 +8,7 @@ description: PVC backups with Kopiur, database backups with CNPG, and deploy-or-
 | --- | --- | --- | --- | --- |
 | App PVCs | [Kopiur](https://github.com/home-operations/kopiur) (Kopia) | NFS repo on the NAS, `/mnt/vault/Backups/Cluster/main/kopiur` | Hourly (minute hashed per app) | 3 latest, 24 hourly, 7 daily, 4 weekly |
 | PostgreSQL (WAL + base) | CNPG Barman Cloud plugin | Garage S3, `s3://postgresql/<app>/` | Continuous WAL, daily base | 14 days |
-| PostgreSQL (dumps) | [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) | NFS share on the NAS | Daily | 7 daily, 4 weekly, 6 monthly |
+| PostgreSQL (dumps) | [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) | NFS share on the NAS | Daily | 7 daily, 4 weekly, 1 monthly |
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 
 Everything above lands on the NAS first. The Kopia repository is then copied

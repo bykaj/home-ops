@@ -46,7 +46,7 @@ A patch in `cluster-apps` matches the label. It strips
 `spec.bootstrap.recovery` and `spec.externalClusters` from the `Cluster`, and
 replaces `bootstrap` with an `initdb` that creates a database and owner role
 named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into
-the `${APP}-app` Secret as usual.
+the `${APP}-postgres-app` Secret as usual.
 
 ## 2. Get a first backup
 

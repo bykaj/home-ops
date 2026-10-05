@@ -45,8 +45,11 @@ skill, which coding agents also follow. This page is the short version.
 
 ## Common mistakes
 
-- Adding `wait`, `timeout` or `commonMetadata` to `ks.yaml`. `cluster-apps`
-  already injects those.
+- Adding `timeout` or `commonMetadata` to `ks.yaml`. `cluster-apps` injects
+  `timeout`, and the chart already sets the labels `commonMetadata` would add.
+- Adding `wait: true` by reflex. Leave it unset, unless another Kustomization
+  depends on this app and it has no health checks. Then `wait: true` is what
+  gives the dependent a readiness gate.
 - `readOnlyRootFilesystem: true` without a writable `tmpfs` for `/tmp`.
 - Forgetting the `kopiur/secret` component at the namespace level when the
   app's namespace has no other backed-up apps.
