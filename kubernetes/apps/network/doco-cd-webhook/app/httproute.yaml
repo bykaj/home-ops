@@ -5,10 +5,12 @@ kind: HTTPRoute
 metadata:
   name: doco-cd-webhook
   annotations:
+    # Every request to /v1/webhook creates a doco-cd job, so probe /v1/health instead.
+    # The tunnel → envoy-external path is covered by the flux-webhook check.
     gatus.home-operations.com/endpoint: |-
-      conditions: ["[STATUS] == 405"]
+      conditions: ["[STATUS] == 200"]
       group: infrastructure
-      url: https://doco-cd-webhook.bykaj.io/v1/webhook
+      url: http://nas.internal:8880/v1/health
 spec:
   hostnames: ["doco-cd-webhook.bykaj.io"]
   parentRefs:

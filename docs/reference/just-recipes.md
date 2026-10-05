@@ -76,4 +76,5 @@ NAS operations
 
 | Recipe | Does |
 | --- | --- |
-| `reconcile-nas` | Restart doco-cd on the NAS via Ansible, triggering an immediate redeploy |
+| `restart-doco-cd` | Restart doco-cd on the NAS via Ansible, without applying compose changes (use `just bootstrap nas` for those) |
+| `sync-stacks` | Trigger a doco-cd poll of `main` through its REST API and wait for the result |
