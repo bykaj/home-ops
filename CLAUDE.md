@@ -24,7 +24,7 @@ just docker <recipe>             # docker/mod.just — NAS doco-cd operations
 
 Frequently used `just k8s` recipes: `sync ks|hr|gitrepo|ocirepo|es` (force Flux/ExternalSecrets reconciliation), `sync-hr`/`sync-ks`/`sync-es <ns> <name>` (single resource), `apply-ks`/`delete-ks <ns> <ks>` (render+apply/delete a Flux Kustomization locally via `flate`), `toolbox` (shell into rook-ceph-tools), `view-secret <ns> <secret>`, `browse-pvc <ns> <claim>`, `debug-node <node>`, `db-backup <ns> <app>` (manual CNPG backup), `prune-pods`.
 
-`just bootstrap cluster` runs the full sequence: apply Talos config to nodes → bootstrap Kubernetes → fetch kubeconfig → apply base manifests/CRDs (kustomize + helmfile) → sync apps helmfile → fetch kubeconfig again. `just bootstrap nas` runs the Ansible playbook that bootstraps TrueNAS. `just docker reconcile-nas` restarts doco-cd on the NAS via Ansible.
+`just bootstrap cluster` runs the full sequence: apply Talos config to nodes → bootstrap Kubernetes → fetch kubeconfig → apply base manifests/CRDs (kustomize + helmfile) → sync apps helmfile → fetch kubeconfig again. `just bootstrap nas` runs the Ansible playbook that bootstraps TrueNAS. `just docker sync-stacks` triggers an immediate doco-cd poll of `main` through its REST API; `just docker restart-doco-cd` only restarts the doco-cd container via Ansible; changes to `docker/nas/.doco-cd/docker-compose.app.yaml` are applied with `just bootstrap nas`.
 
 ### Validating a single Kubernetes app
 

@@ -35,8 +35,19 @@ sets the order.
 To redeploy without a push, for example after a failed deploy:
 
 ```sh
-just docker reconcile-nas   # restarts doco-cd on the NAS via Ansible
+just docker sync-stacks     # poll main now through doco-cd's REST API
 ```
+
+The recipe calls `POST /v1/api/poll/run` on `nas.internal:8880` with the API
+secret from 1Password (`op://Homelab/doco-cd/API_SECRET`). It waits for the run
+and fails if the run doesn't succeed. Only changed stacks are redeployed.
+
+doco-cd can't manage its own stack. After changing
+`docker/nas/.doco-cd/docker-compose.app.yaml`, run `just bootstrap nas`: it
+copies the file and its secrets to the NAS and runs `docker compose up`.
+`just docker restart-doco-cd` only restarts the running container (via Ansible)
+and doesn't pick up compose changes. Changes to `docker/nas/.doco-cd.yaml`
+need neither: doco-cd reads it from the repo on every run.
 
 ### Webhook
 
@@ -59,9 +70,10 @@ sets `webhook_filter: ^refs/heads/main$` so doco-cd skips the others, and
 pushing a PR branch (Renovate's included) would deploy it to the NAS before
 it is merged.
 
-Gatus checks the route with a `GET`, which doco-cd answers with
-`405 Method Not Allowed`. That status means the whole path from Cloudflare to
-the NAS is up.
+Gatus checks doco-cd's `/v1/health` on `nas.internal:8880` rather than the
+public route, because every request to `/v1/webhook` (even a `GET`) shows up
+as a failed job in doco-cd's run history. The Cloudflare Tunnel →
+`envoy-external` part is the same path the `flux-webhook` check covers.
 
 ## Ingress and DNS
 
