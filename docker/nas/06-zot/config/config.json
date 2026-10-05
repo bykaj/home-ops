@@ -9,7 +9,7 @@
       "delay": "24h",
       "policies": [
         {
-          "repositories": ["docker-hub/**", "ghcr/**"],
+          "repositories": ["docker-hub/**", "ghcr/**", "quay/**"],
           "deleteReferrers": true,
           "deleteUntagged": true,
           "keepUntagged": {
@@ -68,6 +68,16 @@
           ]
         },
         "ghcr/**": {
+          "anonymousPolicy": ["read"],
+          "defaultPolicy": ["read"],
+          "policies": [
+            {
+              "groups": ["registry-ui-users"],
+              "actions": ["read", "delete"]
+            }
+          ]
+        },
+        "quay/**": {
           "anonymousPolicy": ["read"],
           "defaultPolicy": ["read"],
           "policies": [
@@ -138,6 +148,19 @@
             {
               "prefix": "**",
               "destination": "/ghcr"
+            }
+          ]
+        },
+        {
+          "urls": ["https://quay.io"],
+          "onDemand": true,
+          "tlsVerify": true,
+          "maxRetries": 3,
+          "retryDelay": "5m",
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/quay"
             }
           ]
         }

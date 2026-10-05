@@ -154,6 +154,14 @@ endpoints:
 skipFallback: false
 ---
 apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: quay.io
+endpoints:
+  - url: https://registry.bykaj.app/v2/quay/
+    overridePath: true
+skipFallback: false
+---
+apiVersion: v1alpha1
 kind: KubeNodeConfig
 nodeIP:
   validSubnets:
