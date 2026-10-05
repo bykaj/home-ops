@@ -162,6 +162,14 @@ endpoints:
 skipFallback: false
 ---
 apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: registry.k8s.io
+endpoints:
+  - url: https://registry.bykaj.app/v2/k8s/
+    overridePath: true
+skipFallback: false
+---
+apiVersion: v1alpha1
 kind: KubeNodeConfig
 nodeIP:
   validSubnets:

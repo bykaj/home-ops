@@ -21,7 +21,7 @@ download-image version node="":
 [doc('Set the Ceph Micron NVMe power state (0 = 8.25W full, 4 = 4.25W coolest)')]
 nvme-power node state="4":
     trap 'kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug --field-selector spec.nodeName={{ node }} --ignore-not-found --wait=false' EXIT
-    kubectl debug node/{{ node }} -n default --image=mirror.gcr.io/alpine:latest --profile=sysadmin --attach -q -- sh -euc ' \
+    kubectl debug node/{{ node }} -n default --image=docker.io/library/alpine:latest --profile=sysadmin --attach -q -- sh -euc ' \
         apk add -q nvme-cli >/dev/null; \
         dev=$(grep -l MTFDHBA480TDF /host/sys/class/nvme/nvme*/model | cut -d/ -f6); \
         nvme set-feature /dev/$dev --feature-id=0x02 --value={{ state }} --save; \

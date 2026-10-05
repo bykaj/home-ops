@@ -113,6 +113,7 @@ jobs:
               ;;
             ghcr.io) prefix="ghcr" ;;
             quay.io) prefix="quay" ;;
+            registry.k8s.io) prefix="k8s" ;;
             *)
               echo "$registry is not mirrored by Zot, skipping"
               exit 0

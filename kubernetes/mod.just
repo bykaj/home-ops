@@ -11,8 +11,8 @@ apply-ks ns ks:
 [doc('Browse a PVC')]
 browse-pvc ns claim:
     kubectl run -n {{ ns }} browse-pvc-{{ claim }} -it --rm --restart=Never \
-        --image=mirror.gcr.io/alpine:latest \
-        --overrides='{"spec":{"containers":[{"name":"browse-pvc-{{ claim }}","image":"mirror.gcr.io/alpine:latest","stdin":true,"tty":true,"command":["/bin/sh"],"workingDir":"/mnt","volumeMounts":[{"mountPath":"/mnt","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ claim }}"}}]}}'
+        --image=docker.io/library/alpine:latest \
+        --overrides='{"spec":{"containers":[{"name":"browse-pvc-{{ claim }}","image":"docker.io/library/alpine:latest","stdin":true,"tty":true,"command":["/bin/sh"],"workingDir":"/mnt","volumeMounts":[{"mountPath":"/mnt","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ claim }}"}}]}}'
 
 [doc('Derive a pseudo-random cron minute (0-59) from a name')]
 cron-minute name:
@@ -30,7 +30,7 @@ db-backup ns app:
 [doc('Debug a node')]
 debug-node node:
     trap 'kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug --field-selector spec.nodeName={{ node }} --ignore-not-found --wait=false' EXIT
-    kubectl debug node/{{ node }} -n default -it --image=mirror.gcr.io/alpine:latest --profile=sysadmin
+    kubectl debug node/{{ node }} -n default -it --image=docker.io/library/alpine:latest --profile=sysadmin
 
 [doc('Delete local Flux Kustomization')]
 delete-ks ns ks:
