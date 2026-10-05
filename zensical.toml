@@ -6,7 +6,7 @@
 site_name = "Home Operations"
 site_description = "Technical documentation for Kaj's home infrastructure: a bare-metal Talos/Kubernetes cluster and a TrueNAS host, managed with GitOps."
 site_author = "Kaj"
-site_url = "https://bykaj.github.io/home-ops/"
+site_url = "https://docs.bykaj.com/"
 repo_url = "https://github.com/bykaj/home-ops"
 repo_name = "bykaj/home-ops"
 edit_uri = "edit/main/docs/"
