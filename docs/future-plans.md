@@ -9,7 +9,9 @@ description: What's planned next for the platform, and what earlier plans became
 Nothing is planned right now. The previous round of plans wrapped up in
 Q3 2026 (see below).
 
-## Completed in Q3 2026
+## Completed
+
+### Q3 2026
 
 - [x] **Upgrading to more powerful hardware**: replace the Lenovo M920q units
       and the self-built server with three Minisforum MS-01 units as Proxmox VE
