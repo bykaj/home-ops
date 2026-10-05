@@ -145,7 +145,7 @@ the namespace `kustomization.yaml`.
 | [thelounge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/thelounge) | IRC client |
 | [wallos](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wallos) | Subscription tracking |
 | [wastebin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wastebin) | Pastebin |
-| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Work and project management |
+| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management |
 
 ## Disabled
 
