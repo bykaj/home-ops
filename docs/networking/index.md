@@ -10,7 +10,7 @@ description: Subnets, VIPs, gateways and how traffic reaches apps
 | --- | --- |
 | `10.73.0.254` | UDM Pro Max (gateway, BGP router ID) |
 | `10.73.1.10` | NAS, announced over BGP as a `/32` VIP |
-| `10.73.2.100` | Traefik reverse proxy on the NAS (`proxy.bykaj.app`) |
+| `10.73.2.100` | Traefik reverse proxy on the NAS (`proxy.bykaj.io`) |
 | `10.73.20.0/24` | Servers subnet: node IPs and the Cilium LoadBalancer pool |
 | `10.73.20.10` / `.20` / `.30` | `k8s-01` / `k8s-02` / `k8s-03` |
 | `10.73.20.100` | `kube-api` LoadBalancer (`k8s.internal`) |

@@ -17,7 +17,7 @@ Everything is driven by
 - A valid `talosconfig` at the repo root. The controller endpoint and node list
   are derived from `talosctl config info`, so nothing is hardcoded.
 - The UDM [BGP config](../networking/bgp.md#udm-frr-config) and
-  [static DNS records](../networking/dns.md#static-records) in place.
+  [static DNS records](../networking/dns.md#manual-records) in place.
   `k8s.internal` only works once Cilium is running, so bootstrap talks to the
   controller's node IP until then.
 - Nodes booted into Talos maintenance mode, for example from a

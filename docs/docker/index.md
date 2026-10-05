@@ -54,7 +54,9 @@ labels:
 ```
 
 [dexd](https://github.com/ishioni/dexd) (`01-dexd`) watches Docker labels and
-writes matching DNS records to the UDM, pointing at the proxy.
+writes a CNAME to the UDM for each `Host()` rule, pointing at `proxy.bykaj.io`
+(a static A record for `10.73.2.100`). NAS services are LAN-only. See
+[DNS → NAS records](../networking/dns.md#nas-records-dexd).
 
 ## Stacks
 

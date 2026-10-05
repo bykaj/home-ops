@@ -66,7 +66,7 @@ The bootstrap process is explained in the [bootstrap](./bootstrap/) folder.
 - [cert-manager](https://github.com/cert-manager/cert-manager) – Creates SSL certificates for services in my cluster.
 - [cilium](https://github.com/cilium/cilium) – eBPF-based networking for my workloads.
 - [cloudflared](https://github.com/cloudflare/cloudflared) – Enables Cloudflare secure access to my routes.
-- [external-dns](https://github.com/kubernetes-sigs/external-dns) – Automatically syncs ingress DNS records to a DNS provider (see [DNS](#-dns) below).
+- [external-dns](https://github.com/kubernetes-sigs/external-dns) – Automatically syncs Gateway API route DNS records to UniFi and Cloudflare (see [DNS](#-dns) below).
 - [external-secrets](https://github.com/external-secrets/external-secrets) – Kubernetes secrets injection using [1Password Connect](https://github.com/1Password/connect).
 - [flux](https://github.com/fluxcd/flux2) – Syncs Kubernetes configuration in Git to the cluster.
 - [kopiur](https://github.com/home-operations/kopiur) – Backup and recovery of persistent volume claims.
@@ -138,9 +138,12 @@ I could tackle the first two problems by spinning up another Kubernetes cluster 
 
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f30e/512.gif" alt="🌎" width="20" height="20"> DNS
 
-My cluster implements a split-horizon DNS configuration using two [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) instances, each handling different DNS zones. This setup allows me to maintain separate private and public DNS records while orchestrating them through distinct ingress classes.
+My cluster runs split-horizon DNS: the same hostname resolves differently on my LAN than on the internet. Two [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) instances watch my [Gateway API](https://gateway-api.sigs.k8s.io/) routes and write records for six zones, each to its own provider.
 
-The first ExternalDNS instance manages private DNS records, syncing them to my UniFi UDM gateway via the [ExternalDNS Webhook Provider for UniFi](https://github.com/home-operations/external-dns-unifi-webhook). The second instance handles public DNS records, syncing them directly to Cloudflare. Each instance monitors only its designated ingress class—`internal` for private DNS management and `external` for public DNS synchronization—ensuring precise control over which DNS platform receives updates.
+- **Private (UniFi)** – The first instance syncs records to my UniFi UDM via the [ExternalDNS Webhook Provider for UniFi](https://github.com/home-operations/external-dns-unifi-webhook). It watches routes on _both_ Envoy gateways plus annotated LoadBalancer Services, so every app on my LAN is a CNAME to `internal.bykaj.app` or `external.bykaj.app`, which in turn are A records for the gateway VIPs. Even publicly exposed apps resolve to the local gateway at home instead of taking a detour through Cloudflare.
+- **Public (Cloudflare)** – The second instance only watches routes attached to the `envoy-external` gateway and syncs them to Cloudflare as proxied CNAMEs to `external.bykaj.app`, which a `DNSEndpoint` points at my [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/). Internal-only apps simply never show up in public DNS.
+
+The Docker apps on my NAS get their (LAN-only) records from [dexd](https://github.com/ishioni/dexd), which reads container labels and points each hostname at the Traefik reverse proxy. Each controller marks its records with its own TXT ownership prefix (`k8s.` and `dkr.`), so they never step on each other's toes. Only a handful of bootstrap records, like the Kubernetes API endpoint, are maintained by hand. The full details are in the [DNS docs](https://bykaj.github.io/home-ops/networking/dns/).
 
 ---
 

@@ -66,7 +66,7 @@ at the Traefik gateway:
 
 ```text
 k8s.internal → 10.73.20.100
-proxy.bykaj.app → 10.73.2.100
+proxy.bykaj.io → 10.73.2.100
 ```
 
 Cilium (ASN 64514) peers from the node IPs on the SERVERS subnet
