@@ -56,6 +56,7 @@ nav = [
     { "Cloud Dependencies" = "reference/cloud-dependencies.md" },
     { "Glossary" = "reference/glossary.md" },
   ] },
+  { "Future Plans" = "future-plans.md" },
 ]
 
 [project.theme]
@@ -129,3 +130,4 @@ alternate_style = true
 combine_header_slug = true
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
+[project.markdown_extensions.pymdownx.tilde]
