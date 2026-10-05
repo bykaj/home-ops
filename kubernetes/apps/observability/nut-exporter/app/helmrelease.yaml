@@ -29,22 +29,34 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-          # Repeater driver: mirrors the UniFi UPS NUT server into a local socket
-          nut-driver:
-            image: &nutImage
+          # Repeater driver (daemonized) mirrors the UniFi UPS NUT server into a
+          # local socket; upsd serves it on localhost for nut-exporter
+          nut-upsd:
+            image:
               repository: docker.io/instantlinux/nut-upsd
               tag: 2.8.5-r1@sha256:a4a68e3c56081e3187621ee2a4bf9bce2936eaf0b628c01f81881f25cee0e667
-            command: ["/usr/lib/nut/dummy-ups", "-a", "ups-2u", "-F"]
-            env: &nutEnv
+            command:
+              - sh
+              - -c
+              - /usr/lib/nut/dummy-ups -a ups-2u && exec /usr/sbin/upsd -F
+            env:
               NUT_ALTPIDPATH: /run/nut
               NUT_CONFPATH: /etc/nut
               NUT_STATEPATH: /run/nut
-            securityContext: *securityContext
-          # Full upsd serving the relayed UPS on localhost for nut-exporter
-          nut-upsd:
-            image: *nutImage
-            command: ["/usr/sbin/upsd", "-F"]
-            env: *nutEnv
+            # dummy-ups never notices when the UniFi UPS reboots and drops the
+            # session silently, and runs unsupervised in the background; restart
+            # the container once upsd reports the data as stale
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: ["upsc", "ups-2u@127.0.0.1", "ups.status"]
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 4
             securityContext: *securityContext
     defaultPodOptions:
       securityContext:
@@ -58,17 +70,15 @@ spec:
         name: nut-exporter-configmap
         advancedMounts:
           nut-exporter:
-            nut-driver: &configMount
+            nut-upsd:
               - path: /etc/nut
                 readOnly: true
-            nut-upsd: *configMount
       state:
         type: emptyDir
         advancedMounts:
           nut-exporter:
-            nut-driver: &stateMount
+            nut-upsd:
               - path: /run/nut
-            nut-upsd: *stateMount
     service:
       nut-exporter:
         controller: nut-exporter
