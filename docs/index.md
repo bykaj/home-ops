@@ -1,5 +1,26 @@
 # Home Operations
 
+!!! quote ""
+
+    **Home-Ops: Where Hobby Meets High-Tech Infrastructure**
+
+<div align="center" markdown>
+
+[![Talos](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Ftalos_version%3Fformat%3Dshields&style=for-the-badge&logo=talos&logoColor=white&color=blue&label=talos)](https://talos.dev)
+[![Kubernetes](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fkubernetes_version%3Fformat%3Dshields&style=for-the-badge&logo=kubernetes&logoColor=white&color=blue&label=k8s)](https://kubernetes.io)
+[![Flux](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fflux_version%3Fformat%3Dshields&style=for-the-badge&logo=flux&logoColor=white&color=blue&label=flux)](https://fluxcd.io)
+[![Renovate](https://img.shields.io/github/actions/workflow/status/bykaj/home-ops/renovate.yaml?branch=main&label=renovate&logo=renovate&logoColor=white&style=for-the-badge&color=blue)](https://github.com/bykaj/home-ops/actions/workflows/renovate.yaml)
+
+[![Age-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_birth_age%3Fformat%3Dshields&style=for-the-badge&label=Age)](https://github.com/home-operations/kromgo)
+[![Uptime-Days](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_uptime_age%3Fformat%3Dshields&style=for-the-badge&label=Uptime)](https://github.com/home-operations/kromgo)
+[![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_node_count%3Fformat%3Dshields&style=for-the-badge&label=Nodes)](https://github.com/home-operations/kromgo)
+[![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_pod_count%3Fformat%3Dshields&style=for-the-badge&label=Pods)](https://github.com/home-operations/kromgo)
+[![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_cpu_usage%3Fformat%3Dshields&style=for-the-badge&label=CPU)](https://github.com/home-operations/kromgo)
+[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_memory_usage%3Fformat%3Dshields&style=for-the-badge&label=MEM)](https://github.com/home-operations/kromgo)
+[![Power](https://img.shields.io/endpoint?url=https%3A%2F%2Fstats.bykaj.io%2Fbadges%2Fcluster_power_usage%3Fformat%3Dshields&style=for-the-badge&label=PWR)](https://github.com/home-operations/kromgo)
+
+</div>
+
 Documentation for my home infrastructure: a three-node bare-metal Kubernetes
 cluster running [Talos Linux](https://www.talos.dev/), and a
 [TrueNAS](https://www.truenas.com/) server that provides bulk storage, backups
