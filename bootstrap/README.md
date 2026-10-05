@@ -231,6 +231,8 @@ it with the new config.
 To verify:
 
 ```sh
-dig +short @10.73.0.254 internal.bykaj.app HTTPS   # expect: 1 . alpn="h3,h2"
+dig +short @10.73.0.254 internal.bykaj.app -t TYPE65
+# expect: 1 . alpn="h3,h2"                  (dig that knows HTTPS)
+#     or: \# 13 00010000010006026833026832   (older dig, e.g. macOS 9.10)
 curl --http3-only -sk -o /dev/null -w '%{http_version}\n' https://internal.bykaj.app/
 ```

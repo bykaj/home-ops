@@ -142,9 +142,13 @@ The records are written by a [UDM boot script](udm-boot-scripts.md#http3-https-r
     through Cloudflare even though the A/AAAA answer is the internal gateway
     IP. LAN traffic to those apps rides the tunnel instead of the local path.
 
-Verify with:
+Verify with the commands below. Query the type as `TYPE65`: older dig
+releases (including the 9.10 bundled with macOS) don't know `HTTPS` and silently
+treat it as a second hostname.
 
 ```sh
-dig +short @10.73.0.254 internal.bykaj.app HTTPS   # expect: 1 . alpn="h3,h2"
+dig +short @10.73.0.254 internal.bykaj.app -t TYPE65
+# expect: 1 . alpn="h3,h2"                  (dig that knows HTTPS)
+#     or: \# 13 00010000010006026833026832   (older dig, e.g. macOS 9.10)
 curl --http3-only -sk -o /dev/null -w '%{http_version}\n' https://internal.bykaj.app/
 ```
