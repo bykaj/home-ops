@@ -593,9 +593,9 @@ backend = "pipx:ansible"
 specifiers = ["14.4.0"]
 
 [[tools."pipx:ansible-core"]]
-version = "2.21.4"
+version = "2.21.5"
 backend = "pipx:ansible-core"
-specifiers = ["2.21.4"]
+specifiers = ["2.21.5"]
 
 [[tools."pipx:yamllint"]]
 version = "1.38.0"
@@ -603,9 +603,9 @@ backend = "pipx:yamllint"
 specifiers = ["1.38.0"]
 
 [[tools."pipx:zensical"]]
-version = "0.0.67"
+version = "0.0.68"
 backend = "pipx:zensical"
-specifiers = ["0.0.67"]
+specifiers = ["0.0.68"]
 
 [[tools.ripgrep]]
 version = "15.2.0"
