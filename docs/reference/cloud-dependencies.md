@@ -14,7 +14,7 @@ the cloud:
 | [GitHub](https://github.com) | This repository, Actions CI, and GitHub Pages for these docs |
 | [Fastmail](https://www.fastmail.com) | Email |
 | [Pushover](https://pushover.net) | Alert and app notifications |
-| [Backblaze B2](https://www.backblaze.com) | Off-site S3 object storage for apps and backups |
+| [Backblaze B2](https://www.backblaze.com) | Off-site S3 object storage for apps and backups, including the [nightly copy of the Kopia repository](../storage/backups.md#off-site-copy) |
 
 These stay external to avoid three problems:
 

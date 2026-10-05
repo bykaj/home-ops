@@ -58,7 +58,7 @@ the namespace `kustomization.yaml`.
 
 | App | Purpose |
 | --- | --- |
-| [kopiur](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/system/kopiur) | PVC backup and restore, with the `nas` Kopia repository |
+| [kopiur](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/system/kopiur) | PVC backup and restore with the `nas` Kopia repository, replicated nightly to Backblaze B2 |
 | [openebs](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/system/openebs) | `openebs-hostpath` local volumes |
 | [snapshot-controller](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/system/snapshot-controller) | CSI VolumeSnapshot support |
 | [spegel](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/system/spegel) | Peer-to-peer image mirror between nodes |
