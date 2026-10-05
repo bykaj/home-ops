@@ -18,6 +18,7 @@ jobs:
   filter:
     name: Image Pull - Filter
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       changed-files: ${{ steps.changed-files.outputs.changed_files }}
     steps:
@@ -36,6 +37,7 @@ jobs:
     needs: filter
     name: Image Pull - Extract Images
     runs-on: ${{ github.event.repository.name }}-runner
+    timeout-minutes: 10
     outputs:
       images: ${{ steps.extract.outputs.images }}
     steps:
@@ -72,6 +74,7 @@ jobs:
         image: ${{ fromJSON(needs.extract.outputs.images) }}
       max-parallel: 4
       fail-fast: false
+    timeout-minutes: 20
     steps:
       - name: Setup Mise
         uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
@@ -81,12 +84,15 @@ jobs:
             talosctl latest
 
       - name: Pull Image
+        timeout-minutes: 15
         env:
           IMAGE: ${{ matrix.image }}
         run: talosctl --nodes "$NODE" image pull "$IMAGE"
 
       # Digest pulls are stored untagged in Zot; requesting the tag makes its on-demand sync record it
       - name: Register Tag in Zot
+        continue-on-error: true
+        timeout-minutes: 4
         env:
           IMAGE: ${{ matrix.image }}
           ZOT_URL: https://registry.bykaj.app
@@ -121,7 +127,7 @@ jobs:
           esac
 
           url="$ZOT_URL/v2/$prefix/$repo/manifests/$tag"
-          if curl -fsS -o /dev/null --retry 3 \
+          if curl -fsS -o /dev/null --retry 3 --connect-timeout 10 --max-time 60 --retry-max-time 120 \
             -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json" \
             "$url"; then
             echo "Registered $prefix/$repo:$tag in Zot"
@@ -134,6 +140,7 @@ jobs:
     needs: pull
     name: Image Pull - Success
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Any jobs failed?
         if: ${{ contains(needs.*.result, 'failure') }}
