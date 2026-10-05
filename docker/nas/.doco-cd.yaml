@@ -20,3 +20,5 @@ force_recreate: false
 reconciliation:
   enabled: true
   interval: 3600
+reference: refs/heads/main
+webhook_filter: ^refs/heads/main$

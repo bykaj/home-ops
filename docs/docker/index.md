@@ -53,6 +53,12 @@ doco-cd checks each request's HMAC-SHA256 signature against
 GitHub webhook must use the same secret, with content type
 `application/json` and only the push event.
 
+GitHub sends push events for every branch, not just `main`. `.doco-cd.yaml`
+sets `webhook_filter: ^refs/heads/main$` so doco-cd skips the others, and
+`reference: refs/heads/main` so deploys always run from `main`. Without them,
+pushing a PR branch (Renovate's included) would deploy it to the NAS before
+it is merged.
+
 Gatus checks the route with a `GET`, which doco-cd answers with
 `405 Method Not Allowed`. That status means the whole path from Cloudflare to
 the NAS is up.
