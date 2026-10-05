@@ -9,6 +9,7 @@ resources:
   - ./namespace.yaml
   - ./certificates/ks.yaml
   - ./cloudflare-tunnel/ks.yaml
+  - ./doco-cd-webhook/ks.yaml
   - ./echo-server/ks.yaml
   - ./envoy-gateway/ks.yaml
   - ./external-dns/ks.yaml

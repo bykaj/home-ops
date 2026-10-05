@@ -11,9 +11,9 @@ the Kubernetes manifests, the Talos machine configs, the Docker Compose stacks,
 the bootstrap tooling and these docs.
 
 Merging to `main` is the deploy step:
-[Flux](https://fluxcd.io/) reconciles the cluster immediately through a
-webhook, [doco-cd](https://github.com/kimdre/doco-cd) redeploys the NAS stacks
-within the hour, and [Renovate](https://github.com/renovatebot/renovate) opens
+[Flux](https://fluxcd.io/) reconciles the cluster and
+[doco-cd](https://github.com/kimdre/doco-cd) redeploys the NAS stacks, both
+immediately through webhooks, and [Renovate](https://github.com/renovatebot/renovate) opens
 pull requests for every dependency in the repository.
 
 ## Where to start

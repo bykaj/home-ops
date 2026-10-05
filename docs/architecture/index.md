@@ -34,7 +34,7 @@ graph LR
     end
 
     k8s -- "webhook on push" --> flux
-    docker -- "hourly poll" --> doco
+    docker -- "webhook on push" --> doco
     flux --> apps
     apps --> ceph
     doco --> stacks
