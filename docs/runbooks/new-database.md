@@ -48,6 +48,12 @@ replaces `bootstrap` with an `initdb` that creates a database and owner role
 named `${POSTGRES_USERNAME:=${APP}}`. CNPG generates the role's password into
 the `${APP}-postgres-app` Secret as usual.
 
+!!! warning "Variable escaping in the patch"
+
+    The patch's `${...}` variables are substituted by the app's own Flux
+    Kustomization. If `cluster-apps` ever gains a `postBuild`, escape them as
+    `$${...}` in the patch, so they survive that first (outer) substitution.
+
 ## 2. Get a first backup
 
 Wait for the nightly `ScheduledBackup`, or force one:
