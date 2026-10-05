@@ -6,6 +6,8 @@ description: Cluster nodes, NAS, network gear and power
 
 Everything lives in a 12U rack.
 
+![The rack](../assets/rack.jpg){ width="420" loading=lazy }
+
 ## Cluster nodes
 
 Three Talos nodes. All three are control plane nodes and also run workloads.

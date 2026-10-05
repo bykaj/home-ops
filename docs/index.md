@@ -1,8 +1,6 @@
 # Home Operations
 
-!!! quote ""
-
-    **Home-Ops: Where Hobby Meets High-Tech Infrastructure**
+!!! tip "Home-Ops: Where Hobby Meets High-Tech Infrastructure"
 
 Documentation for my home infrastructure: a three-node bare-metal Kubernetes
 cluster running [Talos Linux](https://www.talos.dev/), and a
@@ -17,8 +15,6 @@ Merging to `main` is the deploy step:
 webhook, [doco-cd](https://github.com/kimdre/doco-cd) redeploys the NAS stacks
 within the hour, and [Renovate](https://github.com/renovatebot/renovate) opens
 pull requests for every dependency in the repository.
-
-![The rack](assets/rack.jpg){ width="420" loading=lazy }
 
 ## Where to start
 
