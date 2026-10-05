@@ -55,8 +55,8 @@ GitHub sends push events for `bykaj/home-ops` to
 `https://doco-cd-webhook.bykaj.io/v1/webhook`. The NAS is LAN-only, so the
 request goes through the cluster: Cloudflare Tunnel → `envoy-external` → an
 Envoy Gateway `Backend` in the `network` namespace that points at doco-cd on
-the NAS (`nas.internal:8880`). The `HTTPRoute` only matches `/v1/webhook`, so doco-cd's
-REST API stays off the internet. See
+the NAS (`nas.internal:8880`). The `HTTPRoute` only matches `/v1/webhook` and
+`/v1/health` (exact paths), so doco-cd's REST API stays off the internet. See
 [`kubernetes/apps/network/doco-cd-webhook/`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/doco-cd-webhook).
 
 doco-cd checks each request's HMAC-SHA256 signature against
@@ -70,10 +70,10 @@ sets `webhook_filter: ^refs/heads/main$` so doco-cd skips the others, and
 pushing a PR branch (Renovate's included) would deploy it to the NAS before
 it is merged.
 
-Gatus checks doco-cd's `/v1/health` on `nas.internal:8880` rather than the
-public route, because every request to `/v1/webhook` (even a `GET`) shows up
-as a failed job in doco-cd's run history. The Cloudflare Tunnel →
-`envoy-external` part is the same path the `flux-webhook` check covers.
+Gatus checks `https://doco-cd-webhook.bykaj.io/v1/health` from the cluster,
+through the same public path GitHub uses. It doesn't probe `/v1/webhook`,
+because every request there (even a `GET`) shows up as a failed job in
+doco-cd's run history. `/v1/health` only returns `{"content":"healthy"}`.
 
 ## Ingress and DNS
 
