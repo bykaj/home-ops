@@ -14,7 +14,7 @@ spec:
       envoyDeployment:
         replicas: 1
         container:
-          image: docker.io/envoyproxy/envoy:v1.39.2
+          image: docker.io/envoyproxy/envoy:v1.39.3
           resources:
             requests:
               cpu: 100m
