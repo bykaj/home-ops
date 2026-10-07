@@ -71,6 +71,13 @@
             - name: webhook_secret
               content: "{{ doco_webhook_secret }}"
 
+        # Shared by doco-cd and every stack behind Traefik; created here because doco-cd starts
+        # before the stacks it deploys
+        - name: doco-cd | Create apps network
+          community.docker.docker_network:
+            name: apps
+          when: not ansible_check_mode
+
         - name: doco-cd | Create data volume
           community.docker.docker_volume:
             name: doco-cd_data

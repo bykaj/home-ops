@@ -3,7 +3,7 @@ name: traefik
 networks:
   apps:
     name: apps
-    external: false
+    external: true
 services:
   traefik:
     command:
