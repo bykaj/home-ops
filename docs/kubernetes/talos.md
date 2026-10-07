@@ -34,7 +34,7 @@ Applied to every node from `cluster.yaml.j2`:
 - Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, NFS RPC slot limits, raised inotify limits, IPv6 disabled
 - `nfsmount.conf` with tuned NFS mount defaults
 - Registry mirrors for `docker.io`, `ghcr.io`, `quay.io` and `registry.k8s.io`,
-  pointing at the [Zot](../docker/index.md#06-zot) pull-through cache on the NAS
+  pointing at the [Zot](../docker/index.md#07-zot) pull-through cache on the NAS
   (`registry.bykaj.app`), falling back to upstream
 - KubePrism, and kubelet node IPs restricted to `10.73.20.0/24`
 

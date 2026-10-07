@@ -87,7 +87,7 @@ cloudflared accepts every hostname in the six zones and forwards it to
 
 ## NAS records (dexd)
 
-[dexd](https://github.com/ishioni/dexd) (`docker/nas/01-dexd`) watches Docker
+[dexd](https://github.com/ishioni/dexd) (`docker/nas/02-dexd`) watches Docker
 labels on the NAS. For every container labelled `dexd.enabled: "true"`, it
 creates a CNAME in UniFi from the container's Traefik `Host()` rule to the
 reverse proxy:

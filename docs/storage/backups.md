@@ -202,7 +202,7 @@ Why some data is excluded:
   second time.
 - **`Backups/Excluded`** is the place for client data that deliberately stays
   local.
-- **`Applications/zot`** is the [Zot](../docker/index.md#06-zot) pull-through
+- **`Applications/zot`** is the [Zot](../docker/index.md#07-zot) pull-through
   cache. It refills itself from the upstream registries.
 - **`Media/Series`, `Movies`, `Documentaries`** are large and recreatable. Only
   `Books` and `Music` go off-site.
