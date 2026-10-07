@@ -11,8 +11,8 @@ NAS-local (BGP, hardware exporters).
 
 ## How stacks are deployed
 
-[doco-cd](https://github.com/kimdre/doco-cd) runs on the NAS (its own compose
-file lives in `docker/nas/.doco-cd/`) and is configured by
+[doco-cd](https://github.com/kimdre/doco-cd) runs on the NAS as the
+[`00-doco-cd`](#00-doco-cd) stack and is configured by
 [`docker/nas/.doco-cd.yaml`](https://github.com/bykaj/home-ops/blob/main/docker/nas/.doco-cd.yaml):
 
 - deploys on every push to `main` through a GitHub webhook (see
@@ -42,12 +42,12 @@ The recipe calls `POST /v1/api/poll/run` on `nas.internal:8880` with the API
 secret from 1Password (`op://Homelab/doco-cd/API_SECRET`). It waits for the run
 and fails if the run doesn't succeed. Only changed stacks are redeployed.
 
-doco-cd can't manage its own stack. After changing
-`docker/nas/.doco-cd/docker-compose.app.yaml`, run `just bootstrap nas`: it
-copies the file and its secrets to the NAS and runs `docker compose up`.
-`just docker restart-doco-cd` only restarts the running container (via Ansible)
-and doesn't pick up compose changes. Changes to `docker/nas/.doco-cd.yaml`
-need neither: doco-cd reads it from the repo on every run.
+doco-cd deploys its own stack like any other (see [`00-doco-cd`](#00-doco-cd)),
+so a merged change to its compose file, including a Renovate image bump,
+updates doco-cd itself. `just docker restart-doco-cd` restarts the running
+container (via Ansible) without applying anything. Changes to
+`docker/nas/.doco-cd.yaml` take effect on the next run: doco-cd reads it from
+the repo every time.
 
 ### Webhook
 
@@ -98,6 +98,24 @@ writes a CNAME to the UDM for each `Host()` rule, pointing at `docker.bykaj.app`
 [DNS → NAS records](../networking/dns.md#nas-records-dexd).
 
 ## Stacks
+
+### `00-doco-cd`
+
+doco-cd itself, with `SELF_UPDATE_ENABLED=true`. When a deploy changes this
+stack, doco-cd replaces its own container. It uses the `applier` strategy,
+because `container_name` and the published port `8880` rule out a
+zero-downtime `scale_out`: a throwaway copy of doco-cd recreates the container,
+waits for it to become healthy, and restores the previous container if it
+doesn't. Webhook requests may get a `503` until the new container is healthy,
+and the hourly poll catches up. A self-update that fails isn't retried until
+the next commit. See [Self-Updating](https://doco.cd/latest/Advanced/Self-Updating/).
+
+The `data` volume (`doco-cd_data`, the repo cache and the handover journal) is
+external, so it survives any change to the stack. The secrets doco-cd needs to
+start at all (1Password service account token, API and webhook secrets) can't
+come from doco-cd. `just bootstrap nas` writes them to `~/.config/doco-cd/`,
+creates the volume, and starts this stack only if no `doco-cd` container from
+the `00-doco-cd` project is running. After that, doco-cd manages it.
 
 ### `00-frr`
 

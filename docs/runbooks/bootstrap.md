@@ -101,6 +101,7 @@ just bootstrap nas
 ```
 
 This runs the Ansible playbook against the hosts in `ansible/inventory.yaml`.
-It provisions TrueNAS and deploys doco-cd, which then reconciles the
-`docker/nas/` stacks. Nothing in `bootstrap/` is used again until the next
+It provisions TrueNAS, writes doco-cd's secrets and starts doco-cd from
+`docker/nas/00-doco-cd`, which then reconciles the `docker/nas/` stacks,
+including its own. Nothing in `bootstrap/` is used again until the next
 provisioning.
