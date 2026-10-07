@@ -61,5 +61,6 @@ and base backups.
 
 ## Pages in this section
 
-- [Backups](backups.md): what is backed up, where, and how restores work
+- [Backups](backups.md): what is backed up, where, and how restores work,
+  for both the cluster and the NAS
 - [PostgreSQL](postgres.md): the CNPG component every database uses
