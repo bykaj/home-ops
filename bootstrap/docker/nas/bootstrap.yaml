@@ -46,14 +46,13 @@
             group: truenas_admin
             mode: "0700"
 
-        - name: doco-cd | Copy docker-compose app file
+        - name: doco-cd | Copy docker-compose file
           ansible.builtin.copy:
-            src: ../../../docker/nas/.doco-cd/docker-compose.app.yaml
+            src: ../../../docker/nas/00-doco-cd/docker-compose.yaml
             dest: "{{ dococd_config_dir }}/docker-compose.yaml"
             owner: truenas_admin
             group: truenas_admin
             mode: "0644"
-          register: compose_file
 
         - name: doco-cd | Create secrets
           ansible.builtin.copy:
@@ -72,6 +71,35 @@
             - name: webhook_secret
               content: "{{ doco_webhook_secret }}"
 
+        - name: doco-cd | Create data volume
+          community.docker.docker_volume:
+            name: doco-cd_data
+          when: not ansible_check_mode
+
+        # doco-cd manages its own stack (docker/nas/00-doco-cd) once running, so only start it when
+        # there is no container yet, or when the running one isn't part of that project (the
+        # one-time takeover from the old Ansible-managed `doco-cd` project)
+        - name: doco-cd | Get container info
+          community.docker.docker_container_info:
+            name: doco-cd
+          register: dococd_existing
+
+        - name: doco-cd | Set project facts
+          ansible.builtin.set_fact:
+            dococd_project: "{{ dococd_existing.container.Config.Labels['com.docker.compose.project'] | default('') if dococd_existing.exists else '' }}"
+
+        - name: doco-cd | Remove container from another project
+          community.docker.docker_compose_v2:
+            project_src: "{{ dococd_config_dir }}"
+            project_name: "{{ dococd_project }}"
+            files:
+              - docker-compose.yaml
+            state: absent
+          when:
+            - not ansible_check_mode
+            - dococd_existing.exists
+            - dococd_project != '00-doco-cd'
+
         - name: doco-cd | Run docker-compose
           community.docker.docker_compose_v2:
             project_src: "{{ dococd_config_dir }}"
@@ -79,7 +107,9 @@
               - docker-compose.yaml
             pull: always
             state: present
-          when: not ansible_check_mode
+          when:
+            - not ansible_check_mode
+            - dococd_project != '00-doco-cd'
 
         - name: doco-cd | Wait for healthy
           community.docker.docker_container_info:

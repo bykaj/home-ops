@@ -61,7 +61,8 @@ CRD-backed resources don't need `dependsOn` chains.
 webhook triggers a deploy on every push to `main`, and it also polls `main`
 every hour as a fallback (`reconciliation.interval: 3600`). It auto-discovers
 stacks one directory deep under `docker/nas/` and deletes stacks whose
-directory disappears. See [Docker](../docker/index.md#webhook).
+directory disappears. Its own stack (`00-doco-cd`) is one of them, so doco-cd
+updates itself. See [Docker](../docker/index.md#webhook).
 
 ## Dependency updates: Renovate
 

@@ -1,6 +1,8 @@
 ---
-# This file is not managed by doco-cd because it can't manage itself
-
+# doco-cd deploys this stack itself (SELF_UPDATE_ENABLED). Ansible only starts it on a fresh NAS
+# (`just bootstrap nas`), reusing this file. The project name must match the directory name, since
+# that's what doco-cd uses to recognise its own container.
+name: 00-doco-cd
 secrets:
   1pw_token:
     file: /home/truenas_admin/.config/doco-cd/1pw_token
@@ -22,6 +24,7 @@ services:
           interval: 3600
       SECRET_PROVIDER: 1password
       SECRET_PROVIDER_ACCESS_TOKEN_FILE: /run/secrets/1pw_token
+      SELF_UPDATE_ENABLED: "true"
       TZ: Europe/Amsterdam
       WEBHOOK_SECRET_FILE: /run/secrets/webhook_secret
     healthcheck:
@@ -45,4 +48,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - data:/data
 volumes:
-  data: {}
+  # Created by Ansible; external so the volume (repo cache and self-update journal) keeps its name
+  # whatever the project is called
+  data:
+    external: true
+    name: doco-cd_data
