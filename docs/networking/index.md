@@ -1,5 +1,6 @@
 ---
 description: Subnets, VIPs, gateways and how traffic reaches apps
+icon: material/lan
 ---
 
 # Networking

@@ -1,5 +1,6 @@
 ---
 description: How apps are laid out under kubernetes/apps and the conventions they follow
+icon: material/kubernetes
 ---
 
 # Kubernetes

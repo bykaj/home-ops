@@ -1,5 +1,6 @@
 ---
 description: Docker Compose stacks on the NAS, deployed by doco-cd
+icon: material/docker
 ---
 
 # Docker

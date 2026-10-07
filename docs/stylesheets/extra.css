@@ -1,0 +1,12 @@
+/* Align section children with the section label when the label has an icon:
+   icon width (1.3em) + gap between icon and label (.6rem). Sections only
+   render expanded on wide screens; on mobile they are drill-down menus. */
+@media screen and (min-width: 76.25em) {
+  [dir="ltr"] .md-nav__item--section:has(> .md-nav__container > .md-nav__link > svg) > .md-nav > .md-nav__list {
+    margin-left: calc(1.3em + 0.6rem);
+  }
+
+  [dir="rtl"] .md-nav__item--section:has(> .md-nav__container > .md-nav__link > svg) > .md-nav > .md-nav__list {
+    margin-right: calc(1.3em + 0.6rem);
+  }
+}

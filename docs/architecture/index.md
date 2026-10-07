@@ -1,5 +1,6 @@
 ---
 description: How the cluster, the NAS and the repository fit together
+icon: material/sitemap
 ---
 
 # Architecture

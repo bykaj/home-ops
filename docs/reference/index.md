@@ -1,5 +1,6 @@
 ---
 description: Lookup material for day-to-day operations
+icon: material/format-list-bulleted
 ---
 
 # Reference
