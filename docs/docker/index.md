@@ -28,9 +28,12 @@ sets the order.
 
 !!! danger "Don't rename stack directories"
 
-    Renaming or renumbering a stack directory makes doco-cd delete the old
-    stack and create a new one, including its anonymous volumes. Keep
-    directory names stable.
+    doco-cd names each compose project after its directory, overriding any
+    top-level `name:`. Renaming or renumbering a stack directory makes it
+    delete the old stack and create a new one. The new project gets fresh
+    anonymous and named volumes, because named volumes are prefixed with the
+    project name (`02-traefik_acme`), unless the volume sets an explicit
+    `name:`. Keep directory names stable.
 
 To redeploy without a push, for example after a failed deploy:
 
@@ -92,7 +95,7 @@ labels:
   traefik.http.services.myapp.loadbalancer.server.port: "8080"
 ```
 
-[dexd](https://github.com/ishioni/dexd) (`01-dexd`) watches Docker labels and
+[dexd](https://github.com/ishioni/dexd) (`03-dexd`) watches Docker labels and
 writes a CNAME to the UDM for each `Host()` rule, pointing at `docker.bykaj.app`
 (a static A record for `10.73.2.100`). NAS services are LAN-only. See
 [DNS → NAS records](../networking/dns.md#nas-records-dexd).
@@ -117,30 +120,24 @@ come from doco-cd. `just bootstrap nas` writes them to `~/.config/doco-cd/`,
 creates the volume, and starts this stack only if no `doco-cd` container from
 the `00-doco-cd` project is running. After that, doco-cd manages it.
 
-### `00-frr`
+### `01-frr`
 
 [FRR](https://frrouting.org) in host network mode. It peers with the UDM as
 ASN 64515 and announces the NAS address `10.73.1.10/32`. See
 [BGP & Load Balancing](../networking/bgp.md).
 
-### `01-dexd`
-
-DNS records in UniFi for labelled containers.
-
 ### `02-traefik`
 
 Reverse proxy and TLS termination for the stacks below.
 
-### `03-exporters`
+### `03-dexd`
+
+DNS records in UniFi for labelled containers.
+
+### `04-exporters`
 
 `node-exporter` and `smartctl-exporter` for NAS host and disk metrics, scraped
 by the cluster's Prometheus.
-
-### `04-bootimus`
-
-[Bootimus](https://github.com/garybowers/bootimus) PXE/netboot server (TFTP +
-HTTP), with its admin UI at `bootimus.bykaj.app`. It is used to boot Talos
-installers on bare metal.
 
 ### `05-garage`
 
@@ -148,7 +145,13 @@ installers on bare metal.
 `s3.bykaj.io`, with [garage-ui](https://github.com/noooste/garage-ui) for
 management (OIDC login). CNPG stores WAL archives and base backups here.
 
-### `06-zot`
+### `06-bootimus`
+
+[Bootimus](https://github.com/garybowers/bootimus) PXE/netboot server (TFTP +
+HTTP), with its admin UI at `bootimus.bykaj.app`. It is used to boot Talos
+installers on bare metal.
+
+### `07-zot`
 
 [Zot](https://zotregistry.dev) OCI registry at `registry.bykaj.app`, acting as
 an on-demand pull-through cache for Docker Hub (`/docker-hub`), GHCR (`/ghcr`),

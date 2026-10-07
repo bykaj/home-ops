@@ -32,7 +32,7 @@ graph LR
 | --- | --- | --- |
 | 64513 | UDM Pro Max | (peer) |
 | 64514 | Cilium on each node | LoadBalancer IPs from `10.73.20.0/24` |
-| 64515 | FRR on the NAS ([`docker/nas/00-frr`](https://github.com/bykaj/home-ops/tree/main/docker/nas/00-frr)) | `10.73.1.10/32` |
+| 64515 | FRR on the NAS ([`docker/nas/01-frr`](https://github.com/bykaj/home-ops/tree/main/docker/nas/01-frr)) | `10.73.1.10/32` |
 
 The Cilium side is configured in
 [`kubernetes/apps/kube-system/cilium/config/`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/cilium/config)

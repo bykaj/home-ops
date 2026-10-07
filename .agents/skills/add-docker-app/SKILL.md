@@ -1,41 +1,60 @@
 ---
 name: add-docker-app
-description: Use when deploying or changing an application on the docker hosts (gladius, icarus) — docker-compose stacks under docker/, doco-cd deployments, "deploy X to the NAS", secrets or reverse-proxy wiring for a compose app
+description: Use when deploying or changing an application on the NAS (TrueNAS) — docker-compose stacks under docker/nas/, doco-cd deployments, "deploy X to the NAS", secrets, Traefik/DNS wiring or storage for a compose app
 ---
 
-# Add an App to a Docker Host
+# Add an App to the NAS
 
-Apps live in `docker/<host>/NN-<app>/docker-compose.yaml`, deployed GitOps-style by [doco-cd](https://github.com/kimdre/doco-cd) (config: `docker/<host>/.doco-cd.yaml`): it polls this repo's `main` hourly, auto-discovers stacks one directory deep, and **`delete: true` means removing (or renaming) a directory deletes the running stack**. Mirror an existing app rather than inventing structure:
+Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by [doco-cd](https://github.com/kimdre/doco-cd) (config: `docker/nas/.doco-cd.yaml`). It deploys on every push to `main` (GitHub webhook) with an hourly poll as fallback, auto-discovers stacks one directory deep, and **`delete: true` means removing (or renaming) a directory deletes the running stack**. doco-cd also manages itself (`00-doco-cd`, `SELF_UPDATE_ENABLED`). Mirror an existing app rather than inventing structure:
 
-| Host            | Proxy                                                                                      | Network                                       | Reference apps                                                             |
-| --------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------------------------------- |
-| `nas` (TrueNAS) | traefik (`01-traefik`, docker provider, `exposedByDefault: false`, wildcard `*.bjw-s.dev`) | `apps`, or `network_mode: host`               | `03-garage` (bind-mount storage), `02-exporters` (host network)            |
-| `icarus`        | caddy-l4 (`03-caddy-l4`, Caddyfile)                                                        | external `edge` (no published ports for HTTP) | `04-gatus` (config file, secrets), `02-towonel` (published non-HTTP ports) |
+| Pattern                                    | Reference                                                        |
+| ------------------------------------------ | ---------------------------------------------------------------- |
+| Web UI behind Traefik, OIDC, secrets       | `07-zot` (`configs:` from secrets), `05-garage` (env secrets)    |
+| Bind-mount storage on the pool             | `05-garage`, `07-zot` (named volume + `driver_opts`)             |
+| Non-HTTP ports through Traefik entrypoints | `06-bootimus` (TCP on `web-alt`, UDP on `tftp`)                  |
+| Host network, no proxy                     | `01-frr`, `04-exporters`                                         |
+| Config files in `config/`                  | `01-frr`, `05-garage`, `07-zot` (read-only bind of `./config/…`) |
 
 ## Steps
 
-1. **Directory**: next free `NN-` prefix on that host (`ls docker/<host>/`). The number is just ordering; keep it stable — renaming triggers delete+recreate.
+1. **Directory**: next free `NN-` prefix (`ls docker/nas/`); `00-doco-cd` is reserved. The number is ordering only; keep it stable. doco-cd names the compose project after the directory (overriding top-level `name:`), so renaming deletes and recreates the stack, and unpinned named volumes come back empty.
 
-2. **Compose file** — conventions from existing apps:
-   - Top-level `name: <app>` and `container_name: <app>`, `restart: unless-stopped`.
-   - Registry-qualified image with a pinned version tag. **Never write a tag from memory** — look up the upstream project's current release first. Plain tags are fine; Renovate manages digests/updates. Keep a `# renovate: datasource=docker depName=...` hint comment only if copying from an app that has one (e.g. `01-crowdsec`, `02-towonel`).
-   - Set `user:` where the image supports it (see garage/towonel).
-   - Config files: `config/` subdirectory, wired via a `configs:` block (`04-gatus`) or a read-only bind volume (`03-garage`).
-   - Persistent data: on gladius, named volume with `driver_opts` bind to `/mnt/tank/apps/<app>/<vol>` (see garage); on icarus, host path (towonel uses `/opt/<app>`) or a named volume.
+2. **Compose file**, following existing apps:
+   - Top-level `name: <app>`, `container_name: <app>`, `restart: unless-stopped`.
+   - Registry-qualified image with a pinned version tag (digest optional, see `06-bootimus`). **Never write a tag from memory**: look up the upstream project's current release first. Renovate handles updates.
+   - Set `user:` where the image supports it (garage runs as `4000:4000`).
+   - Config files: `config/` subdirectory, bind-mounted read-only (`./config/<file>:/path:ro`). A single-file bind mount isn't refreshed in a running container; note in the docs if the app needs a restart after config changes (see `07-zot`).
+   - Persistent data on the pool under `/mnt/vault/Applications/<app>/<vol>`: either a named volume with `driver: local` + `driver_opts` (`device`, `o: bind`, `type: none`) like garage/zot, or a direct host-path bind like bootimus. Ask the user to create the dataset/directory first; doco-cd won't.
+   - Keep the YAML keys sorted per `.agents/instructions/sorting.instructions.md`.
 
-3. **Secrets**: add `VAR_NAME: op://<vault>/<item>/<field>` under `external_secrets` in `docker/<host>/.doco-cd.yaml`, reference as `${VAR_NAME}` in the compose file. Use the item's **real field names** (ask the user; never guess) — doco-cd injects these as env vars at deploy time.
+3. **Secrets**: add `VAR_NAME: op://Homelab/<item>/<field>` under `external_secrets` in `docker/nas/.doco-cd.yaml` (keep it sorted) and reference it as `${VAR_NAME}` in the compose file. For secrets the app reads from files, build them with a top-level `configs:` block (`environment:` or `content:` with `${VAR}`) like `07-zot`. Use the item's **real field names** (ask the user, never guess).
 
-4. **Expose it** (only if it serves HTTP):
-   - **icarus**: join the `edge` network (`networks: default: {name: edge, external: true}`), publish no HTTP ports, then register `icarus-<app>.bjw-s.dev` in **two places**: `VPS_LOCAL_HOSTS` in `03-caddy-l4/docker-compose.yaml` AND a `reverse_proxy <container>:<port>` site block in `03-caddy-l4/config/Caddyfile`.
-   - **gladius**: traefik is label-based but no current app uses labels (garage/exporters run host-network). Confirm the intended exposure with the user instead of inventing label conventions.
-   - Only publish `ports:` directly for non-HTTP protocols (see towonel: 22, 51820/udp).
+4. **Expose it** (HTTP):
+   - Join the shared network: `networks: apps: {name: apps, external: true}` and `networks: [apps]` on the service. `02-traefik` owns it.
+   - Labels:
 
-5. **Verify**: `docker compose -f docker/<host>/NN-<app>/docker-compose.yaml config --quiet` (unset `${VAR}` warnings are expected). Show the user the files before committing. Commit style: `feat(<app>): Deploy to NAS`.
+     ```yaml
+     labels:
+       dexd.enabled: "true" # CNAME <host> -> docker.bykaj.app in UniFi
+       traefik.enable: "true"
+       traefik.http.routers.<app>.rule: Host(`<app>.bykaj.app`)
+       traefik.http.services.<app>.loadbalancer.server.port: "<port>"
+     ```
+
+   - Traefik terminates TLS on `websecure` with the `*.bykaj.app` / `*.bykaj.io` wildcards and redirects HTTP. NAS services are LAN-only; use `bykaj.app` unless the user says otherwise.
+   - Don't publish HTTP `ports:`. Non-HTTP traffic goes through a Traefik entrypoint (`tftp` 69/udp, `web-alt` 8080, `smb` 445) or, failing that, a published port or `network_mode: host`.
+   - OIDC apps use Authentik at `https://auth.cetana.id/application/o/<app>/`; the user creates the provider and stores the client ID/secret in 1Password.
+
+5. **Docs**: add a `### NN-<app>` section under "Stacks" in `docs/docker/index.md` (in directory order), and update any other page that describes what the stack touches (DNS, storage/backups, networking). Validate with `zensical build --strict`.
+
+6. **Verify**: `docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet` (unset `${VAR}` warnings are expected) and `yamllint --config-file .yamllint.yaml docker/nas/NN-<app>`. Show the user the files before committing. Commit style: `feat(<app>): <what>` (e.g. `feat(zot): add zot OCI registry with pull-through cache to NAS`). Pushing to `main` deploys; `just docker sync-stacks` forces a run.
 
 ## Common mistakes
 
-- **Inventing an image tag** — check the upstream release; a hallucinated tag deploys nothing or the wrong thing.
-- **Secret in compose but not in `.doco-cd.yaml`** — the `${VAR}` silently resolves empty.
-- **Publishing HTTP ports on icarus** — everything HTTP goes through caddy-l4 over `edge`; published ports bypass TLS and auth.
-- **Registering the hostname in only one of Caddyfile / `VPS_LOCAL_HOSTS`** — both are required.
-- **Renaming/renumbering an existing app directory casually** — `delete: true` tears the old stack down, losing anonymous volumes.
+- **Inventing an image tag**: check the upstream release; a made-up tag deploys nothing or the wrong thing.
+- **Secret in compose but not in `.doco-cd.yaml`**: the `${VAR}` silently resolves empty.
+- **Publishing HTTP ports**: everything HTTP goes through Traefik on `apps`; published ports bypass TLS.
+- **Forgetting `dexd.enabled`**: the Traefik route works but the hostname never resolves.
+- **Declaring `apps` without `external: true`**: the stack tries to own the network that `02-traefik` created.
+- **Renaming/renumbering an existing app directory casually**: `delete: true` tears the old stack down; anonymous and unpinned named volumes start empty.
+- **Editing `00-doco-cd` casually**: a merge redeploys doco-cd itself. Keep the `doco-cd_data` volume external, and keep `container_name`/ports in mind (they force the `applier` strategy).
