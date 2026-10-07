@@ -109,7 +109,7 @@
             state: present
           when:
             - not ansible_check_mode
-            - dococd_project != '00-doco-cd'
+            - dococd_project != '00-doco-cd' or not dococd_existing.container.State.Running
 
         - name: doco-cd | Wait for healthy
           community.docker.docker_container_info:
