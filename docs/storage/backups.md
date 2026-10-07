@@ -16,7 +16,7 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
-| Paperless originals | TrueNAS Cloud Sync (WebDAV) | Nextcloud | Hourly | Mirror |
+| Documents | TrueNAS Cloud Sync (WebDAV) | Nextcloud | Hourly | Mirror |
 
 The cluster's data lands on the NAS first. From there the Kopia repository is
 copied off-site by Kopiur itself (see [Off-site copy](#off-site-copy)), and
