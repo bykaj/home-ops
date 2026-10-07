@@ -32,7 +32,7 @@ sets the order.
     top-level `name:`. Renaming or renumbering a stack directory makes it
     delete the old stack and create a new one. The new project gets fresh
     anonymous and named volumes, because named volumes are prefixed with the
-    project name (`03-traefik_acme`), unless the volume sets an explicit
+    project name (`02-traefik_acme`), unless the volume sets an explicit
     `name:`. Keep directory names stable.
 
 To redeploy without a push, for example after a failed deploy:
@@ -80,7 +80,7 @@ doco-cd's run history. `/v1/health` only returns `{"content":"healthy"}`.
 
 ## Ingress and DNS
 
-[Traefik](https://traefik.io) (`03-traefik`) is the reverse proxy for every
+[Traefik](https://traefik.io) (`02-traefik`) is the reverse proxy for every
 stack on the shared `apps` network. It terminates TLS for `*.bykaj.app` and
 `*.bykaj.io` with Let's Encrypt certificates (Cloudflare DNS-01) and also
 forwards TFTP (UDP 69), HTTP on 8080 and SMB (445).
@@ -95,7 +95,7 @@ labels:
   traefik.http.services.myapp.loadbalancer.server.port: "8080"
 ```
 
-[dexd](https://github.com/ishioni/dexd) (`02-dexd`) watches Docker labels and
+[dexd](https://github.com/ishioni/dexd) (`03-dexd`) watches Docker labels and
 writes a CNAME to the UDM for each `Host()` rule, pointing at `docker.bykaj.app`
 (a static A record for `10.73.2.100`). NAS services are LAN-only. See
 [DNS → NAS records](../networking/dns.md#nas-records-dexd).
@@ -126,13 +126,13 @@ the `00-doco-cd` project is running. After that, doco-cd manages it.
 ASN 64515 and announces the NAS address `10.73.1.10/32`. See
 [BGP & Load Balancing](../networking/bgp.md).
 
-### `02-dexd`
-
-DNS records in UniFi for labelled containers.
-
-### `03-traefik`
+### `02-traefik`
 
 Reverse proxy and TLS termination for the stacks below.
+
+### `03-dexd`
+
+DNS records in UniFi for labelled containers.
 
 ### `04-exporters`
 

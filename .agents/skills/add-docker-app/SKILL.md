@@ -30,7 +30,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
 3. **Secrets**: add `VAR_NAME: op://Homelab/<item>/<field>` under `external_secrets` in `docker/nas/.doco-cd.yaml` (keep it sorted) and reference it as `${VAR_NAME}` in the compose file. For secrets the app reads from files, build them with a top-level `configs:` block (`environment:` or `content:` with `${VAR}`) like `07-zot`. Use the item's **real field names** (ask the user, never guess).
 
 4. **Expose it** (HTTP):
-   - Join the shared network: `networks: apps: {name: apps, external: true}` and `networks: [apps]` on the service. `03-traefik` owns it.
+   - Join the shared network: `networks: apps: {name: apps, external: true}` and `networks: [apps]` on the service. `02-traefik` owns it.
    - Labels:
 
      ```yaml
@@ -55,6 +55,6 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
 - **Secret in compose but not in `.doco-cd.yaml`**: the `${VAR}` silently resolves empty.
 - **Publishing HTTP ports**: everything HTTP goes through Traefik on `apps`; published ports bypass TLS.
 - **Forgetting `dexd.enabled`**: the Traefik route works but the hostname never resolves.
-- **Declaring `apps` without `external: true`**: the stack tries to own the network that `03-traefik` created.
+- **Declaring `apps` without `external: true`**: the stack tries to own the network that `02-traefik` created.
 - **Renaming/renumbering an existing app directory casually**: `delete: true` tears the old stack down; anonymous and unpinned named volumes start empty.
 - **Editing `00-doco-cd` casually**: a merge redeploys doco-cd itself. Keep the `doco-cd_data` volume external, and keep `container_name`/ports in mind (they force the `applier` strategy).
