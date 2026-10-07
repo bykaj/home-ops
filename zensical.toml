@@ -11,6 +11,7 @@ repo_url = "https://github.com/bykaj/home-ops"
 repo_name = "bykaj/home-ops"
 edit_uri = "edit/main/docs/"
 copyright = "Copyright &copy; 2026 Kaj Visser. All rights reserved."
+extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
