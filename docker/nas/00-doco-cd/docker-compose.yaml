@@ -3,6 +3,10 @@
 # (`just bootstrap nas`), reusing this file. The project name must match the directory name, since
 # that's what doco-cd uses to recognise its own container.
 name: 00-doco-cd
+networks:
+  apps:
+    name: apps
+    external: true
 secrets:
   1pw_token:
     file: /home/truenas_admin/.config/doco-cd/1pw_token
@@ -37,8 +41,13 @@ services:
       timeout: 5s
       retries: 3
     image: ghcr.io/kimdre/doco-cd:0.124.0@sha256:31d3755a206ba5c7bc2d12752a9170edf327b2f36f815a8bc992753434f04676
-    ports:
-      - 8880:8880
+    labels:
+      dexd.enabled: "true"
+      traefik.enable: "true"
+      traefik.http.routers.doco-cd.rule: Host(`doco-cd.bykaj.app`)
+      traefik.http.services.doco-cd.loadbalancer.server.port: "8880"
+    networks:
+      - apps
     restart: unless-stopped
     secrets:
       - 1pw_token

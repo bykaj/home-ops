@@ -20,6 +20,11 @@ spec:
         - group: gateway.envoyproxy.io
           kind: Backend
           name: doco-cd-webhook
+      filters:
+        # Traefik on the NAS routes on the Host header
+        - type: URLRewrite
+          urlRewrite:
+            hostname: doco-cd.bykaj.app
       matches:
         - path:
             type: Exact

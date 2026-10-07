@@ -41,8 +41,8 @@ To redeploy without a push, for example after a failed deploy:
 just docker sync-stacks     # poll main now through doco-cd's REST API
 ```
 
-The recipe calls `POST /v1/api/poll/run` on `nas.internal:8880` with the API
-secret from 1Password (`op://Homelab/doco-cd/API_SECRET`). It waits for the run
+The recipe calls `POST /v1/api/poll/run` on `https://doco-cd.bykaj.app`
+(doco-cd behind Traefik) with the API secret from 1Password (`op://Homelab/doco-cd/API_SECRET`). It waits for the run
 and fails if the run doesn't succeed. Only changed stacks are redeployed.
 
 doco-cd deploys its own stack like any other (see [`00-doco-cd`](#00-doco-cd)),
@@ -57,9 +57,11 @@ the repo every time.
 GitHub sends push events for `bykaj/home-ops` to
 `https://doco-cd-webhook.bykaj.io/v1/webhook`. The NAS is LAN-only, so the
 request goes through the cluster: Cloudflare Tunnel → `envoy-external` → an
-Envoy Gateway `Backend` in the `network` namespace that points at doco-cd on
-the NAS (`nas.internal:8880`). The `HTTPRoute` only matches `/v1/webhook` and
-`/v1/health` (exact paths), so doco-cd's REST API stays off the internet. See
+Envoy Gateway `Backend` in the `network` namespace that points at doco-cd
+behind Traefik on the NAS (`https://doco-cd.bykaj.app`, verified against the
+system CAs). The `HTTPRoute` rewrites the `Host` header to `doco-cd.bykaj.app`,
+because Traefik routes on it, and only matches `/v1/webhook` and `/v1/health`
+(exact paths), so doco-cd's REST API stays off the internet. See
 [`kubernetes/apps/network/doco-cd-webhook/`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/doco-cd-webhook).
 
 doco-cd checks each request's HMAC-SHA256 signature against
@@ -106,8 +108,7 @@ writes a CNAME to the UDM for each `Host()` rule, pointing at `docker.bykaj.app`
 
 doco-cd itself, with `SELF_UPDATE_ENABLED=true`. When a deploy changes this
 stack, doco-cd replaces its own container. It uses the `applier` strategy,
-because `container_name` and the published port `8880` rule out a
-zero-downtime `scale_out`: a throwaway copy of doco-cd recreates the container,
+because `container_name` rules out a zero-downtime `scale_out`: a throwaway copy of doco-cd recreates the container,
 waits for it to become healthy, and restores the previous container if it
 doesn't. Webhook requests may get a `503` until the new container is healthy,
 and the hourly poll catches up. A self-update that fails isn't retried until
@@ -117,8 +118,14 @@ The `data` volume (`doco-cd_data`, the repo cache and the handover journal) is
 external, so it survives any change to the stack. The secrets doco-cd needs to
 start at all (1Password service account token, API and webhook secrets) can't
 come from doco-cd. `just bootstrap nas` writes them to `~/.config/doco-cd/`,
-creates the volume, and starts this stack only if no `doco-cd` container from
-the `00-doco-cd` project is running. After that, doco-cd manages it.
+creates the volume and the shared `apps` network, and starts this stack only if
+no `doco-cd` container from the `00-doco-cd` project is running. After that,
+doco-cd manages it.
+
+doco-cd publishes no ports. Its API and webhook are only reachable through
+Traefik at `doco-cd.bykaj.app`, so `just docker sync-stacks` and the webhook
+both depend on `02-traefik`. If Traefik is down, the hourly poll still deploys
+fixes to it; follow along with `sudo docker logs doco-cd` on the NAS.
 
 ### `01-frr`
 
@@ -128,7 +135,9 @@ ASN 64515 and announces the NAS address `10.73.1.10/32`. See
 
 ### `02-traefik`
 
-Reverse proxy and TLS termination for the stacks below.
+Reverse proxy and TLS termination for the other stacks, doco-cd included.
+It joins the `apps` network as external: `just bootstrap nas` creates it, so
+doco-cd can attach to it before Traefik is deployed.
 
 ### `03-dexd`
 

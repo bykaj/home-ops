@@ -5,7 +5,7 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-doco_url := 'http://nas.internal:8880'
+doco_url := 'https://doco-cd.bykaj.app'
 doco_repo := 'https://github.com/bykaj/home-ops.git'
 
 [doc('Reconcile Doco-CD on TrueNAS: poll main now and redeploy changed stacks')]
