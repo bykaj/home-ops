@@ -77,7 +77,7 @@
           when: not ansible_check_mode
 
         # doco-cd manages its own stack (docker/nas/00-doco-cd) once running, so only start it when
-        # there is no container yet, or when the running one isn't part of that project (the
+        # there is no container yet, when it's stopped, or when it isn't part of that project (the
         # one-time takeover from the old Ansible-managed `doco-cd` project)
         - name: doco-cd | Get container info
           community.docker.docker_container_info:

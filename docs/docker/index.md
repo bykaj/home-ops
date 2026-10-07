@@ -106,9 +106,9 @@ stack, doco-cd replaces its own container. It uses the `applier` strategy,
 because `container_name` and the published port `8880` rule out a
 zero-downtime `scale_out`: a throwaway copy of doco-cd recreates the container,
 waits for it to become healthy, and restores the previous container if it
-Webhook requests may receive a `503` during the interruption, and the hourly
-poll catches up. A self-update that fails isn't retried until the next commit.
-See [Self-Updating](https://doco.cd/latest/Advanced/Self-Updating/).
+doesn't. Webhook requests may get a `503` until the new container is healthy,
+and the hourly poll catches up. A self-update that fails isn't retried until
+the next commit. See [Self-Updating](https://doco.cd/latest/Advanced/Self-Updating/).
 
 The `data` volume (`doco-cd_data`, the repo cache and the handover journal) is
 external, so it survives any change to the stack. The secrets doco-cd needs to
