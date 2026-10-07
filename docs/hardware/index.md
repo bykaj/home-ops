@@ -1,5 +1,6 @@
 ---
 description: Cluster nodes, NAS, network gear and power
+icon: material/server
 ---
 
 # Hardware

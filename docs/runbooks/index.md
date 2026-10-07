@@ -1,5 +1,6 @@
 ---
 description: Repeatable operational procedures
+icon: material/book-open-variant
 ---
 
 # Runbooks

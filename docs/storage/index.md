@@ -1,5 +1,6 @@
 ---
 description: Rook-Ceph block storage, OpenEBS local volumes and the NAS
+icon: material/database
 ---
 
 # Storage

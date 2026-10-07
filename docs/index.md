@@ -1,3 +1,7 @@
+---
+icon: material/home
+---
+
 # Home Operations
 
 !!! tip "Home-Ops: Where Hobby Meets High-Tech Infrastructure"
