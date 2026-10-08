@@ -41,7 +41,11 @@ skill, which coding agents also follow. This page is the short version.
     yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
     ```
 
-8. **Open a PR**. konflate posts the rendered diff. Merging deploys the app.
+8. **Document it**: run `just docs-apps`, then replace the `TODO` purpose of
+    the new row on [Applications](../kubernetes/applications.md) and fill in
+    its Upstream link. A new namespace must first be added to `PLATFORM` or
+    `WORKLOADS` in `scripts/docs-applications.py`.
+9. **Open a PR**. konflate posts the rendered diff. Merging deploys the app.
 
 ## Common mistakes
 

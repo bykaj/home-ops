@@ -37,6 +37,7 @@ the environment:
 | `mise fmt`, `mise lock` | mise config and lockfile |
 | `actionlint`, `zizmor` | GitHub Actions workflows and actions |
 | `shellcheck` | `*.sh` |
+| `just docs-apps --check` | `kubernetes/apps/**`: the [Applications](../kubernetes/applications.md) page is up to date |
 | `gofmt`, `cargo fmt` | Go, Rust |
 
 ## Validating by hand

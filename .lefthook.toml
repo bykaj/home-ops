@@ -60,6 +60,10 @@ actionlint -shellcheck= \
   {staged_files}
 '''
 
+[pre-commit.commands.docs-apps]
+glob = ["kubernetes/apps/**", "docs/kubernetes/applications.md", "scripts/docs-applications.py"]
+run = "uv run --script scripts/docs-applications.py --check"
+
 [pre-commit.commands.shellcheck]
 glob = ["*.sh"]
 run = "shellcheck {staged_files}"
