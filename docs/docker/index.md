@@ -33,7 +33,7 @@ sets the order.
     top-level `name:`. Renaming or renumbering a stack directory makes it
     delete the old stack and create a new one. The new project gets fresh
     anonymous and named volumes, because named volumes are prefixed with the
-    project name (`02-traefik_acme`), unless the volume sets an explicit
+    project name (`02-traefik_data`), unless the volume sets an explicit
     `name:`. Keep directory names stable.
 
 To redeploy without a push, for example after a failed deploy:
