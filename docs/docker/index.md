@@ -88,7 +88,7 @@ doco-cd's run history. `/v1/health` only returns `{"content":"healthy"}`.
 [Traefik](https://traefik.io) (`02-traefik`) is the reverse proxy for every
 stack on the shared `apps` network. It terminates TLS for `*.bykaj.app` and
 `*.bykaj.io` with Let's Encrypt certificates (Cloudflare DNS-01) and also
-forwards TFTP (UDP 69), HTTP on 8080 and SMB (445).
+forwards TFTP (UDP 69) and HTTP on 8080.
 
 A stack opts in with labels:
 
