@@ -8,4 +8,5 @@ components:
 resources:
   - ./namespace.yaml
   - ./authentik/ks.yaml
+  - ./kguardian/ks.yaml
   - ./oidc-provider-debugger/ks.yaml

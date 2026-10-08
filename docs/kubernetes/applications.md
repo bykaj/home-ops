@@ -44,6 +44,7 @@ the namespace `kustomization.yaml`.
 | [authentik](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/authentik) | Identity provider and SSO (OIDC) |
 | [cert-manager](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/cert-manager/cert-manager) | ACME certificates via Cloudflare DNS-01 |
 | [external-secrets](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external-secrets/external-secrets) | Syncs secrets from 1Password |
+| [kguardian](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/kguardian) | eBPF traffic observer that generates network policies |
 | [oidc-provider-debugger](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/oidc-provider-debugger) | Test client for OIDC flows |
 | [onepassword-connect](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external-secrets/onepassword-connect) | 1Password Connect server backing External Secrets |
 
