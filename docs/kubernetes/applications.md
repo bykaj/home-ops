@@ -95,6 +95,7 @@ the namespace `kustomization.yaml`.
 | [goldilocks](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/goldilocks) | Resource request recommendations |
 | [grafana-operator](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/grafana-operator) | Grafana and dashboards as CRDs |
 | [headlamp](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/headlamp) | Kubernetes web UI |
+| [kguardian](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kguardian) | eBPF traffic observer that generates network policies |
 | [kromgo](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kromgo) | Cluster stats for the README badges |
 | [kube-prometheus-stack](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kube-prometheus-stack) | Prometheus, Alertmanager and alerting rules |
 | [nut-exporter](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/nut-exporter) | UPS metrics |
