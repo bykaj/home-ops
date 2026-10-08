@@ -135,8 +135,8 @@ def discover():
     enabled, disabled = {}, {}
     for ns_dir in sorted(p for p in APPS.iterdir() if p.is_dir()):
         ns = ns_dir.name
-        if ns not in PLATFORM | WORKLOADS:
-            sys.exit(f"error: namespace {ns!r} is in neither PLATFORM nor WORKLOADS")
+        if (ns in PLATFORM) == (ns in WORKLOADS):
+            sys.exit(f"error: namespace {ns!r} must be in exactly one of PLATFORM or WORKLOADS")
         text = (ns_dir / "kustomization.yaml").read_text()
         for commented, app in re.findall(r"^\s*(#\s*)?-\s*\./([^/]+)/ks\.yaml\s*$", text, re.M):
             (disabled if commented else enabled).setdefault(ns, []).append(app)

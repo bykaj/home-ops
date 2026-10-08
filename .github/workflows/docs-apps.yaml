@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Docs Apps
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/docs-apps.yaml
+      - docs/kubernetes/applications.md
+      - kubernetes/apps/**
+      - scripts/docs-applications.py
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Docs Apps - Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Mise
+        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          cache: false
+          install_args: uv
+
+      - name: Check Applications Page
+        run: uv run --script scripts/docs-applications.py --check
