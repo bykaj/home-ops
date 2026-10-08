@@ -10,6 +10,16 @@ spec:
     name: kguardian
   interval: 1h
   values:
+    broker:
+      resources:
+        limits:
+          memory: 2Gi
+    database:
+      persistence:
+        storageClassName: openebs-hostpath
+      resources:
+        limits:
+          memory: 1Gi
     frontend:
       allowedHosts:
         - kguardian.bykaj.app
