@@ -11,12 +11,15 @@ spec:
   interval: 1h
   values:
     # Rook-compatible values, see
-    # https://github.com/rook/rook/blob/v1.20.5/deploy/charts/ceph-csi-drivers/values.yaml
+    # https://github.com/rook/rook/blob/v1.21.0/deploy/charts/ceph-csi-drivers/values.yaml
     # Settings beyond that file preserve what rook v1.19 wrote into the live Driver
     # CRs; chart defaults would otherwise overwrite them on helm adoption.
     operatorConfig:
       namespace: rook-ceph
       driverSpecDefaults:
+        # Rook >= v1.21 renders this ConfigMap empty, so the operator's built-in
+        # images apply; set csi.<image>.repository/tag in the rook-ceph HelmRelease
+        # (e.g. csi.cephcsi) to pin them
         imageSet:
           name: rook-csi-operator-image-set-configmap
         log:
