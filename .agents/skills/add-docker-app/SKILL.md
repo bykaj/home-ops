@@ -42,7 +42,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
      ```
 
    - Traefik terminates TLS on `websecure` with the `*.bykaj.app` / `*.bykaj.io` wildcards and redirects HTTP. NAS services are LAN-only; use `bykaj.app` unless the user says otherwise.
-   - Don't publish HTTP `ports:`. Non-HTTP traffic goes through a Traefik entrypoint (`tftp` 69/udp, `web-alt` 8080, `smb` 445) or, failing that, a published port or `network_mode: host`.
+   - Don't publish HTTP `ports:`. Non-HTTP traffic goes through a Traefik entrypoint (`tftp` 69/udp, `web-alt` 8080) or, failing that, a published port or `network_mode: host`.
    - OIDC apps use Authentik at `https://auth.cetana.id/application/o/<app>/`; the user creates the provider and stores the client ID/secret in 1Password.
 
 5. **Docs**: add a `### NN-<app>` section under "Stacks" in `docs/docker/index.md` (in directory order), and update any other page that describes what the stack touches (DNS, storage/backups, networking). Validate with `zensical build --strict`.

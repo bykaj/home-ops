@@ -21,7 +21,6 @@ services:
       - --entrypoints.websecure.http.tls.domains[1].main=*.bykaj.io
       - --entryPoints.tftp.address=:69/udp
       - --entryPoints.web-alt.address=:8080
-      - --entryPoints.smb.address=:445
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
     container_name: traefik
