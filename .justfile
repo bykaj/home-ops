@@ -18,6 +18,11 @@ mod bootstrap "bootstrap"
 docs:
     zensical serve
 
+[doc('Regenerate the app tables in the docs (--check to verify only)')]
+[group('docs')]
+docs-apps *args:
+    uv run --script scripts/docs-applications.py {{ args }}
+
 # Specific Docker recipes
 [group('docker')]
 mod docker "docker"

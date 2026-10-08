@@ -13,6 +13,7 @@ one module per area. Run `just` on its own to list everything.
 | Recipe | Does |
 | --- | --- |
 | `just docs` | Serve this site locally with live reload (`zensical serve`) |
+| `just docs-apps [--check]` | Regenerate the tables on [Applications](../kubernetes/applications.md) from `kubernetes/apps`; `--check` only verifies |
 
 ## `just k8s`
 

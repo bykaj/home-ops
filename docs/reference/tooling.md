@@ -37,6 +37,7 @@ the environment:
 | `mise fmt`, `mise lock` | mise config and lockfile |
 | `actionlint`, `zizmor` | GitHub Actions workflows and actions |
 | `shellcheck` | `*.sh` |
+| `just docs-apps --check` | `kubernetes/apps/**`: the [Applications](../kubernetes/applications.md) page is up to date |
 | `gofmt`, `cargo fmt` | Go, Rust |
 
 ## Validating by hand
@@ -59,6 +60,7 @@ zensical build --strict   # what CI runs
 | Workflow | Does |
 | --- | --- |
 | `docs` | Builds this site on PRs, and deploys it to GitHub Pages on `main` |
+| `docs-apps` | Fails a PR when the [Applications](../kubernetes/applications.md) tables don't match `kubernetes/apps` in the committed tree |
 | `renovate` | Runs Renovate hourly |
 | `image-pull` | Pre-pulls images changed in a PR onto the nodes, so rollouts after merge don't wait on downloads |
 | `labeler`, `label-sync` | PR labels by path, and label definitions from `.github/labels.yaml` |

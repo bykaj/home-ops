@@ -279,6 +279,8 @@ kustomize build kubernetes/apps/<namespace>/<app>/app   # must render; ${APP} va
 yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 ```
 
+Then run `just docs-apps` and, in the new row on `docs/kubernetes/applications.md`, replace the `TODO` purpose with a short description and set Upstream to `[owner/repo](https://github.com/owner/repo)` of the project. A new namespace must first be added to `PLATFORM` or `WORKLOADS` in `scripts/docs-applications.py`. The `docs-apps` pre-commit hook fails until this is done.
+
 Show the user the created files and get confirmation before committing. Commit style: `feat(<app>): deploy`.
 
 ## Common mistakes
