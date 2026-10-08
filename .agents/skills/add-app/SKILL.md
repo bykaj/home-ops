@@ -248,7 +248,7 @@ spec:
   refreshInterval: 12h
   secretStoreRef:
     kind: ClusterSecretStore
-    name: onepassword-connect
+    name: onepassword
   target:
     name: <app>-secret
     creationPolicy: Owner
