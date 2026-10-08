@@ -55,7 +55,10 @@ dumps to NFS. See [PostgreSQL](../storage/postgres.md).
 ## `dragonfly`
 
 A [Dragonfly](https://www.dragonflydb.io) (Redis-compatible) instance per app,
-with a `NetworkPolicy` and `PodMonitor`. `authentication/` is an optional
+with a `NetworkPolicy` and `PodMonitor`. It runs with `--cluster_mode=emulated`
+and `--default_lua_flags=allow-undeclared-keys`; the latter is needed for
+BullMQ (Immich), whose Lua scripts access keys they don't declare in `KEYS`,
+which Dragonfly rejects by default. `authentication/` is an optional
 sub-component that enables password auth from `${DRAGONFLY_PASSWORD_SECRET}`.
 
 ## `gpu`
