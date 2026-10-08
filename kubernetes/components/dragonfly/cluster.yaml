@@ -17,6 +17,8 @@ spec:
     - --maxmemory=$(MAX_MEMORY)Mi
     - --proactor_threads=2
     - --cluster_mode=emulated
+    # BullMQ (Immich) Lua scripts build key names at runtime instead of declaring them in KEYS
+    - --default_lua_flags=allow-undeclared-keys
   resources:
     requests:
       cpu: 20m
