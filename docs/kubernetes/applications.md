@@ -44,7 +44,6 @@ the namespace `kustomization.yaml`.
 | [authentik](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/authentik) | Identity provider and SSO (OIDC) |
 | [cert-manager](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/cert-manager/cert-manager) | ACME certificates via Cloudflare DNS-01 |
 | [external-secrets](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external-secrets/external-secrets) | Syncs secrets from 1Password |
-| [kguardian](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/kguardian) | eBPF traffic observer that generates network policies |
 | [oidc-provider-debugger](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/oidc-provider-debugger) | Test client for OIDC flows |
 | [onepassword-connect](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/external-secrets/onepassword-connect) | 1Password Connect server backing External Secrets |
 
@@ -96,6 +95,7 @@ the namespace `kustomization.yaml`.
 | [goldilocks](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/goldilocks) | Resource request recommendations |
 | [grafana-operator](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/grafana-operator) | Grafana and dashboards as CRDs |
 | [headlamp](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/headlamp) | Kubernetes web UI |
+| [kguardian](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kguardian) | eBPF traffic observer that generates network policies |
 | [kromgo](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kromgo) | Cluster stats for the README badges |
 | [kube-prometheus-stack](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/kube-prometheus-stack) | Prometheus, Alertmanager and alerting rules |
 | [nut-exporter](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/observability/nut-exporter) | UPS metrics |
