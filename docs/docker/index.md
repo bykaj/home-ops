@@ -31,10 +31,12 @@ sets the order.
 
     doco-cd names each compose project after its directory, overriding any
     top-level `name:`. Renaming or renumbering a stack directory makes it
-    delete the old stack and create a new one. The new project gets fresh
-    anonymous and named volumes, because named volumes are prefixed with the
-    project name (`02-traefik_acme`), unless the volume sets an explicit
-    `name:`. Keep directory names stable.
+    delete the old stack and create a new one. Named volumes are prefixed
+    with the project name (`02-traefik_data`) unless they set an explicit
+    `name:`, so the new project gets new volume objects. For anonymous and
+    Docker-managed named volumes that means starting empty. Bind-backed
+    volumes (`driver_opts` with `o: bind`) point at the same host path, so
+    their data survives. Keep directory names stable.
 
 To redeploy without a push, for example after a failed deploy:
 

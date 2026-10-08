@@ -37,7 +37,16 @@ services:
       - "10.73.2.100:8080:8080"
     restart: unless-stopped
     volumes:
-      - acme:/certs
+      - source: data
+        target: /certs
+        type: volume
+        volume:
+          subpath: certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
-  acme:
+  data:
+    driver: local
+    driver_opts:
+      device: /mnt/vault/Applications/traefik/data
+      o: bind
+      type: none
