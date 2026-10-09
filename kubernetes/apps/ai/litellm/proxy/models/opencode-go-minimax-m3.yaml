@@ -7,14 +7,12 @@ metadata:
 spec:
   modelName: opencode-go/minimax-m3
   params:
-    model: minimaxai/minimax-m3
-    apiBase: https://opencode.ai/zen/go/v1
+    model: anthropic/minimax-m3
+    apiBase: https://opencode.ai/zen/go
     apiKeyRef:
       name: litellm-proxy-secret
       key: OPENCODE_GO_API_KEY
-    additional:
-      extra_body:
-        reasoning_split: true
+    dropParams: true
   info:
     maxTokens: 1000000
     maxInputTokens: 1000000
