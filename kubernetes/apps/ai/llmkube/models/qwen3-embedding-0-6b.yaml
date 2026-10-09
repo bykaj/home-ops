@@ -2,7 +2,7 @@
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: Model
 metadata:
-  name: qwen3-embedding-0.6b
+  name: qwen3-embedding-0-6b
 spec:
   source: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf
   format: gguf
@@ -20,9 +20,9 @@ spec:
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: InferenceService
 metadata:
-  name: qwen3-embedding-0.6b
+  name: qwen3-embedding-0-6b
 spec:
-  modelRef: qwen3-embedding-0.6b
+  modelRef: qwen3-embedding-0-6b
   runtime: llamacpp
   image: ghcr.io/ggml-org/llama.cpp:server-vulkan@sha256:b7ac2b757dd43ab04fdc236b9e96a0020ba8566d0b8c33839add482e93c80f3b
   replicas: 1
