@@ -5,12 +5,12 @@ kind: ServiceMonitor
 metadata:
   name: litellm
   labels:
-    app.kubernetes.io/instance: litellm
+    app.kubernetes.io/instance: litellm-proxy
     app.kubernetes.io/name: litellm
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/instance: litellm
+      app.kubernetes.io/instance: litellm-proxy
       app.kubernetes.io/name: litellm
   namespaceSelector:
     matchNames:
@@ -24,5 +24,5 @@ spec:
       interval: 30s
       scrapeTimeout: 10s
       bearerTokenSecret:
-        name: litellm-secret
+        name: litellm-proxy-secret
         key: LITELLM_MASTER_KEY
