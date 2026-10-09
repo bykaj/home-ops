@@ -3,20 +3,22 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: opencode-go-deepseek-v4-flash
+  name: minimax-m2-7
 spec:
   info:
     extra:
       supports_reasoning: true
-    maxInputTokens: 1000000
-    maxOutputTokens: 131072
+    maxInputTokens: 192000
+    maxOutputTokens: 16384
+    maxTokens: 204800
     supportsFunctionCalling: true
-    supportsPromptCaching: true
-  modelName: opencode-go/deepseek-v4-flash
+  modelName: minimax/MiniMax-M2-7
   params:
-    apiBase: https://opencode.ai/zen/go/v1
+    additional:
+      extra_body:
+        reasoning_split: true
+    apiBase: https://api.minimax.io/v1
     apiKeyRef:
-      key: OPENCODE_GO_API_KEY
+      key: MINIMAX_API_KEY
       name: litellm-proxy-secret
-    dropParams: true
-    model: openai/deepseek-v4-flash
+    model: minimax/MiniMax-M2.7
