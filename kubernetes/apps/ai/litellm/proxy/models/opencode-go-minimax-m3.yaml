@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: opencode-go-minimax-m3
+spec:
+  modelName: opencode-go/minimax-m3
+  params:
+    model: minimaxai/minimax-m3
+    apiBase: https://opencode.ai/zen/go/v1
+    apiKeyRef:
+      name: litellm-proxy-secret
+      key: OPENCODE_GO_API_KEY
+    additional:
+      extra_body:
+        reasoning_split: true
+  info:
+    maxTokens: 1000000
+    maxInputTokens: 1000000
+    maxOutputTokens: 131072
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+    supportsVision: true
+    extra:
+      supports_reasoning: true
