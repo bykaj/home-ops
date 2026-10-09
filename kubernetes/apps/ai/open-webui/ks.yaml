@@ -11,6 +11,9 @@ spec:
   dependsOn:
     - name: authentik
       namespace: security
+    - name: dragonfly-operator
+      namespace: database
+    - name: litellm-proxy
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
       kind: Dragonfly
