@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: opencode-go-deepseek-v4-flash
+spec:
+  info:
+    extra:
+      supports_reasoning: true
+    maxInputTokens: 1000000
+    maxOutputTokens: 131072
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+  modelName: opencode-go/deepseek-v4-flash
+  params:
+    apiBase: https://opencode.ai/zen/go/v1
+    apiKeyRef:
+      key: OPENCODE_GO_API_KEY
+      name: litellm-proxy-secret
+    dropParams: true
+    model: openai/deepseek-v4-flash

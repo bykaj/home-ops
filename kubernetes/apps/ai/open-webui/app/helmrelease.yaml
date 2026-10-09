@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: open-webui
+  dependsOn: []
   interval: 1h
   values:
     controllers:
@@ -31,7 +32,7 @@ spec:
               # Features
               ENABLE_LOGIN_FORM: false
               ENABLE_OLLAMA_API: false
-              ENABLE_OPENAI_API: false
+              ENABLE_OPENAI_API: true
               ENABLE_SIGNUP: false
               ENABLE_WEB_SEARCH: true
               # Search
@@ -42,6 +43,8 @@ spec:
               ENABLE_WEBSOCKET_SUPPORT: true
               WEBSOCKET_MANAGER: redis
               WEBSOCKET_REDIS_URL: "redis://:${APP}-dragonfly:6379"
+              # LiteLLM
+              OPENAI_API_BASE_URL: http://litellm-proxy.ai.svc.cluster.local:4000/v1
               # Memini
               MEMINI_BASE_URL: "http://memini.ai.svc.cluster.local:8080"
             envFrom:
@@ -63,7 +66,7 @@ spec:
         hostnames:
           - "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
         parentRefs:
-          - name: envoy-external
+          - name: envoy-internal
             namespace: network
     service:
       app:

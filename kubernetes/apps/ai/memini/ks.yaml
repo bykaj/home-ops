@@ -7,13 +7,14 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+  dependsOn:
+    - name: litellm-proxy
+    - name: llmkube-models
   interval: 1h
   path: ./kubernetes/apps/ai/memini/app
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_MOVER_UID: "1000"
-      KOPIUR_MOVER_GID: "1000"
   prune: true
   sourceRef:
     kind: GitRepository

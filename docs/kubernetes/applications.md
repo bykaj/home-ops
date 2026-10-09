@@ -151,6 +151,15 @@ to date and every app has a purpose.
 
 ## Workloads
 
+### `ai`
+
+| App | Purpose | Exposure | Uses | Upstream |
+| --- | --- | --- | --- | --- |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM gateway (LiteLLM operator, proxy and MCP servers) for hosted models | internal | [dragonfly](components.md#dragonfly) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [llmkube](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/llmkube) | Runs local GGUF models on the Intel iGPU (llama.cpp); serves the embedding model | — | [gpu](components.md#gpu) | [defilantech/LLMKube](https://github.com/defilantech/LLMKube) |
+| [memini](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/memini) | Long-term memory for Open WebUI chats, backed by local embeddings and LiteLLM | internal | [backup](components.md#kopiurbackup) | [eleboucher/memini](https://github.com/eleboucher/memini) |
+| [open-webui](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/open-webui) | Chat UI for LLMs, signs in through Authentik | internal | [backup](components.md#kopiurbackup), [dragonfly](components.md#dragonfly) | [open-webui/open-webui](https://github.com/open-webui/open-webui) |
+
 ### `default`
 
 | App | Purpose | Exposure | Uses | Upstream |
@@ -200,7 +209,6 @@ Manifests kept in the repository but commented out of their namespace
 
 | Namespace | Apps |
 | --- | --- |
-| `ai` | [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm), [llmkube](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/llmkube), [memini](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/memini), [open-webui](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/open-webui) |
 | `default` | [filabridge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/filabridge), [n8n](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/n8n), [opencloud](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/opencloud) |
 | `development` | [coder](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/development/coder) |
 | `media` | [komga](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/komga) |

@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: opencode-go-qwen3-6-plus
+spec:
+  info:
+    extra:
+      supports_reasoning: true
+    maxInputTokens: 262144
+    maxOutputTokens: 32768
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+  modelName: opencode-go/qwen3.6-plus
+  params:
+    apiBase: https://opencode.ai/zen/go
+    apiKeyRef:
+      key: OPENCODE_GO_API_KEY
+      name: litellm-proxy-secret
+    dropParams: true
+    model: anthropic/qwen3.6-plus
