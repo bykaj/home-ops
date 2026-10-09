@@ -3,20 +3,21 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: opencode-go-qwen3-6-plus
+  name: minimax-m2-7-anthropic
 spec:
   info:
     extra:
       supports_reasoning: true
-    maxInputTokens: 262144
-    maxOutputTokens: 32768
+    maxInputTokens: 192000
+    maxOutputTokens: 16384
+    maxTokens: 204800
     supportsFunctionCalling: true
     supportsPromptCaching: true
-  modelName: opencode-go/qwen3.6-plus
+  modelName: minimax/MiniMax-M2-7-anthropic
   params:
-    apiBase: https://opencode.ai/zen/go
+    apiBase: https://api.minimax.io/anthropic
     apiKeyRef:
-      key: OPENCODE_GO_API_KEY
+      key: MINIMAX_API_KEY
       name: litellm-proxy-secret
     dropParams: true
-    model: anthropic/qwen3.6-plus
+    model: anthropic/MiniMax-M2.7

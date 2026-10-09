@@ -3,20 +3,24 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: opencode-go-glm-5-2
+  name: minimax-m3
 spec:
   info:
     extra:
       supports_reasoning: true
-    maxInputTokens: 1048560
+    maxInputTokens: 1000000
     maxOutputTokens: 131072
+    maxTokens: 1000000
     supportsFunctionCalling: true
     supportsPromptCaching: true
-  modelName: opencode-go/glm-5.2
+    supportsVision: true
+  modelName: minimax/MiniMax-M3
   params:
-    apiBase: https://opencode.ai/zen/go/v1
+    additional:
+      extra_body:
+        reasoning_split: true
+    apiBase: https://api.minimax.io/v1
     apiKeyRef:
-      key: OPENCODE_GO_API_KEY
+      key: MINIMAX_API_KEY
       name: litellm-proxy-secret
-    dropParams: true
-    model: openai/glm-5.2
+    model: minimax/MiniMax-M3
