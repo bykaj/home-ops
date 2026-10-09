@@ -37,7 +37,7 @@ spec:
           name: litellm-proxy-secret
           key: LITELLM_MASTER_KEY
     - name: REDIS_URL
-      value: "redis://:${APP}-dragonfly:6379"
+      value: "redis://${APP}-dragonfly:6379"
   resources:
     requests:
       cpu: 100m
