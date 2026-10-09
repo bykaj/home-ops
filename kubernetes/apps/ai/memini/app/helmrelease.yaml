@@ -43,8 +43,8 @@ spec:
               MEMINI_EMBED_QUERY_PREFIX: "Instruct: Given a user message, retrieve relevant past memories\nQuery: "
               MEMINI_LOG_FORMAT: json
               MEMINI_LLM_API: openai
-              MEMINI_LLM_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
-              MEMINI_LLM_MODEL: neuralwatt/qwen3.6-35b-fast
+              MEMINI_LLM_BASE_URL: http://litellm-proxy.ai.svc.cluster.local:4000/v1
+              MEMINI_LLM_MODEL: opencode-go/deepseek-v4-flash
               MEMINI_LLM_API_KEY:
                 valueFrom:
                   secretKeyRef:

@@ -7,6 +7,9 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+  dependsOn:
+    - name: litellm-proxy
+    - name: llmkube-models
   interval: 1h
   path: ./kubernetes/apps/ai/memini/app
   postBuild:
