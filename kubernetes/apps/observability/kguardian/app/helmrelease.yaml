@@ -10,6 +10,16 @@ spec:
     name: kguardian
   interval: 1h
   values:
+    ai:
+      baseUrl: http://litellm-proxy.ai.svc.cluster.local:4000/v1
+      enabled: true
+      mcp:
+        auth:
+          allowUnauthenticated: true
+        enabled: true
+      model: minimax/MiniMax-M2-7-anthropic
+      provider: openai
+      secret: kguardian-secret
     broker:
       resources:
         limits:
@@ -23,5 +33,7 @@ spec:
     frontend:
       allowedHosts:
         - kguardian.bykaj.app
+    llmBridge:
+      replicaCount: 1
     telemetry:
       enabled: false
