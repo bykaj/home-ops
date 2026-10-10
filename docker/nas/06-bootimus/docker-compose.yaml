@@ -13,7 +13,8 @@ services:
       BOOTIMUS_TFTP_PORT: 69
       BOOTIMUS_HTTP_PORT: 8080
       BOOTIMUS_ADMIN_PORT: 8880
-      BOOTIMUS_SERVER_ADDR: 0.0.0.0
+      # Address advertised to PXE clients in the generated iPXE scripts
+      BOOTIMUS_SERVER_ADDR: 10.73.2.100
       BOOTIMUS_WINDOWS_SMB_ENABLED: "false"
     labels:
       dexd.enabled: "true"
@@ -25,11 +26,12 @@ services:
       traefik.tcp.routers.bootimus-http.rule: HostSNI(`*`)
       traefik.tcp.routers.bootimus-http.entrypoints: web-alt
       traefik.tcp.services.bootimus-http.loadbalancer.server.port: "8080"
-      # UDP: TFTP on 69
-      traefik.udp.routers.bootimus-tftp.entrypoints: tftp
-      traefik.udp.services.bootimus-tftp.loadbalancer.server.port: "69"
     networks:
       apps:
+    # TFTP can't go through Traefik: replies come from a new ephemeral port
+    # (RFC 1350 TID), which Traefik's UDP proxy drops
+    ports:
+      - "10.73.2.100:69:69/udp"
     volumes:
       - /mnt/vault/Applications/bootimus/data:/data
     cap_add:
