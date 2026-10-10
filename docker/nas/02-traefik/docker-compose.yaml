@@ -19,7 +19,6 @@ services:
       - --entrypoints.websecure.http.tls.certResolver=cf
       - --entrypoints.websecure.http.tls.domains[0].main=*.bykaj.app
       - --entrypoints.websecure.http.tls.domains[1].main=*.bykaj.io
-      - --entryPoints.tftp.address=:69/udp
       - --entryPoints.web-alt.address=:8080
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
@@ -32,7 +31,6 @@ services:
     ports:
       - "10.73.2.100:80:80"
       - "10.73.2.100:443:443"
-      - "10.73.2.100:69:69/udp"
       - "10.73.2.100:8080:8080"
     restart: unless-stopped
     volumes:

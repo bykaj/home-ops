@@ -88,7 +88,9 @@ doco-cd's run history. `/v1/health` only returns `{"content":"healthy"}`.
 [Traefik](https://traefik.io) (`02-traefik`) is the reverse proxy for every
 stack on the shared `apps` network. It terminates TLS for `*.bykaj.app` and
 `*.bykaj.io` with Let's Encrypt certificates (Cloudflare DNS-01) and also
-forwards TFTP (UDP 69) and HTTP on 8080.
+forwards plain TCP on 8080 (`web-alt`). UDP protocols that reply from a new
+port, such as TFTP, can't go through Traefik's UDP proxy and publish their port
+directly instead.
 
 A stack opts in with labels:
 
@@ -161,7 +163,9 @@ management (OIDC login). CNPG stores WAL archives and base backups here.
 
 [Bootimus](https://github.com/garybowers/bootimus) PXE/netboot server (TFTP +
 HTTP), with its admin UI at `bootimus.bykaj.app`. It is used to boot Talos
-installers on bare metal.
+installers on bare metal. iPXE HTTP on 8080 goes through Traefik; TFTP publishes
+`10.73.2.100:69/udp` straight from the container. UniFi DHCP on the Home and
+Cluster networks points clients at `10.73.2.100` with filename `ipxe.efi`.
 
 ### `07-zot`
 
