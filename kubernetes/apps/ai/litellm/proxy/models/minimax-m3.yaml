@@ -22,5 +22,5 @@ spec:
     apiBase: https://api.minimax.io/v1
     apiKeyRef:
       key: MINIMAX_API_KEY
-      name: litellm-proxy-secret
+      name: litellm-secret
     model: minimax/MiniMax-M3

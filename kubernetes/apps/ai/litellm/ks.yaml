@@ -22,7 +22,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app litellm-proxy
+  name: &app litellm
 spec:
   components:
     - ../../../../components/dragonfly
@@ -37,27 +37,6 @@ spec:
       current: status.phase == 'ready'
   interval: 1h
   path: ./kubernetes/apps/ai/litellm/proxy
-  postBuild:
-    substitute:
-      APP: *app
-      APP_SUBDOMAIN: litellm
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: ai
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app litellm-mcp
-spec:
-  dependsOn:
-    - name: litellm-operator
-  interval: 1h
-  path: ./kubernetes/apps/ai/litellm/mcp
   postBuild:
     substitute:
       APP: *app
