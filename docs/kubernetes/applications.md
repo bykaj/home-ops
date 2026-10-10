@@ -155,7 +155,7 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM gateway (LiteLLM operator, proxy and MCP servers) for hosted models | internal | [dragonfly](components.md#dragonfly) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM gateway (LiteLLM operator and proxy) for hosted models | internal | [dragonfly](components.md#dragonfly) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
 
 ### `default`
 
