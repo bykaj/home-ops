@@ -167,6 +167,42 @@ installers on bare metal. iPXE HTTP on 8080 goes through Traefik; TFTP publishes
 `10.73.2.100:69/udp` straight from the container. UniFi DHCP on the Home and
 Cluster networks points clients at `10.73.2.100` with filename `ipxe.efi`.
 
+#### Proxmox VE
+
+Bootimus has no Proxmox profile: it boots the extracted kernel and initrd with
+Debian live parameters, and the Proxmox installer then stops because it can't
+find its ISO. The fix is to embed the ISO in the initrd as `proxmox.iso`, as
+Proxmox's own PXE setup does. Bootimus's initrd override can't be used for this
+on UEFI: it appends `initrd` as an iPXE argument rather than a name, so
+`initrd=initrd` fails with iPXE error `0x7f04828e`. Replace the extracted
+`initrd` in place instead, padding the original to a 4-byte boundary so the
+kernel finds the appended archive:
+
+```sh
+sudo sh -c 'cd /mnt/vault/Applications/bootimus/data/isos/<image> \
+  && { [ -f initrd.orig ] || cp -p initrd initrd.orig; } \
+  && pad=$(( (4 - $(stat -c%s initrd.orig) % 4) % 4 )) \
+  && ln -sf ../<image>.iso proxmox.iso \
+  && { cat initrd.orig; head -c $pad /dev/zero; echo proxmox.iso | cpio -L -H newc -o; } > initrd.new \
+  && mv -f initrd.new initrd && rm -f proxmox.iso \
+  && chown share_user:share_user initrd initrd.orig'
+```
+
+In the image's properties, leave **Initrd File** on *Auto-detected* and set
+**Boot Parameters** to:
+
+```text
+initrd=initrd ramdisk_size=16777216 rw quiet splash=silent proxmox-tui-mode
+```
+
+`proxmox-tui-mode` starts the terminal installer; the graphical one picks a
+resolution the JetKVM can't show in full. The client needs more than about
+4 GB of RAM, since the whole ISO is loaded into memory.
+
+!!! warning
+    Re-extracting or replacing the ISO in Bootimus restores the original
+    `initrd`, so repeat these steps for every new Proxmox ISO.
+
 ### `07-zot`
 
 [Zot](https://zotregistry.dev) OCI registry at `registry.bykaj.app`, acting as
