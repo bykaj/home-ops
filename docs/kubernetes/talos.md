@@ -32,7 +32,9 @@ Applied to every node from `cluster.yaml.j2`:
 - Filesystem trim and scrub schedules, and a hardware watchdog
 - Kernel modules for DRBD, `dm_thin_pool` and `nbd`
 - Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, NFS RPC slot limits, raised inotify limits, IPv6 disabled
-- `nfsmount.conf` with tuned NFS mount defaults
+- `nfsmount.conf` with tuned NFS mount defaults (including `noresvport`, so
+  reconnects can use any source port), and an `nfs.conf` that sets the
+  `nfsrahead` read-ahead to 16 MiB for NFSv4 mounts
 - Registry mirrors for `docker.io`, `ghcr.io`, `quay.io` and `registry.k8s.io`,
   pointing at the [Zot](../docker/index.md#07-zot) pull-through cache on the NAS
   (`registry.bykaj.app`), falling back to upstream

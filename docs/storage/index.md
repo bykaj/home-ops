@@ -49,8 +49,9 @@ node and not replicated.
 
 The NAS (`nas.internal`, `10.73.1.10`) exports NFS shares from its ZFS pools
 for media libraries, documents and backups. Talos mounts NFS with tuned
-options from an `nfsmount.conf` in the machine config and loads the
-`nfsrahead` extension for read-ahead tuning.
+options from an `nfsmount.conf` in the machine config. The `nfsrahead`
+extension, configured by an `nfs.conf`, raises read-ahead on NFSv4 mounts to
+16 MiB.
 
 Apps that depend on an NFS share can use the
 [`zeroscaler/nfs` component](../kubernetes/components.md#zeroscalernfs) to
