@@ -209,6 +209,9 @@ resolution the JetKVM can't show in full. The client needs more than about
 an on-demand pull-through cache for Docker Hub (`/docker-hub`), GHCR (`/ghcr`),
 Quay (`/quay`) and `registry.k8s.io` (`/k8s`). Talos nodes use it as their
 registry mirror, falling back to upstream when it is unavailable.
+Prometheus scrapes its metrics at `https://registry.bykaj.app/metrics`
+(the `zot` ScrapeConfig in kube-prometheus-stack). `accessControl.metrics`
+allows anonymous reads, and the hostname only resolves on the LAN.
 
 !!! note
 

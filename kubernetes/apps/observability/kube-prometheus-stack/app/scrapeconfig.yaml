@@ -33,6 +33,22 @@ spec:
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: ScrapeConfig
 metadata:
+  name: zot
+spec:
+  scheme: HTTPS
+  staticConfigs:
+    - targets:
+        - registry.bykaj.app
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: zot
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
   name: jetkvm
 spec:
   staticConfigs:
