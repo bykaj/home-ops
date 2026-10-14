@@ -97,6 +97,9 @@
             }
           ]
         }
+      },
+      "metrics": {
+        "anonymousPolicy": ["read"]
       }
     },
     "address": "0.0.0.0",
@@ -191,6 +194,12 @@
     },
     "ui": {
       "enable": true
+    },
+    "metrics": {
+      "enable": true,
+      "prometheus": {
+        "path": "/metrics"
+      }
     }
   }
 }
