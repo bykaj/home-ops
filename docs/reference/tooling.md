@@ -62,6 +62,7 @@ zensical build --strict   # what CI runs
 | `docs` | Builds this site on PRs, and deploys it to GitHub Pages on `main` |
 | `docs-apps` | Fails a PR when the [Applications](../kubernetes/applications.md) tables don't match `kubernetes/apps` in the committed tree |
 | `renovate` | Runs Renovate hourly |
+| `claude-review` | Claude (Opus 5.5) reviews every non-draft PR, including Renovate's: researches version bumps against upstream changelogs and the config here, checks other changes for breakage, and posts one verdict comment plus inline findings. Reads its token from `op://Homelab/claude/CLAUDE_CODE_OAUTH_TOKEN` |
 | `image-pull` | Pre-pulls images changed in a PR onto the nodes, so rollouts after merge don't wait on downloads |
 | `labeler`, `label-sync` | PR labels by path, and label definitions from `.github/labels.yaml` |
 | `tag` | Monthly release tag |
