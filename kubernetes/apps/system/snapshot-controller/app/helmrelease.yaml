@@ -14,3 +14,4 @@ spec:
       replicaCount: 2
       serviceMonitor:
         create: true
+    keepCRDs: true

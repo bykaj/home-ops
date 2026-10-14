@@ -25,6 +25,10 @@ creates:
 - the `csi-ceph-blockpool` VolumeSnapshotClass (default), used by Kopiur for
   crash-consistent snapshots before backup
 
+The VolumeSnapshot CRDs come from the `snapshot-controller` chart with
+`keepCRDs: true`, so a Helm uninstall or failed-upgrade remediation can't
+delete them, and every VolumeSnapshot with them.
+
 Notable settings: msgr2 is required on the wire, discard is enabled on the
 block devices, local disk-failure prediction is on, and all Ceph daemons
 tolerate tuppr's `outdated` taint so upgrades don't evict them prematurely.
