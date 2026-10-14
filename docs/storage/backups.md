@@ -43,7 +43,10 @@ The component creates, per app:
 - the `Restore`, which acts as a volume populator
 
 The mover runs as UID/GID `4000` by default and keeps a persistent cache on
-`openebs-hostpath`.
+`openebs-hostpath` (5Gi by default). The `ClusterRepository` caps Kopia's cache
+budgets at 512 MiB for content and 1 GiB for metadata, so the cache sweeper
+keeps it inside the PVC. Kopia's own default of 5000 MiB per budget is larger
+than the volume.
 
 !!! warning "Changing the mover UID"
 
