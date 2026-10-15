@@ -19,10 +19,10 @@ pipx.uvx = true
 "github:mitsuhiko/minijinja" = "3.0.0"
 "github:postfinance/topf" = "v0.6.1"
 "gum" = "2.0.2"
-"helm" = "4.3.0"
+"helm" = "4.3.1"
 "helmfile" = "1.8.1"
 "jq" = "1.8.2"
-"just" = "1.58.0"
+"just" = "1.59.0"
 "krew" = "0.5.0"
 "kubeconform" = "0.8.0"
 "kubectl" = "1.37.1"
@@ -40,7 +40,7 @@ pipx.uvx = true
 "talos" = "1.14.2"
 "uv" = "0.13.1"
 "yq" = "4.54.1"
-"zizmor" = "1.30.1"
+"zizmor" = "1.31.0"
 
 [hooks]
 postinstall = [
