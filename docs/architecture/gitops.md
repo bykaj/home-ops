@@ -31,7 +31,7 @@ so individual apps don't repeat this boilerplate:
 | `Kustomization` | `retryInterval: 2m`, `timeout: 15m`, `deletionPolicy: WaitForTermination` |
 | `HelmRelease` install | `crds: CreateReplace`, strategy `RetryOnFailure` |
 | `HelmRelease` upgrade | `crds: CreateReplace`, `cleanupOnFail`, strategy `RemediateOnFailure` (2 retries, remediate last failure) |
-| `HelmRelease` | `timeout: 15m` |
+| `HelmRelease` | `timeout: 15m`, `maxHistory: 3` (each revision is a `helm.sh/release.v1` Secret holding the whole chart, and they make up most of etcd) |
 
 A third, label-driven patch rewrites a CNPG `Cluster` to a plain `initdb`
 bootstrap when its Flux Kustomization carries

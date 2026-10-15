@@ -89,6 +89,16 @@ complete files, not deltas. None exist today.
   loudly. Adding the first worker means creating `workers.yaml.j2` (with
   `machine: { type: worker }` and a `ca` block carrying `crt` only) plus
   `nodes/workers/<node>.yaml.j2`.
+- Applying a change to `KubeAPIServerConfig` or `KubeControllerManagerConfig`
+  restarts those static pods even though the dry run says "without a reboot".
+  All three nodes are control planes, so apply one node at a time and wait for
+  `kubectl get --raw /readyz` before the next, or the API goes down.
+- etcd's database file never shrinks on its own, and Talos doesn't defragment
+  it. The [`etcd-defrag`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/etcd-defrag)
+  CronJob runs every Sunday at 04:00 and defragments members with more than
+  100 MiB free, one at a time, moving the leader first. To do it by hand: run
+  `talosctl -n <node> etcd defrag` on the followers, then
+  `talosctl -n <leader> etcd forfeit-leadership` and defrag the old leader.
 - Kernel names for the two NVMe drives can swap across reboots. Disks are
   selected by model and links by MAC, so this is harmless, but match by model
   or serial when reading `talosctl` output.

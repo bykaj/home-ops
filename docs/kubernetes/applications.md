@@ -81,6 +81,7 @@ to date and every app has a purpose.
 | --- | --- | --- | --- | --- |
 | [cilium](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/cilium) | CNI, kube-proxy replacement, BGP LoadBalancer IPs | — | — | [cilium/cilium](https://github.com/cilium/cilium) |
 | [coredns](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/coredns) | Cluster DNS | — | — | [coredns/coredns](https://github.com/coredns/coredns) |
+| [etcd-defrag](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/etcd-defrag) | Weekly etcd defragmentation, one member at a time | — | — | [ahrtr/etcd-defrag](https://github.com/ahrtr/etcd-defrag) |
 | [metrics-server](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/metrics-server) | Resource metrics for `kubectl top` and HPAs | — | — | [kubernetes-sigs/metrics-server](https://github.com/kubernetes-sigs/metrics-server) |
 
 ### `network`

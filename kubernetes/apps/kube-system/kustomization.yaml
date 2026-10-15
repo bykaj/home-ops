@@ -9,4 +9,5 @@ resources:
   - ./namespace.yaml
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
+  - ./etcd-defrag/ks.yaml
   - ./metrics-server/ks.yaml
