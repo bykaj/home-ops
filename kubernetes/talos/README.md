@@ -8,7 +8,7 @@ just talos render-config <node>   # render a node's full machine config
 just talos apply-node <node>      # render and apply
 ```
 
-See [Talos](https://docs.bykaj.com/kubernetes/talos/) ([source](../../docs/kubernetes/talos.md))
+See [Talos](https://docs.bykaj.com/kubernetes/talos/) ([source](../../docs/content/kubernetes/talos.md))
 for the layout, rendering layers, schematics and gotchas, and
-[Upgrades](https://docs.bykaj.com/runbooks/upgrades/) ([source](../../docs/runbooks/upgrades.md))
+[Upgrades](https://docs.bykaj.com/runbooks/upgrades/) ([source](../../docs/content/runbooks/upgrades.md))
 for Talos and Kubernetes upgrades.

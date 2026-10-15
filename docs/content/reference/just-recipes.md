@@ -8,13 +8,6 @@ description: All just recipes, grouped by module
 [`.justfile`](https://github.com/bykaj/home-ops/blob/main/.justfile) imports
 one module per area. Run `just` on its own to list everything.
 
-## Root
-
-| Recipe | Does |
-| --- | --- |
-| `just docs` | Serve this site locally with live reload (`zensical serve`) |
-| `just docs-apps [--check]` | Regenerate the tables on [Applications](../kubernetes/applications.md) from `kubernetes/apps`; `--check` only verifies |
-
 ## `just k8s`
 
 Day-2 cluster operations
@@ -79,3 +72,14 @@ NAS operations
 | --- | --- |
 | `restart-doco-cd` | Restart doco-cd on the NAS via Ansible, without applying anything (doco-cd deploys its own compose changes) |
 | `sync-stacks` | Trigger a doco-cd poll of `main` through its REST API and wait for the result |
+
+## `just docs`
+
+This site
+([`docs/mod.just`](https://github.com/bykaj/home-ops/blob/main/docs/mod.just)).
+
+| Recipe | Does |
+| --- | --- |
+| `serve` | Serve this site locally with live reload (`zensical serve`) |
+| `build` | Strict build into `docs/site`, as CI runs it (`zensical build --clean --strict`) |
+| `apps [--check]` | Regenerate the tables on [Applications](../kubernetes/applications.md) from `kubernetes/apps`; `--check` only verifies |

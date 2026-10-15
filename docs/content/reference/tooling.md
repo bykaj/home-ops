@@ -37,7 +37,7 @@ the environment:
 | `mise fmt`, `mise lock` | mise config and lockfile |
 | `actionlint`, `zizmor` | GitHub Actions workflows and actions |
 | `shellcheck` | `*.sh` |
-| `just docs-apps --check` | `kubernetes/apps/**`: the [Applications](../kubernetes/applications.md) page is up to date |
+| `just docs apps --check` | `kubernetes/apps/**`: the [Applications](../kubernetes/applications.md) page is up to date |
 | `gofmt`, `cargo fmt` | Go, Rust |
 
 ## Validating by hand
@@ -51,8 +51,8 @@ yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
 
 # These docs
-just docs                 # live preview on http://localhost:8000
-zensical build --strict   # what CI runs
+just docs serve           # live preview on http://localhost:8000
+just docs build           # strict build, what CI runs
 ```
 
 ## GitHub Actions
@@ -69,9 +69,9 @@ zensical build --strict   # what CI runs
 
 ## Writing these docs
 
-Pages live in [`docs/`](https://github.com/bykaj/home-ops/tree/main/docs). The
+Pages live in [`docs/content/`](https://github.com/bykaj/home-ops/tree/main/docs/content). The
 navigation is set explicitly in
-[`zensical.toml`](https://github.com/bykaj/home-ops/blob/main/zensical.toml),
+[`zensical.toml`](https://github.com/bykaj/home-ops/blob/main/docs/zensical.toml),
 so add every new page there. [Zensical](https://zensical.org) supports
 admonitions (`!!! note`), content tabs, Mermaid diagrams, code annotations and
 grid cards. See the [authoring docs](https://zensical.org/docs/authoring/markdown/).

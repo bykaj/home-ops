@@ -11,10 +11,10 @@ just bootstrap nas       # Ansible provisioning of TrueNAS, then doco-cd takes o
 Documentation:
 
 - [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/): prerequisites, stages, data
-  restore ([source](../docs/runbooks/bootstrap.md))
+  restore ([source](../docs/content/runbooks/bootstrap.md))
 - [BGP & Load Balancing](https://docs.bykaj.com/networking/bgp/): the UDM FRR config the cluster
-  needs ([source](../docs/networking/bgp.md))
+  needs ([source](../docs/content/networking/bgp.md))
 - [DNS](https://docs.bykaj.com/networking/dns/): the manual UniFi records
-  ([source](../docs/networking/dns.md))
+  ([source](../docs/content/networking/dns.md))
 - [UDM Boot Scripts](https://docs.bykaj.com/networking/udm-boot-scripts/): ECMP hashing and
-  HTTP/3 records ([source](../docs/networking/udm-boot-scripts.md))
+  HTTP/3 records ([source](../docs/content/networking/udm-boot-scripts.md))

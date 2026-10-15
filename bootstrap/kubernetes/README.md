@@ -8,5 +8,5 @@ just bootstrap cluster
 ```
 
 See the [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/#cluster)
-([source](../../docs/runbooks/bootstrap.md)) for the stages, the helmfile single-source-of-truth
+([source](../../docs/content/runbooks/bootstrap.md)) for the stages, the helmfile single-source-of-truth
 setup and how app data is restored.

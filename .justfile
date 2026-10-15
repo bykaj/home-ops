@@ -13,19 +13,13 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 [group('bootstrap')]
 mod bootstrap "bootstrap"
 
-[doc('Serve the docs site locally with live reload')]
-[group('docs')]
-docs:
-    zensical serve
-
-[doc('Regenerate the app tables in the docs (--check to verify only)')]
-[group('docs')]
-docs-apps *args:
-    uv run --script scripts/docs-applications.py {{ args }}
-
 # Specific Docker recipes
 [group('docker')]
 mod docker "docker"
+
+# Docs site recipes
+[group('docs')]
+mod docs "docs"
 
 # Specific Kubernetes recipes
 [group('k8s')]

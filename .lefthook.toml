@@ -61,7 +61,7 @@ actionlint -shellcheck= \
 '''
 
 [pre-commit.commands.docs-apps]
-glob = ["kubernetes/apps/**", "docs/kubernetes/applications.md", "scripts/docs-applications.py"]
+glob = ["kubernetes/apps/**", "docs/content/kubernetes/applications.md", "scripts/docs-applications.py"]
 run = "uv run --script scripts/docs-applications.py --check"
 
 [pre-commit.commands.shellcheck]

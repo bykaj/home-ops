@@ -1,5 +1,5 @@
 # Zensical configuration for the docs site published to GitHub Pages.
-# Build locally with `just docs` (serves on http://localhost:8000).
+# Preview locally with `just docs serve` (serves on http://localhost:8000).
 # Reference: https://zensical.org/docs/setup/basics/
 
 [project]
@@ -9,7 +9,8 @@ site_author = "Kaj"
 site_url = "https://docs.bykaj.com/"
 repo_url = "https://github.com/bykaj/home-ops"
 repo_name = "bykaj/home-ops"
-edit_uri = "edit/main/docs/"
+docs_dir = "content"
+edit_uri = "edit/main/docs/content/"
 copyright = "Copyright &copy; 2026 Kaj Visser. All rights reserved."
 extra_css = ["stylesheets/extra.css"]
 

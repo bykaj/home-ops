@@ -73,7 +73,7 @@ graph LR
 ├── 📁 bootstrap/        # Cluster and NAS bring-up (helmfile, kustomize, mod.just)
 ├── 📁 docker/
 │   └── 📁 nas/          # Compose stacks deployed by doco-cd
-├── 📁 docs/             # This site
+├── 📁 docs/             # This site (Zensical project, mod.just)
 ├── 📁 kubernetes/
 │   ├── 📁 apps/         # Applications, organized by namespace
 │   ├── 📁 clusters/     # Flux entrypoint (cluster-apps Kustomization)
