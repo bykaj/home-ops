@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: etcd-defrag
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: etcd-defrag
+  interval: 1h
+  values:
+    defaultPodOptions:
+      hostNetwork: true # etcd client port listens on 127.0.0.1:2379 on each control-plane node
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      securityContext:
+        runAsGroup: 60
+        runAsNonRoot: true
+        runAsUser: 60 # Talos's etcd user, owner of the 0400 certs under /system/secrets/etcd
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+    controllers:
+      etcd-defrag:
+        type: cronjob
+        cronjob:
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 1
+          schedule: "0 4 * * 0"
+          successfulJobsHistory: 1
+          timeZone: Europe/Amsterdam
+        containers:
+          app:
+            image:
+              repository: ghcr.io/ahrtr/etcd-defrag
+              tag: v0.46.0
+            args:
+              - --cacert=/certs/ca.crt
+              - --cert=/certs/server.crt
+              - --cluster # discover all members from the local endpoint, defrag them one at a time
+              - --defrag-rule=dbQuotaUsage > 0.5 || dbSizeFree > 100*1024*1024
+              - --endpoints=https://127.0.0.1:2379
+              - --key=/certs/server.key
+              - --move-leader # hand leadership off before defragmenting the leader
+              - --wait-between-defrags=30s
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      certs:
+        type: hostPath
+        hostPath: /system/secrets/etcd
+        globalMounts:
+          - path: /certs
+            readOnly: true
