@@ -7,7 +7,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/docs-apps.yaml
-      - docs/kubernetes/applications.md
+      - docs/content/kubernetes/applications.md
       - kubernetes/apps/**
       - scripts/docs-applications.py
 
