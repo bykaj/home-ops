@@ -26,6 +26,10 @@ devices. LoadBalancer Service IPs come from a `CiliumLoadBalancerIPPool`
 covering `10.73.20.0/24` and are announced to the UDM over BGP. See
 [BGP & Load Balancing](bgp.md).
 
+Service topology (`loadBalancer.serviceTopology`) is enabled, so Cilium honours
+`trafficDistribution` and topology hints on Services, including node-level
+`PreferSameNode` (Cilium 1.20 or newer).
+
 Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
 public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32`).
 
