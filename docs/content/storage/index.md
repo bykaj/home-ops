@@ -57,6 +57,15 @@ options from an `nfsmount.conf` in the machine config. The `nfsrahead`
 extension, configured by an `nfs.conf`, raises read-ahead on NFSv4 mounts to
 16 MiB.
 
+!!! warning "The NAS must allow non-root mounts"
+
+    `nfsmount.conf` sets `noresvport`, so nodes connect from unprivileged
+    source ports. TrueNAS rejects those by default (`secure` exports, seen as
+    `mount.nfs: Operation not permitted`), so the NFS service has **Allow
+    non-root mount** enabled, which adds `insecure` to every export. This is
+    set in the TrueNAS UI and isn't managed from this repository. Existing
+    NFS connections survive without it; it only shows up once a node reboots.
+
 Apps that depend on an NFS share can use the
 [`zeroscaler/nfs` component](../kubernetes/components.md#zeroscalernfs) to
 scale to zero when the NAS is unreachable, instead of hanging on a stale mount.
