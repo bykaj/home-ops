@@ -39,7 +39,6 @@ spec:
               DISABLE_PASSWORD_AUTH: "true"
               DISABLE_SIGNUPS: "false"
               OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
-              OAUTH_PROVIDER_NAME: "Cetana ID"
               OAUTH_SCOPE: "openid profile email"
               # Inference config
               EMBEDDING_DIMENSIONS: "1536"
