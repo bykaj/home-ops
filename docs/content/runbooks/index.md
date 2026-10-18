@@ -11,6 +11,7 @@ Step-by-step procedures for recurring and disaster-recovery operations.
 - [Upgrades](upgrades.md): Talos and Kubernetes upgrades with tuppr, or by hand
 - [New Database](new-database.md): first deploy of an app with a brand-new CNPG cluster
 - [Adding an App](adding-an-app.md): scaffold a new cluster app
+- [Adding a Domain](adding-a-domain.md): serve a new domain with DNS, routing and a wildcard certificate
 
 !!! tip "Prerequisites for every runbook"
 
