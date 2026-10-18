@@ -55,7 +55,7 @@ env:
 
 `uri` points at the read-write primary Service `${APP}-postgres-rw`. There is no
 PgBouncer `Pooler`. Apps connect directly. If transaction-mode pooling is
-ever needed (for example for authentik at scale), add a CNPG `Pooler` per
+ever needed, add a CNPG `Pooler` per
 cluster.
 
 ## Bootstrap behavior

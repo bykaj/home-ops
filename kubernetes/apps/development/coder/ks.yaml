@@ -8,7 +8,7 @@ spec:
   components:
     - ../../../../components/zeroscaler/postgres
   dependsOn:
-    - name: authentik
+    - name: pocket-id
       namespace: security
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2

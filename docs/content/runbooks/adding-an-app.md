@@ -13,7 +13,7 @@ skill, which coding agents also follow. This page is the short version.
 | App | Shows |
 | --- | --- |
 | [`network/echo-server`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/echo-server) | Minimal stateless app with a route |
-| [`security/authentik`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/authentik) | Secrets, and a config file via `configMapGenerator` |
+| [`network/cloudflare-tunnel`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/cloudflare-tunnel) | Secrets, and a config file via `configMapGenerator` |
 | [`default/paperless`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Custom probes, Dragonfly dependency, Kopiur-backed persistence |
 
 ## Steps

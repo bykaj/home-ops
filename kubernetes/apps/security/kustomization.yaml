@@ -7,6 +7,5 @@ components:
   - ../../components/alerts
 resources:
   - ./namespace.yaml
-  - ./authentik/ks.yaml
   - ./oidc-provider-debugger/ks.yaml
   - ./pocket-id/ks.yaml

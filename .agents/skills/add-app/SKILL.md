@@ -7,11 +7,11 @@ description: Use when deploying a new application to the cluster — scaffolding
 
 Scaffolds `kubernetes/apps/<namespace>/<app>/` with a Flux Kustomization (`ks.yaml`) and an app-template HelmRelease. Every value below comes from current repo conventions — when in doubt, mirror a recent real app instead of inventing structure:
 
-| Reference app                         | Shows                                                          |
-| ------------------------------------- | -------------------------------------------------------------- |
-| `kubernetes/apps/network/echo-server` | Minimal stateless app + route                                  |
-| `kubernetes/apps/security/authentik`  | Secrets, config file via configMapGenerator                    |
-| `kubernetes/apps/default/paperless`   | Custom probes, dragonfly dependency, kopiur-backed persistence |
+| Reference app                               | Shows                                                          |
+| ------------------------------------------- | -------------------------------------------------------------- |
+| `kubernetes/apps/network/echo-server`       | Minimal stateless app + route                                  |
+| `kubernetes/apps/network/cloudflare-tunnel` | Secrets, config file via configMapGenerator                    |
+| `kubernetes/apps/default/paperless`         | Custom probes, dragonfly dependency, kopiur-backed persistence |
 
 ## Step 1: Gather details
 

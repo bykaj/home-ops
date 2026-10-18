@@ -9,7 +9,7 @@ spec:
     - ../../../../components/dragonfly
     - ../../../../components/kopiur/backup
   dependsOn:
-    - name: authentik
+    - name: pocket-id
       namespace: security
     - name: dragonfly-operator
       namespace: database

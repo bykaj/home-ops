@@ -25,8 +25,8 @@ spec:
               ENABLE_OAUTH_SIGNUP: true
               ENABLE_OAUTH_PERSISTENT_CONFIG: false
               OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
-              OAUTH_PROVIDER_NAME: "Cetana ID"
-              OPENID_PROVIDER_URL: https://auth.cetana.id/application/o/open-webui/.well-known/openid-configuration
+              OAUTH_PROVIDER_NAME: "Cyrannus ID"
+              OPENID_PROVIDER_URL: https://cyrannus.id/.well-known/openid-configuration
               OAUTH_SCOPES: openid email profile
               OPENID_REDIRECT_URI: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}/oauth/oidc/callback
               # Features

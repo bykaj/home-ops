@@ -67,7 +67,7 @@ warnings.simplefilter("ignore", ReusedAnchorWarning)
 yaml = YAML(typ="safe", pure=True)
 # A bare `=` (e.g. AlertmanagerConfig matchType) resolves to the YAML 1.1 value tag
 yaml.constructor.add_constructor("tag:yaml.org,2002:value", lambda c, node: c.construct_scalar(node))
-# Ignore custom tags such as authentik blueprint `!Find`
+# Ignore custom tags such as `!Find`
 yaml.constructor.add_multi_constructor("!", lambda c, suffix, node: None)
 
 
