@@ -70,8 +70,8 @@ spec:
               Npgsql__CommandTimeout: "900"
               # OIDC Configuration
               OAuth__Enabled: "true"
-              OAuth__Authority: "https://auth.cetana.id/application/o/mail-archiver/"
-              OAuth__DisplayName: "Cetana ID"
+              OAuth__Authority: "https://cyrannus.id"
+              OAuth__DisplayName: "Cyrannus ID"
               OAuth__ClientScopes__0: "openid"
               OAuth__ClientScopes__1: "profile"
               OAuth__ClientScopes__2: "email"
