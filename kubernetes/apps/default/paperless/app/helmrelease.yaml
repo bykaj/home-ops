@@ -23,7 +23,7 @@ spec:
             env:
               # OIDC integration
               PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
-              PAPERLESS_DISABLE_REGULAR_LOGIN: "false"
+              PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
               PAPERLESS_REDIRECT_LOGIN_TO_SSO: "false"
               # Configure application
               PAPERLESS_FILENAME_FORMAT: "{ created }-{ correspondent }-{ title }"
