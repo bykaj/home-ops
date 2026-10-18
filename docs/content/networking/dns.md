@@ -27,8 +27,8 @@ Three controllers write the records, and a handful of records are made by hand:
 
 Both external-dns instances use `policy: sync` and `txtOwnerId: main`, so they
 also delete records whose route or Service disappears, but only records they
-own. They manage six zones: `bykaj.app`, `bykaj.dev`, `bykaj.io`, `cetana.id`,
-`drup.lol` and `kaj.pics`.
+own. They manage seven zones: `bykaj.app`, `bykaj.dev`, `bykaj.io`, `cetana.id`,
+`cyrannus.id`, `drup.lol` and `kaj.pics`.
 
 ```mermaid
 graph LR
@@ -82,7 +82,7 @@ lookups return Cloudflare edge IPs rather than anything in the house.
 | `external.bykaj.app → <tunnel-id>.cfargotunnel.com` | The `DNSEndpoint` in [`cloudflare-tunnel/app/dnsendpoint.yaml`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/cloudflare-tunnel/app/dnsendpoint.yaml) |
 | `<app> → external.bykaj.app` | Each route on `envoy-external` |
 
-cloudflared accepts every hostname in the six zones and forwards it to
+cloudflared accepts every hostname in the seven zones and forwards it to
 `envoy-external` inside the cluster, which routes on the `Host` header.
 
 ## NAS records (dexd)
