@@ -50,6 +50,7 @@ nav = [
     { "Upgrades" = "runbooks/upgrades.md" },
     { "New Database" = "runbooks/new-database.md" },
     { "Adding an App" = "runbooks/adding-an-app.md" },
+    { "Adding a Domain" = "runbooks/adding-a-domain.md" },
   ] },
   { "Reference" = [
     "reference/index.md",
