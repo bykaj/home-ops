@@ -44,6 +44,8 @@ spec:
           - kind: Secret
             name: cetana-id-tls
           - kind: Secret
+            name: cyrannus-id-tls
+          - kind: Secret
             name: drup-lol-tls
           - kind: Secret
             name: kaj-pics-tls
@@ -94,6 +96,8 @@ spec:
             name: coder-bykaj-dev-tls
           - kind: Secret
             name: cetana-id-tls
+          - kind: Secret
+            name: cyrannus-id-tls
           - kind: Secret
             name: drup-lol-tls
           - kind: Secret

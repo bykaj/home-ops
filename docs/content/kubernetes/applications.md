@@ -128,6 +128,7 @@ to date and every app has a purpose.
 | --- | --- | --- | --- | --- |
 | [authentik](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/authentik) | Identity provider and SSO (OIDC) | external | [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [goauthentik/authentik](https://github.com/goauthentik/authentik) |
 | [oidc-provider-debugger](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/oidc-provider-debugger) | Test client for OIDC flows | internal | — | [leplusorg/openid-connect-provider-debugger](https://github.com/leplusorg/openid-connect-provider-debugger) |
+| [pocket-id](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/pocket-id) | Passkey-only OIDC identity provider (`cyrannus.id`) | external | [backup](components.md#kopiurbackup) | [pocket-id/pocket-id](https://github.com/pocket-id/pocket-id) |
 
 ### `system`
 

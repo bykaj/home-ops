@@ -19,6 +19,10 @@ ingress:
   - <<: *config
     hostname: "*.cetana.id"
   - <<: *config
+    hostname: "cyrannus.id"
+  - <<: *config
+    hostname: "*.cyrannus.id"
+  - <<: *config
     hostname: "bykaj.io"
   - <<: *config
     hostname: "*.bykaj.io"
