@@ -21,7 +21,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: 0.33.2@sha256:b069e4307dec06ea06d16989c6861c30a1ff208568be44ed5fb5d422cd3e950c
+              tag: 0.34.0@sha256:151cdd6b5f2e21635645983e126f411675bfa35becb02c028c1a727f45f899c6
             env:
               # Application config
               DATA_DIR: &dataDir "/data"
@@ -50,7 +50,6 @@ spec:
               INFERENCE_ENABLE_AUTO_TAGGING: "true"
               INFERENCE_IMAGE_MODEL: "gpt-4o-mini"
               INFERENCE_LANG: "english"
-              INFERENCE_TEXT_MODEL: "gpt-5.6-luna"
               INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
               # Crawler config
               BROWSER_CONNECT_ONDEMAND: "true"
@@ -65,6 +64,7 @@ spec:
               CRAWLER_FULL_PAGE_SCREENSHOT: "true"
               CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
               CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.bykaj.app"
+              CRAWLER_BROWSER_TIMEZONE: "Europe/Amsterdam"
               # OCR config
               OCR_LANGS: "eng,nld"
               OCR_USE_LLM: "true"
