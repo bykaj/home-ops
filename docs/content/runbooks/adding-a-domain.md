@@ -7,7 +7,7 @@ description: Serve a new domain from the cluster, with DNS, routing and a wildca
 A domain served by the cluster needs to be in six places: cert-manager,
 both external-dns instances, the certificates `export` and `import`
 directories, cloudflared, and both Gateways. Copy an existing domain (for
-example `cetana.id`) in each file. In the steps below, `example.com` is the new
+example `cyrannus.id`) in each file. In the steps below, `example.com` is the new
 domain and `example-com` is its dashed form, used in resource names.
 
 It takes **two PRs**. The certificate import reads an item from 1Password that
