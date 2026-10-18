@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: "${APP}-gateway-oidc"
+spec:
+  oidc:
+    clientIDRef:
+      name: "${APP}-gateway-oidc-secret"
+    clientSecret:
+      name: "${APP}-gateway-oidc-secret"
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://cyrannus.id
+    redirectURL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}/oauth2/callback"
+    scopes:
+      - openid
+      - email
+      - profile
+  # Only the route rule named "app" is protected, so rules for API paths
+  # (still guarded by each app's API key) stay reachable for other apps
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: "${APP}"
+      sectionName: "${GATEWAY_OIDC_RULE:=app}"

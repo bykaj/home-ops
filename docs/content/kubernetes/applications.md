@@ -181,13 +181,13 @@ to date and every app has a purpose.
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
 | [autobrr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/autobrr) | Release automation | internal | [postgres](components.md#postgres) | [autobrr/autobrr](https://github.com/autobrr/autobrr) |
-| [bazarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/bazarr) | Subtitles | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [LavX/bazarr](https://github.com/LavX/bazarr) |
+| [bazarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/bazarr) | Subtitles | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [LavX/bazarr](https://github.com/LavX/bazarr) |
 | [configarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/configarr) | Syncs TRaSH quality profiles into the *arrs | — | — | [raydak-labs/configarr](https://github.com/raydak-labs/configarr) |
-| [prowlarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/prowlarr) | Indexer management | internal | [backup](components.md#kopiurbackup) | [Prowlarr/Prowlarr](https://github.com/Prowlarr/Prowlarr) |
-| [radarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/radarr) | Movie management | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [Radarr/Radarr](https://github.com/Radarr/Radarr) |
-| [sabnzbd](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sabnzbd) | Usenet downloader | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [sabnzbd/sabnzbd](https://github.com/sabnzbd/sabnzbd) |
-| [sonarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sonarr) | TV series management | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [Sonarr/Sonarr](https://github.com/Sonarr/Sonarr) |
-| [whisparr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/whisparr) | Media management | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [Whisparr/Whisparr](https://github.com/Whisparr/Whisparr) |
+| [prowlarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/prowlarr) | Indexer management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc) | [Prowlarr/Prowlarr](https://github.com/Prowlarr/Prowlarr) |
+| [radarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/radarr) | Movie management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Radarr/Radarr](https://github.com/Radarr/Radarr) |
+| [sabnzbd](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sabnzbd) | Usenet downloader | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [sabnzbd/sabnzbd](https://github.com/sabnzbd/sabnzbd) |
+| [sonarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sonarr) | TV series management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Sonarr/Sonarr](https://github.com/Sonarr/Sonarr) |
+| [whisparr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/whisparr) | Media management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Whisparr/Whisparr](https://github.com/Whisparr/Whisparr) |
 
 ### `media`
 
