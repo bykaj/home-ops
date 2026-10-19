@@ -51,17 +51,6 @@ spec:
         enableArgoproj: false
       serviceAccount:
         create: true
-      ingress:
-        enabled: true
-        ingressClassName: tailscale
-        hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
-            paths:
-              - path: /
-                type: Prefix
-        tls:
-          - hosts:
-              - *host
       resources:
         requests:
           cpu: 15m
