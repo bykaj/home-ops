@@ -136,6 +136,10 @@ spec:
               - path:
                   type: PathPrefix
                   value: /feed
+              # Bazarr follows live updates over SignalR (API key as access_token)
+              - path:
+                  type: PathPrefix
+                  value: /signalr
           # Everything else requires a Pocket ID login (components/gateway-oidc)
           - name: app
             backendRefs:
