@@ -193,7 +193,7 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [audiobookshelf](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/audiobookshelf) | Audiobooks and podcasts | internal | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [advplyr/audiobookshelf](https://github.com/advplyr/audiobookshelf) |
+| [audiobookshelf](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/audiobookshelf) | Audiobooks and podcasts | external | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [advplyr/audiobookshelf](https://github.com/advplyr/audiobookshelf) |
 | [immich](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich) | Photo and video library | external | [dragonfly](components.md#dragonfly), [gpu](components.md#gpu), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [immich-app/immich](https://github.com/immich-app/immich) |
 | [jellyfin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/jellyfin) | Media server | internal | [backup](components.md#kopiurbackup), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [jellyfin/jellyfin](https://github.com/jellyfin/jellyfin) |
 | [plex](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/plex) | Media server, published externally | external | [backup](components.md#kopiurbackup), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [plexinc/pms-docker](https://github.com/plexinc/pms-docker) |
