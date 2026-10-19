@@ -68,6 +68,61 @@ iGPU through Dynamic Resource Allocation (`deviceClassName: gpu.intel.com`),
 served by the `intel-gpu-resource-driver`. Reference it from the app's pod
 `resourceClaims` for hardware transcoding.
 
+## `gateway-oidc`
+
+Puts a [Pocket ID](https://cyrannus.id) login in front of an app that has no
+OIDC support of its own, using Envoy Gateway's built-in OIDC. It adds a
+`SecurityPolicy` and an `ExternalSecret` (`${APP}-gateway-oidc`) that reads the
+client ID and secret from the app's own 1Password item. Each app gets its own
+Pocket ID client, so who may sign in is decided per app, by that client's
+**allowed user groups**.
+
+The policy attaches to **one named rule** of the app's HTTPRoute (`app` by
+default), not to the whole route. That way API paths, which other apps, the
+Homepage widgets and mobile apps call with an API key, can stay in a separate
+rule without a login. The HelmRelease's route needs both rules:
+
+```yaml
+route:
+  app:
+    rules:
+      - name: api # no login, still guarded by the app's API key
+        backendRefs:
+          - identifier: app
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /api
+      - name: app # everything else: Pocket ID login
+        backendRefs:
+          - identifier: app
+            port: *port
+```
+
+| Variable | Default | Notes |
+| --- | --- | --- |
+| `APP` | _(required)_ | Names the HTTPRoute to protect, and the policy and secret |
+| `APP_DOMAIN` / `APP_SUBDOMAIN` | `${APP}.bykaj.app` | The redirect URL is `https://<host>/oauth2/callback` |
+| `GATEWAY_OIDC_ITEM` | `${APP}` | 1Password item with `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` |
+| `GATEWAY_OIDC_RULE` | `app` | Route rule (`sectionName`) the policy attaches to |
+
+In Pocket ID, create a confidential client per app with the callback URL
+`https://<host>/oauth2/callback`, and add its client ID and secret to the
+app's 1Password item as `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET`. These are
+the same 1Password field names the apps with native OIDC use. Their
+ExternalSecrets add a per-app prefix (`AB_`, `KK_`, …) through `rewrite`,
+but this component reads the fields unprefixed. Point `GATEWAY_OIDC_ITEM` at
+another item only when several apps should deliberately share one client, and
+with it one set of allowed groups. `/oauth2/logout` clears the Envoy session cookies
+for that host; the Pocket ID session itself stays signed in.
+
+!!! warning "Only traffic through Envoy is protected"
+
+    Anything that reaches the app's Service directly bypasses the login: other
+    pods using the cluster-internal Service address, and a Tailscale ingress
+    (`className: tailscale`) on the same app.
+
 ## `zeroscaler/nfs`
 
 A `HorizontalPodAutoscaler` (min 0, max 1) driven by the external metric

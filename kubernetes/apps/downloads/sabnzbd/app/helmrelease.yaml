@@ -135,6 +135,24 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+        rules:
+          # API paths stay reachable for the other apps, still guarded by the API key
+          - name: api
+            backendRefs:
+              - identifier: app
+                port: *port
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /api
+              - path:
+                  type: PathPrefix
+                  value: /sabnzbd/api
+          # Everything else requires a Pocket ID login (components/gateway-oidc)
+          - name: app
+            backendRefs:
+              - identifier: app
+                port: *port
     service:
       app:
         controller: *app

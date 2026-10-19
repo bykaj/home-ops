@@ -53,6 +53,7 @@ WORKLOADS = {"ai", "default", "development", "downloads", "media"}
 COMPONENTS = {
     "dragonfly": ("dragonfly", "components.md#dragonfly"),
     "dragonfly/authentication": ("dragonfly", "components.md#dragonfly"),
+    "gateway-oidc": ("gateway-oidc", "components.md#gateway-oidc"),
     "gpu": ("gpu", "components.md#gpu"),
     "kopiur/backup": ("backup", "components.md#kopiurbackup"),
     "postgres": ("postgres", "components.md#postgres"),

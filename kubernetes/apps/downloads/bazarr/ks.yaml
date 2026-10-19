@@ -8,6 +8,7 @@ spec:
   components:
     - ../../../../components/zeroscaler/nfs
     - ../../../../components/kopiur/backup
+    - ../../../../components/gateway-oidc
   dependsOn:
     - name: sonarr
     - name: radarr
