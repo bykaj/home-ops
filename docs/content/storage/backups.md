@@ -263,15 +263,27 @@ corrupted sparsebundle after a power cut, which makes Time Machine start over.
 
 To add a Mac, pick **TimeMachine** under **System Settings → General → Time
 Machine → Add Backup Disk**. If the share doesn't appear (mDNS doesn't cross
-VLANs), add it by hand:
+VLANs), add it by hand (`-p` prompts for the password):
 
 ```sh
-sudo tmutil setdestination -a smb://kaj@nas.internal/TimeMachine
+sudo tmutil setdestination -a -p smb://kaj@nas.internal/TimeMachine
 ```
 
 Time Machine versions the backups itself, so the dataset has no periodic
-snapshot task and no TrueCloud task. The auto snapshots are there to roll a
-sparsebundle back when Time Machine reports a failed verification.
+snapshot task and no TrueCloud task. The auto snapshots are there to restore
+a sparsebundle when Time Machine reports a failed verification. All Macs share
+the dataset, so never `zfs rollback` it: that reverts every Mac's backups, and
+rolling back past the latest snapshot needs `-r`, which destroys all newer
+snapshots. Restore only the affected sparsebundle instead, with that Mac's
+backups paused:
+
+```sh
+cd /mnt/vault/TimeMachine
+mv "<Mac>.sparsebundle" "<Mac>.sparsebundle.broken"
+cp -a ".zfs/snapshot/<snapshot>/<Mac>.sparsebundle" .
+```
+
+Delete the `.broken` copy once Time Machine verifies the backup again.
 
 ### Documents to Nextcloud
 
@@ -290,8 +302,9 @@ TrueCloud task.
 - **Lost pool or older versions**: use **Restore** on the TrueCloud Backup task
   to pick a backup run and restore it, whole or in part, to a path on the NAS.
 - **Mac files**: restore from Time Machine on the Mac (Finder, or Migration
-  Assistant for a whole machine). If a sparsebundle is damaged, roll
-  `vault/TimeMachine` back to the last auto snapshot taken before the problem.
+  Assistant for a whole machine). If a sparsebundle is damaged, copy only
+  that Mac's sparsebundle back from an auto snapshot (see
+  [Time Machine](#time-machine)); don't roll back the shared dataset.
 
 ## Nightly timeline
 
