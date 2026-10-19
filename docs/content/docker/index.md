@@ -185,7 +185,7 @@ sudo sh -c 'cd /mnt/vault/Applications/bootimus/data/isos/<image> \
   && ln -sf ../<image>.iso proxmox.iso \
   && { cat initrd.orig; head -c $pad /dev/zero; echo proxmox.iso | cpio -L -H newc -o; } > initrd.new \
   && mv -f initrd.new initrd && rm -f proxmox.iso \
-  && chown share_user:share_user initrd initrd.orig'
+  && chown --reference=. initrd initrd.orig'
 ```
 
 In the image's properties, leave **Initrd File** on *Auto-detected* and set
