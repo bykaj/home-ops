@@ -119,6 +119,35 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+        rules:
+          # Requests that bring their own API key (Whisparr sends an ApiKey header,
+          # Homepage and external players an apikey parameter) skip the login;
+          # Stash itself rejects a missing or wrong key
+          - name: api
+            backendRefs:
+              - identifier: app
+                port: *port
+            matches:
+              - headers:
+                  - name: ApiKey
+                    type: RegularExpression
+                    value: ".+"
+              - queryParams:
+                  - name: apikey
+                    type: RegularExpression
+                    value: ".+"
+          # Everything else requires a Pocket ID login (components/gateway-oidc),
+          # after which Envoy injects Stash's API key (httproutefilter.yaml)
+          - name: app
+            backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: stash-api-key
     service:
       app:
         controller: *app

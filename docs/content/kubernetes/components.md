@@ -117,6 +117,14 @@ another item only when several apps should deliberately share one client, and
 with it one set of allowed groups. `/oauth2/logout` clears the Envoy session cookies
 for that host; the Pocket ID session itself stays signed in.
 
+For an app with its own form login that also accepts an API key, the second
+login can be skipped: an Envoy Gateway `HTTPRouteFilter` with
+`credentialInjection` on the `app` rule adds the app's API key to every request
+that passed the Pocket ID login. The `api` rule then matches requests that bring
+their own key, not a path. See
+[`media/stash`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/stash/app),
+where the browser UI and the API share `/graphql`.
+
 !!! warning "Only traffic through Envoy is protected"
 
     Anything that reaches the app's Service directly bypasses the login, such

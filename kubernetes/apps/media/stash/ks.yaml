@@ -9,6 +9,7 @@ spec:
     - ../../../../components/gpu
     - ../../../../components/zeroscaler/nfs
     - ../../../../components/kopiur/backup
+    - ../../../../components/gateway-oidc
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: system
