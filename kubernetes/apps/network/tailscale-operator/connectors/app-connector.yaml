@@ -1,9 +1,0 @@
----
-# yaml-language-server: $schema=https://schemas.bykaj.io/tailscale.com/connector_v1alpha1.json
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: app-connector
-spec:
-  appConnector: {}
-  hostname: homelab-ingress
