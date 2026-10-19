@@ -64,14 +64,14 @@ graph LR
 The [Tailscale operator](https://tailscale.com/kb/1236/kubernetes-operator)
 runs two `Connector`s in the `network` namespace:
 
-- `homelab-ingress`: an app connector routing `10.43.0.0/16` into the tailnet
+- `homelab-ingress`: an app connector for the domains configured in the Tailscale admin console
 - `homelab-egress`: an exit node
 
 Apps are not published on the tailnet one by one: there are no Tailscale
 ingresses (`className: tailscale`), because they go straight to the app's
 Service and skip Envoy, including the [Pocket ID login](../kubernetes/components.md#gateway-oidc).
-The app connector's `10.43.0.0/16` route is the Service network, so the same
-applies to tailnet devices allowed to use that route.
+For the same reason, the app connector doesn't advertise the Service network
+(`10.43.0.0/16`).
 
 ## Pages in this section
 
