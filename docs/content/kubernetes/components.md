@@ -109,10 +109,12 @@ route:
 
 In Pocket ID, create a confidential client per app with the callback URL
 `https://<host>/oauth2/callback`, and add its client ID and secret to the
-app's 1Password item as `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET`, the same
-fields the apps with native OIDC use. Point `GATEWAY_OIDC_ITEM` at another
-item only when several apps should deliberately share one client, and with it
-one set of allowed groups. `/oauth2/logout` clears the Envoy session cookies
+app's 1Password item as `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET`. These are
+the same 1Password field names the apps with native OIDC use. Their
+ExternalSecrets add a per-app prefix (`AB_`, `KK_`, …) through `rewrite`,
+but this component reads the fields unprefixed. Point `GATEWAY_OIDC_ITEM` at
+another item only when several apps should deliberately share one client, and
+with it one set of allowed groups. `/oauth2/logout` clears the Envoy session cookies
 for that host; the Pocket ID session itself stays signed in.
 
 !!! warning "Only traffic through Envoy is protected"
