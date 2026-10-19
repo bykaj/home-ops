@@ -70,6 +70,9 @@ Apps that depend on an NFS share can use the
 [`zeroscaler/nfs` component](../kubernetes/components.md#zeroscalernfs) to
 scale to zero when the NAS is unreachable, instead of hanging on a stale mount.
 
+It also serves an SMB share for the Macs' Time Machine backups (see
+[Backups → Time Machine](backups.md#time-machine)).
+
 The NAS also runs [Garage](https://garagehq.deuxfleurs.fr/) as an
 S3-compatible object store at `s3.bykaj.io`. CNPG uses it for WAL archives
 and base backups.
