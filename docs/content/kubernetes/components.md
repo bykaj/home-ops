@@ -73,8 +73,9 @@ served by the `intel-gpu-resource-driver`. Reference it from the app's pod
 Puts a [Pocket ID](https://cyrannus.id) login in front of an app that has no
 OIDC support of its own, using Envoy Gateway's built-in OIDC. It adds a
 `SecurityPolicy` and an `ExternalSecret` (`${APP}-gateway-oidc`) that reads the
-client ID and secret from 1Password. Who may sign in is decided in Pocket ID,
-by the client's **allowed user groups**.
+client ID and secret from the app's own 1Password item. Each app gets its own
+Pocket ID client, so who may sign in is decided per app, by that client's
+**allowed user groups**.
 
 The policy attaches to **one named rule** of the app's HTTPRoute (`app` by
 default), not to the whole route. That way API paths, which other apps, the
@@ -103,15 +104,16 @@ route:
 | --- | --- | --- |
 | `APP` | _(required)_ | Names the HTTPRoute to protect, and the policy and secret |
 | `APP_DOMAIN` / `APP_SUBDOMAIN` | `${APP}.bykaj.app` | The redirect URL is `https://<host>/oauth2/callback` |
-| `GATEWAY_OIDC_ITEM` | `gateway-oidc` | 1Password item with `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` |
+| `GATEWAY_OIDC_ITEM` | `${APP}` | 1Password item with `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` |
 | `GATEWAY_OIDC_RULE` | `app` | Route rule (`sectionName`) the policy attaches to |
 
-In Pocket ID, the client needs each app's callback URL
-(`https://<host>/oauth2/callback`) and must be a confidential client.
-`/oauth2/logout` clears the Envoy session cookies for that host; the Pocket ID
-session itself stays signed in. Apps sharing one client share its allowed
-groups: use a separate client, and a separate 1Password item through
-`GATEWAY_OIDC_ITEM`, for apps with a different audience.
+In Pocket ID, create a confidential client per app with the callback URL
+`https://<host>/oauth2/callback`, and add its client ID and secret to the
+app's 1Password item as `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET`, the same
+fields the apps with native OIDC use. Point `GATEWAY_OIDC_ITEM` at another
+item only when several apps should deliberately share one client, and with it
+one set of allowed groups. `/oauth2/logout` clears the Envoy session cookies
+for that host; the Pocket ID session itself stays signed in.
 
 !!! warning "Only traffic through Envoy is protected"
 
