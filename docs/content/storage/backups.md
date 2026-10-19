@@ -17,6 +17,7 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
 | Documents | TrueNAS Cloud Sync (WebDAV) | Nextcloud | Hourly | Mirror |
+| Macs | Time Machine over SMB | NAS, `/mnt/vault/TimeMachine` | Hourly (macOS) | Time Machine thinning, see [Time Machine](#time-machine) |
 
 The cluster's data lands on the NAS first. From there the Kopia repository is
 copied off-site by Kopiur itself (see [Off-site copy](#off-site-copy)), and
@@ -137,6 +138,7 @@ gets a protection level that fits how replaceable its data is:
 | `Downloads`, `Software`, `Transfer`, `Users` | Recreatable or transient data | None | None |
 | `Media` | Books, music and video libraries | Daily + monthly | Weekly, keep 12 (only `Books` and `Music`) |
 | `Photos` | Photo albums and the Immich library | Daily + monthly | Daily, keep 30 |
+| `TimeMachine` | Time Machine backups of the Macs | On every backup (share auto-snapshot) | None |
 
 ### ZFS snapshots
 
@@ -229,6 +231,48 @@ archives and base backups, so those go off-site through the Applications task.
 The task password is the restic repository password. TrueNAS encrypts the
 repository with it, so without it the B2 copy can't be read or restored.
 
+### Time Machine
+
+The Macs back up to the NAS with Time Machine over SMB. They use their own
+dataset and share, kept out of `Backups` on purpose: Time Machine keeps
+rewriting the 8 MiB band files inside its sparsebundles, and under `Backups`
+that churn would bloat the daily snapshots and be uploaded to B2 every night.
+
+| Setting | Value |
+| --- | --- |
+| Dataset | `vault/TimeMachine`, SMB preset, `recordsize=1M`, lz4, `sync=standard` |
+| Quota | 3 TiB (ZFS quota on the dataset) |
+| Owner | `kaj:kaj`; ACL grants only the owner, group and `builtin_administrators` (no `builtin_users`, so `share_user` has no access) |
+| Share | `TimeMachine`, purpose **Time Machine Share**, advertised over mDNS |
+| Auto snapshot | On: the NAS takes a ZFS snapshot each time a Mac starts a backup |
+| Auto dataset creation | Off: all Macs share the dataset, one sparsebundle per Mac |
+| Server-side Time Machine quota | 0 (limits are set on the Macs) |
+
+Each Mac logs in as `kaj` and backs up all of its macOS users into a single
+sparsebundle. The space is split with the **Disk usage limit** in each Mac's
+Time Machine settings, at about twice the Mac's disk size:
+
+| Mac | Disk | Disk usage limit |
+| --- | --- | --- |
+| Mac with one user | 1 TB | 2 TB |
+| Mac with two users | 256 GB | 512 GB |
+
+Without these limits, one Mac could fill the whole 3 TiB quota. `sync` stays
+at `standard`: macOS sends full-fsync requests, and ignoring them risks a
+corrupted sparsebundle after a power cut, which makes Time Machine start over.
+
+To add a Mac, pick **TimeMachine** under **System Settings → General → Time
+Machine → Add Backup Disk**. If the share doesn't appear (mDNS doesn't cross
+VLANs), add it by hand:
+
+```sh
+sudo tmutil setdestination -a smb://kaj@nas.internal/TimeMachine
+```
+
+Time Machine versions the backups itself, so the dataset has no periodic
+snapshot task and no TrueCloud task. The auto snapshots are there to roll a
+sparsebundle back when Time Machine reports a failed verification.
+
 ### Documents to Nextcloud
 
 A TrueNAS Cloud Sync task (`Archive Sync`) pushes
@@ -245,6 +289,9 @@ TrueCloud task.
   `.zfs/snapshot/` directory).
 - **Lost pool or older versions**: use **Restore** on the TrueCloud Backup task
   to pick a backup run and restore it, whole or in part, to a path on the NAS.
+- **Mac files**: restore from Time Machine on the Mac (Finder, or Migration
+  Assistant for a whole machine). If a sparsebundle is damaged, roll
+  `vault/TimeMachine` back to the last auto snapshot taken before the problem.
 
 ## Nightly timeline
 
