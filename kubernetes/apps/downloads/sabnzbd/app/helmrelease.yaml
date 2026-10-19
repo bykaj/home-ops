@@ -28,8 +28,7 @@ spec:
                 {{ .Release.Name }}.downloads.svc,
                 {{ .Release.Name }}.downloads.svc.cluster,
                 {{ .Release.Name }}.downloads.svc.cluster.local,
-                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app},
-                ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
+                ${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
             envFrom:
               - secretRef:
                   name: sabnzbd-secret
