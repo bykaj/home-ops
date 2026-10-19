@@ -26,6 +26,8 @@ spec:
               - --no-update
               - --config
               - /config
+            env:
+              BAZARR_ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
             probes:
               liveness:
                 enabled: true
