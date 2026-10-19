@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/gateway.envoyproxy.io/httproutefilter_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: stash-api-key
+spec:
+  # After the Pocket ID login, Envoy presents Stash's API key, so Stash
+  # authenticates the request and never shows its own login form
+  credentialInjection:
+    credential:
+      valueRef:
+        name: stash-secret
+    header: ApiKey
+    overwrite: true
