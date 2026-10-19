@@ -242,13 +242,13 @@ that churn would bloat the daily snapshots and be uploaded to B2 every night.
 | --- | --- |
 | Dataset | `vault/TimeMachine`, SMB preset, `recordsize=1M`, lz4, `sync=standard` |
 | Quota | 3 TiB (ZFS quota on the dataset) |
-| Owner | `kaj:kaj`; ACL grants only the owner, group and `builtin_administrators` (no `builtin_users`, so `share_user` has no access) |
+| Owner | A personal NAS user; the ACL grants only that user, its group and `builtin_administrators` (no `builtin_users`, so service accounts have no access) |
 | Share | `TimeMachine`, purpose **Time Machine Share**, advertised over mDNS |
 | Auto snapshot | On: the NAS takes a ZFS snapshot each time a Mac starts a backup |
 | Auto dataset creation | Off: all Macs share the dataset, one sparsebundle per Mac |
 | Server-side Time Machine quota | 0 (limits are set on the Macs) |
 
-Each Mac logs in as `kaj` and backs up all of its macOS users into a single
+Each Mac logs in as the dataset's owner and backs up all of its macOS users into a single
 sparsebundle. The space is split with the **Disk usage limit** in each Mac's
 Time Machine settings, at about twice the Mac's disk size:
 
@@ -266,7 +266,7 @@ Machine → Add Backup Disk**. If the share doesn't appear (mDNS doesn't cross
 VLANs), add it by hand (`-p` prompts for the password):
 
 ```sh
-sudo tmutil setdestination -a -p smb://kaj@nas.internal/TimeMachine
+sudo tmutil setdestination -a -p smb://<user>@nas.internal/TimeMachine
 ```
 
 Time Machine versions the backups itself, so the dataset has no periodic
