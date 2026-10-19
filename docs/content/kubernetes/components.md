@@ -119,11 +119,11 @@ for that host; the Pocket ID session itself stays signed in.
 
 !!! warning "Only traffic through Envoy is protected"
 
-    Anything that reaches the app's Service directly bypasses the login: other
-    pods using the cluster-internal Service address, and tailnet devices that
-    use the Tailscale app connector's `10.43.0.0/16` route (see
-    [Remote access](../networking/index.md#remote-access)). Don't add a
-    Tailscale ingress (`className: tailscale`) to an app behind this login.
+    Anything that reaches the app's Service directly bypasses the login, such
+    as other pods using the cluster-internal Service address. Don't add a
+    Tailscale ingress (`className: tailscale`) to an app behind this login, or
+    a Tailscale route to the Service network (see
+    [Remote access](../networking/index.md#remote-access)).
 
 ## `zeroscaler/nfs`
 
