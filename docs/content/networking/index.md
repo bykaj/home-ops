@@ -67,6 +67,12 @@ runs two `Connector`s in the `network` namespace:
 - `homelab-ingress`: an app connector routing `10.43.0.0/16` into the tailnet
 - `homelab-egress`: an exit node
 
+Apps are not published on the tailnet one by one: there are no Tailscale
+ingresses (`className: tailscale`), because they go straight to the app's
+Service and skip Envoy, including the [Pocket ID login](../kubernetes/components.md#gateway-oidc).
+The app connector's `10.43.0.0/16` route is the Service network, so the same
+applies to tailnet devices allowed to use that route.
+
 ## Pages in this section
 
 - [BGP & Load Balancing](bgp.md): UDM BGP peering, ECMP and flow hashing

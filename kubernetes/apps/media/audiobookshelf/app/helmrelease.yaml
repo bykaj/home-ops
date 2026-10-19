@@ -61,19 +61,6 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-    ingress:
-      ts:
-        className: tailscale
-        hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
-            paths:
-              - path: /
-                service:
-                  identifier: *app
-                  port: *port
-        tls:
-          - hosts:
-              - *host
     persistence:
       config:
         existingClaim: *app

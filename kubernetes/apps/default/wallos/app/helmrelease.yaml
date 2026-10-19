@@ -40,19 +40,6 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 256Mi
-    ingress:
-      ts:
-        className: tailscale
-        hosts:
-          - host: &host ${APP_SUBDOMAIN:=${APP}}.moose-piano.ts.net
-            paths:
-              - path: /
-                service:
-                  identifier: *name
-                  port: *port
-        tls:
-          - hosts:
-              - *host
     persistence:
       config:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
