@@ -41,6 +41,8 @@ spec:
               secretKeyRef:
                 name: *secret
                 key: UNIFI_API_KEY
+          - name: UNIFI_REQUEST_TIMEOUT
+            value: 4s
         livenessProbe:
           httpGet:
             path: /healthz
