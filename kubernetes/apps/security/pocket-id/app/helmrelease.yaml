@@ -31,6 +31,9 @@ spec:
             env:
               ANALYTICS_DISABLED: "true"
               APP_URL: "https://${APP_DOMAIN}"
+              # The default jsDelivr mirror only serves icons it has cached: the selfh.st repo
+              # exceeds jsDelivr's 50 MB GitHub limit, so other files fail with a 403/429
+              ICON_LIBRARY_URL: "https://raw.githubusercontent.com/selfhst/icons/main"
               PORT: &port 1411
               TRUST_PROXY: "true"
               TZ: "Europe/Amsterdam"
