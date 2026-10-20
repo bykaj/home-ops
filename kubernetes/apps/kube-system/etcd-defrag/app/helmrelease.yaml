@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ahrtr/etcd-defrag
-              tag: v0.46.0
+              tag: v0.47.0
             args:
               - --cacert=/certs/ca.crt
               - --cert=/certs/server.crt
