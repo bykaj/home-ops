@@ -22,8 +22,8 @@ spec:
           value: "true"
         - name: CODER_DERP_SERVER_STUN_ADDRESSES
           value: "disable"
-        - name: CODER_EMAIL_TLS_STARTTLS
-          value: "true"
+        - name: CODER_EMAIL_SMARTHOST
+          value: "smtp.bykaj.io:25"
         - name: CODER_LOGGING_HUMAN
           value: "/dev/stderr"
         - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE

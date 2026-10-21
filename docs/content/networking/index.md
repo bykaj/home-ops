@@ -82,13 +82,15 @@ graph LR
 
 `smtp-relay` ([maddy](https://maddy.email)) accepts mail on port 25 without
 authentication or TLS and forwards it to Fastmail on port 587, using the
-credentials from the 1Password `smtp` item. Apps point at
-`smtp-relay.network.svc.cluster.local:25` and need no credentials of their own.
-maddy queues messages and retries when Fastmail is unreachable; the queue is an
-`emptyDir`, so undelivered mail is lost when a pod restarts.
+credentials from the 1Password `smtp` item. Apps and the NAS all use
+`smtp.bykaj.io:25` (`10.73.20.203`) without credentials, TLS or STARTTLS; only
+the sender address still comes from the `smtp` item. Inside the cluster the name
+resolves through the UDM like any other, which adds no dependency: the relay
+needs the UDM to reach Fastmail anyway. maddy queues messages and retries when
+Fastmail is unreachable; the queue is an `emptyDir`, so undelivered mail is lost
+when a pod restarts.
 
-Outside the cluster it is reachable at `smtp.bykaj.io`
-(`10.73.20.203`). Because anyone who can connect can send mail as the Fastmail
+Because anyone who can connect can send mail as the Fastmail
 account, a `CiliumNetworkPolicy` allows the whole cluster but only the `nas`
 `CiliumCIDRGroup` from the LAN. The Service uses `externalTrafficPolicy: Local`
 so the NAS's source IP survives for the policy to match. `10.73.2.100` is the
