@@ -12,8 +12,9 @@ on:
       - ready_for_review
       - reopened
   # `/ai-review` from the repo owner on a PR requests a fresh review. The job
-  # only runs for the owner's exact comment on an open, non-draft PR from this
-  # repo, pins the checkout to its head SHA and never executes PR code.
+  # only runs for the owner's comment starting with `/ai-review` (the body can
+  # end in a line break) on an open, non-draft PR from this repo, pins the
+  # checkout to its head SHA and never executes PR code.
   issue_comment: # zizmor: ignore[dangerous-triggers]
     types:
       - created
@@ -32,7 +33,7 @@ jobs:
         ) || (
           github.event_name == 'issue_comment' &&
           github.event.issue.pull_request &&
-          github.event.comment.body == '/ai-review' &&
+          startsWith(github.event.comment.body, '/ai-review') &&
           github.event.comment.author_association == 'OWNER'
         )
       }}
