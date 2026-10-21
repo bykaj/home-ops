@@ -50,7 +50,8 @@ Service topology (`loadBalancer.serviceTopology`) is enabled, so Cilium honours
 `PreferSameNode` to serve image pulls from the Spegel instance on the same node.
 
 Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
-public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32`).
+public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
+`10.73.2.100/32`, both addresses on the NAS interface).
 
 ## Gateways
 
@@ -90,7 +91,9 @@ Outside the cluster it is reachable at `smtp.bykaj.io`
 (`10.73.20.203`). Because anyone who can connect can send mail as the Fastmail
 account, a `CiliumNetworkPolicy` allows the whole cluster but only the `nas`
 `CiliumCIDRGroup` from the LAN. The Service uses `externalTrafficPolicy: Local`
-so the NAS's source IP survives for the policy to match. To allow another LAN
+so the NAS's source IP survives for the policy to match. `10.73.2.100` is the
+primary address on the NAS interface, so mail from TrueNAS and from the Docker
+stacks (masqueraded behind the host) arrives from it. To allow another LAN
 host, add its CIDR to the policy.
 
 Every `From` address an app uses must be an allowed alias or sending identity
