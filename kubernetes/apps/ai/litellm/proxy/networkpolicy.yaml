@@ -37,9 +37,13 @@ spec:
         - ports:
             - port: "8080"
               protocol: TCP
-    # Model providers; add the host here when adding a model with a new apiBase
+    # Model providers; add the host here when adding a model with a new apiBase.
+    # CoreDNS autopath answers the first search-path query with a CNAME to the
+    # real name, and Cilium ties the IPs to that query name, so each host also
+    # needs its <host>.ai.svc.cluster.local variant
     - toFQDNs:
         - matchName: api.minimax.io
+        - matchName: api.minimax.io.ai.svc.cluster.local
       toPorts:
         - ports:
             - port: "443"

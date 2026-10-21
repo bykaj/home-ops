@@ -59,7 +59,11 @@ in-namespace LLMKube inference pods (port 8080, which the operator registers as
 models through `llmkube.autoRegister`) and the provider APIs by FQDN
 (`toFQDNs`, currently `api.minimax.io`). A model with a new `apiBase` host, or
 an `InferenceService` with a non-default endpoint port, needs a matching rule
-in the policy, or its requests time out.
+in the policy, or its requests time out. Each provider host is listed twice:
+CoreDNS runs `autopath`, which answers the pod's first search-path query
+(`<host>.ai.svc.cluster.local`) with a CNAME to the real host, and Cilium ties
+the returned IPs to that query name, so `matchName: <host>` alone never
+matches.
 
 ## Gateways
 
