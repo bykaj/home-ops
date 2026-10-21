@@ -39,6 +39,7 @@ spec:
               DISABLE_PASSWORD_AUTH: "true"
               DISABLE_SIGNUPS: "false"
               OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
+              OAUTH_AUTO_REDIRECT: "true"
               OAUTH_SCOPE: "openid profile email"
               # Email config
               SMTP_HOST: "smtp.bykaj.io"
