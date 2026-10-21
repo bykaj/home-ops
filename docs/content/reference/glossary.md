@@ -40,12 +40,21 @@ flate
     renders a Flux Kustomization locally, with components and substitutions,
     exactly as Flux would.
 
+FRR
+:   [FRRouting](https://frrouting.org), the routing daemon that speaks BGP on
+    the UDM and, in a container, on the NAS.
+
 Kopiur
 :   [home-operations/kopiur](https://github.com/home-operations/kopiur), a
     Kopia-based PVC backup operator with volume-populator restores.
 
 konflate
 :   A Flux PR previewer that posts rendered diffs as comments and status checks.
+
+OIDC
+:   OpenID Connect, the login protocol on top of OAuth 2.0. Pocket ID is the
+    provider; apps use it natively or through Envoy Gateway's OIDC filter
+    (the `gateway-oidc` component).
 
 OSD
 :   Object Storage Daemon. One Ceph OSD runs per Micron NVMe drive.
@@ -68,3 +77,7 @@ UDM
 
 VIP
 :   Virtual IP. An address announced over BGP rather than bound to one host.
+
+WAL
+:   Write-Ahead Log, PostgreSQL's change log. CNPG archives it to Garage S3
+    next to the base backups for point-in-time recovery.
