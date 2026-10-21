@@ -51,6 +51,11 @@ spec:
                   secretKeyRef:
                     name: "${APP}-postgres-app"
                     key: username
+              # Configure email sending; set explicitly in case the defaults change
+              PAPERLESS_EMAIL_HOST: "smtp.bykaj.io"
+              PAPERLESS_EMAIL_PORT: "25"
+              PAPERLESS_EMAIL_USE_SSL: "false"
+              PAPERLESS_EMAIL_USE_TLS: "false"
               # Configure folders
               PAPERLESS_CONSUMPTION_DIR: /mnt/archive/consume
               PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data
