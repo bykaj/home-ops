@@ -13,7 +13,8 @@ on:
       - reopened
   # `/ai-review` from the repo owner on a PR requests a fresh review. The job
   # only runs for the owner's comment starting with `/ai-review` (the body can
-  # end in a line break) on an open, non-draft PR from this repo, pins the checkout to its head SHA and never executes PR code.
+  # end in a line break) on an open, non-draft PR from this repo, pins the
+  # checkout to its head SHA and never executes PR code.
   issue_comment: # zizmor: ignore[dangerous-triggers]
     types:
       - created
