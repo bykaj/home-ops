@@ -30,11 +30,11 @@ followed by its labels. Put what to do in `description`.
 
 | Source | Alerts | Where |
 | --- | --- | --- |
-| kube-prometheus-stack defaults | ~150 | Upstream kubernetes-mixin and node-exporter rules (`defaultRules` left at chart defaults) |
-| Rook Ceph | 88 | `createPrometheusRules` in the [cluster HelmRelease](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/rook-ceph/rook-ceph/cluster/helmrelease.yaml); `CephNodeInconsistentMTU` is disabled |
-| kopiur | 13 | Chart `prometheusRule` in [kopiur](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/system/kopiur/app/helmrelease.yaml) (backup failures, stale backups, repository health) |
 | crd-schema-publisher | 2 | Chart rules |
 | Custom rules | 29 | Below |
+| kopiur | 13 | Chart `prometheusRule` in [kopiur](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/system/kopiur/app/helmrelease.yaml) (backup failures, stale backups, repository health) |
+| kube-prometheus-stack defaults | ~150 | Upstream kubernetes-mixin and node-exporter rules (`defaultRules` left at chart defaults) |
+| Rook Ceph | 88 | `createPrometheusRules` in the [cluster HelmRelease](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/rook-ceph/rook-ceph/cluster/helmrelease.yaml); `CephNodeInconsistentMTU` is disabled |
 
 Upstream rule sets change with chart upgrades. To see what is loaded, run
 `kubectl get prometheusrules -A` or open the Prometheus *Alerts* page.
