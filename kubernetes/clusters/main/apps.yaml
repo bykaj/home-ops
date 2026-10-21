@@ -6,7 +6,8 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
-  deletionPolicy: WaitForTermination
+  # Deleting cluster-apps itself (e.g. during a re-bootstrap) must not cascade-delete every app
+  deletionPolicy: Orphan
   interval: 1h
   patches:
     - # Add default timings to all Kustomizations

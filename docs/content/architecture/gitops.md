@@ -33,6 +33,10 @@ so individual apps don't repeat this boilerplate:
 | `HelmRelease` upgrade | `crds: CreateReplace`, `cleanupOnFail`, strategy `RemediateOnFailure` (2 retries, remediate last failure) |
 | `HelmRelease` | `timeout: 15m`, `maxHistory: 3` (each revision is a `helm.sh/release.v1` Secret holding the whole chart, and they make up most of etcd) |
 
+`cluster-apps` itself uses `deletionPolicy: Orphan`, so deleting or
+recreating it (for example during a re-bootstrap) leaves the apps it applied
+running instead of deleting all of them.
+
 A third, label-driven patch rewrites a CNPG `Cluster` to a plain `initdb`
 bootstrap when its Flux Kustomization carries
 `components.postgres/cnpg: init`. See [New Database](../runbooks/new-database.md).
