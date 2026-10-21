@@ -160,7 +160,7 @@ spec:
           app:
             image:
               repository: <image-repo>
-              tag: <image-tag>
+              tag: <image-tag>@sha256:<index-digest>
             probes:
               liveness:
                 enabled: true
@@ -184,7 +184,15 @@ spec:
             port: <port>
 ```
 
-Adjust `runAsUser`/`runAsGroup` (and capabilities) to what the image requires; drop the pod `securityContext` only if the image genuinely can't run non-root. Plain image tags are fine — Renovate pins digests and manages updates.
+Adjust `runAsUser`/`runAsGroup` (and capabilities) to what the image requires; drop the pod `securityContext` only if the image genuinely can't run non-root.
+
+Pin the image by digest (`<tag>@sha256:<digest>`), like the other HelmReleases; Renovate then keeps tag and digest up to date. Use the multi-arch index digest, not a single-platform one, and look it up from the registry instead of copying it from another repo:
+
+```bash
+skopeo inspect --override-os linux --format '{{.Digest}}' docker://<image-repo>:<image-tag>
+```
+
+Without `--override-os linux`, skopeo on macOS fails looking for a darwin image. `skopeo inspect --raw docker://<image-repo>:<image-tag> | shasum -a 256` gives the same digest.
 
 **Optional value blocks** (top-level under `values`, alphabetical: `controllers`, `persistence`, `route`, `service`):
 
@@ -286,6 +294,7 @@ Show the user the created files and get confirmation before committing. Commit s
 ## Common mistakes
 
 - **Copying a chart version or image tag from this skill or memory** — always read the current version from the repo (Step 2 command) and upstream.
+- **Leaving the image tag without a digest** — pin `<tag>@sha256:<digest>`, looked up from the registry (see the HelmRelease template).
 - **Using volsync** — this repo migrated to kopiur; `components/volsync` no longer exists.
 - **Forgetting `reloader.stakater.com/auto`** — without it, secret/config changes don't restart pods.
 - **`readOnlyRootFilesystem: true` without a tmpfs** — apps that write to `/tmp` will crash; mount an emptyDir.
