@@ -13,8 +13,8 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 1
+        # No image: run the proxy version the envoy-gateway release was tested with
         container:
-          image: docker.io/envoyproxy/envoy:v1.40.0
           resources:
             requests:
               cpu: 100m
