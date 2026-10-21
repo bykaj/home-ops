@@ -27,6 +27,16 @@ spec:
         - ports:
             - port: "6379"
               protocol: TCP
+    # LLMKube InferenceServices, auto-registered as models by the operator
+    # (llmkube.autoRegister); 8080 is the llmkube default endpoint port
+    - toEndpoints:
+        - matchExpressions:
+            - key: inference.llmkube.dev/service
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
     # Model providers; add the host here when adding a model with a new apiBase
     - toFQDNs:
         - matchName: api.minimax.io

@@ -54,10 +54,12 @@ public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
 `10.73.2.100/32`, both addresses on the NAS interface).
 
 The LiteLLM proxy holds every model provider key, so the `litellm-egress`
-`CiliumNetworkPolicy` limits its egress to DNS, its Dragonfly cache and the
-provider APIs by FQDN (`toFQDNs`, currently `api.minimax.io`). A model with a
-new `apiBase` host needs that host added to the policy, or its requests time
-out.
+`CiliumNetworkPolicy` limits its egress to DNS, its Dragonfly cache, the
+in-namespace LLMKube inference pods (port 8080, which the operator registers as
+models through `llmkube.autoRegister`) and the provider APIs by FQDN
+(`toFQDNs`, currently `api.minimax.io`). A model with a new `apiBase` host, or
+an `InferenceService` with a non-default endpoint port, needs a matching rule
+in the policy, or its requests time out.
 
 ## Gateways
 
