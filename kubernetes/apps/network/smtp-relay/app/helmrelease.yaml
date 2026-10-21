@@ -27,7 +27,7 @@ spec:
               repository: ghcr.io/foxcpp/maddy
               tag: 0.9.6
             env:
-              SMTP_RELAY_HOSTNAME: smtp-relay.bykaj.app
+              SMTP_RELAY_HOSTNAME: smtp.bykaj.io
               SMTP_RELAY_METRICS_PORT: &metricsPort 8080
               SMTP_RELAY_SMTP_PORT: &smtpPort 25
             envFrom:
@@ -65,7 +65,7 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          external-dns.kubernetes.io/hostname: smtp-relay.bykaj.app
+          external-dns.kubernetes.io/hostname: smtp.bykaj.io
           gatus.home-operations.com/endpoint: |-
             group: infrastructure
             url: tcp://smtp-relay.network.svc.cluster.local:25

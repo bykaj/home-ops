@@ -13,11 +13,28 @@ icon: material/lan
 | `10.73.1.10` | NAS, announced over BGP as a `/32` VIP |
 | `10.73.2.100` | Traefik reverse proxy on the NAS (`docker.bykaj.app`) |
 | `10.73.20.0/24` | Servers subnet: node IPs and the Cilium LoadBalancer pool |
+
+The servers subnet is divided into fixed ranges:
+
+| Range | Use |
+| --- | --- |
+| `10.73.20.10`–`.90` | Nodes |
+| `10.73.20.100` | `kube-api` LoadBalancer |
+| `10.73.20.110`–`.190` | Gateways |
+| `10.73.20.200`–`.250` | LoadBalancer IPs for services |
+
+Assigned addresses in the servers subnet:
+
+| Address | What |
+| --- | --- |
 | `10.73.20.10` / `.20` / `.30` | `k8s-01` / `k8s-02` / `k8s-03` |
 | `10.73.20.100` | `kube-api` LoadBalancer (`k8s.internal`) |
 | `10.73.20.110` | `envoy-internal` Gateway (`internal.bykaj.app`) |
 | `10.73.20.120` | `envoy-external` Gateway (`external.bykaj.app`) |
-| `10.73.20.203` | `smtp-relay` LoadBalancer (`smtp-relay.bykaj.app`) |
+| `10.73.20.200` | Plex LoadBalancer |
+| `10.73.20.201` | Jellyfin LoadBalancer |
+| `10.73.20.202` | EMQX MQTT listeners (`mqtt.bykaj.io`) |
+| `10.73.20.203` | `smtp-relay` LoadBalancer (`smtp.bykaj.io`) |
 
 ## Cilium
 
@@ -69,7 +86,7 @@ credentials from the 1Password `smtp` item. Apps point at
 maddy queues messages and retries when Fastmail is unreachable; the queue is an
 `emptyDir`, so undelivered mail is lost when a pod restarts.
 
-Outside the cluster it is reachable at `smtp-relay.bykaj.app`
+Outside the cluster it is reachable at `smtp.bykaj.io`
 (`10.73.20.203`). Because anyone who can connect can send mail as the Fastmail
 account, a `CiliumNetworkPolicy` allows the whole cluster but only the `nas`
 `CiliumCIDRGroup` from the LAN. The Service uses `externalTrafficPolicy: Local`
