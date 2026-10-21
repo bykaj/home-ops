@@ -61,6 +61,13 @@ models through `llmkube.autoRegister`) and the provider APIs by FQDN
 an `InferenceService` with a non-default endpoint port, needs a matching rule
 in the policy, or its requests time out.
 
+CoreDNS runs without `autopath`. With it, CoreDNS answers a pod's first
+search-path query (`<host>.<namespace>.svc.cluster.local`) with a CNAME to the
+real host, and Cilium ties the returned IPs to that query name, so a `toFQDNs`
+`matchName: <host>` rule never matches and connections time out. Without it,
+pods walk their search domains themselves (`ndots:5`); CoreDNS answers those
+lookups with NXDOMAIN from its own zone and caches them.
+
 ## Gateways
 
 Apps are exposed through the Gateway API, implemented by
