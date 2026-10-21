@@ -179,10 +179,11 @@ jobs:
             ## Report
 
             Post exactly one top-level comment with `gh pr comment`, using this
-            structure and omitting empty sections:
+            structure and omitting empty sections. The verdict is one of the
+            two options, with its icon:
 
             ```
-            **Verdict**: Safe to merge | Changes required before merge
+            **Verdict**: ✅ Safe to merge | ❌ Changes required before merge
 
             **Breaking changes**:
             - [package] OLD ➔ NEW: [what changed], introduced in [version]. Affects `path/to/file`. Fix: [brief description]
