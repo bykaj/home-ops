@@ -72,6 +72,8 @@ finds: Helm charts, container images, Talos and Kubernetes versions, tools in
 [`.renovaterc.json5`](https://github.com/bykaj/home-ops/blob/main/.renovaterc.json5)
 and extends
 [home-operations/renovate-presets](https://github.com/home-operations/renovate-presets).
+Open PRs are only rebased when they conflict with `main` (`rebaseWhen:
+conflicted`), not every time `main` moves.
 
 Talos and Kubernetes version bumps are applied by tuppr once merged. See
 [Upgrades](../runbooks/upgrades.md).

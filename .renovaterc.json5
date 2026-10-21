@@ -24,6 +24,9 @@
     commitMessageExtra: "({{manager}})",
     additionalBranchPrefix: "{{manager}}-",
   },
+  // main doesn't require up-to-date branches, and the default (`auto`) would
+  // rebase every open automerge PR, and re-run its checks, each time main moves
+  rebaseWhen: "conflicted",
   packageRules: [
     //
     // Allowed versions rules
