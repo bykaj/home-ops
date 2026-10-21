@@ -179,15 +179,11 @@ jobs:
             ## Report
 
             Post exactly one top-level comment with `gh pr comment`, using this
-            structure and omitting empty sections. The verdict is a GitHub
-            alert block: use exactly one of these two, as written.
+            structure and omitting empty sections. The verdict is one of the
+            two options, with its icon:
 
             ```
-            > [!TIP]
-            > **Verdict**: Safe to merge
-
-            > [!CAUTION]
-            > **Verdict**: Changes required before merge
+            **Verdict**: ✅ Safe to merge | ❌ Changes required before merge
 
             **Breaking changes**:
             - [package] OLD ➔ NEW: [what changed], introduced in [version]. Affects `path/to/file`. Fix: [brief description]
