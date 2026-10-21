@@ -17,6 +17,7 @@ icon: material/lan
 | `10.73.20.100` | `kube-api` LoadBalancer (`k8s.internal`) |
 | `10.73.20.110` | `envoy-internal` Gateway (`internal.bykaj.app`) |
 | `10.73.20.120` | `envoy-external` Gateway (`external.bykaj.app`) |
+| `10.73.20.203` | `smtp-relay` LoadBalancer (`smtp-relay.bykaj.app`) |
 
 ## Cilium
 
@@ -58,6 +59,25 @@ graph LR
     int --> app[App Service]
     ext --> app
 ```
+
+## SMTP relay
+
+`smtp-relay` ([maddy](https://maddy.email)) accepts mail on port 25 without
+authentication or TLS and forwards it to Fastmail on port 587, using the
+credentials from the 1Password `smtp` item. Apps point at
+`smtp-relay.network.svc.cluster.local:25` and need no credentials of their own.
+maddy queues messages and retries when Fastmail is unreachable; the queue is an
+`emptyDir`, so undelivered mail is lost when a pod restarts.
+
+Outside the cluster it is reachable at `smtp-relay.bykaj.app`
+(`10.73.20.203`). Because anyone who can connect can send mail as the Fastmail
+account, a `CiliumNetworkPolicy` allows the whole cluster but only the `nas`
+`CiliumCIDRGroup` from the LAN. The Service uses `externalTrafficPolicy: Local`
+so the NAS's source IP survives for the policy to match. To allow another LAN
+host, add its CIDR to the policy.
+
+Every `From` address an app uses must be an allowed alias or sending identity
+in Fastmail. Rejections show up in the relay's logs, not in the app.
 
 ## Remote access
 
