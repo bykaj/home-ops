@@ -97,6 +97,21 @@ spec:
         matchLabels:
           dashboards: grafana
     additionalPrometheusRulesMap:
+      cilium-rules:
+        groups:
+          - name: cilium
+            rules:
+              - alert: CiliumEgressPolicyDenied
+                annotations:
+                  description: >-
+                    Cilium dropped {{ $value | humanize }} egress packets on {{ $labels.node }} in the last 10 minutes
+                    because no egress policy allowed them. Only allowlisted pods such as LiteLLM have egress policies,
+                    so one of them tried to reach a host it should not. Find it with
+                    `cilium-dbg monitor --type drop` in the cilium-agent on {{ $labels.node }}.
+                  summary: An egress-restricted pod tried to reach a host outside its allowlist.
+                expr: sum by (node) (increase(cilium_drop_count_total{direction="EGRESS",reason="Policy denied"}[10m])) > 0
+                labels:
+                  severity: critical
       dockerhub-rules:
         groups:
           - name: dockerhub
