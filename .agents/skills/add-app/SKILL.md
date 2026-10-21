@@ -189,10 +189,10 @@ Adjust `runAsUser`/`runAsGroup` (and capabilities) to what the image requires; d
 Pin the image by digest (`<tag>@sha256:<digest>`), like the other HelmReleases; Renovate then keeps tag and digest up to date. Use the multi-arch index digest, not a single-platform one, and look it up from the registry instead of copying it from another repo:
 
 ```bash
-skopeo inspect --override-os linux --format '{{.Digest}}' docker://<image-repo>:<image-tag>
+crane digest <image-repo>:<image-tag>
 ```
 
-Without `--override-os linux`, skopeo on macOS fails looking for a darwin image. `skopeo inspect --raw docker://<image-repo>:<image-tag> | shasum -a 256` gives the same digest.
+`crane` comes from mise and prints the index digest for multi-arch images.
 
 **Optional value blocks** (top-level under `values`, alphabetical: `controllers`, `persistence`, `route`, `service`):
 
