@@ -72,6 +72,7 @@ spec:
             interval: 1m
             ui:
               hide-url: true
+              hide-hostname: true
           lbipam.cilium.io/ips: 10.73.20.203
         # Keeps the client IP so the network policy can match the NAS
         externalTrafficPolicy: Local
