@@ -10,13 +10,31 @@ icon: material/lan
 | Address | What |
 | --- | --- |
 | `10.73.0.254` | UDM Pro Max (gateway, BGP router ID) |
-| `10.73.1.10` | NAS, announced over BGP as a `/32` VIP |
-| `10.73.2.100` | Traefik reverse proxy on the NAS (`docker.bykaj.app`) |
+| `10.73.1.10` | NAS (`nas.internal`): TrueNAS UI, NFS, BGP peer address and router ID |
+| `10.73.2.100` | Traefik reverse proxy on the NAS (`docker.bykaj.app`), announced over BGP as a `/32`; primary address, so the NAS's outbound traffic uses it as source |
 | `10.73.20.0/24` | Servers subnet: node IPs and the Cilium LoadBalancer pool |
+
+The servers subnet is divided into fixed ranges:
+
+| Range | Use |
+| --- | --- |
+| `10.73.20.10`–`.90` | Nodes |
+| `10.73.20.100` | `kube-api` LoadBalancer |
+| `10.73.20.110`–`.190` | Gateways |
+| `10.73.20.200`–`.250` | LoadBalancer IPs for services |
+
+Assigned addresses in the servers subnet:
+
+| Address | What |
+| --- | --- |
 | `10.73.20.10` / `.20` / `.30` | `k8s-01` / `k8s-02` / `k8s-03` |
 | `10.73.20.100` | `kube-api` LoadBalancer (`k8s.internal`) |
 | `10.73.20.110` | `envoy-internal` Gateway (`internal.bykaj.app`) |
 | `10.73.20.120` | `envoy-external` Gateway (`external.bykaj.app`) |
+| `10.73.20.200` | Plex LoadBalancer |
+| `10.73.20.201` | Jellyfin LoadBalancer |
+| `10.73.20.202` | EMQX MQTT listeners (`mqtt.bykaj.io`) |
+| `10.73.20.203` | `smtp-relay` LoadBalancer (`smtp.bykaj.io`) |
 
 ## Cilium
 
@@ -32,7 +50,8 @@ Service topology (`loadBalancer.serviceTopology`) is enabled, so Cilium honours
 `PreferSameNode` to serve image pulls from the Spegel instance on the same node.
 
 Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
-public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32`).
+public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
+`10.73.2.100/32`, both addresses on the NAS interface).
 
 ## Gateways
 
@@ -58,6 +77,27 @@ graph LR
     int --> app[App Service]
     ext --> app
 ```
+
+## SMTP relay
+
+`smtp-relay` ([maddy](https://maddy.email)) accepts mail on port 25 without
+authentication or TLS and forwards it to Fastmail on port 587, using the
+credentials from the 1Password `smtp` item. Apps point at
+`smtp-relay.network.svc.cluster.local:25` and need no credentials of their own.
+maddy queues messages and retries when Fastmail is unreachable; the queue is an
+`emptyDir`, so undelivered mail is lost when a pod restarts.
+
+Outside the cluster it is reachable at `smtp.bykaj.io`
+(`10.73.20.203`). Because anyone who can connect can send mail as the Fastmail
+account, a `CiliumNetworkPolicy` allows the whole cluster but only the `nas`
+`CiliumCIDRGroup` from the LAN. The Service uses `externalTrafficPolicy: Local`
+so the NAS's source IP survives for the policy to match. `10.73.2.100` is the
+primary address on the NAS interface, so mail from TrueNAS and from the Docker
+stacks (masqueraded behind the host) arrives from it. To allow another LAN
+host, add its CIDR to the policy.
+
+Every `From` address an app uses must be an allowed alias or sending identity
+in Fastmail. Rejections show up in the relay's logs, not in the app.
 
 ## Remote access
 

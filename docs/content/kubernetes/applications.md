@@ -94,6 +94,7 @@ to date and every app has a purpose.
 | [echo-server](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/echo-server) | Request echo for testing routing | external | — | [mendhak/docker-http-https-echo](https://github.com/mendhak/docker-http-https-echo) |
 | [envoy-gateway](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/envoy-gateway) | Gateway API: `envoy-internal` and `envoy-external` | — | — | [envoyproxy/gateway](https://github.com/envoyproxy/gateway) |
 | [external-dns](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/external-dns) | UniFi (private) and Cloudflare (public) DNS records | — | — | [kubernetes-sigs/external-dns](https://github.com/kubernetes-sigs/external-dns) |
+| [smtp-relay](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/smtp-relay) | SMTP relay to Fastmail for apps and the NAS | — | — | [foxcpp/maddy](https://github.com/foxcpp/maddy) |
 | [tailscale-operator](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/network/tailscale-operator) | Tailnet exit node | — | — | [tailscale/tailscale](https://github.com/tailscale/tailscale) |
 
 ### `observability`

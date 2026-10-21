@@ -5,8 +5,9 @@ description: How Cilium and the NAS announce VIPs to the UDM over BGP, with ECMP
 # BGP & Load Balancing
 
 Every LoadBalancer IP in the cluster, including the Kubernetes API, is
-announced to the UniFi UDM over BGP. The NAS announces its own address the
-same way, using FRR in a container.
+announced to the UniFi UDM over BGP. The NAS announces its Traefik address
+(`10.73.2.100`) the same way, using FRR in a container. FRR peers from the
+NAS address `10.73.1.10`, which is also its router ID.
 
 ```mermaid
 graph LR
@@ -23,7 +24,7 @@ graph LR
     k1 & k2 & k3 -. "`**BGP** _ASN 64514_
     VIPs from 10.73.20.0/24`" .-> udm
     nas -. "`**BGP** _ASN 64515_
-    VIP 10.73.1.10/32`" .-> udm
+    VIP 10.73.2.100/32`" .-> udm
     client@{ shape: browser}
     nas@{ shape: lin-cyl }
 ```
@@ -32,7 +33,7 @@ graph LR
 | --- | --- | --- |
 | 64513 | UDM Pro Max | (peer) |
 | 64514 | Cilium on each node | LoadBalancer IPs from `10.73.20.0/24` |
-| 64515 | FRR on the NAS ([`docker/nas/01-frr`](https://github.com/bykaj/home-ops/tree/main/docker/nas/01-frr)) | `10.73.1.10/32` |
+| 64515 | FRR on the NAS ([`docker/nas/01-frr`](https://github.com/bykaj/home-ops/tree/main/docker/nas/01-frr)) | `10.73.2.100/32` (Traefik) |
 
 The Cilium side is configured in
 [`kubernetes/apps/kube-system/cilium/config/`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/cilium/config)

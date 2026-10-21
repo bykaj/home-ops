@@ -47,5 +47,8 @@ kind: CiliumCIDRGroup
 metadata:
   name: nas
 spec:
+  # Both addresses on the NAS interface; 10.73.2.100 is the primary, so outbound
+  # traffic from TrueNAS and the Docker stacks uses it as source
   externalCIDRs:
     - 10.73.1.10/32
+    - 10.73.2.100/32

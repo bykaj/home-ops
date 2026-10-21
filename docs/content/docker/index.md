@@ -135,7 +135,8 @@ fixes to it; follow along with `sudo docker logs doco-cd` on the NAS.
 ### `01-frr`
 
 [FRR](https://frrouting.org) in host network mode. It peers with the UDM as
-ASN 64515 and announces the NAS address `10.73.1.10/32`. See
+ASN 64515 from `10.73.1.10` (also its router ID) and announces the Traefik
+address `10.73.2.100/32`. See
 [BGP & Load Balancing](../networking/bgp.md).
 
 ### `02-traefik`
