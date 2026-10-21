@@ -6,8 +6,27 @@ description: What's planned next for the platform, and what earlier plans became
 
 ## Planned
 
-Nothing is planned right now. The previous round of plans wrapped up in
-Q3 2026 (see below).
+### Q4 2026
+
+- [ ] **Network restructure**: rework the network's structure so it scales to
+      multiple sites.
+
+    - **Naming convention**: one strict naming scheme for everything on the
+      network. Names encode the site, device type and role, and the same
+      scheme applies to VLANs and networks.
+    - **Domain names**: move to new domain names that fit the naming scheme.
+      These are already registered.
+    - **IP addressing**: new IP ranges that follow the same structure, so an
+      address shows which site and network it belongs to.
+
+### Q1 2027
+
+- [ ] **NAS rebuild**: move TrueNAS to proper server hardware with more
+      storage spread over multiple vdevs, an L2ARC cache device and a separate
+      fast pool.
+
+- [ ] **Second rack**: add a second rack with dedicated top-of-rack and
+      management switches, and better power distribution through PDUs.
 
 ## Completed
 
