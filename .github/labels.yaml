@@ -36,6 +36,8 @@
   color: "ff9800"
 - name: type/major
   color: "f6412d"
+- name: type/security
+  color: "b60205"
 # Uncategorized
 - name: community
   color: "370fb2"

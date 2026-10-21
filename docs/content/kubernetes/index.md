@@ -121,3 +121,4 @@ diff as a PR comment and status check.
 - [Talos](talos.md): machine config templates, schematics, rendering
 - [Components](components.md): reusable kustomize components
 - [Applications](applications.md): every app running in the cluster
+- [Alerting](alerting.md): alert rules, Alertmanager routing and silences

@@ -86,5 +86,20 @@ Renovate only gets release timestamps from Docker Hub, not from ghcr.io or
 Quay, so the image comes from `docker.io/litellm/litellm`; on a ghcr.io image
 the rule would hold every update indefinitely.
 
+### Yanked images
+
+Every 2 hours the
+[Yanked Images](https://github.com/bykaj/home-ops/blob/main/.github/workflows/yanked-images.yaml)
+workflow checks that every pinned image still exists upstream: all images Flux
+renders for the cluster (`flate get images`) and all images in the
+`docker/<host>` compose files. It checks both the digest and the tag of each
+image. Upstreams rarely delete a published release; when they do it is often
+because it was compromised, which is how the LiteLLM incident first showed up.
+A tag or digest the registry explicitly reports as gone (`MANIFEST_UNKNOWN` or
+`NAME_UNKNOWN`) opens a `type/security` issue, one per image, naming the files
+that pin it. Other errors (rate limits, auth, network) only produce workflow
+warnings. The check is in `scripts/check-yanked-images.sh` and can be run
+locally against a file of image references.
+
 Talos and Kubernetes version bumps are applied by tuppr once merged. See
 [Upgrades](../runbooks/upgrades.md).

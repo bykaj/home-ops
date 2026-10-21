@@ -61,6 +61,15 @@ models through `llmkube.autoRegister`) and the provider APIs by FQDN
 an `InferenceService` with a non-default endpoint port, needs a matching rule
 in the policy, or its requests time out.
 
+Any blocked egress packet raises the
+[`CiliumEgressPolicyDenied`](../kubernetes/alerting.md#cluster-wide-additionalprometheusrulesmap)
+alert (critical), per node. Only egress-restricted pods can cause egress policy drops,
+so the alert means such a pod tried to reach a host outside its allowlist:
+either a missing rule or something it should not be doing. Run
+`cilium-dbg monitor --type drop` in the cilium-agent on that node to find the
+pod and destination. Ingress drops are not alerted on, because the Dragonfly
+and SMTP relay policies drop some ingress traffic as normal.
+
 CoreDNS runs without `autopath`. With it, CoreDNS answers a pod's first
 search-path query (`<host>.<namespace>.svc.cluster.local`) with a CNAME to the
 real host, and Cilium ties the returned IPs to that query name, so a `toFQDNs`

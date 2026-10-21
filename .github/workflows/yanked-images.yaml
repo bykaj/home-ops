@@ -1,0 +1,108 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Yanked Images
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *" # Every 2 hours
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+# bash -eo pipefail: a failing flate or gh call must fail the step, not leave
+# the image list incomplete or open a duplicate issue
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check:
+    name: Yanked Images - Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Mise
+        uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
+        with:
+          cache: false
+          install_args: github:home-operations/flate crane yq
+
+      - name: List Images
+        run: |
+          {
+            flate get images -p ./kubernetes/clusters/main -o json --no-progress | jq -r '.[]'
+            yq -N '.services[].image | select(. != null)' docker/*/*/docker-compose.yaml
+          } | sort -u > "$RUNNER_TEMP/images.txt"
+          echo "Checking $(wc -l < "$RUNNER_TEMP/images.txt") images"
+
+      - name: Check Images
+        id: check
+        run: |
+          set +e
+          scripts/check-yanked-images.sh "$RUNNER_TEMP/images.txt" > "$RUNNER_TEMP/findings.tsv"
+          rc=$?
+          set -e
+          [[ $rc -gt 1 ]] && exit "$rc"
+          while IFS=$'\t' read -r status ref detail; do
+            if [[ "$status" == error ]]; then
+              echo "::warning title=Image check failed::$ref: $detail"
+            else
+              echo "::error title=Image gone from registry::$ref: $detail"
+            fi
+          done < "$RUNNER_TEMP/findings.tsv"
+
+      - name: Open Issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # shellcheck disable=SC2016 # $t is a jq variable
+          awk -F '\t' '$1 == "missing"' "$RUNNER_TEMP/findings.tsv" | while IFS=$'\t' read -r _ ref detail; do
+            title="Image gone from registry: $ref"
+            open=$(gh issue list --state open --label type/security --search "in:title \"$ref\"" --json title \
+              | jq --arg t "$title" '[.[] | select(.title == $t)] | length')
+            if [[ "$open" -gt 0 ]]; then
+              echo "Issue already open for $ref"
+              continue
+            fi
+
+            # Digests and name:tag strings appear verbatim in the repo; chart default images do not
+            needle="${ref#*@}"
+            files=$(git grep -l -F "$needle" -- kubernetes docker || true)
+            [[ -z "$files" ]] && files="(not found verbatim: split into repository/tag values, or a Helm chart default image)"
+
+            gh issue create --label type/security --title "$title" --body-file - <<EOF
+          The registry no longer has \`$ref\`, which is pinned in this repository.
+
+          Upstreams rarely delete a published tag or digest. When they do, the release has often been withdrawn because it was compromised. In 2026-10, LiteLLM v1.107.0 shipped a credential stealer and was removed this way (BerriAI/litellm#47826).
+
+          **Registry response:** \`$detail\`
+
+          **Referenced in:**
+
+          \`\`\`
+          $files
+          \`\`\`
+
+          **Next steps:**
+
+          1. Search the upstream repository's issues, releases and security advisories for why the release was removed.
+          2. If it was compromised: scale the workload down, pin a known-good version by digest, and rotate every secret the pod could read.
+          3. If it was a harmless re-publish: let Renovate move the pin, then close this issue.
+
+          Found by [Yanked Images]($RUN_URL).
+          EOF
+          done
