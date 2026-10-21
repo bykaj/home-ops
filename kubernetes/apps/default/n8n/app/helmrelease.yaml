@@ -47,7 +47,10 @@ spec:
               N8N_PROTOCOL: "https"
               N8N_PROXY_HOPS: "1"
               N8N_RUNNERS_ENABLED: "true"
-              N8N_SMTP_PORT: "587"
+              N8N_SMTP_HOST: "smtp.bykaj.io"
+              N8N_SMTP_PORT: "25"
+              N8N_SMTP_SSL: "false"
+              N8N_SMTP_STARTTLS: "false"
               WEBHOOK_URL: "https://${APP_SUBDOMAIN:=${APP}}-webhook.bykaj.io/"
             envFrom:
               - secretRef:
