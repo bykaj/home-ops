@@ -38,6 +38,18 @@
       allowedVersions: "<19",
     },
     //
+    // Release age rules
+    //
+    {
+      // v1.107.0 shipped a credential stealer and was pulled within hours
+      // (BerriAI/litellm#47826). Pulled from Docker Hub because Renovate only
+      // gets release timestamps there, not from ghcr.io
+      description: "Hold LiteLLM releases for 3 days",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/litellm/litellm"],
+      minimumReleaseAge: "3 days",
+    },
+    //
     // Auto-merge rules
     //
     {

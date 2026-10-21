@@ -17,7 +17,7 @@ spec:
         auth:
           allowUnauthenticated: true
         enabled: true
-      model: minimax/MiniMax-M2-7-anthropic
+      model: minimax/MiniMax-M3-anthropic
       provider: openai
       secret: kguardian-secret
     broker:

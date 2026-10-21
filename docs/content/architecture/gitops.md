@@ -79,5 +79,12 @@ and extends
 Open PRs are only rebased when they conflict with `main` (`rebaseWhen:
 conflicted`), not every time `main` moves.
 
+LiteLLM releases wait 3 days before Renovate proposes them (`minimumReleaseAge`),
+after a compromised release was pulled within hours
+([BerriAI/litellm#47826](https://github.com/BerriAI/litellm/issues/47826)).
+Renovate only gets release timestamps from Docker Hub, not from ghcr.io or
+Quay, so the image comes from `docker.io/litellm/litellm`; on a ghcr.io image
+the rule would hold every update indefinitely.
+
 Talos and Kubernetes version bumps are applied by tuppr once merged. See
 [Upgrades](../runbooks/upgrades.md).

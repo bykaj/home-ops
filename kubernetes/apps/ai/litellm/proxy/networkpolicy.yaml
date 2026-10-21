@@ -1,0 +1,50 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: litellm-egress
+spec:
+  # Egress only: the proxy holds every provider key, so it may reach the model
+  # providers and its cache and nothing else (BerriAI/litellm#47826)
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app: litellm-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # LLMKube InferenceServices, auto-registered as models by the operator
+    # (llmkube.autoRegister); 8080 is the llmkube default endpoint port
+    - toEndpoints:
+        - matchExpressions:
+            - key: inference.llmkube.dev/service
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    # Model providers; add the host here when adding a model with a new apiBase
+    - toFQDNs:
+        - matchName: api.minimax.io
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: litellm
+      app.kubernetes.io/name: litellm

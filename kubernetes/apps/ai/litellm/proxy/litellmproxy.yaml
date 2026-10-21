@@ -5,8 +5,8 @@ kind: LiteLLMProxy
 metadata:
   name: litellm
 spec:
-  # renovate: datasource=docker depName=ghcr.io/berriai/litellm
-  image: ghcr.io/berriai/litellm:v1.106.2@sha256:7294b90f868c5c38c99b83021c7ba46f9b439e95f8e32964c925c7d2563a03f7
+  # renovate: datasource=docker depName=docker.io/litellm/litellm
+  image: docker.io/litellm/litellm:v1.106.2@sha256:7294b90f868c5c38c99b83021c7ba46f9b439e95f8e32964c925c7d2563a03f7
   replicas: 1
   generalSettings:
     health_check_endpoint: /v1/health
@@ -27,6 +27,10 @@ spec:
     merge_reasoning_content_in_choices: true
     set_verbose: false
   env:
+    # Use the bundled cost map instead of fetching it from GitHub at startup;
+    # the egress policy only allows the model providers
+    - name: LITELLM_LOCAL_MODEL_COST_MAP
+      value: "True"
     - name: LITELLM_LOG
       value: INFO
     - name: LITELLM_MODE
