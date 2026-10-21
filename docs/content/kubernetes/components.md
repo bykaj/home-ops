@@ -77,6 +77,11 @@ client ID and secret from the app's own 1Password item. Each app gets its own
 Pocket ID client, so who may sign in is decided per app, by that client's
 **allowed user groups**.
 
+Prefer an app's own OIDC support when it has one. Sonarr (v5) does: it sets
+`SONARR__AUTH__METHOD: Oidc` and reads the client ID and secret and the one
+Pocket ID user it allows (`OIDC_USER`, that user's ID) from its 1Password
+item, with the callback URL `https://<host>/signin-oidc`.
+
 The policy attaches to **one named rule** of the app's HTTPRoute (`app` by
 default), not to the whole route. That way API paths, which other apps, the
 Homepage widgets and mobile apps call with an API key, can stay in a separate

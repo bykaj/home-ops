@@ -8,7 +8,6 @@ spec:
   components:
     - ../../../../components/zeroscaler/nfs
     - ../../../../components/kopiur/backup
-    - ../../../../components/gateway-oidc
   dependsOn:
     - name: prowlarr
     - name: sabnzbd
