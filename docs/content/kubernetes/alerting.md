@@ -52,38 +52,38 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 | --- | --- | --- |
 | `CiliumEgressPolicyDenied` | critical | An egress policy dropped a packet on a node in the last 10 minutes; see [Cilium](../networking/index.md#cilium) |
 | `DockerhubRateLimitRisk` | critical | More than 100 running containers use `docker.io` images |
-| `NvmeTemperatureHigh` | warning | An NVMe drive is within 2 °C of its warning threshold for 5 minutes |
 | `NvmeTemperatureCritical` | critical | An NVMe drive is at or above its warning threshold for 1 minute |
+| `NvmeTemperatureHigh` | warning | An NVMe drive is within 2 °C of its warning threshold for 5 minutes |
 | `OomKilled` | critical | A container restarted because of an OOM kill in the last 10 minutes |
 | `ZfsUnexpectedPoolState` | critical | A NAS ZFS pool is not `online` |
 
 ### Per app
 
-| Alert | Severity | Fires when | App |
+| App | Alert | Severity | Fires when |
 | --- | --- | --- | --- |
-| `AutobrrNetworkUnmonitored` | critical | An enabled IRC channel is not monitored, for 1 hour | [autobrr](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/downloads/autobrr/app/prometheusrule.yaml) |
-| `BlackboxProbeFailed` | critical | A blackbox probe fails for 15 minutes | [blackbox-exporter](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/blackbox-exporter/app/helmrelease.yaml) |
-| `CertManagerAbsent` | critical | cert-manager is missing from Prometheus for 5 minutes | [cert-manager](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/cert-manager/cert-manager/app/prometheusrule.yaml) |
-| `CertManagerCertExpirySoon` | critical | A certificate expires within 21 days | cert-manager |
-| `CertManagerCertNotReady` | critical | A certificate is not ready for 5 minutes | cert-manager |
-| `CertManagerHittingRateLimits` | critical | Let's Encrypt answers with HTTP 429 | cert-manager |
-| `LongRunningTransaction` | warning | A PostgreSQL transaction runs longer than 5 minutes | [cloudnative-pg](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/database/cloudnative-pg/app/prometheusrule.yaml) |
-| `BackendsWaiting` | warning | More than 300 backends are waiting on locks held by other queries | cloudnative-pg |
-| `PGDatabase` | warning | A database's transaction ID age exceeds 300 million (wraparound risk) | cloudnative-pg |
-| `PGReplication` | warning | A standby lags more than 5 minutes behind the primary | cloudnative-pg |
-| `LastFailedArchiveTime` | warning | WAL archiving failed after the last successful archive | cloudnative-pg |
-| `DatabaseDeadlockConflicts` | warning | A database has had more than 10 deadlocks since its statistics were last reset | cloudnative-pg |
-| `ReplicaFailingReplication` | warning | A replica is in recovery but its WAL receiver is down | cloudnative-pg |
-| `ExternalDNSStale` | critical | ExternalDNS has not synced for 90 seconds, for 15 minutes | [external-dns](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/external-dns/cloudflare/prometheusrule.yaml) |
-| `FluxInstanceAbsent` | critical | The Flux instance metric is missing for 5 minutes | [flux-instance](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/flux-instance/app/prometheusrule.yaml) |
-| `FluxInstanceNotReady` | critical | The Flux instance is not ready for 5 minutes | flux-instance |
-| `GatusEndpointDown` | critical | An external or infrastructure endpoint in Gatus fails for 5 minutes | [gatus](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/gatus/app/prometheusrule.yaml) |
-| `GatusEndpointExposed` | critical | An internal-only hostname has a public DNS record; see [Gatus](../networking/dns.md) | gatus |
-| `NutExporterAbsent` | critical | The NUT exporter is down for 5 minutes | [nut-exporter](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/nut-exporter/app/prometheusrule.yaml) |
-| `UpsOnBattery` | warning | The UPS runs on battery | nut-exporter |
-| `UpsLowRuntime` | critical | The UPS is on battery with less than 10 minutes of runtime left | nut-exporter |
-| `UpsLowBattery` | warning | The UPS battery charge is below 50% | nut-exporter |
-| `UpsBatteryReplace` | warning | The UPS reports that its battery needs replacing | nut-exporter |
+| [autobrr](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/downloads/autobrr/app/prometheusrule.yaml) | `AutobrrNetworkUnmonitored` | critical | An enabled IRC channel is not monitored, for 1 hour |
+| [blackbox-exporter](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/blackbox-exporter/app/helmrelease.yaml) | `BlackboxProbeFailed` | critical | A blackbox probe fails for 15 minutes |
+| [cert-manager](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/cert-manager/cert-manager/app/prometheusrule.yaml) | `CertManagerAbsent` | critical | cert-manager is missing from Prometheus for 5 minutes |
+| cert-manager | `CertManagerCertExpirySoon` | critical | A certificate expires within 21 days |
+| cert-manager | `CertManagerCertNotReady` | critical | A certificate is not ready for 5 minutes |
+| cert-manager | `CertManagerHittingRateLimits` | critical | Let's Encrypt answers with HTTP 429 |
+| [cloudnative-pg](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/database/cloudnative-pg/app/prometheusrule.yaml) | `BackendsWaiting` | warning | More than 300 backends are waiting on locks held by other queries |
+| cloudnative-pg | `DatabaseDeadlockConflicts` | warning | A database has had more than 10 deadlocks since its statistics were last reset |
+| cloudnative-pg | `LastFailedArchiveTime` | warning | WAL archiving failed after the last successful archive |
+| cloudnative-pg | `LongRunningTransaction` | warning | A PostgreSQL transaction runs longer than 5 minutes |
+| cloudnative-pg | `PGDatabase` | warning | A database's transaction ID age exceeds 300 million (wraparound risk) |
+| cloudnative-pg | `PGReplication` | warning | A standby lags more than 5 minutes behind the primary |
+| cloudnative-pg | `ReplicaFailingReplication` | warning | A replica is in recovery but its WAL receiver is down |
+| [external-dns](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/external-dns/cloudflare/prometheusrule.yaml) | `ExternalDNSStale` | critical | ExternalDNS has not synced for 90 seconds, for 15 minutes |
+| [flux-instance](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/flux-instance/app/prometheusrule.yaml) | `FluxInstanceAbsent` | critical | The Flux instance metric is missing for 5 minutes |
+| flux-instance | `FluxInstanceNotReady` | critical | The Flux instance is not ready for 5 minutes |
+| [gatus](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/gatus/app/prometheusrule.yaml) | `GatusEndpointDown` | critical | An external or infrastructure endpoint in Gatus fails for 5 minutes |
+| gatus | `GatusEndpointExposed` | critical | An internal-only hostname has a public DNS record; see [Gatus](../networking/dns.md) |
+| [nut-exporter](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/nut-exporter/app/prometheusrule.yaml) | `NutExporterAbsent` | critical | The NUT exporter is down for 5 minutes |
+| nut-exporter | `UpsBatteryReplace` | warning | The UPS reports that its battery needs replacing |
+| nut-exporter | `UpsLowBattery` | warning | The UPS battery charge is below 50% |
+| nut-exporter | `UpsLowRuntime` | critical | The UPS is on battery with less than 10 minutes of runtime left |
+| nut-exporter | `UpsOnBattery` | warning | The UPS runs on battery |
 
 Coder (`development/coder`, 14 rules under `app/rules/`) and LLMKube are
 disabled, so their rules are not loaded.
