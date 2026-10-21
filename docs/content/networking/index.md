@@ -10,8 +10,8 @@ icon: material/lan
 | Address | What |
 | --- | --- |
 | `10.73.0.254` | UDM Pro Max (gateway, BGP router ID) |
-| `10.73.1.10` | NAS, announced over BGP as a `/32` VIP |
-| `10.73.2.100` | Traefik reverse proxy on the NAS (`docker.bykaj.app`) |
+| `10.73.1.10` | NAS (`nas.internal`): TrueNAS UI, NFS, BGP peer address and router ID |
+| `10.73.2.100` | Traefik reverse proxy on the NAS (`docker.bykaj.app`), announced over BGP as a `/32`; primary address, so the NAS's outbound traffic uses it as source |
 | `10.73.20.0/24` | Servers subnet: node IPs and the Cilium LoadBalancer pool |
 
 The servers subnet is divided into fixed ranges:
