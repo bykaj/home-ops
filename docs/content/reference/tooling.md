@@ -75,3 +75,9 @@ navigation is set explicitly in
 so add every new page there. [Zensical](https://zensical.org) supports
 admonitions (`!!! note`), content tabs, Mermaid diagrams, code annotations and
 grid cards. See the [authoring docs](https://zensical.org/docs/authoring/markdown/).
+
+The privacy plugin downloads external assets at build time, such as the Google
+Fonts and the theme's CDN scripts (Mermaid, lightbox). It serves them from
+`assets/external/` on this site, so readers' browsers never contact third-party
+CDNs. Its download cache in `docs/.cache/` is gitignored. A build needs network
+access to those CDNs, and the plugin skips the theme's video-ad SDK on purpose.
