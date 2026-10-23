@@ -111,6 +111,14 @@ link = "https://mastodon.social/@bykaj"
 icon = "fontawesome/brands/bluesky"
 link = "https://bsky.app/profile/bykaj.com"
 
+# Download external assets (Google Fonts, theme scripts) at build time and
+# serve them from the site, so readers' browsers never hit third-party CDNs.
+# https://zensical.org/docs/setup/data-privacy/
+[project.plugins.privacy]
+# The theme's video player references Google's ad SDK, which pulls in
+# googlesyndication.com; the site has no video ads, so don't self-host it.
+assets_exclude = ["imasdk.googleapis.com/*"]
+
 [project.markdown_extensions.abbr]
 [project.markdown_extensions.admonition]
 [project.markdown_extensions.attr_list]
