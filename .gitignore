@@ -27,4 +27,5 @@ talosconfig
 Brewfile.lock.json
 
 # Docs
+.cache/
 site/

@@ -113,7 +113,8 @@ link = "https://bsky.app/profile/bykaj.com"
 
 # Download external assets (Google Fonts, theme scripts) at build time and
 # serve them from the site, so readers' browsers never hit third-party CDNs.
-# https://zensical.org/docs/setup/data-privacy/
+# Options match the Material for MkDocs plugin (Zensical has no page for it yet):
+# https://squidfunk.github.io/mkdocs-material/plugins/privacy/
 [project.plugins.privacy]
 # The theme's video player references Google's ad SDK, which pulls in
 # googlesyndication.com; the site has no video ads, so don't self-host it.
