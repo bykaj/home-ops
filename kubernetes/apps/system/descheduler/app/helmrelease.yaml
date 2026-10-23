@@ -42,6 +42,10 @@ spec:
                 nodeAffinityType:
                   - requiredDuringSchedulingIgnoredDuringExecution
             - name: RemovePodsViolatingNodeTaints
+              args:
+                # Transient NoSchedule taint while a Cilium agent restarts (upgrades, reboots)
+                excludedTaints:
+                  - node.cilium.io/agent-not-ready
             - name: RemovePodsViolatingTopologySpreadConstraint
           plugins:
             balance:
