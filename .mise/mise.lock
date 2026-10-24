@@ -2,26 +2,6 @@
 
 lockfile_version = 1
 
-[[tools.1password-cli]]
-version = "2.40.0"
-backend = "vfox:1password-cli"
-specifiers = ["2.40.0"]
-
-[tools.1password-cli."platforms.linux-arm64"]
-url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.40.0/op_linux_arm64_v2.40.0.zip"
-
-[tools.1password-cli."platforms.linux-x64"]
-url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.40.0/op_linux_amd64_v2.40.0.zip"
-
-[tools.1password-cli."platforms.macos-arm64"]
-url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.40.0/op_darwin_arm64_v2.40.0.zip"
-
-[tools.1password-cli."platforms.macos-x64"]
-url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.40.0/op_darwin_amd64_v2.40.0.zip"
-
-[tools.1password-cli."platforms.windows-x64"]
-url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.40.0/op_windows_amd64_v2.40.0.zip"
-
 [[tools.actionlint]]
 version = "1.7.12"
 backend = "aqua:rhysd/actionlint"
@@ -56,6 +36,26 @@ checksum = "sha256:6e7241b51e6817ea6a047693d8e6fed13b31819c9a0dd6c5a726e1592d22f
 url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_windows_amd64.zip"
 url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924919"
 provenance = "github-attestations"
+
+[[tools."aqua:1password/cli"]]
+version = "2.41.1"
+backend = "aqua:1password/cli"
+specifiers = ["2.41.1"]
+
+[tools."aqua:1password/cli"."platforms.linux-arm64"]
+url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_linux_arm64_v2.41.1.zip"
+
+[tools."aqua:1password/cli"."platforms.linux-x64"]
+url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_linux_amd64_v2.41.1.zip"
+
+[tools."aqua:1password/cli"."platforms.macos-arm64"]
+url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_darwin_arm64_v2.41.1.zip"
+
+[tools."aqua:1password/cli"."platforms.macos-x64"]
+url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_darwin_amd64_v2.41.1.zip"
+
+[tools."aqua:1password/cli"."platforms.windows-x64"]
+url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_windows_amd64_v2.41.1.zip"
 
 [[tools.cloudflared]]
 version = "2026.10.3"

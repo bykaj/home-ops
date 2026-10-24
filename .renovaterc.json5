@@ -195,7 +195,7 @@
     {
       description: "1Password CLI is not on GitHub, look it up through its custom datasource",
       matchManagers: ["mise"],
-      matchDepNames: ["1password-cli"],
+      matchDepNames: ["aqua:1password/cli"],
       overrideDatasource: "custom.1password-cli",
     },
     //
