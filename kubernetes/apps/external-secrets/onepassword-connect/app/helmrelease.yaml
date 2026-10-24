@@ -23,7 +23,6 @@ spec:
             memory: 128Mi
         serviceMonitor:
           enabled: true
-      credentialsKey: credentials.json
       credentialsName: onepassword-secret
       sync:
         imageRepository: ghcr.io/1password/connect-sync
