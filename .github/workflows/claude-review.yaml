@@ -11,8 +11,8 @@ on:
       - synchronize
       - ready_for_review
       - reopened
-  # `/ai-review` from the repo owner on a PR requests a fresh review. The job
-  # only runs for the owner's comment starting with `/ai-review` (the body can
+  # `/bot-review` from the repo owner on a PR requests a fresh review. The job
+  # only runs for the owner's comment starting with `/bot-review` (the body can
   # end in a line break) on an open, non-draft PR from this repo, pins the
   # checkout to its head SHA and never executes PR code.
   issue_comment: # zizmor: ignore[dangerous-triggers]
@@ -33,7 +33,7 @@ jobs:
         ) || (
           github.event_name == 'issue_comment' &&
           github.event.issue.pull_request &&
-          startsWith(github.event.comment.body, '/ai-review') &&
+          startsWith(github.event.comment.body, '/bot-review') &&
           github.event.comment.author_association == 'OWNER'
         )
       }}
@@ -63,7 +63,7 @@ jobs:
             if [[ "$(jq -r '.state' <<< "$pr_json")" != "open" ||
                   "$(jq -r '.draft' <<< "$pr_json")" != "false" ||
                   "$(jq -r '.head.repo.full_name // empty' <<< "$pr_json")" != "$GITHUB_REPOSITORY" ]]; then
-              echo "::error::/ai-review only runs on open, non-draft PRs from this repository"
+              echo "::error::/bot-review only runs on open, non-draft PRs from this repository"
               exit 1
             fi
             head_sha="$(jq -r '.head.sha' <<< "$pr_json")"
@@ -131,7 +131,7 @@ jobs:
             detached, so always pass the PR number). If an earlier comment from
             this review already covers the same change (the PR was only
             rebased), stop without commenting, unless RE-REVIEW REQUESTED is
-            yes: then the owner asked for a fresh review with `/ai-review`, so
+            yes: then the owner asked for a fresh review with `/bot-review`, so
             review the current diff again and take the replies posted since
             the last review into account.
 
