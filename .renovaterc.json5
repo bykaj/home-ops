@@ -9,6 +9,19 @@
     "github>home-operations/renovate-presets//apps/talosFactory.json5#10.0.1",
     ":timezone(Europe/Amsterdam)",
   ],
+  customDatasources: {
+    // The 1Password CLI isn't published on GitHub; 1Password's update check
+    // returns the latest stable release for any version passed in the URL.
+    // Each major has its own channel (CLI = 1.x, CLI2 = 2.x), so a new major
+    // never shows up here: switch the URL to CLI3 when migrating by hand
+    "1password-cli": {
+      defaultRegistryUrlTemplate: "https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N",
+      format: "json",
+      transformTemplates: [
+        '{"releases": [{"version": version}], "changelogUrl": relnotes, "homepage": "https://developer.1password.com/docs/cli/"}',
+      ],
+    },
+  },
   // hostRules: [
   //   {
   //     description: 'Authenticate against the ocharted OCI registry',
@@ -180,10 +193,10 @@
       minimumGroupSize: 2,
     },
     {
-      description: "1Password CLI is not resolvable on GitHub, bump manually",
+      description: "1Password CLI is not on GitHub, look it up through its custom datasource",
       matchManagers: ["mise"],
       matchDepNames: ["1password-cli"],
-      enabled: false,
+      overrideDatasource: "custom.1password-cli",
     },
     //
     // Scheduling rules
