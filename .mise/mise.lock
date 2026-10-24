@@ -43,18 +43,23 @@ backend = "aqua:1password/cli"
 specifiers = ["2.41.1"]
 
 [tools."aqua:1password/cli"."platforms.linux-arm64"]
+checksum = "blake3:6efd1911f1c24f74abc6f7dd464be85a79aca339c93b55247d18b58ea88d0e62"
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_linux_arm64_v2.41.1.zip"
 
 [tools."aqua:1password/cli"."platforms.linux-x64"]
+checksum = "blake3:a884c1d980249fb06b437b020aac617870f19cad43bfc5ff321b40d6bc475f55"
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_linux_amd64_v2.41.1.zip"
 
 [tools."aqua:1password/cli"."platforms.macos-arm64"]
+checksum = "blake3:096adce99e25dad7ff03fd7c435dfe9ed0f3ee1fac808de7aa1b698f1156f9ca"
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_darwin_arm64_v2.41.1.zip"
 
 [tools."aqua:1password/cli"."platforms.macos-x64"]
+checksum = "blake3:7ff4aba0cce96d556b6d6694d7f4b76f2243c49cad294ad5267689ba681ace4f"
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_darwin_amd64_v2.41.1.zip"
 
 [tools."aqua:1password/cli"."platforms.windows-x64"]
+checksum = "blake3:a8dd1887247b2df64d8bc43cb14f4185c71db5f63a946db2507cd929fd666f2f"
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.41.1/op_windows_amd64_v2.41.1.zip"
 
 [[tools.cloudflared]]
