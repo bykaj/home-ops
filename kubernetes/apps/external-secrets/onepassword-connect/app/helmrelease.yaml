@@ -10,106 +10,21 @@ spec:
     name: onepassword-connect
   interval: 1h
   values:
-    controllers:
-      onepassword-connect:
-        strategy: RollingUpdate
-        annotations:
-          reloader.stakater.com/auto: "true"
-        containers:
-          api:
-            image:
-              repository: ghcr.io/1password/connect-api
-              tag: 1.8.4@sha256:37cf4d505f5c7bb08fa9290a2c44295646cbbaac960452667da9c499a78c3cc9
-            env:
-              XDG_DATA_HOME: &configDir /config
-              OP_HTTP_PORT: &apiPort 8080
-              OP_BUS_PORT: 11220
-              OP_BUS_PEERS: localhost:11221
-              OP_SESSION:
-                valueFrom:
-                  secretKeyRef:
-                    name: onepassword-secret
-                    key: 1password-credentials.json
-            probes:
-              liveness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /heartbeat
-                    port: *apiPort
-                  initialDelaySeconds: 15
-                  periodSeconds: 30
-                  failureThreshold: 3
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *apiPort
-                  initialDelaySeconds: 15
-            securityContext: &securityContext
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - "ALL"
-            resources: &resources
-              requests:
-                cpu: 5m
-                memory: 64Mi
-              limits:
-                memory: 128Mi
-          sync:
-            image:
-              repository: ghcr.io/1password/connect-sync
-              tag: 1.8.4@sha256:739688254d7a5ae757860e4165e925eb30028c71496299518c84d0361245d9bc
-            env:
-              XDG_DATA_HOME: *configDir
-              OP_HTTP_PORT: &syncPort 8081
-              OP_BUS_PORT: 11221
-              OP_BUS_PEERS: localhost:11220
-              OP_SESSION:
-                valueFrom:
-                  secretKeyRef:
-                    name: onepassword-secret
-                    key: 1password-credentials.json
-            probes:
-              liveness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /heartbeat
-                    port: *syncPort
-                  initialDelaySeconds: 15
-                  periodSeconds: 30
-                  failureThreshold: 3
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *syncPort
-                  initialDelaySeconds: 15
-            securityContext: *securityContext
-            resources: *resources
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        runAsGroup: 999
-        fsGroup: 999
-        fsGroupChangePolicy: OnRootMismatch
-    service:
-      app:
-        ports:
-          http:
-            port: *apiPort
-    persistence:
-      config:
-        type: emptyDir
-        globalMounts:
-          - path: *configDir
+    connect:
+      annotations:
+        reloader.stakater.com/auto: "true"
+      api:
+        imageRepository: ghcr.io/1password/connect-api
+        resources: &resources
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+        serviceMonitor:
+          enabled: true
+      credentialsKey: credentials.json
+      credentialsName: onepassword-secret
+      sync:
+        imageRepository: ghcr.io/1password/connect-sync
+        resources: *resources
