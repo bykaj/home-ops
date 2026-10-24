@@ -209,6 +209,13 @@ jobs:
             When citing github.com URLs, rewrite the host to
             `https://redirect.github.com` so the linked issues, PRs and
             releases do not receive a backlink notification.
+
+            Never write a bare issue or PR reference like `#123` or
+            `owner/repo#123`: GitHub links a bare `#123` to this repository's
+            own issue or PR with that number. Write every upstream reference
+            as a Markdown link, e.g.
+            `[#123](https://redirect.github.com/owner/repo/issues/123)`.
+            Likewise, never write a bare `@username`; put it in backticks.
           claude_args: |
             --model claude-opus-5-5
             --allowedTools "Read,Glob,Grep,WebFetch,WebSearch,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh release list:*),Bash(gh release view:*)"
