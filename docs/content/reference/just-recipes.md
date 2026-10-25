@@ -51,7 +51,7 @@ Day-2 cluster operations
 | --- | --- |
 | `apply-ks <ns> <ks>` | Render a Flux Kustomization locally with `flate` and server-side apply it |
 | `browse-pvc <ns> <claim>` | Start an Alpine pod with the PVC mounted at `/mnt` |
-| `cron-minute <name>` | Derive a stable pseudo-random minute (0–59) from a name |
+| `cron-minute <name>` | Derive a stable minute (0–59) from an app name, for `POSTGRES_BACKUP_SCHEDULE` ([details](../storage/postgres.md)) |
 | `db-backup <ns> <app>` | Create a one-off CNPG `Backup` |
 | `debug-node <node>` | Privileged debug shell on a node (`kubectl debug --profile=sysadmin`) |
 | `delete-ks <ns> <ks>` | Render a Flux Kustomization locally and delete its resources |

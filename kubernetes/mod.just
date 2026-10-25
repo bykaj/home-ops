@@ -14,7 +14,7 @@ browse-pvc ns claim:
         --image=docker.io/library/alpine:latest \
         --overrides='{"spec":{"containers":[{"name":"browse-pvc-{{ claim }}","image":"docker.io/library/alpine:latest","stdin":true,"tty":true,"command":["/bin/sh"],"workingDir":"/mnt","volumeMounts":[{"mountPath":"/mnt","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ claim }}"}}]}}'
 
-[doc('Derive a pseudo-random cron minute (0-59) from a name')]
+[doc('Derive a stable cron minute (0-59) from an app name, used for POSTGRES_BACKUP_SCHEDULE')]
 cron-minute name:
     echo $(( $(echo -n "{{ name }}" | cksum | cut -d' ' -f1) % 60 ))
 

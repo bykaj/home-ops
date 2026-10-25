@@ -32,7 +32,7 @@ spec:
 | `APP` | _(required)_ | Name of the consuming app; used for cluster, Secret and backup paths |
 | `POSTGRES_USERNAME` | `${APP}` | Owner role created on initial bootstrap |
 | `POSTGRES_DATABASE` | `${APP}` | Database created on initial bootstrap |
-| `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *` | Cron schedule for the local NFS dump |
+| `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *` | Cron schedule for the local NFS dump. Set it per app to `<minute> 0 * * *` with the minute from `just k8s cron-minute <app>`, so the dumps are spread over the hour |
 
 A brand-new database needs one extra label on first deploy. See
 [New Database](../runbooks/new-database.md).
