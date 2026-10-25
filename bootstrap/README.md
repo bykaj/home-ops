@@ -7,7 +7,7 @@ fresh Docker host (such as the TrueNAS server) with the supporting applications 
 just bootstrap cluster           # Talos → Kubernetes → base CRDs/secrets → helmfile apps → Flux takes over
 just bootstrap docker <host>     # Ansible provisioning of docker/<host>, then doco-cd takes over
 just bootstrap restore-configs   # existing cluster: restore kubeconfig and talosconfig from 1Password
-just bootstrap store-configs     # upload kubeconfig and talosconfig to 1Password
+just bootstrap store-configs     # upload kubeconfig and talosconfig (and their expiry dates) to 1Password
 ```
 
 Documentation:

@@ -70,7 +70,14 @@ Two conventions keep the layers honest:
 - **Secrets never live in the repo.** Sensitive values are
   `op://Homelab/talos/...` references resolved at render time.
 
-## talosconfig
+## Client configs
+
+Both client configs at the repo root carry a client certificate that expires
+after a year. The recipes below renew them and store the result, with its
+expiry date, in 1Password (see
+[Bootstrap → Client configs](../runbooks/bootstrap.md#client-configs)).
+
+### talosconfig
 
 `just talos gen-talosconfig` generates the repo-root `talosconfig` from the
 cluster's secrets in 1Password, so it works before the cluster exists and
@@ -95,6 +102,16 @@ does not need a still-valid client certificate:
 Run it for a brand-new cluster, and before the client certificate expires
 (`talosctl config info` shows the date). If you keep a copy in
 `~/.talos/config`, update that too.
+
+### kubeconfig
+
+`just talos gen-kubeconfig` fetches a kubeconfig with a new admin client
+certificate from the first control-plane endpoint (`talosctl kubeconfig`,
+context `admin@main`), checks it against the API server's `/livez`
+(asking before keeping it if that fails), replaces `./kubeconfig` (mode
+`0600`) and runs `just bootstrap store-configs kubeconfig`. It needs a working
+`talosconfig`. `just bootstrap cluster` fetches its own kubeconfig, so this is
+for renewals.
 
 ## Schematics
 
@@ -143,6 +160,7 @@ complete files, not deltas. None exist today.
 ```sh
 just talos apply-node <node>           # render and apply (talosctl apply-config)
 just talos download-image <version>    # fetch a metal ISO from the Image Factory
+just talos gen-kubeconfig              # new kubeconfig (new client cert), stored in 1Password
 just talos gen-talosconfig             # new talosconfig from 1Password, stored back in 1Password
 just talos reboot-node <node>          # reboot (asks for confirmation)
 just talos render-config <node>        # render a node's full machine config to stdout

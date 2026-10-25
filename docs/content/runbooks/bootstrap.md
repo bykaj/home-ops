@@ -104,9 +104,18 @@ curl -k https://k8s.internal:6443/livez
 
 ## Client configs
 
-`kubeconfig` and `talosconfig` are kept as file attachments on the `cluster`
-item in the `Homelab` 1Password vault. To operate an existing cluster from a
-new machine, clone the repo, run `mise install`, sign in to `op`, then:
+`kubeconfig` and `talosconfig` are kept on the `cluster` item in the `Homelab`
+1Password vault, each in its own section with the expiry date of its client
+certificate:
+
+| Section | Fields |
+| --- | --- |
+| _(none)_ | `next expiry` (date): the earliest of the two `expires` dates |
+| Kubernetes | `kubeconfig` (file), `expires` (date) |
+| Talos | `talosconfig` (file), `expires` (date) |
+
+To operate an existing cluster from a new machine, clone the repo, run
+`mise install`, sign in to `op`, then:
 
 ```sh
 just bootstrap restore-configs
@@ -124,18 +133,34 @@ just bootstrap store-configs [files...]
 
 Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
 attachments in place, or only the files named (for example
-`just bootstrap store-configs kubeconfig`). Files that already match are
+`just bootstrap store-configs kubeconfig`). It also sets each section's
+`expires` date to the expiry date of the file's client certificate, and then
+`next expiry` to the earliest of the two. Files
+whose attachment and date already match are
 skipped, and a missing file is an error. `just bootstrap cluster` runs this as
-its last stage. Run it by hand whenever either file changes outside bootstrap,
-for example after renewing the client certificates (both expire after a year).
-`just talos gen-talosconfig` already runs it for the talosconfig only.
+its last stage. Run it by hand whenever either file changes outside bootstrap.
+`restore-configs` and `store-configs` both log each file's expiry date.
+
+Both client certificates expire after a year. Renew them with
+`just talos gen-kubeconfig` and `just talos gen-talosconfig` (see
+[Talos → Client configs](../kubernetes/talos.md#client-configs)); both store
+the new file and its expiry date in 1Password.
+
+!!! tip "Expiry alerts"
+
+    1Password allows one expiry alert per item, so it goes on `next expiry`,
+    which follows whichever certificate expires first: edit the item in the
+    1Password app, open **Set expiry alert** under `next expiry` and choose
+    **2 weeks before**. The CLI can't set alerts, so this is a one-time step in
+    the app. The alert survives `store-configs` updating the date and moves
+    with it.
 
 !!! warning "The `cluster` item must be a Secure Note"
 
     `store-configs` updates the attachments with `op item edit`, which
     validates the whole item. A Password item with an empty password fails
     with `Password item requires ps value`, and 1Password can't change an
-    item's category, so recreate it as a Secure Note with both attachments.
+    item's category, so recreate it as a Secure Note with the sections above.
     A Document item doesn't work either: it holds a single file.
 
 ## Docker hosts

@@ -29,12 +29,13 @@ restore-configs:
     trap '/bin/rm -rf "$tmpdir"' EXIT
     for f in {{ configs }}; do
         tmp="${tmpdir}/${f}"
-        if ! op read -f -o "$tmp" "op://Homelab/cluster/${f}" >/dev/null; then
+        section="$(just bootstrap config-section "$f")"
+        if ! op read -f -o "$tmp" "op://Homelab/cluster/${section}/${f}" >/dev/null; then
             just log fatal "Failed to read from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
         dest="{{ justfile_dir() }}/${f}"
         if cmp -s "$tmp" "$dest"; then
-            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$(just bootstrap cert-expiry "$f" "$dest")"
             continue
         fi
         if [[ -f "$dest" ]] && ! gum confirm "Overwrite the local ${f} with the copy from 1Password?"; then
@@ -43,25 +44,40 @@ restore-configs:
         fi
         chmod 600 "$tmp"
         /bin/mv -f "$tmp" "$dest"
-        just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$(just bootstrap cert-expiry "$f" "$dest")"
     done
 
-[doc('Store kubeconfig and talosconfig (or only the files given) in 1Password')]
+[doc('Store kubeconfig and talosconfig (or only the files given) with their expiry dates, and the earliest as next expiry, in 1Password')]
 store-configs *files=configs:
     for f in {{ files }}; do
         src="{{ justfile_dir() }}/${f}"
         if [[ ! -f "$src" ]]; then
             just log fatal "Local file missing" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
-        if cmp -s "$src" <(op read "op://Homelab/cluster/${f}" 2>/dev/null); then
-            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+        section="$(just bootstrap config-section "$f")"
+        expires="$(just bootstrap cert-expiry "$f" "$src")"
+        # Date fields read back as a Unix timestamp, so compare the local date
+        stored="$(op read "op://Homelab/cluster/${section}/expires" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
+        if [[ "$stored" == "$expires" ]] && cmp -s "$src" <(op read "op://Homelab/cluster/${section}/${f}" 2>/dev/null); then
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
             continue
         fi
-        if ! op item edit cluster --vault Homelab "${f}[file]=${src}" >/dev/null; then
+        if ! op item edit cluster --vault Homelab "${section}.${f}[file]=${src}" "${section}.expires[date]=${expires}" >/dev/null; then
             just log fatal "Failed to store in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
-        just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
     done
+    # 1Password allows one expiry alert per item, so `next expiry` holds the earliest section date
+    next="$(for f in {{ configs }}; do op read "op://Homelab/cluster/$(just bootstrap config-section "$f")/expires" 2>/dev/null || true; done \
+        | jq -rRs 'split("\n") | map(tonumber?) | min | if . then localtime | strftime("%Y-%m-%d") else empty end')"
+    current="$(op read "op://Homelab/cluster/next expiry" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
+    if [[ -z "$next" || "$next" == "$current" ]]; then
+        just log info "Next expiry already up to date" "stage" "{{ recipe_name() }}" "expires" "${current:-none}"
+    elif ! op item edit cluster --vault Homelab "next expiry[date]=${next}" >/dev/null; then
+        just log fatal "Failed to store next expiry in 1Password" "stage" "{{ recipe_name() }}"
+    else
+        just log info "Stored next expiry in 1Password" "stage" "{{ recipe_name() }}" "expires" "$next"
+    fi
 
 [private]
 nodes:
@@ -87,7 +103,7 @@ k8s:
 [private]
 kubeconfig lb="cilium":
     just log info "Running stage..." "stage" "{{ recipe_name() }}"
-    if ! talosctl kubeconfig -n "{{ controller }}" -f --force-context-name main {{ justfile_dir() }}; then
+    if ! talosctl kubeconfig -n "{{ controller }}" -f {{ justfile_dir() }}; then
         just log fatal "Failed to fetch kubeconfig" "stage" "{{ recipe_name() }}"
     fi
     if [[ "{{ lb }}" != "cilium" ]]; then
@@ -134,3 +150,29 @@ nodes-ready:
             sleep 5
         done
     fi
+
+# Print the expiry date (YYYY-MM-DD, UTC) of the client certificate in a kubeconfig or talosconfig
+[private]
+cert-expiry file path:
+    case "{{ file }}" in
+        kubeconfig)
+            user="$(yq -r '.current-context as $ctx | .contexts[] | select(.name == $ctx) | .context.user' "{{ path }}")"
+            end="$(USER_NAME="$user" yq -r '.users[] | select(.name == strenv(USER_NAME)) | .user.client-certificate-data' "{{ path }}" | base64 -d | openssl x509 -noout -enddate | cut -d= -f2)"
+            python3 -c 'import sys, datetime; print(datetime.datetime.strptime(sys.argv[1], "%b %d %H:%M:%S %Y %Z").date())' "$end"
+            ;;
+        talosconfig)
+            talosctl --talosconfig "{{ path }}" config info -o yaml | yq -r '.certNotAfter'
+            ;;
+        *)
+            just log fatal "Unknown config file" "file" "{{ file }}"
+            ;;
+    esac
+
+# Print the section of the 1Password cluster item that holds a config file and its expiry date
+[private]
+config-section file:
+    case "{{ file }}" in
+        kubeconfig) echo Kubernetes ;;
+        talosconfig) echo Talos ;;
+        *) just log fatal "Unknown config file" "file" "{{ file }}" ;;
+    esac
