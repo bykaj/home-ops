@@ -104,9 +104,17 @@ curl -k https://k8s.internal:6443/livez
 
 ## Client configs
 
-`kubeconfig` and `talosconfig` are kept as file attachments on the `cluster`
-item in the `Homelab` 1Password vault. To operate an existing cluster from a
-new machine, clone the repo, run `mise install`, sign in to `op`, then:
+`kubeconfig` and `talosconfig` are kept on the `cluster` item in the `Homelab`
+1Password vault, each in its own section with the expiry date of its client
+certificate:
+
+| Section | Fields |
+| --- | --- |
+| Kubernetes | `kubeconfig` (file), `expires` (date) |
+| Talos | `talosconfig` (file), `expires` (date) |
+
+To operate an existing cluster from a new machine, clone the repo, run
+`mise install`, sign in to `op`, then:
 
 ```sh
 just bootstrap restore-configs
@@ -124,9 +132,9 @@ just bootstrap store-configs [files...]
 
 Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
 attachments in place, or only the files named (for example
-`just bootstrap store-configs kubeconfig`). It also sets the date fields
-`kubeconfig expires` and `talosconfig expires` to the expiry date of each
-file's client certificate. Files whose attachment and date already match are
+`just bootstrap store-configs kubeconfig`). It also sets each section's
+`expires` date to the expiry date of the file's client certificate. Files
+whose attachment and date already match are
 skipped, and a missing file is an error. `just bootstrap cluster` runs this as
 its last stage. Run it by hand whenever either file changes outside bootstrap.
 `restore-configs` and `store-configs` both log each file's expiry date.
@@ -139,7 +147,7 @@ the new file and its expiry date in 1Password.
 !!! tip "Expiry alerts"
 
     1Password can alert before a date field's date: edit the item in the
-    1Password app, open **Set expiry alert** under each `… expires` field and
+    1Password app, open **Set expiry alert** under both `expires` fields and
     choose **2 weeks before**. The CLI can't set alerts, so this is a
     one-time step in the app. The alert survives `store-configs` updating the
     date and moves with it.
@@ -149,7 +157,7 @@ the new file and its expiry date in 1Password.
     `store-configs` updates the attachments with `op item edit`, which
     validates the whole item. A Password item with an empty password fails
     with `Password item requires ps value`, and 1Password can't change an
-    item's category, so recreate it as a Secure Note with both attachments.
+    item's category, so recreate it as a Secure Note with the sections above.
     A Document item doesn't work either: it holds a single file.
 
 ## Docker hosts

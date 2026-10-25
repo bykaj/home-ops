@@ -29,7 +29,8 @@ restore-configs:
     trap '/bin/rm -rf "$tmpdir"' EXIT
     for f in {{ configs }}; do
         tmp="${tmpdir}/${f}"
-        if ! op read -f -o "$tmp" "op://Homelab/cluster/${f}" >/dev/null; then
+        section="$(just bootstrap config-section "$f")"
+        if ! op read -f -o "$tmp" "op://Homelab/cluster/${section}/${f}" >/dev/null; then
             just log fatal "Failed to read from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
         dest="{{ justfile_dir() }}/${f}"
@@ -53,14 +54,15 @@ store-configs *files=configs:
         if [[ ! -f "$src" ]]; then
             just log fatal "Local file missing" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
+        section="$(just bootstrap config-section "$f")"
         expires="$(just bootstrap cert-expiry "$f" "$src")"
-        # Date fields read back as a Unix timestamp at local midnight
-        stored="$(op read "op://Homelab/cluster/${f} expires" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
-        if [[ "$stored" == "$expires" ]] && cmp -s "$src" <(op read "op://Homelab/cluster/${f}" 2>/dev/null); then
+        # Date fields read back as a Unix timestamp, so compare the local date
+        stored="$(op read "op://Homelab/cluster/${section}/expires" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
+        if [[ "$stored" == "$expires" ]] && cmp -s "$src" <(op read "op://Homelab/cluster/${section}/${f}" 2>/dev/null); then
             just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
             continue
         fi
-        if ! op item edit cluster --vault Homelab "${f}[file]=${src}" "${f} expires[date]=${expires}" >/dev/null; then
+        if ! op item edit cluster --vault Homelab "${section}.${f}[file]=${src}" "${section}.expires[date]=${expires}" >/dev/null; then
             just log fatal "Failed to store in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
         just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
@@ -153,4 +155,13 @@ cert-expiry file path:
         *)
             just log fatal "Unknown config file" "file" "{{ file }}"
             ;;
+    esac
+
+# Print the section of the 1Password cluster item that holds a config file and its expiry date
+[private]
+config-section file:
+    case "{{ file }}" in
+        kubeconfig) echo Kubernetes ;;
+        talosconfig) echo Talos ;;
+        *) just log fatal "Unknown config file" "file" "{{ file }}" ;;
     esac
