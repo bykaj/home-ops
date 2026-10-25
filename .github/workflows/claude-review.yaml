@@ -3,12 +3,15 @@
 name: Claude Review
 
 on:
+  # No `synchronize`: pushes don't trigger a review, so fixes for findings can
+  # be answered inline first and a new review requested with `/bot-review`.
+  # Drafts are reviewed once they're marked ready; PRs opened as ready
+  # (Renovate's) when they're opened.
   pull_request:
     branches:
       - main
     types:
       - opened
-      - synchronize
       - ready_for_review
       - reopened
   # `/bot-review` from the repo owner on a PR requests a fresh review. The job
