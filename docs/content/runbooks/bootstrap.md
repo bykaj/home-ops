@@ -110,6 +110,7 @@ certificate:
 
 | Section | Fields |
 | --- | --- |
+| _(none)_ | `next expiry` (date): the earliest of the two `expires` dates |
 | Kubernetes | `kubeconfig` (file), `expires` (date) |
 | Talos | `talosconfig` (file), `expires` (date) |
 
@@ -133,7 +134,8 @@ just bootstrap store-configs [files...]
 Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
 attachments in place, or only the files named (for example
 `just bootstrap store-configs kubeconfig`). It also sets each section's
-`expires` date to the expiry date of the file's client certificate. Files
+`expires` date to the expiry date of the file's client certificate, and then
+`next expiry` to the earliest of the two. Files
 whose attachment and date already match are
 skipped, and a missing file is an error. `just bootstrap cluster` runs this as
 its last stage. Run it by hand whenever either file changes outside bootstrap.
@@ -146,11 +148,12 @@ the new file and its expiry date in 1Password.
 
 !!! tip "Expiry alerts"
 
-    1Password can alert before a date field's date: edit the item in the
-    1Password app, open **Set expiry alert** under both `expires` fields and
-    choose **2 weeks before**. The CLI can't set alerts, so this is a
-    one-time step in the app. The alert survives `store-configs` updating the
-    date and moves with it.
+    1Password allows one expiry alert per item, so it goes on `next expiry`,
+    which follows whichever certificate expires first: edit the item in the
+    1Password app, open **Set expiry alert** under `next expiry` and choose
+    **2 weeks before**. The CLI can't set alerts, so this is a one-time step in
+    the app. The alert survives `store-configs` updating the date and moves
+    with it.
 
 !!! warning "The `cluster` item must be a Secure Note"
 

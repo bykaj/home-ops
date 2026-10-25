@@ -47,7 +47,7 @@ restore-configs:
         just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$(just bootstrap cert-expiry "$f" "$dest")"
     done
 
-[doc('Store kubeconfig and talosconfig (or only the files given) with their expiry dates in 1Password')]
+[doc('Store kubeconfig and talosconfig (or only the files given) with their expiry dates, and the earliest as next expiry, in 1Password')]
 store-configs *files=configs:
     for f in {{ files }}; do
         src="{{ justfile_dir() }}/${f}"
@@ -67,6 +67,17 @@ store-configs *files=configs:
         fi
         just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
     done
+    # 1Password allows one expiry alert per item, so `next expiry` holds the earliest section date
+    next="$(for f in {{ configs }}; do op read "op://Homelab/cluster/$(just bootstrap config-section "$f")/expires" 2>/dev/null || true; done \
+        | jq -rRs 'split("\n") | map(tonumber?) | min | if . then localtime | strftime("%Y-%m-%d") else empty end')"
+    current="$(op read "op://Homelab/cluster/next expiry" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
+    if [[ -z "$next" || "$next" == "$current" ]]; then
+        just log info "Next expiry already up to date" "stage" "{{ recipe_name() }}" "expires" "${current:-none}"
+    elif ! op item edit cluster --vault Homelab "next expiry[date]=${next}" >/dev/null; then
+        just log fatal "Failed to store next expiry in 1Password" "stage" "{{ recipe_name() }}"
+    else
+        just log info "Stored next expiry in 1Password" "stage" "{{ recipe_name() }}" "expires" "$next"
+    fi
 
 [private]
 nodes:
