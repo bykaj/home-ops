@@ -16,8 +16,20 @@ BGP
 :   Border Gateway Protocol. Used here to announce LoadBalancer VIPs from
     the nodes and the NAS to the UDM.
 
+CNI
+:   Container Network Interface, the plugin that gives pods their network.
+    Here that is Cilium.
+
 CNPG
 :   [CloudNative-PG](https://cloudnative-pg.io), the PostgreSQL operator.
+
+CRD
+:   CustomResourceDefinition. It adds a new resource kind to the Kubernetes
+    API, such as a Flux `HelmRelease` or a CNPG `Cluster`.
+
+CSI
+:   Container Storage Interface, the plugin API that storage drivers such as
+    Ceph's implement to provision, attach and snapshot volumes.
 
 DRA
 :   Dynamic Resource Allocation, the Kubernetes API the Intel GPU driver uses
@@ -51,13 +63,29 @@ Kopiur
 konflate
 :   A Flux PR previewer that posts rendered diffs as comments and status checks.
 
+NUT
+:   [Network UPS Tools](https://networkupstools.org). The UPS serves its
+    status over NUT, and `nut-exporter` turns it into metrics.
+
+OCI
+:   Open Container Initiative, the standard for container images and the
+    registries that serve them, such as Zot and Spegel.
+
 OIDC
 :   OpenID Connect, the login protocol on top of OAuth 2.0. Pocket ID is the
     provider; apps use it natively or through Envoy Gateway's OIDC filter
     (the `gateway-oidc` component).
 
+OOM
+:   Out Of Memory. The kernel kills a container that goes over its memory
+    limit (an OOM kill), which the `OomKilled` alert reports.
+
 OSD
 :   Object Storage Daemon. One Ceph OSD runs per Micron NVMe drive.
+
+PVC
+:   PersistentVolumeClaim, an app's request for a volume. Most are backed by
+    the `ceph-block` StorageClass and backed up by Kopiur.
 
 RBD
 :   RADOS Block Device, Ceph's block storage. It backs the `ceph-block`
