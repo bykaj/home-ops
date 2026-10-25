@@ -1,11 +1,12 @@
 ---
-description: Bring the Talos/Kubernetes cluster or the TrueNAS host up from scratch
+description: Bring the Talos/Kubernetes cluster or a Docker host up from scratch
 ---
 
 # Bootstrap
 
 Takes freshly installed Talos nodes all the way to a self-managing Flux
-cluster, and provisions a fresh TrueNAS server with its Docker stacks.
+cluster, and provisions a fresh Docker host, such as the TrueNAS server, with
+its stacks.
 Everything is driven by
 [`bootstrap/mod.just`](https://github.com/bykaj/home-ops/blob/main/bootstrap/mod.just).
 
@@ -129,14 +130,27 @@ its last stage. Run it by hand whenever either file changes outside bootstrap,
 for example after renewing the client certificates (both expire after a year).
 `just talos gen-talosconfig` already runs it for the talosconfig only.
 
-## NAS
+## Docker hosts
 
 ```sh
-just bootstrap nas
+just bootstrap docker <host>
 ```
 
-This runs the Ansible playbook against the hosts in `ansible/inventory.yaml`.
-It provisions TrueNAS, writes doco-cd's secrets and starts doco-cd from
-`docker/nas/00-doco-cd`, which then reconciles the `docker/nas/` stacks,
-including its own. Nothing in `bootstrap/` is used again until the next
-provisioning.
+`<host>` is the name shared by the host's directories and inventory group:
+
+| Path | Purpose |
+| --- | --- |
+| `docker/<host>/` | The compose stacks doco-cd deploys |
+| `bootstrap/docker/<host>/bootstrap.yaml` | Ansible playbook that provisions the host |
+| `<host>` group in `ansible/inventory.yaml` | The host's address and connection variables, including `ansible_become_password` as a 1Password lookup |
+
+The recipe runs the host's playbook against the inventory. An unknown host
+fails and lists the available ones.
+
+For the NAS (`just bootstrap docker nas`), the playbook provisions TrueNAS,
+writes doco-cd's secrets and starts doco-cd from `docker/nas/00-doco-cd`,
+which then reconciles the `docker/nas/` stacks, including its own. Nothing in
+`bootstrap/` is used again until the next provisioning.
+
+To add a host, create those three pieces. The become password is resolved
+with `op read` only when a task needs `become`, so it never sits on disk.

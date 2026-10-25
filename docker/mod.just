@@ -28,4 +28,4 @@ sync-stacks:
 
 [doc('Restart the Doco-CD container on TrueNAS via Ansible')]
 restart-doco-cd:
-    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/.ansible/nas/restart-doco-cd.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/.ansible/nas/restart-doco-cd.yaml"

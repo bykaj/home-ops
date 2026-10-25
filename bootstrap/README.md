@@ -1,11 +1,11 @@
 # Bootstrap
 
 Takes freshly installed Talos nodes all the way to a self-managing Flux cluster, and provisions a
-fresh TrueNAS server with the supporting applications it needs.
+fresh Docker host (such as the TrueNAS server) with the supporting applications it needs.
 
 ```sh
 just bootstrap cluster           # Talos → Kubernetes → base CRDs/secrets → helmfile apps → Flux takes over
-just bootstrap nas               # Ansible provisioning of TrueNAS, then doco-cd takes over
+just bootstrap docker <host>     # Ansible provisioning of docker/<host>, then doco-cd takes over
 just bootstrap restore-configs   # existing cluster: restore kubeconfig and talosconfig from 1Password
 just bootstrap store-configs     # upload kubeconfig and talosconfig to 1Password
 ```
