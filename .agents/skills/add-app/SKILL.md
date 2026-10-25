@@ -22,9 +22,10 @@ Ask the user (AskUserQuestion) for anything not already given:
 3. **Port** the app listens on, and whether it gets a **route** (hostname); internal (`envoy-internal`, default) or public (`envoy-external`)
 4. **Persistence** — does the app store state? (→ kopiur backup component)
 5. **Database** — does the app need PostgreSQL? If so, is it a brand-new database, or does a Barman backup of it already exist? (→ postgres component)
-6. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
-7. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
-8. **Dependencies** — other Flux Kustomizations this app needs
+6. **Cache** — does the app need Redis (or a Redis-compatible store for queues, sessions or websockets)? (→ dragonfly component)
+7. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
+8. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
+9. **Dependencies** — other Flux Kustomizations this app needs
 
 ## Step 2: Create the files
 
@@ -103,6 +104,20 @@ spec:
 
 - `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
 - The `components.postgres/cnpg: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/runbooks/new-database.md`); tell the user.
+
+**If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `dragonfly` section of `docs/content/kubernetes/components.md`):
+
+```yaml
+spec:
+  components:
+    - ../../../../components/dragonfly
+  postBuild:
+    substitute:
+      APP: <app>
+```
+
+- The component appends `dragonfly-operator` to the HelmRelease's `spec.dependsOn` with a JSON patch, which fails when the list doesn't exist. Give the HelmRelease `dependsOn: []` (see the HelmRelease template).
+- No password by default: the instance only accepts connections from its own namespace (and Prometheus). `components/dragonfly/authentication` is an optional sub-component that adds password auth from `${DRAGONFLY_PASSWORD_SECRET}`; no app uses it yet.
 
 Add user-specified dependencies to `dependsOn`. Include `postBuild.substitute.APP` whenever any component is used; omit `components`/`postBuild` entirely otherwise.
 
@@ -279,6 +294,15 @@ env:
         key: uri
 ```
 
+Redis connection (pairs with the dragonfly component): the Service is `<app>-dragonfly` on port 6379. Also add `dependsOn: []` under `spec` (between `interval` and `values`, see the sorting rules) so the component can append to it:
+
+```yaml
+env:
+  REDIS_URL: "redis://${APP}-dragonfly:6379"
+```
+
+Use the variable name and format the app expects (some take a host and port instead, e.g. Immich's `REDIS_HOSTNAME: immich-dragonfly`).
+
 ### app/externalsecret.yaml (only if secrets)
 
 ```yaml
@@ -338,4 +362,5 @@ Show the user the created files and get confirmation before committing. Commit s
 - **Adding a CiliumNetworkPolicy by default** — only some apps lock down ingress; copy `searxng`'s if the user asks for one.
 - **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
 - **Adding the `components.postgres/cnpg: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
+- **Adding the dragonfly component without `dependsOn: []` in the HelmRelease** — the component's JSON patch appends to that list and fails if it's missing.
 - **Adding `wait`, `commonMetadata`, or `timeout` to `ks.yaml`** — all three are boilerplate now. Leave `wait` unset unless another Kustomization depends on this one and it has no `healthChecks` (then, and only then, `wait: true`).
