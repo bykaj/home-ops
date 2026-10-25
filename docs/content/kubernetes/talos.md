@@ -21,6 +21,7 @@ is applied automatically. Configs are rendered on demand and pushed with
 | `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, install disk, volumes |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override |
 | `schematic.yaml.j2` | Shared [Image Factory](https://factory.talos.dev) schematic |
+| `secrets.yaml.j2` | Talos secrets bundle as `op://` references, used to generate `talosconfig` |
 | `version.yaml` | Pinned Talos and Kubernetes versions (updated by Renovate) |
 | `mod.just` | `just talos …` recipes |
 
@@ -68,6 +69,30 @@ Two conventions keep the layers honest:
   and `machine.type` is set by the role patch, not by the node file.
 - **Secrets never live in the repo.** Sensitive values are
   `op://Homelab/talos/...` references resolved at render time.
+
+## talosconfig
+
+`just talos gen-talosconfig` generates the repo-root `talosconfig` from the
+cluster's secrets in 1Password, so it works before the cluster exists and
+does not need a still-valid client certificate:
+
+1. `secrets.yaml.j2` is rendered through `op inject` into a Talos secrets
+   bundle, built from the same `op://Homelab/talos/...` fields the machine
+   configs use. It is only ever passed to `talosctl` through a pipe, never
+   written to disk.
+2. `talosctl gen config --output-types talosconfig` signs a new `os:admin`
+   client certificate with the machine CA. It is valid for one year.
+3. Endpoints are set to the nodes under `nodes/controlplane/`, and nodes to
+   every node under `nodes/`.
+4. The certificate is checked against the first control-plane node. If that
+   fails (for example, nodes still in maintenance mode), it asks before
+   keeping the file.
+5. The file replaces `./talosconfig` (mode `0600`) and is uploaded to
+   1Password with `just bootstrap store-configs`.
+
+Run it for a brand-new cluster, and before the client certificate expires
+(`talosctl config info` shows the date). If you keep a copy in
+`~/.talos/config`, update that too.
 
 ## Schematics
 
@@ -120,6 +145,7 @@ just talos upgrade-node <node>         # upgrade Talos using the node's schemati
 just talos upgrade-k8s <version>       # upgrade Kubernetes across the cluster
 just talos download-image <version>    # fetch a metal ISO from the Image Factory
 just talos reboot-node <node>          # reboot (asks for confirmation)
+just talos gen-talosconfig             # new talosconfig from 1Password, stored back in 1Password
 ```
 
 Verify a template refactor by diffing rendered output before and after, then

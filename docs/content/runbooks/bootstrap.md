@@ -16,8 +16,10 @@ Everything is driven by
 - A signed-in 1Password CLI (`op`). Every `op://` reference is resolved at
   apply time with `op inject`.
 - A valid `talosconfig` at the repo root. The controller endpoint and node list
-  are derived from `talosctl config info`, so nothing is hardcoded. For an
-  existing cluster, `just bootstrap workstation` restores it (see
+  are derived from `talosctl config info`, so nothing is hardcoded. For a new
+  cluster, generate it with `just talos gen-talosconfig` (see
+  [Talos → talosconfig](../kubernetes/talos.md#talosconfig)); for an existing
+  one, `just bootstrap workstation` restores it (see
   [Workstation](#workstation)).
 - The UDM [BGP config](../networking/bgp.md#udm-frr-config) and
   [static DNS records](../networking/dns.md#manual-records) in place.
@@ -120,7 +122,8 @@ Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
 attachments in place. Files that already match are skipped. `just bootstrap
 cluster` runs this as its last stage. Run it by hand whenever either file
 changes outside bootstrap, for example after renewing the client certificates
-(both expire after a year).
+(both expire after a year). `just talos gen-talosconfig` already runs it after
+renewing the talosconfig.
 
 ## NAS
 
