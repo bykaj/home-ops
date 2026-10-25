@@ -4,8 +4,10 @@ Takes freshly installed Talos nodes all the way to a self-managing Flux cluster,
 fresh TrueNAS server with the supporting applications it needs.
 
 ```sh
-just bootstrap cluster   # Talos → Kubernetes → base CRDs/secrets → helmfile apps → Flux takes over
-just bootstrap nas       # Ansible provisioning of TrueNAS, then doco-cd takes over
+just bootstrap cluster         # Talos → Kubernetes → base CRDs/secrets → helmfile apps → Flux takes over
+just bootstrap nas             # Ansible provisioning of TrueNAS, then doco-cd takes over
+just bootstrap store-configs   # upload kubeconfig and talosconfig to 1Password
+just bootstrap workstation     # restore kubeconfig and talosconfig from 1Password
 ```
 
 Documentation:

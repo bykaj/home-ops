@@ -140,13 +140,13 @@ complete files, not deltas. None exist today.
 ## Common tasks
 
 ```sh
-just talos render-config <node>        # render a node's full machine config to stdout
 just talos apply-node <node>           # render and apply (talosctl apply-config)
-just talos upgrade-node <node>         # upgrade Talos using the node's schematic image
-just talos upgrade-k8s <version>       # upgrade Kubernetes across the cluster
 just talos download-image <version>    # fetch a metal ISO from the Image Factory
-just talos reboot-node <node>          # reboot (asks for confirmation)
 just talos gen-talosconfig             # new talosconfig from 1Password, stored back in 1Password
+just talos reboot-node <node>          # reboot (asks for confirmation)
+just talos render-config <node>        # render a node's full machine config to stdout
+just talos upgrade-k8s <version>       # upgrade Kubernetes across the cluster
+just talos upgrade-node <node>         # upgrade Talos using the node's schematic image
 ```
 
 Verify a template refactor by diffing rendered output before and after, then
