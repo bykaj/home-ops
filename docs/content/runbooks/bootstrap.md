@@ -118,15 +118,16 @@ its `talosconfig` with `just talos gen-talosconfig`, and bootstrap creates the
 `kubeconfig`.
 
 ```sh
-just bootstrap store-configs
+just bootstrap store-configs [files...]
 ```
 
 Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
-attachments in place. Files that already match are skipped. `just bootstrap
-cluster` runs this as its last stage. Run it by hand whenever either file
-changes outside bootstrap, for example after renewing the client certificates
-(both expire after a year). `just talos gen-talosconfig` already runs it after
-renewing the talosconfig.
+attachments in place, or only the files named (for example
+`just bootstrap store-configs kubeconfig`). Files that already match are
+skipped, and a missing file is an error. `just bootstrap cluster` runs this as
+its last stage. Run it by hand whenever either file changes outside bootstrap,
+for example after renewing the client certificates (both expire after a year).
+`just talos gen-talosconfig` already runs it for the talosconfig only.
 
 ## NAS
 

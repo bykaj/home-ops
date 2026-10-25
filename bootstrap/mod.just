@@ -42,9 +42,9 @@ restore-configs:
         just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
     done
 
-[doc('Store kubeconfig and talosconfig in 1Password')]
-store-configs:
-    for f in {{ configs }}; do
+[doc('Store kubeconfig and talosconfig (or only the files given) in 1Password')]
+store-configs *files=configs:
+    for f in {{ files }}; do
         src="{{ justfile_dir() }}/${f}"
         if [[ ! -f "$src" ]]; then
             just log fatal "Local file missing" "stage" "{{ recipe_name() }}" "file" "$f"

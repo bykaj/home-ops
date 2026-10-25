@@ -89,7 +89,8 @@ does not need a still-valid client certificate:
    fails (for example, nodes still in maintenance mode), it asks before
    keeping the file.
 5. The file replaces `./talosconfig` (mode `0600`) and is uploaded to
-   1Password with `just bootstrap store-configs`.
+   1Password with `just bootstrap store-configs talosconfig`, which also works
+   on a new cluster that has no `kubeconfig` yet.
 
 Run it for a brand-new cluster, and before the client certificate expires
 (`talosctl config info` shows the date). If you keep a copy in

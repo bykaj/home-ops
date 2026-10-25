@@ -40,7 +40,7 @@ gen-talosconfig:
     fi
     install -m 600 "${tmpdir}/talosconfig" "{{ justfile_dir() }}/talosconfig"
     just log info "Generated talosconfig" "expires" "$(talosctl --talosconfig "{{ justfile_dir() }}/talosconfig" config info -o yaml | yq -r '.certNotAfter')"
-    just bootstrap store-configs
+    just bootstrap store-configs talosconfig
 
 [confirm('Set Micron NVMe power state on ' + node + ' to PS' + state + ' (saved across reboots) [y|N] ?')]
 [doc('Set the Ceph Micron NVMe power state (0 = 8.25W full, 4 = 4.25W coolest)')]
