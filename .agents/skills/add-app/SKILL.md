@@ -116,10 +116,11 @@ spec:
       APP: <app>
 ```
 
-- The component appends `dragonfly-operator` to the HelmRelease's `spec.dependsOn` with a JSON patch, which fails when the list doesn't exist. Give the HelmRelease `dependsOn: []` (see the HelmRelease template).
 - No password by default: the instance only accepts connections from its own namespace (and Prometheus). `components/dragonfly/authentication` is an optional sub-component that adds password auth from `${DRAGONFLY_PASSWORD_SECRET}`; no app uses it yet.
 
-Add user-specified dependencies to `dependsOn`. Include `postBuild.substitute.APP` whenever any component is used; omit `components`/`postBuild` entirely otherwise.
+**Postgres or dragonfly → the HelmRelease needs `dependsOn: []`.** Both components append their operator (`cloudnative-pg`, `dragonfly-operator`) to the HelmRelease's `spec.dependsOn` with a JSON patch (`op: add`, `path: /spec/dependsOn/-`), and that patch fails the Flux Kustomization build when the list doesn't exist. See "Components that patch the HelmRelease" in the HelmRelease section.
+
+Add user-specified dependencies to the Kustomization's `dependsOn`. Include `postBuild.substitute.APP` whenever any component is used; omit `components`/`postBuild` entirely otherwise.
 
 ### app/kustomization.yaml
 
@@ -283,6 +284,18 @@ envFrom:
       name: <app>-secret
 ```
 
+Components that patch the HelmRelease (postgres, dragonfly): add an empty `dependsOn` list to the HelmRelease `spec`, after `interval` (see the sorting rules), so the components can append their operator to it. Keep it even when the app has no dependencies of its own:
+
+```yaml
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: <app>
+  interval: 1h
+  dependsOn: []
+  values:
+```
+
 Database connection (pairs with the postgres component): CNPG generates a `<app>-postgres-app` Secret with the keys `uri`, `jdbc-uri`, `username`, `password`, `host`, `port`, `dbname` and `pgpass`. Use `uri` when the app takes a connection URL, or the individual keys otherwise:
 
 ```yaml
@@ -294,7 +307,7 @@ env:
         key: uri
 ```
 
-Redis connection (pairs with the dragonfly component): the Service is `<app>-dragonfly` on port 6379. Also add `dependsOn: []` under `spec` (between `interval` and `values`, see the sorting rules) so the component can append to it:
+Redis connection (pairs with the dragonfly component): the Service is `<app>-dragonfly` on port 6379:
 
 ```yaml
 env:
@@ -362,5 +375,5 @@ Show the user the created files and get confirmation before committing. Commit s
 - **Adding a CiliumNetworkPolicy by default** — only some apps lock down ingress; copy `searxng`'s if the user asks for one.
 - **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
 - **Adding the `components.postgres/cnpg: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
-- **Adding the dragonfly component without `dependsOn: []` in the HelmRelease** — the component's JSON patch appends to that list and fails if it's missing.
+- **Adding the postgres or dragonfly component without `dependsOn: []` in the HelmRelease** — both components' JSON patches append to that list, and the Kustomization build fails if it's missing.
 - **Adding `wait`, `commonMetadata`, or `timeout` to `ks.yaml`** — all three are boilerplate now. Leave `wait` unset unless another Kustomization depends on this one and it has no `healthChecks` (then, and only then, `wait: true`).
