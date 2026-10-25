@@ -106,8 +106,8 @@ Run it for a brand-new cluster, and before the client certificate expires
 ### kubeconfig
 
 `just talos gen-kubeconfig` fetches a kubeconfig with a new admin client
-certificate from the first control-plane endpoint (`talosctl kubeconfig`),
-renames its context to `main`, checks it against the API server's `/livez`
+certificate from the first control-plane endpoint (`talosctl kubeconfig`,
+context `admin@main`), checks it against the API server's `/livez`
 (asking before keeping it if that fails), replaces `./kubeconfig` (mode
 `0600`) and runs `just bootstrap store-configs kubeconfig`. It needs a working
 `talosconfig`. `just bootstrap cluster` fetches its own kubeconfig, so this is

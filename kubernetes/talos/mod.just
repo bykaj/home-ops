@@ -24,8 +24,6 @@ gen-kubeconfig:
     trap '/bin/rm -rf "$tmpdir"' EXIT
     controller="$(talosctl config info -o yaml | yq -r -e '.endpoints[0]')"
     talosctl kubeconfig -n "$controller" "$tmpdir"
-    # A new file gets the context admin@<cluster>; keep the name bootstrap uses
-    kubectl --kubeconfig "${tmpdir}/kubeconfig" config rename-context "$(kubectl --kubeconfig "${tmpdir}/kubeconfig" config current-context)" main >/dev/null
     if ! kubectl --kubeconfig "${tmpdir}/kubeconfig" get --raw /livez >/dev/null 2>&1; then
         gum confirm "The API server rejected the new kubeconfig or is unreachable. Keep it anyway?" || exit 1
     fi
