@@ -140,8 +140,9 @@ the new file and its expiry date in 1Password.
 
     1Password can alert before a date field's date: edit the item in the
     1Password app, open **Set expiry alert** under each `… expires` field and
-    choose **2 months before**. The CLI can't set alerts, so this is a
-    one-time step in the app.
+    choose **2 weeks before**. The CLI can't set alerts, so this is a
+    one-time step in the app. The alert survives `store-configs` updating the
+    date and moves with it.
 
 !!! warning "The `cluster` item must be a Secure Note"
 
