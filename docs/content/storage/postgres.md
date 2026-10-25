@@ -49,7 +49,7 @@ env:
   DATABASE_URL:
     valueFrom:
       secretKeyRef:
-        name: "{{ .Release.Name }}-postgres-app"
+        name: "${APP}-postgres-app"
         key: uri
 ```
 

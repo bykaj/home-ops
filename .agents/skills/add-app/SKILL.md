@@ -7,11 +7,11 @@ description: Use when deploying a new application to the cluster — scaffolding
 
 Scaffolds `kubernetes/apps/<namespace>/<app>/` with a Flux Kustomization (`ks.yaml`) and an app-template HelmRelease. Every value below comes from current repo conventions — when in doubt, mirror a recent real app instead of inventing structure:
 
-| Reference app                               | Shows                                                          |
-| ------------------------------------------- | -------------------------------------------------------------- |
-| `kubernetes/apps/network/echo-server`       | Minimal stateless app + route                                  |
-| `kubernetes/apps/network/cloudflare-tunnel` | Secrets, config file via configMapGenerator                    |
-| `kubernetes/apps/default/paperless`         | Custom probes, dragonfly dependency, kopiur-backed persistence |
+| Reference app                               | Shows                                                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------- |
+| `kubernetes/apps/network/echo-server`       | Minimal stateless app + route                                              |
+| `kubernetes/apps/network/cloudflare-tunnel` | Secrets, config file via configMapGenerator                                |
+| `kubernetes/apps/default/paperless`         | Custom probes, dragonfly dependency, kopiur-backed persistence, PostgreSQL |
 
 ## Step 1: Gather details
 
@@ -21,9 +21,10 @@ Ask the user (AskUserQuestion) for anything not already given:
 2. **Image** repository + tag (upstream's current release)
 3. **Port** the app listens on, and whether it gets a **route** (hostname); internal (`envoy-internal`, default) or public (`envoy-external`)
 4. **Persistence** — does the app store state? (→ kopiur backup component)
-5. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
-6. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
-7. **Dependencies** — other Flux Kustomizations this app needs
+5. **Database** — does the app need PostgreSQL? If so, is it a brand-new database, or does a Barman backup of it already exist? (→ postgres component)
+6. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
+7. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
+8. **Dependencies** — other Flux Kustomizations this app needs
 
 ## Step 2: Create the files
 
@@ -78,6 +79,30 @@ postBuild:
     # KOPIUR_MOVER_UID: "1000"      # default: 4000
     # KOPIUR_MOVER_GID: "1000"      # default: 4000
 ```
+
+**If the app needs PostgreSQL**, it gets its own CNPG cluster from the postgres component. Add the component, its health check and the backup schedule (see `docs/content/storage/postgres.md` for all knobs):
+
+```yaml
+metadata:
+  name: <app>
+  labels:
+    components.postgres/cnpg: init # only for a brand-new database, see below
+spec:
+  components:
+    - ../../../../components/postgres
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+  postBuild:
+    substitute:
+      APP: <app>
+      POSTGRES_BACKUP_SCHEDULE: "<minute> 0 * * *"
+```
+
+- `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
+- The `components.postgres/cnpg: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/runbooks/new-database.md`); tell the user.
 
 Add user-specified dependencies to `dependsOn`. Include `postBuild.substitute.APP` whenever any component is used; omit `components`/`postBuild` entirely otherwise.
 
@@ -243,6 +268,17 @@ envFrom:
       name: <app>-secret
 ```
 
+Database connection (pairs with the postgres component): CNPG generates a `<app>-postgres-app` Secret with the keys `uri`, `jdbc-uri`, `username`, `password`, `host`, `port`, `dbname` and `pgpass`. Use `uri` when the app takes a connection URL, or the individual keys otherwise:
+
+```yaml
+env:
+  DATABASE_URL:
+    valueFrom:
+      secretKeyRef:
+        name: "${APP}-postgres-app"
+        key: uri
+```
+
 ### app/externalsecret.yaml (only if secrets)
 
 ```yaml
@@ -300,4 +336,6 @@ Show the user the created files and get confirmation before committing. Commit s
 - **`readOnlyRootFilesystem: true` without a tmpfs** — apps that write to `/tmp` will crash; mount an emptyDir.
 - **Skipping the sorting conventions** — HelmRelease values follow `.agents/instructions/sorting.instructions.md`.
 - **Adding a CiliumNetworkPolicy by default** — only some apps lock down ingress; copy `searxng`'s if the user asks for one.
+- **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
+- **Adding the `components.postgres/cnpg: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
 - **Adding `wait`, `commonMetadata`, or `timeout` to `ks.yaml`** — all three are boilerplate now. Leave `wait` unset unless another Kustomization depends on this one and it has no `healthChecks` (then, and only then, `wait: true`).
