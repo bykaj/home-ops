@@ -1,6 +1,6 @@
 ---
 # doco-cd deploys this stack itself (SELF_UPDATE_ENABLED). Ansible only starts it on a fresh NAS
-# (`just bootstrap nas`), reusing this file. The project name must match the directory name, since
+# (`just bootstrap docker nas`), reusing this file. The project name must match the directory name, since
 # that's what doco-cd uses to recognise its own container.
 name: 00-doco-cd
 networks:

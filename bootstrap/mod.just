@@ -14,10 +14,14 @@ configs := "kubeconfig talosconfig"
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
 cluster: nodes k8s (kubeconfig "node") base apps kubeconfig store-configs
 
-[confirm('Bootstrap TrueNAS? [y|N]')]
-[doc('Bootstrap TrueNAS applications')]
-nas:
-    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/bootstrap.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+[confirm('Bootstrap Docker host ' + host + '? [y|N]')]
+[doc('Bootstrap a Docker host with Ansible (host = directory under docker/)')]
+docker host:
+    playbook="{{ source_directory() }}/docker/{{ host }}/bootstrap.yaml"
+    if [[ ! -f "$playbook" ]]; then
+        just log fatal "No bootstrap playbook for host" "host" "{{ host }}" "available" "$(basename -a "{{ source_directory() }}"/docker/*/ | xargs)"
+    fi
+    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "$playbook"
 
 [doc('Restore kubeconfig and talosconfig from 1Password')]
 restore-configs:

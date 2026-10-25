@@ -122,7 +122,7 @@ the next commit. See [Self-Updating](https://doco.cd/latest/Advanced/Self-Updati
 The `data` volume (`doco-cd_data`, the repo cache and the handover journal) is
 external, so it survives any change to the stack. The secrets doco-cd needs to
 start at all (1Password service account token, API and webhook secrets) can't
-come from doco-cd. `just bootstrap nas` writes them to `~/.config/doco-cd/`,
+come from doco-cd. `just bootstrap docker nas` writes them to `~/.config/doco-cd/`,
 creates the volume and the shared `apps` network, and starts this stack only if
 no `doco-cd` container from the `00-doco-cd` project is running. After that,
 doco-cd manages it.
@@ -142,7 +142,7 @@ address `10.73.2.100/32`. See
 ### `02-traefik`
 
 Reverse proxy and TLS termination for the other stacks, doco-cd included.
-It joins the `apps` network as external: `just bootstrap nas` creates it, so
+It joins the `apps` network as external: `just bootstrap docker nas` creates it, so
 doco-cd can attach to it before Traefik is deployed.
 
 ### `03-dexd`

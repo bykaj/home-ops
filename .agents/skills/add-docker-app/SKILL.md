@@ -30,7 +30,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
 3. **Secrets**: add `VAR_NAME: op://Homelab/<item>/<field>` under `external_secrets` in `docker/nas/.doco-cd.yaml` (keep it sorted) and reference it as `${VAR_NAME}` in the compose file. For secrets the app reads from files, build them with a top-level `configs:` block (`environment:` or `content:` with `${VAR}`) like `07-zot`. Use the item's **real field names** (ask the user, never guess).
 
 4. **Expose it** (HTTP):
-   - Join the shared network: `networks: apps: {name: apps, external: true}` and `networks: [apps]` on the service. Ansible creates it (`just bootstrap nas`); every stack, Traefik included, declares it external.
+   - Join the shared network: `networks: apps: {name: apps, external: true}` and `networks: [apps]` on the service. Ansible creates it (`just bootstrap docker nas`); every stack, Traefik included, declares it external.
    - Labels:
 
      ```yaml

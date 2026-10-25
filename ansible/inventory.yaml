@@ -4,3 +4,5 @@ all:
     nas:
       hosts:
         nas.home.cetana.net:
+      vars:
+        ansible_become_password: "{{ lookup('ansible.builtin.pipe', 'op read op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD') }}"
