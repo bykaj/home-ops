@@ -9,7 +9,7 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-# Bootstrap workstation, cluster and NAS recipes
+# Bootstrap cluster and NAS recipes
 [group('bootstrap')]
 mod bootstrap "bootstrap"
 

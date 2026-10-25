@@ -21,6 +21,7 @@ is applied automatically. Configs are rendered on demand and pushed with
 | `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, install disk, volumes |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override |
 | `schematic.yaml.j2` | Shared [Image Factory](https://factory.talos.dev) schematic |
+| `secrets.yaml.j2` | Talos secrets bundle as `op://` references, used to generate `talosconfig` |
 | `version.yaml` | Pinned Talos and Kubernetes versions (updated by Renovate) |
 | `mod.just` | `just talos …` recipes |
 
@@ -69,6 +70,32 @@ Two conventions keep the layers honest:
 - **Secrets never live in the repo.** Sensitive values are
   `op://Homelab/talos/...` references resolved at render time.
 
+## talosconfig
+
+`just talos gen-talosconfig` generates the repo-root `talosconfig` from the
+cluster's secrets in 1Password, so it works before the cluster exists and
+does not need a still-valid client certificate:
+
+1. `secrets.yaml.j2` is rendered through `op inject` into a Talos secrets
+   bundle, built from the same `op://Homelab/talos/...` fields the machine
+   configs use. It is only ever passed to `talosctl` through a pipe, never
+   written to disk.
+2. `talosctl gen config --output-types talosconfig` signs a new `os:admin`
+   client certificate with the machine CA. It is valid for one year.
+3. Node names come from the `nodes/<role>/<node>.yaml.j2` files, skipping
+   `<node>.schematic.yaml.j2` overrides. Endpoints are set to the
+   control-plane nodes, and nodes to every node of any role.
+4. The certificate is checked against the first control-plane node. If that
+   fails (for example, nodes still in maintenance mode), it asks before
+   keeping the file.
+5. The file replaces `./talosconfig` (mode `0600`) and is uploaded to
+   1Password with `just bootstrap store-configs talosconfig`, which also works
+   on a new cluster that has no `kubeconfig` yet.
+
+Run it for a brand-new cluster, and before the client certificate expires
+(`talosctl config info` shows the date). If you keep a copy in
+`~/.talos/config`, update that too.
+
 ## Schematics
 
 `just talos schematic-id` POSTs the schematic to the Image Factory and gets
@@ -114,12 +141,13 @@ complete files, not deltas. None exist today.
 ## Common tasks
 
 ```sh
-just talos render-config <node>        # render a node's full machine config to stdout
 just talos apply-node <node>           # render and apply (talosctl apply-config)
-just talos upgrade-node <node>         # upgrade Talos using the node's schematic image
-just talos upgrade-k8s <version>       # upgrade Kubernetes across the cluster
 just talos download-image <version>    # fetch a metal ISO from the Image Factory
+just talos gen-talosconfig             # new talosconfig from 1Password, stored back in 1Password
 just talos reboot-node <node>          # reboot (asks for confirmation)
+just talos render-config <node>        # render a node's full machine config to stdout
+just talos upgrade-k8s <version>       # upgrade Kubernetes across the cluster
+just talos upgrade-node <node>         # upgrade Talos using the node's schematic image
 ```
 
 Verify a template refactor by diffing rendered output before and after, then

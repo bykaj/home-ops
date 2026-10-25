@@ -1,5 +1,6 @@
 set default-list
 set default-script
+set lazy
 set no-exit-message
 set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
@@ -7,15 +8,56 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 
 controller := `talosctl config info -o yaml | yq -r -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -r -e '.nodes | join (" ")'`
+configs := "kubeconfig talosconfig"
 
 [confirm('Bootstrap cluster? [y|N]')]
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
-cluster: nodes k8s (kubeconfig "node") base apps kubeconfig
+cluster: nodes k8s (kubeconfig "node") base apps kubeconfig store-configs
 
 [confirm('Bootstrap TrueNAS? [y|N]')]
 [doc('Bootstrap TrueNAS applications')]
 nas:
     ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/bootstrap.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+
+[doc('Restore kubeconfig and talosconfig from 1Password')]
+restore-configs:
+    tmpdir="$(mktemp -d)"
+    trap '/bin/rm -rf "$tmpdir"' EXIT
+    for f in {{ configs }}; do
+        tmp="${tmpdir}/${f}"
+        if ! op read -f -o "$tmp" "op://Homelab/cluster/${f}" >/dev/null; then
+            just log fatal "Failed to read from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        fi
+        dest="{{ justfile_dir() }}/${f}"
+        if cmp -s "$tmp" "$dest"; then
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+            continue
+        fi
+        if [[ -f "$dest" ]] && ! gum confirm "Overwrite the local ${f} with the copy from 1Password?"; then
+            just log warn "Kept the local copy" "stage" "{{ recipe_name() }}" "file" "$f"
+            continue
+        fi
+        chmod 600 "$tmp"
+        /bin/mv -f "$tmp" "$dest"
+        just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+    done
+
+[doc('Store kubeconfig and talosconfig (or only the files given) in 1Password')]
+store-configs *files=configs:
+    for f in {{ files }}; do
+        src="{{ justfile_dir() }}/${f}"
+        if [[ ! -f "$src" ]]; then
+            just log fatal "Local file missing" "stage" "{{ recipe_name() }}" "file" "$f"
+        fi
+        if cmp -s "$src" <(op read "op://Homelab/cluster/${f}" 2>/dev/null); then
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+            continue
+        fi
+        if ! op item edit cluster --vault Homelab "${f}[file]=${src}" >/dev/null; then
+            just log fatal "Failed to store in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        fi
+        just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+    done
 
 [private]
 nodes:

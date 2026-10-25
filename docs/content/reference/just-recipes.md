@@ -16,8 +16,10 @@ See [Bootstrap](../runbooks/bootstrap.md).
 
 | Recipe | Does |
 | --- | --- |
-| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig |
+| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig → `store-configs` |
 | `nas` | Run the Ansible playbook that provisions TrueNAS |
+| `restore-configs` | Restore `kubeconfig` and `talosconfig` from the `cluster` item in 1Password ([details](../runbooks/bootstrap.md#client-configs)) |
+| `store-configs [files...]` | Upload `kubeconfig` and `talosconfig`, or only the files given, to the `cluster` item in 1Password (skips unchanged files) |
 
 ## `just docker`
 
@@ -76,6 +78,7 @@ Recipes that change a node ask for confirmation.
 | --- | --- |
 | `apply-node <node>` | Render and apply the machine config |
 | `download-image <version> [node]` | Download a metal ISO for the node's schematic |
+| `gen-talosconfig` | Generate `talosconfig` from the Talos secrets in 1Password, check it against a node and store it in 1Password ([details](../kubernetes/talos.md#talosconfig)) |
 | `nvme-power <node> [state]` | Set the Micron NVMe power state (0 = 8.25 W full, 4 = 4.25 W coolest), saved across reboots |
 | `reboot-node <node>` | Reboot a node |
 | `render-config <node>` | Render the node's full machine config to stdout |

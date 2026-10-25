@@ -51,8 +51,8 @@ yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
 
 # These docs
-just docs serve           # live preview on http://localhost:8000
 just docs build           # strict build, what CI runs
+just docs serve           # live preview on http://localhost:8000
 ```
 
 ## GitHub Actions

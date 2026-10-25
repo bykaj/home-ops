@@ -17,6 +17,31 @@ download-image version node="":
         "https://factory.talos.dev/image/${SCHEMATIC}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "${SCHEMATIC}"
 
+[confirm('Generate a new talosconfig and store it in 1Password [y|N] ?')]
+[doc('Generate talosconfig from the Talos secrets in 1Password')]
+gen-talosconfig:
+    tmpdir="$(mktemp -d)"
+    trap '/bin/rm -rf "$tmpdir"' EXIT
+    # nodes/<role>/<node>.yaml.j2, skipping per-node <node>.schematic.yaml.j2 overrides
+    controllers=()
+    nodes=()
+    for f in "{{ source_directory() }}"/nodes/*/*.yaml.j2; do
+        [[ "$f" == *.schematic.yaml.j2 ]] && continue
+        node="$(basename "$f" .yaml.j2)"
+        nodes+=("$node")
+        [[ "$(basename "$(dirname "$f")")" == "controlplane" ]] && controllers+=("$node")
+    done
+    talosctl gen config main https://k8s.internal:6443 --output-types talosconfig -o "${tmpdir}/talosconfig" \
+        --with-secrets <(just template "{{ source_directory() }}/secrets.yaml.j2")
+    talosctl --talosconfig "${tmpdir}/talosconfig" config endpoint "${controllers[@]}"
+    talosctl --talosconfig "${tmpdir}/talosconfig" config node "${nodes[@]}"
+    if ! talosctl --talosconfig "${tmpdir}/talosconfig" -n "${controllers[0]}" version --short >/dev/null 2>&1; then
+        gum confirm "${controllers[0]} rejected the new talosconfig or is unreachable. Keep it anyway?" || exit 1
+    fi
+    install -m 600 "${tmpdir}/talosconfig" "{{ justfile_dir() }}/talosconfig"
+    just log info "Generated talosconfig" "expires" "$(talosctl --talosconfig "{{ justfile_dir() }}/talosconfig" config info -o yaml | yq -r '.certNotAfter')"
+    just bootstrap store-configs talosconfig
+
 [confirm('Set Micron NVMe power state on ' + node + ' to PS' + state + ' (saved across reboots) [y|N] ?')]
 [doc('Set the Ceph Micron NVMe power state (0 = 8.25W full, 4 = 4.25W coolest)')]
 nvme-power node state="4":

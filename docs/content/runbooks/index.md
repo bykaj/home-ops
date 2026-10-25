@@ -18,4 +18,5 @@ Step-by-step procedures for recurring and disaster-recovery operations.
     - `mise install` has been run, so every tool is on the pinned version.
     - `op` is signed in.
     - `talosconfig` and `kubeconfig` are at the repo root. mise sets
-      `TALOSCONFIG` and `KUBECONFIG` to point at them.
+      `TALOSCONFIG` and `KUBECONFIG` to point at them. On a new machine,
+      `just bootstrap restore-configs` restores both from 1Password.

@@ -11,11 +11,15 @@ Everything is driven by
 
 ## Prerequisites
 
-- [mise](https://mise.jdx.dev) installed and activated, and `mise install` run
+- A clone of this repo, with [mise](https://mise.jdx.dev) installed and
+  activated and `mise install` run
 - A signed-in 1Password CLI (`op`). Every `op://` reference is resolved at
   apply time with `op inject`.
-- A valid `talosconfig` at the repo root. The controller endpoint and node list
-  are derived from `talosctl config info`, so nothing is hardcoded.
+- A valid `talosconfig` at the repo root, generated with
+  `just talos gen-talosconfig` (see
+  [Talos → talosconfig](../kubernetes/talos.md#talosconfig)). The controller
+  endpoint and node list are derived from `talosctl config info`, so nothing
+  is hardcoded.
 - The UDM [BGP config](../networking/bgp.md#udm-frr-config) and
   [static DNS records](../networking/dns.md#manual-records) in place.
   `k8s.internal` only works once Cilium is running, so bootstrap talks to the
@@ -32,7 +36,7 @@ just bootstrap cluster
 
 ```mermaid
 graph LR
-    nodes --> k8s --> kubeconfig --> base --> apps
+    nodes --> k8s --> kubeconfig --> base --> apps --> store-configs
 ```
 
 1. **nodes**: renders each node's Talos config (templates plus 1Password
@@ -60,6 +64,9 @@ graph LR
 
     The kubeconfig is then fetched again, so its endpoint is back to
     `k8s.internal`.
+
+6. **store-configs**: uploads `kubeconfig` and `talosconfig` to the
+   `cluster` item in 1Password (see [Client configs](#client-configs)).
 
 Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages the
 same releases from then on.
@@ -93,6 +100,34 @@ flux get ks -A | grep -v True                      # nothing stuck
 kubectl -n rook-ceph exec deploy/rook-ceph-tools -- ceph status
 curl -k https://k8s.internal:6443/livez
 ```
+
+## Client configs
+
+`kubeconfig` and `talosconfig` are kept as file attachments on the `cluster`
+item in the `Homelab` 1Password vault. To operate an existing cluster from a
+new machine, clone the repo, run `mise install`, sign in to `op`, then:
+
+```sh
+just bootstrap restore-configs
+```
+
+This restores both files to the repo root with mode `0600`. Files that
+already match are left alone, and a local file that differs is only
+overwritten after a prompt. A new cluster has nothing to restore yet: generate
+its `talosconfig` with `just talos gen-talosconfig`, and bootstrap creates the
+`kubeconfig`.
+
+```sh
+just bootstrap store-configs [files...]
+```
+
+Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
+attachments in place, or only the files named (for example
+`just bootstrap store-configs kubeconfig`). Files that already match are
+skipped, and a missing file is an error. `just bootstrap cluster` runs this as
+its last stage. Run it by hand whenever either file changes outside bootstrap,
+for example after renewing the client certificates (both expire after a year).
+`just talos gen-talosconfig` already runs it for the talosconfig only.
 
 ## NAS
 
