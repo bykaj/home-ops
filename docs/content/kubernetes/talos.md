@@ -82,8 +82,9 @@ does not need a still-valid client certificate:
    written to disk.
 2. `talosctl gen config --output-types talosconfig` signs a new `os:admin`
    client certificate with the machine CA. It is valid for one year.
-3. Endpoints are set to the nodes under `nodes/controlplane/`, and nodes to
-   every node under `nodes/`.
+3. Node names come from the `nodes/<role>/<node>.yaml.j2` files, skipping
+   `<node>.schematic.yaml.j2` overrides. Endpoints are set to the
+   control-plane nodes, and nodes to every node of any role.
 4. The certificate is checked against the first control-plane node. If that
    fails (for example, nodes still in maintenance mode), it asks before
    keeping the file.
