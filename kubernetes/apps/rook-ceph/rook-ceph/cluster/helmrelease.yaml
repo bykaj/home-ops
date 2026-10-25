@@ -98,7 +98,7 @@ spec:
         mgr:
           limits:
             cpu: 500m
-            memory: 720Mi
+            memory: 1536Mi
           requests:
             cpu: 50m
             memory: 360Mi
