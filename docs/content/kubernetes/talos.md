@@ -102,6 +102,14 @@ complete files, not deltas. None exist today.
 - Kernel names for the two NVMe drives can swap across reboots. Disks are
   selected by model and links by MAC, so this is harmless, but match by model
   or serial when reading `talosctl` output.
+- Node IPs are UniFi DHCP reservations on `bond0`'s MAC, which is the MAC of
+  the `net0` link. Moving `net0` to another NIC changes the MAC, and UniFi
+  refuses to move the reservation while the old NIC is still online with that
+  IP. Intel onboard NICs stay online while the node is powered off. To switch
+  NICs with the same IP: stage the new `net0` selector with
+  `just talos apply-node <node> --mode=staged`, shut the node down, unplug the
+  old NIC, forget its client in UniFi, set the fixed IP and local DNS record on
+  the new NIC's MAC, then power the node on.
 
 ## Common tasks
 
