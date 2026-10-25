@@ -5,22 +5,21 @@ description: Bring the Talos/Kubernetes cluster or the TrueNAS host up from scra
 # Bootstrap
 
 Takes freshly installed Talos nodes all the way to a self-managing Flux
-cluster, provisions a fresh TrueNAS server with its Docker stacks, and sets up
-a new workstation to operate both.
+cluster, and provisions a fresh TrueNAS server with its Docker stacks.
 Everything is driven by
 [`bootstrap/mod.just`](https://github.com/bykaj/home-ops/blob/main/bootstrap/mod.just).
 
 ## Prerequisites
 
-- [mise](https://mise.jdx.dev) installed and activated, and `mise install` run
+- A clone of this repo, with [mise](https://mise.jdx.dev) installed and
+  activated and `mise install` run
 - A signed-in 1Password CLI (`op`). Every `op://` reference is resolved at
   apply time with `op inject`.
-- A valid `talosconfig` at the repo root. The controller endpoint and node list
-  are derived from `talosctl config info`, so nothing is hardcoded. For a new
-  cluster, generate it with `just talos gen-talosconfig` (see
-  [Talos → talosconfig](../kubernetes/talos.md#talosconfig)); for an existing
-  one, `just bootstrap workstation` restores it (see
-  [Workstation](#workstation)).
+- A valid `talosconfig` at the repo root, generated with
+  `just talos gen-talosconfig` (see
+  [Talos → talosconfig](../kubernetes/talos.md#talosconfig)). The controller
+  endpoint and node list are derived from `talosctl config info`, so nothing
+  is hardcoded.
 - The UDM [BGP config](../networking/bgp.md#udm-frr-config) and
   [static DNS records](../networking/dns.md#manual-records) in place.
   `k8s.internal` only works once Cilium is running, so bootstrap talks to the
@@ -67,7 +66,7 @@ graph LR
     `k8s.internal`.
 
 6. **store-configs**: uploads `kubeconfig` and `talosconfig` to the
-   `cluster` item in 1Password (see [Workstation](#workstation)).
+   `cluster` item in 1Password (see [Client configs](#client-configs)).
 
 Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages the
 same releases from then on.
@@ -102,17 +101,21 @@ kubectl -n rook-ceph exec deploy/rook-ceph-tools -- ceph status
 curl -k https://k8s.internal:6443/livez
 ```
 
-## Workstation
+## Client configs
+
+`kubeconfig` and `talosconfig` are kept as file attachments on the `cluster`
+item in the `Homelab` 1Password vault. To operate an existing cluster from a
+new machine, clone the repo, run `mise install`, sign in to `op`, then:
 
 ```sh
-just bootstrap workstation
+just bootstrap restore-configs
 ```
 
-Restores `kubeconfig` and `talosconfig` to the repo root from the file
-attachments on the `cluster` item in the `Homelab` 1Password vault, with mode
-`0600`. Files that already match are left alone, and a local file that differs
-is only overwritten after a prompt. Run it on a new machine after
-`mise install` and signing in to `op`.
+This restores both files to the repo root with mode `0600`. Files that
+already match are left alone, and a local file that differs is only
+overwritten after a prompt. A new cluster has nothing to restore yet: generate
+its `talosconfig` with `just talos gen-talosconfig`, and bootstrap creates the
+`kubeconfig`.
 
 ```sh
 just bootstrap store-configs

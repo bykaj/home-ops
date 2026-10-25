@@ -14,8 +14,13 @@ configs := "kubeconfig talosconfig"
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
 cluster: nodes k8s (kubeconfig "node") base apps kubeconfig store-configs
 
+[confirm('Bootstrap TrueNAS? [y|N]')]
+[doc('Bootstrap TrueNAS applications')]
+nas:
+    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/bootstrap.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
+
 [doc('Restore kubeconfig and talosconfig from 1Password')]
-workstation:
+restore-configs:
     tmpdir="$(mktemp -d)"
     trap '/bin/rm -rf "$tmpdir"' EXIT
     for f in {{ configs }}; do
@@ -53,11 +58,6 @@ store-configs:
         fi
         just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
     done
-
-[confirm('Bootstrap TrueNAS? [y|N]')]
-[doc('Bootstrap TrueNAS applications')]
-nas:
-    ansible-playbook -i "{{ source_directory() }}/../ansible/inventory.yaml" "{{ source_directory() }}/docker/nas/bootstrap.yaml" --become-password-file <(op read 'op://Homelab/truenas/TRUENAS_ADMIN_PASSWORD')
 
 [private]
 nodes:
