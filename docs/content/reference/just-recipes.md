@@ -19,7 +19,7 @@ See [Bootstrap](../runbooks/bootstrap.md).
 | `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig → `store-configs` |
 | `docker <host>` | Run `bootstrap/docker/<host>/bootstrap.yaml` against the `<host>` inventory group ([details](../runbooks/bootstrap.md#docker-hosts)) |
 | `restore-configs` | Restore `kubeconfig` and `talosconfig` from the `cluster` item in 1Password ([details](../runbooks/bootstrap.md#client-configs)) |
-| `store-configs [files...]` | Upload `kubeconfig` and `talosconfig`, or only the files given, to the `cluster` item in 1Password (skips unchanged files) |
+| `store-configs [files...]` | Upload `kubeconfig` and `talosconfig`, or only the files given, with their certificate expiry dates to the `cluster` item in 1Password (skips unchanged files) |
 
 ## `just docker`
 
@@ -78,6 +78,7 @@ Recipes that change a node ask for confirmation.
 | --- | --- |
 | `apply-node <node>` | Render and apply the machine config |
 | `download-image <version> [node]` | Download a metal ISO for the node's schematic |
+| `gen-kubeconfig` | Generate `kubeconfig` with a new client certificate, check it against the API server and store it in 1Password ([details](../kubernetes/talos.md#kubeconfig)) |
 | `gen-talosconfig` | Generate `talosconfig` from the Talos secrets in 1Password, check it against a node and store it in 1Password ([details](../kubernetes/talos.md#talosconfig)) |
 | `nvme-power <node> [state]` | Set the Micron NVMe power state (0 = 8.25 W full, 4 = 4.25 W coolest), saved across reboots |
 | `reboot-node <node>` | Reboot a node |

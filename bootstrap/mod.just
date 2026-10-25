@@ -34,7 +34,7 @@ restore-configs:
         fi
         dest="{{ justfile_dir() }}/${f}"
         if cmp -s "$tmp" "$dest"; then
-            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$(just bootstrap cert-expiry "$f" "$dest")"
             continue
         fi
         if [[ -f "$dest" ]] && ! gum confirm "Overwrite the local ${f} with the copy from 1Password?"; then
@@ -43,24 +43,27 @@ restore-configs:
         fi
         chmod 600 "$tmp"
         /bin/mv -f "$tmp" "$dest"
-        just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        just log info "Restored from 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$(just bootstrap cert-expiry "$f" "$dest")"
     done
 
-[doc('Store kubeconfig and talosconfig (or only the files given) in 1Password')]
+[doc('Store kubeconfig and talosconfig (or only the files given) with their expiry dates in 1Password')]
 store-configs *files=configs:
     for f in {{ files }}; do
         src="{{ justfile_dir() }}/${f}"
         if [[ ! -f "$src" ]]; then
             just log fatal "Local file missing" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
-        if cmp -s "$src" <(op read "op://Homelab/cluster/${f}" 2>/dev/null); then
-            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f"
+        expires="$(just bootstrap cert-expiry "$f" "$src")"
+        # Date fields read back as a Unix timestamp at local midnight
+        stored="$(op read "op://Homelab/cluster/${f} expires" 2>/dev/null | jq -rR 'tonumber? | localtime | strftime("%Y-%m-%d")' || true)"
+        if [[ "$stored" == "$expires" ]] && cmp -s "$src" <(op read "op://Homelab/cluster/${f}" 2>/dev/null); then
+            just log info "Already up to date" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
             continue
         fi
-        if ! op item edit cluster --vault Homelab "${f}[file]=${src}" >/dev/null; then
+        if ! op item edit cluster --vault Homelab "${f}[file]=${src}" "${f} expires[date]=${expires}" >/dev/null; then
             just log fatal "Failed to store in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
         fi
-        just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f"
+        just log info "Stored in 1Password" "stage" "{{ recipe_name() }}" "file" "$f" "expires" "$expires"
     done
 
 [private]
@@ -134,3 +137,20 @@ nodes-ready:
             sleep 5
         done
     fi
+
+# Print the expiry date (YYYY-MM-DD, UTC) of the client certificate in a kubeconfig or talosconfig
+[private]
+cert-expiry file path:
+    case "{{ file }}" in
+        kubeconfig)
+            user="$(yq -r '.current-context as $ctx | .contexts[] | select(.name == $ctx) | .context.user' "{{ path }}")"
+            end="$(USER_NAME="$user" yq -r '.users[] | select(.name == strenv(USER_NAME)) | .user.client-certificate-data' "{{ path }}" | base64 -d | openssl x509 -noout -enddate | cut -d= -f2)"
+            python3 -c 'import sys, datetime; print(datetime.datetime.strptime(sys.argv[1], "%b %d %H:%M:%S %Y %Z").date())' "$end"
+            ;;
+        talosconfig)
+            talosctl --talosconfig "{{ path }}" config info -o yaml | yq -r '.certNotAfter'
+            ;;
+        *)
+            just log fatal "Unknown config file" "file" "{{ file }}"
+            ;;
+    esac

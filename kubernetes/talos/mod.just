@@ -17,6 +17,22 @@ download-image version node="":
         "https://factory.talos.dev/image/${SCHEMATIC}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "${SCHEMATIC}"
 
+[confirm('Generate a new kubeconfig and store it in 1Password [y|N] ?')]
+[doc('Generate kubeconfig with a new client certificate and store it in 1Password')]
+gen-kubeconfig:
+    tmpdir="$(mktemp -d)"
+    trap '/bin/rm -rf "$tmpdir"' EXIT
+    controller="$(talosctl config info -o yaml | yq -r -e '.endpoints[0]')"
+    talosctl kubeconfig -n "$controller" "$tmpdir"
+    # A new file gets the context admin@<cluster>; keep the name bootstrap uses
+    kubectl --kubeconfig "${tmpdir}/kubeconfig" config rename-context "$(kubectl --kubeconfig "${tmpdir}/kubeconfig" config current-context)" main >/dev/null
+    if ! kubectl --kubeconfig "${tmpdir}/kubeconfig" get --raw /livez >/dev/null 2>&1; then
+        gum confirm "The API server rejected the new kubeconfig or is unreachable. Keep it anyway?" || exit 1
+    fi
+    install -m 600 "${tmpdir}/kubeconfig" "{{ justfile_dir() }}/kubeconfig"
+    just log info "Generated kubeconfig" "expires" "$(just bootstrap cert-expiry kubeconfig "{{ justfile_dir() }}/kubeconfig")"
+    just bootstrap store-configs kubeconfig
+
 [confirm('Generate a new talosconfig and store it in 1Password [y|N] ?')]
 [doc('Generate talosconfig from the Talos secrets in 1Password')]
 gen-talosconfig:
@@ -39,7 +55,7 @@ gen-talosconfig:
         gum confirm "${controllers[0]} rejected the new talosconfig or is unreachable. Keep it anyway?" || exit 1
     fi
     install -m 600 "${tmpdir}/talosconfig" "{{ justfile_dir() }}/talosconfig"
-    just log info "Generated talosconfig" "expires" "$(talosctl --talosconfig "{{ justfile_dir() }}/talosconfig" config info -o yaml | yq -r '.certNotAfter')"
+    just log info "Generated talosconfig" "expires" "$(just bootstrap cert-expiry talosconfig "{{ justfile_dir() }}/talosconfig")"
     just bootstrap store-configs talosconfig
 
 [confirm('Set Micron NVMe power state on ' + node + ' to PS' + state + ' (saved across reboots) [y|N] ?')]

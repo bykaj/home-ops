@@ -124,11 +124,24 @@ just bootstrap store-configs [files...]
 
 Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
 attachments in place, or only the files named (for example
-`just bootstrap store-configs kubeconfig`). Files that already match are
+`just bootstrap store-configs kubeconfig`). It also sets the date fields
+`kubeconfig expires` and `talosconfig expires` to the expiry date of each
+file's client certificate. Files whose attachment and date already match are
 skipped, and a missing file is an error. `just bootstrap cluster` runs this as
-its last stage. Run it by hand whenever either file changes outside bootstrap,
-for example after renewing the client certificates (both expire after a year).
-`just talos gen-talosconfig` already runs it for the talosconfig only.
+its last stage. Run it by hand whenever either file changes outside bootstrap.
+`restore-configs` and `store-configs` both log each file's expiry date.
+
+Both client certificates expire after a year. Renew them with
+`just talos gen-kubeconfig` and `just talos gen-talosconfig` (see
+[Talos → Client configs](../kubernetes/talos.md#client-configs)); both store
+the new file and its expiry date in 1Password.
+
+!!! tip "Expiry alerts"
+
+    1Password can alert before a date field's date: edit the item in the
+    1Password app, open **Set expiry alert** under each `… expires` field and
+    choose **2 months before**. The CLI can't set alerts, so this is a
+    one-time step in the app.
 
 !!! warning "The `cluster` item must be a Secure Note"
 
