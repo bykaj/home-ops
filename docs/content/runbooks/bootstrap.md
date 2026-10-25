@@ -130,6 +130,14 @@ its last stage. Run it by hand whenever either file changes outside bootstrap,
 for example after renewing the client certificates (both expire after a year).
 `just talos gen-talosconfig` already runs it for the talosconfig only.
 
+!!! warning "The `cluster` item must be a Secure Note"
+
+    `store-configs` updates the attachments with `op item edit`, which
+    validates the whole item. A Password item with an empty password fails
+    with `Password item requires ps value`, and 1Password can't change an
+    item's category, so recreate it as a Secure Note with both attachments.
+    A Document item doesn't work either: it holds a single file.
+
 ## Docker hosts
 
 ```sh
