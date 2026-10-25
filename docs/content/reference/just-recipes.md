@@ -16,8 +16,10 @@ See [Bootstrap](../runbooks/bootstrap.md).
 
 | Recipe | Does |
 | --- | --- |
-| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig |
+| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig → `store-configs` |
 | `nas` | Run the Ansible playbook that provisions TrueNAS |
+| `store-configs` | Upload `kubeconfig` and `talosconfig` to the `cluster` item in 1Password (skips unchanged files) |
+| `workstation` | Restore `kubeconfig` and `talosconfig` from the `cluster` item in 1Password |
 
 ## `just docker`
 

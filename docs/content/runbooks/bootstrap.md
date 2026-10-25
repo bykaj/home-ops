@@ -5,7 +5,8 @@ description: Bring the Talos/Kubernetes cluster or the TrueNAS host up from scra
 # Bootstrap
 
 Takes freshly installed Talos nodes all the way to a self-managing Flux
-cluster, and provisions a fresh TrueNAS server with its Docker stacks.
+cluster, provisions a fresh TrueNAS server with its Docker stacks, and sets up
+a new workstation to operate both.
 Everything is driven by
 [`bootstrap/mod.just`](https://github.com/bykaj/home-ops/blob/main/bootstrap/mod.just).
 
@@ -15,7 +16,9 @@ Everything is driven by
 - A signed-in 1Password CLI (`op`). Every `op://` reference is resolved at
   apply time with `op inject`.
 - A valid `talosconfig` at the repo root. The controller endpoint and node list
-  are derived from `talosctl config info`, so nothing is hardcoded.
+  are derived from `talosctl config info`, so nothing is hardcoded. For an
+  existing cluster, `just bootstrap workstation` restores it (see
+  [Workstation](#workstation)).
 - The UDM [BGP config](../networking/bgp.md#udm-frr-config) and
   [static DNS records](../networking/dns.md#manual-records) in place.
   `k8s.internal` only works once Cilium is running, so bootstrap talks to the
@@ -32,7 +35,7 @@ just bootstrap cluster
 
 ```mermaid
 graph LR
-    nodes --> k8s --> kubeconfig --> base --> apps
+    nodes --> k8s --> kubeconfig --> base --> apps --> store-configs
 ```
 
 1. **nodes**: renders each node's Talos config (templates plus 1Password
@@ -60,6 +63,9 @@ graph LR
 
     The kubeconfig is then fetched again, so its endpoint is back to
     `k8s.internal`.
+
+6. **store-configs**: uploads `kubeconfig` and `talosconfig` to the
+   `cluster` item in 1Password (see [Workstation](#workstation)).
 
 Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages the
 same releases from then on.
@@ -93,6 +99,28 @@ flux get ks -A | grep -v True                      # nothing stuck
 kubectl -n rook-ceph exec deploy/rook-ceph-tools -- ceph status
 curl -k https://k8s.internal:6443/livez
 ```
+
+## Workstation
+
+```sh
+just bootstrap workstation
+```
+
+Restores `kubeconfig` and `talosconfig` to the repo root from the file
+attachments on the `cluster` item in the `Homelab` 1Password vault, with mode
+`0600`. Files that already match are left alone, and a local file that differs
+is only overwritten after a prompt. Run it on a new machine after
+`mise install` and signing in to `op`.
+
+```sh
+just bootstrap store-configs
+```
+
+Uploads the local `kubeconfig` and `talosconfig` to that item, replacing the
+attachments in place. Files that already match are skipped. `just bootstrap
+cluster` runs this as its last stage. Run it by hand whenever either file
+changes outside bootstrap, for example after renewing the client certificates
+(both expire after a year).
 
 ## NAS
 
