@@ -62,8 +62,8 @@ just docs serve           # live preview on http://localhost:8000
 | `docs` | Builds this site on PRs, and deploys it to GitHub Pages on `main` |
 | `docs-apps` | Fails a PR when the [Applications](../kubernetes/applications.md) tables don't match `kubernetes/apps` in the committed tree |
 | `renovate` | Runs Renovate hourly |
-| `claude-review` | Claude (Opus 5.5) reviews every PR, including Renovate's: when it's opened as ready, when a draft is marked ready, and when Renovate pushes to its own PR (a new version or a conflict rebase). It researches version bumps against upstream changelogs and the config here, checks other changes for breakage, and posts one verdict comment plus inline findings. Other pushes don't trigger a review: answer the findings inline, then comment `/bot-review` on the open PR (repo owner only) for a fresh review that also takes the replies into account. Reads its token from `op://Homelab/claude/CLAUDE_CODE_OAUTH_TOKEN` |
-| `image-pull` | Pre-pulls images changed in a PR, warming the cache in Zot and on the node the runner is on, so rollouts after merge don't wait on downloads |
+| `claude-review` | Claude (Opus 5.5) reviews every PR, including Renovate's: when it's opened as ready, when a draft is marked ready, and when Renovate pushes to its own PR (a new version or a conflict rebase). It researches version bumps against upstream changelogs and the config here, checks other changes for breakage, and posts one verdict comment plus inline findings. Other pushes don't trigger a review: answer the findings inline, then comment `/bot-review` on the open PR (repo owner only) for a fresh review that also takes the replies into account |
+| `image-pull` | Pre-pulls images changed in a PR, warming the cache in [Zot](../docker/index.md#07-zot) and on the node the runner is on, which Spegel then serves to the other nodes, so rollouts after merge don't wait on downloads |
 | `labeler`, `label-sync` | PR labels by path, and label definitions from `.github/labels.yaml` |
 | `tag` | Monthly release tag |
 
