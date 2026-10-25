@@ -254,8 +254,8 @@ Time Machine settings, at about twice the Mac's disk size:
 
 | Mac | Disk | Disk usage limit |
 | --- | --- | --- |
-| Mac with one user | 1 TB | 2 TB |
-| Mac with two users | 256 GB | 512 GB |
+| MacBook M4 Pro | 1 TB | 2 TB |
+| Mac mini M6 | 256 GB | 512 GB |
 
 Without these limits, one Mac could fill the whole 3 TiB quota. `sync` stays
 at `standard`: macOS sends full-fsync requests, and ignoring them risks a
