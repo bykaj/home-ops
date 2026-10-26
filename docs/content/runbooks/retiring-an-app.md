@@ -30,8 +30,9 @@ hand.
     ```
 
     Then create a one-off `Snapshot` for each policy. `pin: true` exempts it
-    from retention, and `deletionPolicy: Retain` keeps the Kopia snapshot even
-    if the `Snapshot` object is deleted:
+    from retention. The `Snapshot` object is removed from the cluster along
+    with the app; `deletionPolicy: Retain` makes sure that never deletes the
+    Kopia snapshot in the repository:
 
     ```sh
     kubectl create -f - <<EOF
@@ -97,7 +98,8 @@ After the merge, these go away without any action:
 - DNS records: both external-dns instances use `policy: sync`, so they delete
   the app's records in UniFi and Cloudflare
 - the Gatus check, which is generated from the route
-- the Kopiur `SnapshotPolicy` and `SnapshotSchedule`
+- the Kopiur `SnapshotPolicy`, `SnapshotSchedule` and `Snapshot` objects (the
+  snapshots themselves stay in the repository; see below)
 
 Check that the Flux Kustomization is gone with `flux get ks -A | grep <app>`.
 If anything is still there, see
@@ -108,7 +110,7 @@ Kustomization prunes.
 
 | What | Where | Remove it |
 | --- | --- | --- |
-| Kopia snapshots | The `nas` repository, and its B2 mirror | Kept when the app is removed. Delete them with Kopia against the repository if the app won't come back; the B2 mirror follows on its next sync |
+| Kopia snapshots | The `nas` repository on the NAS, and its B2 mirror | The `Snapshot` objects in the cluster are deleted with the app, but the snapshots in the repository are kept. Delete them with Kopia against the repository if the app won't come back; the B2 mirror follows on its next sync |
 | Barman base backups and WAL | Garage, `s3://postgresql/<app>/` | Retention stops with the `Cluster`, so nothing expires. Delete the prefix in Garage |
 | Local database dumps | NAS, `/mnt/vault/Backups/Database` | Delete the app's files |
 | 1Password items | The `Homelab` vault | Archive the app's item, and any OIDC or API credentials made for it |
@@ -118,8 +120,9 @@ Kustomization prunes.
 !!! note "Coming back later restores the old data"
 
     If the backups are kept, adding the app again with the same name in the
-    same namespace restores them. Kopiur rediscovers the kept snapshots, its
-    `Restore` fills the new PVC from the latest one, and the CNPG `Cluster`
+    same namespace restores them. Kopiur rediscovers the snapshots from the
+    repository on the NAS (as `Snapshot` objects with `origin: discovered`),
+    its `Restore` fills the new PVC from the latest one, and the CNPG `Cluster`
     bootstraps from Barman by default. For a fresh start,
     delete the backups first, or follow [New Database](new-database.md) for
     the database.
