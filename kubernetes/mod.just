@@ -43,12 +43,12 @@ prune-pods:
     done
 
 [doc('Manual Kopiur backup of a volume, waits for it to finish')]
-pvc-backup ns policy:
+pvc-backup ns app:
     snapshot=$(kubectl create -o name -f - <<EOF
     apiVersion: kopiur.home-operations.com/v1alpha1
     kind: Snapshot
-    metadata: { generateName: {{ policy }}-manual-, namespace: {{ ns }} }
-    spec: { policyRef: { name: {{ policy }} } }
+    metadata: { generateName: {{ app }}-manual-, namespace: {{ ns }} }
+    spec: { policyRef: { name: {{ app }} } }
     EOF
     )
     just log info "Waiting for snapshot" "snapshot" "$snapshot"

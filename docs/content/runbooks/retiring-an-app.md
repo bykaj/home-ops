@@ -22,17 +22,10 @@ hand.
 2. **Take a final backup** of every volume and database the app has. Skip
    this for a stateless app.
 
-    **Volumes (Kopiur).** List the app's backup policies; there is usually one,
-    named after the app (or after `KOPIUR_CLAIM` if the app sets it):
+    **Volumes (Kopiur).** Take a final snapshot and wait for it to finish:
 
     ```sh
-    kubectl -n <namespace> get snapshotpolicy
-    ```
-
-    Then take a final snapshot of each one and wait for it to finish:
-
-    ```sh
-    just k8s pvc-backup <namespace> <policy>
+    just k8s pvc-backup <namespace> <app>
     ```
 
     Removing the app later deletes the `Snapshot` objects from the cluster,

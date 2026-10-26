@@ -117,15 +117,12 @@ Take a one-off snapshot of an app's volume, for example before a risky
 change:
 
 ```sh
-just k8s pvc-backup <namespace> <policy>
+just k8s pvc-backup <namespace> <app>
 ```
 
-The snapshot falls under the policy's retention like the scheduled ones.
-
-`<policy>` is the app's `SnapshotPolicy`, normally named after the app (or
-after `KOPIUR_CLAIM`); `kubectl -n <namespace> get snapshotpolicy` lists them.
-The recipe creates a `Snapshot` named `<policy>-manual-<suffix>` and waits up
-to 30 minutes for it to finish.
+The recipe creates a `Snapshot` named `<app>-manual-<suffix>` for the app's
+`SnapshotPolicy` and waits up to 30 minutes for it to finish. It falls under
+the policy's retention like the scheduled ones.
 
 ### Database backups
 
