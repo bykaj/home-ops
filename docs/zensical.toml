@@ -137,6 +137,12 @@ features = [
   "search.highlight",
 ]
 
+# The toggle cycles system preference -> light -> dark -> system preference.
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"
@@ -147,7 +153,7 @@ toggle.name = "Switch to dark mode"
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to system preference"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
