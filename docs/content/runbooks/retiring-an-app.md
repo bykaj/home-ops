@@ -29,27 +29,16 @@ hand.
     kubectl -n <namespace> get snapshotpolicy
     ```
 
-    Then create a one-off `Snapshot` for each policy. `pin: true` exempts it
-    from retention. The `Snapshot` object is removed from the cluster along
-    with the app; `deletionPolicy: Retain` makes sure that never deletes the
-    Kopia snapshot in the repository:
+    Then take a final snapshot of each one and wait for it to finish:
 
     ```sh
-    kubectl create -f - <<EOF
-    apiVersion: kopiur.home-operations.com/v1alpha1
-    kind: Snapshot
-    metadata:
-      name: <app>-final
-      namespace: <namespace>
-    spec:
-      policyRef:
-        name: <app>
-      deletionPolicy: Retain
-      pin: true
-      description: Final backup before retiring <app>
-    EOF
-    kubectl -n <namespace> get snapshot <app>-final -w   # wait for PHASE Succeeded
+    just k8s pvc-backup <namespace> <policy> keep
     ```
+
+    `keep` pins the snapshot, so retention never removes it, and sets
+    `deletionPolicy: Retain`. The `Snapshot` object is removed from the
+    cluster along with the app, and `Retain` makes sure that never deletes the
+    snapshot from the repository.
 
     **Database (CNPG).** If the app has a `<app>-postgres` cluster:
 

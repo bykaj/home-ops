@@ -42,6 +42,32 @@ prune-pods:
         kubectl delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
     done
 
+[doc('Manual Kopiur backup of a volume and wait for it (keep pins it and keeps it after the app is removed)')]
+pvc-backup ns policy mode="":
+    case "{{ mode }}" in
+      "") extra="" ;;
+      keep) extra="pin: true, deletionPolicy: Retain, " ;;
+      *) just log fatal "Unknown mode, expected nothing or 'keep'" "mode" "{{ mode }}" ;;
+    esac
+    snapshot=$(kubectl create -o name -f - <<EOF
+    apiVersion: kopiur.home-operations.com/v1alpha1
+    kind: Snapshot
+    metadata: { generateName: {{ policy }}-manual-, namespace: {{ ns }} }
+    spec: { ${extra}policyRef: { name: {{ policy }} } }
+    EOF
+    )
+    just log info "Waiting for snapshot" "snapshot" "$snapshot"
+    for _ in $(seq 360); do
+      phase=$(kubectl -n {{ ns }} get "$snapshot" -o jsonpath='{.status.phase}')
+      case "$phase" in
+        Succeeded|Unchanged) just log info "Snapshot done" "snapshot" "$snapshot" "phase" "$phase"; exit 0 ;;
+        Failed) just log error "Snapshot failed" "snapshot" "$snapshot"; exit 1 ;;
+      esac
+      sleep 5
+    done
+    just log error "Timed out after 30 minutes" "snapshot" "$snapshot" "phase" "$phase"
+    exit 1
+
 [arg('resource', pattern='hr|ks|gitrepo|ocirepo|es')]
 [doc('Sync a resource')]
 sync resource:

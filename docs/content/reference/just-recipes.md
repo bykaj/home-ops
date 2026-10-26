@@ -56,6 +56,7 @@ Day-2 cluster operations
 | `debug-node <node>` | Privileged debug shell on a node (`kubectl debug --profile=sysadmin`) |
 | `delete-ks <ns> <ks>` | Render a Flux Kustomization locally and delete its resources |
 | `prune-pods` | Delete pods in `Failed`, `Pending` or `Succeeded` phase |
+| `pvc-backup <ns> <policy> [keep]` | Create a one-off Kopiur `Snapshot` and wait for it; `keep` pins it and keeps it in the repository ([details](../storage/backups.md#manual-backups)) |
 | `sync <hr\|ks\|gitrepo\|ocirepo\|es>` | Force reconciliation of every resource of that kind |
 | `sync-es <ns> <name>` | Force-sync one ExternalSecret |
 | `sync-hr <ns> <name>` | Force-reconcile one HelmRelease |
