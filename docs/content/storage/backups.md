@@ -121,8 +121,8 @@ just k8s pvc-backup <namespace> <app>
 ```
 
 The recipe creates a `Snapshot` named `<app>-manual-<suffix>` for the app's
-`SnapshotPolicy` and waits up to 30 minutes for it to finish. It falls under
-the policy's retention like the scheduled ones.
+`SnapshotPolicy`; follow it with `kubectl -n <namespace> get snapshot`. It
+falls under the policy's retention like the scheduled ones.
 
 ### Database backups
 

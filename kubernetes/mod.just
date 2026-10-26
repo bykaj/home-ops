@@ -44,7 +44,7 @@ prune-pods:
         kubectl delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
     done
 
-[doc('Manual Kopiur backup of a volume, waits for it to finish')]
+[doc('Manual Kopiur backup of a volume')]
 pvc-backup ns app:
     snapshot=$(kubectl create -o name -f - <<EOF
     apiVersion: kopiur.home-operations.com/v1alpha1
@@ -53,17 +53,7 @@ pvc-backup ns app:
     spec: { policyRef: { name: {{ app }} } }
     EOF
     )
-    just log info "Waiting for snapshot" "snapshot" "$snapshot"
-    for _ in $(seq 360); do
-      phase=$(kubectl -n {{ ns }} get "$snapshot" -o jsonpath='{.status.phase}')
-      case "$phase" in
-        Succeeded|Unchanged) just log info "Snapshot done" "snapshot" "$snapshot" "phase" "$phase"; exit 0 ;;
-        Failed) just log error "Snapshot failed" "snapshot" "$snapshot"; exit 1 ;;
-      esac
-      sleep 5
-    done
-    just log error "Timed out after 30 minutes" "snapshot" "$snapshot" "phase" "$phase"
-    exit 1
+    just log info "Snapshot started" "snapshot" "$snapshot"
 
 [arg('resource', pattern='hr|ks|gitrepo|ocirepo|es')]
 [doc('Sync a resource')]
