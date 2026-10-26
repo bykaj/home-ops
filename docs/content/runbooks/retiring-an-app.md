@@ -22,7 +22,9 @@ hand.
 2. **Take a final backup** of every volume and database the app has. Skip
    this for a stateless app.
 
-    - **Volumes (Kopiur).** Take a final snapshot:
+    - **Volumes (Kopiur)**
+
+        Take a final snapshot:
 
         ```sh
         just k8s pvc-backup <namespace> <app>
@@ -32,7 +34,9 @@ hand.
         Removing the app later deletes the `Snapshot` objects from the
         cluster, but the snapshots stay in the repository on the NAS.
 
-    - **Database (CNPG).** If the app has a `<app>-postgres` cluster:
+    - **Database (CNPG)**
+
+        If the app has a `<app>-postgres` cluster:
 
         ```sh
         just k8s db-backup <namespace> <app>
