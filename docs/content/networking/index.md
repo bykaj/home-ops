@@ -53,13 +53,17 @@ Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
 public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
 `10.73.2.100/32`, both addresses on the NAS interface).
 
-The LiteLLM proxy holds every model provider key, so the `litellm-egress`
-`CiliumNetworkPolicy` limits its egress to DNS, its Dragonfly cache, the
-in-namespace LLMKube inference pods (port 8080, which the operator registers as
-models through `llmkube.autoRegister`) and the provider APIs by FQDN
-(`toFQDNs`, currently `api.minimax.io`). A model with a new `apiBase` host, or
-an `InferenceService` with a non-default endpoint port, needs a matching rule
-in the policy, or its requests time out.
+Network policies are the exception, not the default. Only a few pods have
+one, and each policy file explains its own rules:
+
+- [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/proxy/networkpolicy.yaml)
+  limits the LiteLLM proxy, which holds the model provider keys, to an egress
+  allowlist. Model providers are allowed by FQDN (`toFQDNs`), so a provider on
+  a new host needs a rule there.
+- [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
+  limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
+- The [`dragonfly` component](../kubernetes/components.md#dragonfly) limits
+  ingress to each Dragonfly cache.
 
 Any blocked egress packet raises the
 [`CiliumEgressPolicyDenied`](../kubernetes/alerting.md#cluster-wide-additionalprometheusrulesmap)
@@ -70,12 +74,8 @@ either a missing rule or something it should not be doing. Run
 pod and destination. Ingress drops are not alerted on, because the Dragonfly
 and SMTP relay policies drop some ingress traffic as normal.
 
-CoreDNS runs without `autopath`. With it, CoreDNS answers a pod's first
-search-path query (`<host>.<namespace>.svc.cluster.local`) with a CNAME to the
-real host, and Cilium ties the returned IPs to that query name, so a `toFQDNs`
-`matchName: <host>` rule never matches and connections time out. Without it,
-pods walk their search domains themselves (`ndots:5`); CoreDNS answers those
-lookups with NXDOMAIN from its own zone and caches them.
+CoreDNS runs without `autopath`, because it stops `toFQDNs` rules from
+matching; see [KB-006](../troubleshooting/kb/006-tofqdns-timeouts.md).
 
 ## Gateways
 

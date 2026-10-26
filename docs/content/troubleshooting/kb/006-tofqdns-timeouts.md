@@ -19,6 +19,8 @@ so `matchName: <host>` never matches.
 
 `autopath` was removed from CoreDNS for this reason
 ([#2993](https://github.com/bykaj/home-ops/pull/2993)). Don't add it back.
+Without it, pods walk their search domains themselves (`ndots:5`), and CoreDNS
+answers those lookups with NXDOMAIN from its own zone and caches them.
 
 ## Fix
 
