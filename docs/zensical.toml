@@ -170,33 +170,6 @@ link = "https://bsky.app/profile/bykaj.com"
 # googlesyndication.com; the site has no video ads, so don't self-host it.
 assets_exclude = ["imasdk.googleapis.com/*"]
 
-# Old URLs from before the pages were grouped into Infrastructure, Platforms
-# and Operations (2026-10).
-[project.plugins.redirects.redirect_maps]
-"architecture/gitops.md" = "infrastructure/architecture/gitops.md"
-"architecture/index.md" = "infrastructure/architecture/index.md"
-"architecture/secrets.md" = "infrastructure/architecture/secrets.md"
-"docker/index.md" = "platforms/docker/index.md"
-"hardware/index.md" = "infrastructure/hardware/index.md"
-"kubernetes/alerting.md" = "operations/alerting/index.md"
-"kubernetes/applications.md" = "platforms/kubernetes/applications.md"
-"kubernetes/components.md" = "platforms/kubernetes/components.md"
-"kubernetes/index.md" = "platforms/kubernetes/index.md"
-"kubernetes/talos.md" = "platforms/kubernetes/talos.md"
-"networking/bgp.md" = "infrastructure/networking/bgp.md"
-"networking/dns.md" = "infrastructure/networking/dns.md"
-"networking/index.md" = "infrastructure/networking/index.md"
-"networking/udm-boot-scripts.md" = "infrastructure/networking/udm-boot-scripts.md"
-"runbooks/adding-a-domain.md" = "operations/runbooks/adding-a-domain.md"
-"runbooks/adding-an-app.md" = "operations/runbooks/adding-an-app.md"
-"runbooks/bootstrap.md" = "operations/runbooks/bootstrap.md"
-"runbooks/index.md" = "operations/runbooks/index.md"
-"runbooks/new-database.md" = "operations/runbooks/new-database.md"
-"runbooks/upgrades.md" = "operations/runbooks/upgrades.md"
-"storage/backups.md" = "infrastructure/storage/backups.md"
-"storage/index.md" = "infrastructure/storage/index.md"
-"storage/postgres.md" = "infrastructure/storage/postgres.md"
-
 [project.markdown_extensions.abbr]
 [project.markdown_extensions.admonition]
 [project.markdown_extensions.attr_list]
