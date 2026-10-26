@@ -16,13 +16,13 @@ description: A compromised LiteLLM release ran in the cluster for about five hou
 
 - **13:46 UTC.** [#2972](https://github.com/bykaj/home-ops/pull/2972), a
   Renovate PR for `ghcr.io/berriai/litellm:v1.107.0`, was merged.
-- **Afternoon.** Renovate's Dependency Dashboard warned that it "could not
+- **Between 13:46 and 18:57 UTC.** Renovate's Dependency Dashboard warned that it "could not
   determine new digest": upstream had deleted the tag. Following that up led
   to the upstream advisory.
 - **18:57 UTC.** Contained: the Flux Kustomization was suspended and the
   Deployment scaled to 0. The pod had the payload files and a detached Python
   process.
-- **Same evening.** The LiteLLM master key and the model provider key were
+- **After 18:57 UTC.** The LiteLLM master key and the model provider key were
   rotated, the image was pinned back to v1.106.2
   ([#2991](https://github.com/bykaj/home-ops/pull/2991)), and the new pod was
   checked clean.

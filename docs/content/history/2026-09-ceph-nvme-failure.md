@@ -6,7 +6,7 @@ description: A failing NVMe drive in k8s-03, a node-wide RBD blocklist, and the 
 
 !!! abstract "Summary"
 
-    **2026-09-23 to 2026-10-01.** The NVMe drive behind `osd.2` on k8s-03 hung
+    **2026-09-22 to 2026-10-01.** The NVMe drive behind `osd.2` on k8s-03 hung
     three times in three days. Ceph stayed available on two replicas, with no
     data loss, but a second-order RBD blocklist on another node left volumes
     stuck for hours. The cluster was then rebuilt on Micron 7300 drives and
@@ -14,7 +14,7 @@ description: A failing NVMe drive in k8s-03, a node-wide RBD blocklist, and the 
 
 ## Timeline
 
-- **2026-09-23 00:56.** The SK hynix PC801 behind `osd.2` stopped responding:
+- **2026-09-22 22:56 UTC.** The SK hynix PC801 behind `osd.2` stopped responding:
   I/O timeouts, a failed controller reset, then the kernel disabled the device.
   The PCIe device stayed visible in `talosctl get pcidevices`, which pointed at
   a hung controller rather than a dead or unseated card. Ceph went to
@@ -27,7 +27,7 @@ description: A failing NVMe drive in k8s-03, a node-wide RBD blocklist, and the 
   backup jobs stayed stuck for hours after Ceph itself was back to
   `HEALTH_OK`. Removing the blocklist entry wasn't enough; rebooting k8s-02
   was.
-- **2026-09-23 13:27 and 2026-09-25 23:44.** The same drive hung twice more.
+- **2026-09-23 11:27 UTC and 2026-09-25 21:44 UTC.** The same drive hung twice more.
   Each power cycle fixed it for a while, so a replacement drive was ordered.
 - **2026-09-30.** Instead of swapping one drive, all three nodes were reset
   and the cluster rebuilt on Micron 7300 drives, with cephx moved to
@@ -35,7 +35,7 @@ description: A failing NVMe drive in k8s-03, a node-wide RBD blocklist, and the 
 - **2026-10-01.** During the backfill, k8s-03's Micron reached 74 °C, close
   to its 76 °C critical limit, so recovery was paused with `nobackfill` and
   `norecover`. k8s-03 was moved somewhere cooler, and recovery finished at
-  12:53 with the drive peaking at 69 °C.
+  10:53 UTC with the drive peaking at 69 °C.
 - **2026-10-03.** Rack cooling was improved: raised feet, open case bottoms
   and a 140 mm fan per node aimed at the NVMe drives and RAM. NVMe
   temperatures dropped by 18 to 23 °C.

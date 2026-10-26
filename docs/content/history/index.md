@@ -13,7 +13,7 @@ go in the [knowledge base](../troubleshooting/index.md) instead.
 
 | Date | Incident | Impact |
 | --- | --- | --- |
-| 2026-09-23 | [OSD NVMe failure and Ceph rebuild](2026-09-ceph-nvme-failure.md) | Degraded Ceph pool, stuck volumes, then a planned full rebuild |
+| 2026-09-22 | [OSD NVMe failure and Ceph rebuild](2026-09-ceph-nvme-failure.md) | Degraded Ceph pool, stuck volumes, then a planned full rebuild |
 | 2026-10-15 | [etcd fragmentation](2026-10-etcd-fragmentation.md) | Recurring alert, no outage |
 | 2026-10-21 | [LiteLLM 1.107.0 compromise](2026-10-litellm-compromise.md) | Compromised image ran for about 5 hours; keys rotated |
 

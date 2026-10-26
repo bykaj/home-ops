@@ -16,10 +16,10 @@ description: etcd database files grew to three times their live data, mostly fro
 - **Before 2026-10-15.** The alert fired briefly at night, then resolved. It
   fires when less than half of the file is in use and more than 100 MB is
   live, and live data hovered right around 100 MB.
-- **2026-10-15.** The members were defragmented by hand: the two followers
+- **2026-10-15 11:30 UTC.** The members were defragmented by hand: the two followers
   first, then the leader after `etcd forfeit-leadership`. Each took under a
   second, and the API stayed ready. Files dropped to 104 to 136 MB.
-- **2026-10-16.** The alert came back after a night with three Cilium
+- **2026-10-16 21:55 UTC.** The alert came back after a night with three Cilium
   upgrades, a Talos upgrade and a mass pod restart. The new CronJob hadn't
   run yet, so it was started by hand.
 
@@ -35,8 +35,8 @@ it. Most of the live data was Helm release Secrets (`helm.sh/release.v1`):
 [#2862](https://github.com/bykaj/home-ops/pull/2862):
 
 - The [`etcd-defrag`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/kube-system/etcd-defrag)
-  CronJob defragments every Sunday at 04:00, one member at a time, leader
-  last.
+  CronJob defragments every Sunday at 03:00 UTC (02:00 UTC in summer; the
+  schedule follows Europe/Amsterdam time), one member at a time, leader last.
 - `cluster-apps` sets `maxHistory: 3` on every HelmRelease.
 
 ## What to watch
