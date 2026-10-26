@@ -20,6 +20,24 @@ Merging to `main` is the deploy step:
 immediately through webhooks, and [Renovate](https://github.com/renovatebot/renovate) opens
 pull requests for every dependency in the repository.
 
+## At a glance
+
+| Area | Choice |
+| --- | --- |
+| OS | [Talos Linux](kubernetes/talos.md) on three control-plane nodes; upgrades by [tuppr](runbooks/upgrades.md) |
+| GitOps | [Flux](architecture/gitops.md) for the cluster, [doco-cd](docker/index.md) for the NAS, Renovate for updates |
+| CNI | [Cilium](networking/index.md#cilium): native routing, no kube-proxy, LoadBalancer IPs over [BGP](networking/bgp.md) |
+| Ingress | [Envoy Gateway](networking/index.md#gateways) (Gateway API), Cloudflare Tunnel for public apps |
+| DNS | [Split-horizon](networking/dns.md): external-dns to UniFi on the LAN and to Cloudflare publicly |
+| Certificates | cert-manager with Let's Encrypt wildcard certificates |
+| Identity | Pocket ID (OIDC) |
+| Secrets | [External Secrets with 1Password Connect](architecture/secrets.md) in the cluster, doco-cd `op://` references on the NAS |
+| Storage | [Rook-Ceph](storage/index.md#rook-ceph) block storage, [OpenEBS](storage/index.md#openebs) local volumes, NFS from the [NAS](storage/index.md#nas) |
+| Backups | [Kopiur](storage/backups.md) (Kopia) for PVCs, off-site to Backblaze B2 |
+| Databases | [CloudNativePG](storage/postgres.md) with Barman Cloud backups to Garage S3; Dragonfly caches |
+| Images | Spegel node-to-node sharing, Zot pull-through mirror on the NAS |
+| Monitoring | [kube-prometheus-stack](kubernetes/alerting.md) with Pushover alerts, VictoriaLogs, Grafana, Gatus |
+
 ## Where to start
 
 <div class="grid cards" markdown>
