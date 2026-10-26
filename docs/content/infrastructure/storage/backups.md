@@ -145,7 +145,7 @@ gets a protection level that fits how replaceable its data is:
 
 | Dataset | Contents | ZFS snapshots | Off-site (TrueCloud) |
 | --- | --- | --- | --- |
-| `Applications` | Data of the [Compose stacks](../../platforms/docker/index.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot`) |
+| `Applications` | Data of the [Compose stacks](../../platforms/docker.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot`) |
 | `Archive` | Paperless documents | Daily + monthly | Daily, keep 30 |
 | `Backups` | Client and server backups, Postgres dumps | Daily | Daily, keep 14 (without `Cluster` and `Excluded`) |
 | `Downloads`, `Software`, `Transfer`, `Users` | Recreatable or transient data | None | None |
@@ -220,7 +220,7 @@ Why some data is excluded:
   second time.
 - **`Backups/Excluded`** is the place for client data that deliberately stays
   local.
-- **`Applications/zot`** is the [Zot](../../platforms/docker/index.md#07-zot) pull-through
+- **`Applications/zot`** is the [Zot](../../platforms/docker.md#07-zot) pull-through
   cache. It refills itself from the upstream registries.
 - **`Media/Series`, `Movies`, `Documentaries`** are large and recreatable. Only
   `Books` and `Music` go off-site.

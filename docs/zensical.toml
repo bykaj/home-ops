@@ -21,7 +21,7 @@ nav = [
       { "GitOps" = "infrastructure/architecture/gitops.md" },
       { "Secrets" = "infrastructure/architecture/secrets.md" },
     ] },
-    { "Hardware" = "infrastructure/hardware/index.md" },
+    { "Hardware" = "infrastructure/hardware.md" },
     { "Networking" = [
       "infrastructure/networking/index.md",
       { "BGP & Load Balancing" = "infrastructure/networking/bgp.md" },
@@ -42,7 +42,7 @@ nav = [
       { "Applications" = "platforms/kubernetes/applications.md" },
       { "App Notes" = "platforms/kubernetes/app-notes.md" },
     ] },
-    { "Docker" = "platforms/docker/index.md" },
+    { "Docker" = "platforms/docker.md" },
   ] },
   { "Operations" = [
     { "Runbooks" = [
@@ -166,8 +166,8 @@ assets_exclude = ["imasdk.googleapis.com/*"]
 "architecture/gitops.md" = "infrastructure/architecture/gitops.md"
 "architecture/index.md" = "infrastructure/architecture/index.md"
 "architecture/secrets.md" = "infrastructure/architecture/secrets.md"
-"docker/index.md" = "platforms/docker/index.md"
-"hardware/index.md" = "infrastructure/hardware/index.md"
+"docker/index.md" = "platforms/docker.md"
+"hardware/index.md" = "infrastructure/hardware.md"
 "kubernetes/alerting.md" = "operations/alerting.md"
 "kubernetes/applications.md" = "platforms/kubernetes/applications.md"
 "kubernetes/components.md" = "platforms/kubernetes/components.md"

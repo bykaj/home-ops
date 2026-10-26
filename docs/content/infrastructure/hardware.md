@@ -8,7 +8,7 @@ icon: material/server
 Everything lives in a 12U rack.
 
 <figure markdown="span">
-  ![The rack](../../assets/rack.jpg){ width="420" loading=lazy }
+  ![The rack](../assets/rack.jpg){ width="420" loading=lazy }
   <figcaption>Rack v2, pictured here before I decided it needed "just one more improvement." Rebuild in progress.</figcaption>
 </figure>
 

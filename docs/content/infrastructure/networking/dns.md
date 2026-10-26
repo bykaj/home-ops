@@ -102,7 +102,7 @@ s3.bykaj.io        → docker.bykaj.app
 `external.bykaj.app`): it names the entry point for the Compose stacks.
 
 NAS services are LAN-only. dexd writes nothing to Cloudflare. See
-[Docker](../../platforms/docker/index.md#ingress-and-dns).
+[Docker](../../platforms/docker.md#ingress-and-dns).
 
 ## Manual records
 

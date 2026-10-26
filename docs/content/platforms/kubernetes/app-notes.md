@@ -8,7 +8,7 @@ Notes on apps where the manifests don't tell the whole story: settings that
 live in the app's own UI, decisions not to change something, and gotchas
 found the hard way. Apps that behave as their manifests say aren't listed.
 For the full catalog, see [Applications](applications.md). NAS stacks have
-their notes on the [Docker](../docker/index.md#stacks) page.
+their notes on the [Docker](../docker.md#stacks) page.
 
 ## Identity
 

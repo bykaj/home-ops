@@ -10,4 +10,4 @@ just bootstrap docker <host>   # e.g. nas
 
 See the [Bootstrap runbook](https://docs.bykaj.com/operations/runbooks/bootstrap/#docker-hosts)
 ([source](../../docs/content/operations/runbooks/bootstrap.md)) and the [Docker](https://docs.bykaj.com/platforms/docker/)
-page ([source](../../docs/content/platforms/docker/index.md)).
+page ([source](../../docs/content/platforms/docker.md)).

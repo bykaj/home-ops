@@ -22,7 +22,7 @@ NAS-local (BGP, hardware exporters).
 - auto-discovers stacks one directory deep under `docker/nas/`
 - deletes stacks whose directory disappears
 - resolves `op://` secrets from 1Password and passes them to compose as
-  `${VAR}` (see [Secrets](../../infrastructure/architecture/secrets.md#nas-doco-cd))
+  `${VAR}` (see [Secrets](../infrastructure/architecture/secrets.md#nas-doco-cd))
 
 Each stack is `docker/nas/NN-<app>/docker-compose.yaml`. The `NN-` prefix only
 sets the order.
@@ -105,7 +105,7 @@ labels:
 [dexd](https://github.com/ishioni/dexd) (`03-dexd`) watches Docker labels and
 writes a CNAME to the UDM for each `Host()` rule, pointing at `docker.bykaj.app`
 (a static A record for `10.73.2.100`). NAS services are LAN-only. See
-[DNS → NAS records](../../infrastructure/networking/dns.md#nas-records-dexd).
+[DNS → NAS records](../infrastructure/networking/dns.md#nas-records-dexd).
 
 ## Stacks
 
@@ -137,7 +137,7 @@ fixes to it; follow along with `sudo docker logs doco-cd` on the NAS.
 [FRR](https://frrouting.org) in host network mode. It peers with the UDM as
 ASN 64515 from `10.73.1.10` (also its router ID) and announces the Traefik
 address `10.73.2.100/32`. See
-[BGP & Load Balancing](../../infrastructure/networking/bgp.md).
+[BGP & Load Balancing](../infrastructure/networking/bgp.md).
 
 ### `02-traefik`
 

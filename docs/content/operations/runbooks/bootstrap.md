@@ -26,7 +26,7 @@ Everything is driven by
   `k8s.internal` only works once Cilium is running, so bootstrap talks to the
   controller's node IP until then.
 - Nodes booted into Talos maintenance mode, for example from a
-  [Bootimus](../../platforms/docker/index.md#06-bootimus) PXE boot or an ISO from
+  [Bootimus](../../platforms/docker.md#06-bootimus) PXE boot or an ISO from
   `just talos download-image <version>`.
 
 ## Cluster
