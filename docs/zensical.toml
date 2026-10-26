@@ -51,6 +51,7 @@ nav = [
     { "Health Check" = "runbooks/health-check.md" },
     { "New Database" = "runbooks/new-database.md" },
     { "Adding an App" = "runbooks/adding-an-app.md" },
+    { "Retiring an App" = "runbooks/retiring-an-app.md" },
     { "Adding a Domain" = "runbooks/adding-a-domain.md" },
   ] },
   { "Troubleshooting" = [
