@@ -19,15 +19,47 @@ hand.
 
 1. **Decide what to keep.** Either keep the backups, so the app can come back
    later with its data, or remove everything.
-2. **Take a final backup** if the app has state:
+2. **Take a final backup** of every volume and database the app has. Skip
+   this for a stateless app.
+
+    **Volumes (Kopiur).** List the app's backup policies; there is usually one,
+    named after the app (or after `KOPIUR_CLAIM` if the app sets it):
 
     ```sh
-    just k8s db-backup <namespace> <app>   # CNPG base backup, if it has a database
+    kubectl -n <namespace> get snapshotpolicy
     ```
 
-    For a Kopiur-backed volume, create a manual `Snapshot` with
-    `spec.policyRef.name: <app>` and wait for it to complete (see
-    [Backups](../storage/backups.md)).
+    Then create a one-off `Snapshot` for each policy. `pin: true` exempts it
+    from retention, and `deletionPolicy: Retain` keeps the Kopia snapshot even
+    if the `Snapshot` object is deleted:
+
+    ```sh
+    kubectl create -f - <<EOF
+    apiVersion: kopiur.home-operations.com/v1alpha1
+    kind: Snapshot
+    metadata:
+      name: <app>-final
+      namespace: <namespace>
+    spec:
+      policyRef:
+        name: <app>
+      deletionPolicy: Retain
+      pin: true
+      description: Final backup before retiring <app>
+    EOF
+    kubectl -n <namespace> get snapshot <app>-final -w   # wait for PHASE Succeeded
+    ```
+
+    **Database (CNPG).** If the app has a `<app>-postgres` cluster:
+
+    ```sh
+    just k8s db-backup <namespace> <app>
+    kubectl -n <namespace> get backup <app>-postgres-manual   # wait for PHASE completed
+    ```
+
+    The recipe always names the backup `<app>-postgres-manual`. If one already
+    exists from an earlier run, `kubectl apply` leaves it unchanged and no new
+    backup is taken, so delete the old one first.
 
 3. **Find everything that refers to the app**:
 
@@ -76,7 +108,7 @@ Kustomization prunes.
 
 | What | Where | Remove it |
 | --- | --- | --- |
-| Kopia snapshots | The `nas` repository, and its B2 mirror | They are retained when the `SnapshotPolicy` goes away. Delete them with Kopia against the repository; the B2 mirror follows on its next sync |
+| Kopia snapshots | The `nas` repository, and its B2 mirror | Kept when the app is removed. Delete them with Kopia against the repository if the app won't come back; the B2 mirror follows on its next sync |
 | Barman base backups and WAL | Garage, `s3://postgresql/<app>/` | Retention stops with the `Cluster`, so nothing expires. Delete the prefix in Garage |
 | Local database dumps | NAS, `/mnt/vault/Backups/Database` | Delete the app's files |
 | 1Password items | The `Homelab` vault | Archive the app's item, and any OIDC or API credentials made for it |
@@ -85,9 +117,10 @@ Kustomization prunes.
 
 !!! note "Coming back later restores the old data"
 
-    If the backups are kept, adding the app again with the same name restores
-    them. Kopiur's `Restore` fills the new PVC from the latest snapshot, and
-    the CNPG `Cluster` bootstraps from Barman by default. For a fresh start,
+    If the backups are kept, adding the app again with the same name in the
+    same namespace restores them. Kopiur rediscovers the kept snapshots, its
+    `Restore` fills the new PVC from the latest one, and the CNPG `Cluster`
+    bootstraps from Barman by default. For a fresh start,
     delete the backups first, or follow [New Database](new-database.md) for
     the database.
 
