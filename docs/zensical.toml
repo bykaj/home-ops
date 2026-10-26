@@ -16,6 +16,7 @@ copyright = "Copyright &copy; 2026 Kaj Visser. All rights reserved."
 nav = [
   { "Home" = "index.md" },
   { "Infrastructure" = [
+    "infrastructure/index.md",
     { "Architecture" = [
       "infrastructure/architecture/index.md",
       { "GitOps" = "infrastructure/architecture/gitops.md" },
@@ -35,6 +36,7 @@ nav = [
     ] },
   ] },
   { "Platforms" = [
+    "platforms/index.md",
     { "Kubernetes" = [
       "platforms/kubernetes/index.md",
       { "Talos" = "platforms/kubernetes/talos.md" },
@@ -45,6 +47,7 @@ nav = [
     { "Docker" = "platforms/docker.md" },
   ] },
   { "Operations" = [
+    "operations/index.md",
     { "Runbooks" = [
       "operations/runbooks/index.md",
       { "Bootstrap" = "operations/runbooks/bootstrap.md" },
@@ -60,6 +63,7 @@ nav = [
       "operations/troubleshooting/index.md",
       { "Known Noise" = "operations/troubleshooting/known-noise.md" },
       { "Knowledge Base" = [
+        "operations/troubleshooting/kb/index.md",
         "operations/troubleshooting/kb/001-flux-empty-object-null.md",
         "operations/troubleshooting/kb/002-helmrelease-missing-rollback-target.md",
         "operations/troubleshooting/kb/003-flux-instance-no-prune.md",
