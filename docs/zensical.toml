@@ -77,6 +77,18 @@ nav = [
       { "017 · Gatus no such host" = "troubleshooting/kb/017-gatus-external-route-internal-host.md" },
     ] },
   ] },
+  { "History" = [
+    "history/index.md",
+    { "Incidents" = [
+      { "2026-09 Ceph NVMe Failure" = "history/2026-09-ceph-nvme-failure.md" },
+      { "2026-10 etcd Fragmentation" = "history/2026-10-etcd-fragmentation.md" },
+      { "2026-10 LiteLLM Compromise" = "history/2026-10-litellm-compromise.md" },
+    ] },
+    { "Migrations" = [
+      { "2026-10 Cilium 1.20" = "history/2026-10-cilium-1-20.md" },
+      { "2026-10 Pocket ID" = "history/2026-10-pocket-id.md" },
+    ] },
+  ] },
   { "Reference" = [
     "reference/index.md",
     { "Just Recipes" = "reference/just-recipes.md" },

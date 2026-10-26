@@ -90,6 +90,12 @@ pull requests for every dependency in the repository.
 
     Symptom ladder, known noise and the knowledge base of past problems.
 
+- :material-history: **[History](history/index.md)**
+
+    ***
+
+    Incidents and major migrations, and what changed because of them.
+
 - :material-format-list-bulleted: **[Reference](reference/index.md)**
 
     ***
