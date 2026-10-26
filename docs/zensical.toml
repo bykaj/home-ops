@@ -12,7 +12,6 @@ repo_name = "bykaj/home-ops"
 docs_dir = "content"
 edit_uri = "edit/main/docs/content/"
 copyright = "Copyright &copy; 2026 Kaj Visser. All rights reserved."
-extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
