@@ -12,11 +12,11 @@ just bootstrap store-configs     # upload kubeconfig and talosconfig (and their 
 
 Documentation:
 
-- [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/): prerequisites, stages, data
-  restore ([source](../docs/content/runbooks/bootstrap.md))
-- [BGP & Load Balancing](https://docs.bykaj.com/networking/bgp/): the UDM FRR config the cluster
-  needs ([source](../docs/content/networking/bgp.md))
-- [DNS](https://docs.bykaj.com/networking/dns/): the manual UniFi records
-  ([source](../docs/content/networking/dns.md))
-- [UDM Boot Scripts](https://docs.bykaj.com/networking/udm-boot-scripts/): ECMP hashing and
-  HTTP/3 records ([source](../docs/content/networking/udm-boot-scripts.md))
+- [Bootstrap runbook](https://docs.bykaj.com/operations/runbooks/bootstrap/): prerequisites, stages, data
+  restore ([source](../docs/content/operations/runbooks/bootstrap.md))
+- [BGP & Load Balancing](https://docs.bykaj.com/infrastructure/networking/bgp/): the UDM FRR config the cluster
+  needs ([source](../docs/content/infrastructure/networking/bgp.md))
+- [DNS](https://docs.bykaj.com/infrastructure/networking/dns/): the manual UniFi records
+  ([source](../docs/content/infrastructure/networking/dns.md))
+- [UDM Boot Scripts](https://docs.bykaj.com/infrastructure/networking/udm-boot-scripts/): ECMP hashing and
+  HTTP/3 records ([source](../docs/content/infrastructure/networking/udm-boot-scripts.md))

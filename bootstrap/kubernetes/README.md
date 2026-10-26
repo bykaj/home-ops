@@ -7,6 +7,6 @@ here is used again until the next rebuild.
 just bootstrap cluster
 ```
 
-See the [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/#cluster)
-([source](../../docs/content/runbooks/bootstrap.md)) for the stages, the helmfile single-source-of-truth
+See the [Bootstrap runbook](https://docs.bykaj.com/operations/runbooks/bootstrap/#cluster)
+([source](../../docs/content/operations/runbooks/bootstrap.md)) for the stages, the helmfile single-source-of-truth
 setup and how app data is restored.

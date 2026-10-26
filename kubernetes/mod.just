@@ -20,12 +20,14 @@ cron-minute name:
 
 [doc('Manual database backup')]
 db-backup ns app:
-    kubectl apply -f - <<EOF
+    backup=$(kubectl create -o name -f - <<EOF
     apiVersion: postgresql.cnpg.io/v1
     kind: Backup
-    metadata: { name: {{ app }}-postgres-manual, namespace: {{ ns }} }
+    metadata: { generateName: {{ app }}-postgres-manual-, namespace: {{ ns }} }
     spec: { cluster: { name: {{ app }}-postgres }, method: plugin, pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
     EOF
+    )
+    just log info "Backup started" "backup" "$backup"
 
 [doc('Debug a node')]
 debug-node node:
@@ -41,6 +43,17 @@ prune-pods:
     for phase in Failed Pending Succeeded; do
         kubectl delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
     done
+
+[doc('Manual Kopiur backup of a volume')]
+pvc-backup ns app:
+    snapshot=$(kubectl create -o name -f - <<EOF
+    apiVersion: kopiur.home-operations.com/v1alpha1
+    kind: Snapshot
+    metadata: { generateName: {{ app }}-manual-, namespace: {{ ns }} }
+    spec: { policyRef: { name: {{ app }} } }
+    EOF
+    )
+    just log info "Snapshot started" "snapshot" "$snapshot"
 
 [arg('resource', pattern='hr|ks|gitrepo|ocirepo|es')]
 [doc('Sync a resource')]

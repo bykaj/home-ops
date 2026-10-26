@@ -56,7 +56,7 @@ This is a mono repository for my wildly over-engineered home infrastructure and 
 
 My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This is a semi-hyper-converged cluster, workloads and block storage are sharing the same available resources on my nodes while I have a separate [TrueNAS](https://www.truenas.com) server with multiple ZFS pools for NFS/SMB shares, bulk file storage and backups.
 
-How it all fits together, from the [GitOps flow](https://docs.bykaj.com/architecture/gitops/) to [bootstrapping the cluster](https://docs.bykaj.com/runbooks/bootstrap/), is covered in the [documentation](https://docs.bykaj.com).
+How it all fits together, from the [GitOps flow](https://docs.bykaj.com/infrastructure/architecture/gitops/) to [bootstrapping the cluster](https://docs.bykaj.com/operations/runbooks/bootstrap/), is covered in the [documentation](https://docs.bykaj.com).
 
 ### Core Components
 
@@ -73,7 +73,7 @@ How it all fits together, from the [GitOps flow](https://docs.bykaj.com/architec
 - [rook](https://github.com/rook/rook) – Distributed block storage with Ceph for persistent storage.
 - [spegel](https://github.com/spegel-org/spegel) – Stateless local OCI registry mirror.
 
-Everything else that runs in the cluster is listed in the [application catalog](https://docs.bykaj.com/kubernetes/applications/).
+Everything else that runs in the cluster is listed in the [application catalog](https://docs.bykaj.com/platforms/kubernetes/applications/).
 
 ---
 
@@ -107,7 +107,7 @@ My cluster runs split-horizon DNS: the same hostname resolves differently on my 
 - **Private (UniFi)** – The first instance syncs records to my UniFi UDM via the [ExternalDNS Webhook Provider for UniFi](https://github.com/home-operations/external-dns-unifi-webhook). It watches routes on _both_ Envoy gateways plus annotated LoadBalancer Services, so every app on my LAN is a CNAME to `internal.bykaj.app` or `external.bykaj.app`, which in turn are A records for the gateway VIPs. Even publicly exposed apps resolve to the local gateway at home instead of taking a detour through Cloudflare.
 - **Public (Cloudflare)** – The second instance only watches routes attached to the `envoy-external` gateway and syncs them to Cloudflare as proxied CNAMEs to `external.bykaj.app`, which a `DNSEndpoint` points at my [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/). Internal-only apps simply never show up in public DNS.
 
-The Docker apps on my NAS get their (LAN-only) records from [dexd](https://github.com/ishioni/dexd), which reads container labels and points each hostname at the Traefik reverse proxy. Each controller marks its records with its own TXT ownership prefix (`k8s.` and `dkr.`), so they never step on each other's toes. Only a handful of bootstrap records, like the Kubernetes API endpoint, are maintained by hand. The full details are in the [DNS docs](https://docs.bykaj.com/networking/dns/).
+The Docker apps on my NAS get their (LAN-only) records from [dexd](https://github.com/ishioni/dexd), which reads container labels and points each hostname at the Traefik reverse proxy. Each controller marks its records with its own TXT ownership prefix (`k8s.` and `dkr.`), so they never step on each other's toes. Only a handful of bootstrap records, like the Kubernetes API endpoint, are maintained by hand. The full details are in the [DNS docs](https://docs.bykaj.com/infrastructure/networking/dns/).
 
 ---
 
@@ -156,7 +156,7 @@ The Docker apps on my NAS get their (LAN-only) records from [dexd](https://githu
   <img src="https://github.com/bykaj/home-ops/blob/main/assets/images/rack.jpg?raw=true" width="400px">
 </details>
 
-Per-node details (disks, NICs, Talos volumes) are in the [hardware documentation](https://docs.bykaj.com/hardware/), and what's planned next lives under [Future Plans](https://docs.bykaj.com/reference/future-plans/).
+Per-node details (disks, NICs, Talos volumes) are in the [hardware documentation](https://docs.bykaj.com/infrastructure/hardware/), and what's planned next lives under [Future Plans](https://docs.bykaj.com/reference/future-plans/).
 
 ---
 

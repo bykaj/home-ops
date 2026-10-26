@@ -12,46 +12,95 @@ repo_name = "bykaj/home-ops"
 docs_dir = "content"
 edit_uri = "edit/main/docs/content/"
 copyright = "Copyright &copy; 2026 Kaj Visser. All rights reserved."
-extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
-  { "Architecture" = [
-    "architecture/index.md",
-    { "GitOps" = "architecture/gitops.md" },
-    { "Secrets" = "architecture/secrets.md" },
+  { "Infrastructure" = [
+    "infrastructure/index.md",
+    { "Architecture" = [
+      "infrastructure/architecture/index.md",
+      { "GitOps" = "infrastructure/architecture/gitops.md" },
+      { "Secrets" = "infrastructure/architecture/secrets.md" },
+    ] },
+    { "Hardware" = [
+      "infrastructure/hardware/index.md",
+    ] },
+    { "Networking" = [
+      "infrastructure/networking/index.md",
+      { "BGP & Load Balancing" = "infrastructure/networking/bgp.md" },
+      { "DNS" = "infrastructure/networking/dns.md" },
+      { "UDM Boot Scripts" = "infrastructure/networking/udm-boot-scripts.md" },
+    ] },
+    { "Storage" = [
+      "infrastructure/storage/index.md",
+      { "Backups" = "infrastructure/storage/backups.md" },
+      { "PostgreSQL" = "infrastructure/storage/postgres.md" },
+    ] },
   ] },
-  { "Hardware" = [
-    "hardware/index.md",
+  { "Platforms" = [
+    "platforms/index.md",
+    { "Kubernetes" = [
+      "platforms/kubernetes/index.md",
+      { "Talos" = "platforms/kubernetes/talos.md" },
+      { "Components" = "platforms/kubernetes/components.md" },
+      { "Applications" = "platforms/kubernetes/applications.md" },
+      { "App Notes" = "platforms/kubernetes/app-notes.md" },
+    ] },
+    { "Docker" = [
+      "platforms/docker/index.md",
+    ] },
   ] },
-  { "Networking" = [
-    "networking/index.md",
-    { "BGP & Load Balancing" = "networking/bgp.md" },
-    { "DNS" = "networking/dns.md" },
-    { "UDM Boot Scripts" = "networking/udm-boot-scripts.md" },
-  ] },
-  { "Storage" = [
-    "storage/index.md",
-    { "Backups" = "storage/backups.md" },
-    { "PostgreSQL" = "storage/postgres.md" },
-  ] },
-  { "Kubernetes" = [
-    "kubernetes/index.md",
-    { "Talos" = "kubernetes/talos.md" },
-    { "Components" = "kubernetes/components.md" },
-    { "Applications" = "kubernetes/applications.md" },
-    { "Alerting" = "kubernetes/alerting.md" },
-  ] },
-  { "Docker" = [
-    "docker/index.md",
-  ] },
-  { "Runbooks" = [
-    "runbooks/index.md",
-    { "Bootstrap" = "runbooks/bootstrap.md" },
-    { "Upgrades" = "runbooks/upgrades.md" },
-    { "New Database" = "runbooks/new-database.md" },
-    { "Adding an App" = "runbooks/adding-an-app.md" },
-    { "Adding a Domain" = "runbooks/adding-a-domain.md" },
+  { "Operations" = [
+    "operations/index.md",
+    { "Runbooks" = [
+      "operations/runbooks/index.md",
+      { "Bootstrap" = "operations/runbooks/bootstrap.md" },
+      { "Upgrades" = "operations/runbooks/upgrades.md" },
+      { "Health Check" = "operations/runbooks/health-check.md" },
+      { "New Database" = "operations/runbooks/new-database.md" },
+      { "Adding an App" = "operations/runbooks/adding-an-app.md" },
+      { "Retiring an App" = "operations/runbooks/retiring-an-app.md" },
+      { "Adding a Domain" = "operations/runbooks/adding-a-domain.md" },
+    ] },
+    { "Alerting" = [
+      "operations/alerting/index.md",
+    ] },
+    { "Troubleshooting" = [
+      "operations/troubleshooting/index.md",
+      { "Known Noise" = "operations/troubleshooting/known-noise.md" },
+      { "Knowledge Base" = [
+        "operations/troubleshooting/kb/index.md",
+        "operations/troubleshooting/kb/001-flux-empty-object-null.md",
+        "operations/troubleshooting/kb/002-helmrelease-missing-rollback-target.md",
+        "operations/troubleshooting/kb/003-flux-instance-no-prune.md",
+        "operations/troubleshooting/kb/004-resumed-helmrelease-stays-scaled-down.md",
+        "operations/troubleshooting/kb/005-bootstrap-helm-field-manager-leftovers.md",
+        "operations/troubleshooting/kb/006-tofqdns-timeouts.md",
+        "operations/troubleshooting/kb/007-nfs-eperm-after-reboot.md",
+        "operations/troubleshooting/kb/008-kopiur-mover-uid-change.md",
+        "operations/troubleshooting/kb/009-certificate-retry-backoff.md",
+        "operations/troubleshooting/kb/010-onepassword-connect-credentials.md",
+        "operations/troubleshooting/kb/011-zot-ignores-config-changes.md",
+        "operations/troubleshooting/kb/012-nut-exporter-access-denied.md",
+        "operations/troubleshooting/kb/013-unifi-fixed-ip-nic-swap.md",
+        "operations/troubleshooting/kb/014-renovate-mise-safe-mode.md",
+        "operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md",
+        "operations/troubleshooting/kb/016-oxfmt-dash-comment-trailing-space.md",
+        "operations/troubleshooting/kb/017-gatus-external-route-internal-host.md",
+      ] },
+    ] },
+    { "History" = [
+      "operations/history/index.md",
+      { "Incidents" = [
+        { "2026-09 Ceph NVMe Failure" = "operations/history/2026-09-ceph-nvme-failure.md" },
+        { "2026-10 etcd Fragmentation" = "operations/history/2026-10-etcd-fragmentation.md" },
+        { "2026-10 LiteLLM Compromise" = "operations/history/2026-10-litellm-compromise.md" },
+      ] },
+      { "Migrations" = [
+        { "2026-10 Cilium 1.20" = "operations/history/2026-10-cilium-1-20.md" },
+        { "2026-10 Pocket ID" = "operations/history/2026-10-pocket-id.md" },
+      ] },
+    ] },
   ] },
   { "Reference" = [
     "reference/index.md",
@@ -82,6 +131,7 @@ features = [
   "navigation.instant.prefetch",
   "navigation.path",
   "navigation.sections",
+  "navigation.tabs",
   "navigation.top",
   "navigation.tracking",
   "search.highlight",
