@@ -20,12 +20,14 @@ cron-minute name:
 
 [doc('Manual database backup')]
 db-backup ns app:
-    kubectl apply -f - <<EOF
+    backup=$(kubectl create -o name -f - <<EOF
     apiVersion: postgresql.cnpg.io/v1
     kind: Backup
-    metadata: { name: {{ app }}-postgres-manual, namespace: {{ ns }} }
+    metadata: { generateName: {{ app }}-postgres-manual-, namespace: {{ ns }} }
     spec: { cluster: { name: {{ app }}-postgres }, method: plugin, pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
     EOF
+    )
+    just log info "Backup started" "backup" "$backup"
 
 [doc('Debug a node')]
 debug-node node:

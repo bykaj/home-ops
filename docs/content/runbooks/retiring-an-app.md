@@ -35,12 +35,8 @@ hand.
 
     ```sh
     just k8s db-backup <namespace> <app>
-    kubectl -n <namespace> get backup <app>-postgres-manual   # wait for PHASE completed
+    kubectl -n <namespace> get backup   # wait for the new backup's PHASE to be completed
     ```
-
-    The recipe always names the backup `<app>-postgres-manual`. If one already
-    exists from an earlier run, `kubectl apply` leaves it unchanged and no new
-    backup is taken, so delete the old one first.
 
 3. **Find everything that refers to the app**:
 
