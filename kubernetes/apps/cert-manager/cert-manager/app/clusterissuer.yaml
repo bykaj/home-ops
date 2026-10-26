@@ -19,6 +19,7 @@ spec:
           dnsZones:
             - bykaj.app
             - bykaj.dev
+            - bykaj.io
             - cyrannus.id
             - drup.lol
             - kaj.pics
