@@ -39,6 +39,7 @@ nav = [
     { "Talos" = "kubernetes/talos.md" },
     { "Components" = "kubernetes/components.md" },
     { "Applications" = "kubernetes/applications.md" },
+    { "App Notes" = "kubernetes/app-notes.md" },
     { "Alerting" = "kubernetes/alerting.md" },
   ] },
   { "Docker" = [
