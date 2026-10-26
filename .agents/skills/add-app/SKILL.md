@@ -81,7 +81,7 @@ postBuild:
     # KOPIUR_MOVER_GID: "1000"      # default: 4000
 ```
 
-**If the app needs PostgreSQL**, it gets its own CNPG cluster from the postgres component. Add the component, its health check and the backup schedule (see `docs/content/storage/postgres.md` for all knobs):
+**If the app needs PostgreSQL**, it gets its own CNPG cluster from the postgres component. Add the component, its health check and the backup schedule (see `docs/content/infrastructure/storage/postgres.md` for all knobs):
 
 ```yaml
 metadata:
@@ -103,9 +103,9 @@ spec:
 ```
 
 - `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
-- The `components.postgres/cnpg: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/runbooks/new-database.md`); tell the user.
+- The `components.postgres/cnpg: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/operations/runbooks/new-database.md`); tell the user.
 
-**If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `dragonfly` section of `docs/content/kubernetes/components.md`):
+**If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `dragonfly` section of `docs/content/platforms/kubernetes/components.md`):
 
 ```yaml
 spec:
@@ -360,7 +360,7 @@ kustomize build kubernetes/apps/<namespace>/<app>/app   # must render; ${APP} va
 yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 ```
 
-Then run `just docs apps` and, in the new row on `docs/content/kubernetes/applications.md`, replace the `TODO` purpose with a short description and set Upstream to `[owner/repo](https://github.com/owner/repo)` of the project. A new namespace must first be added to `PLATFORM` or `WORKLOADS` in `scripts/docs-applications.py`. The `docs-apps` pre-commit hook fails until this is done.
+Then run `just docs apps` and, in the new row on `docs/content/platforms/kubernetes/applications.md`, replace the `TODO` purpose with a short description and set Upstream to `[owner/repo](https://github.com/owner/repo)` of the project. A new namespace must first be added to `PLATFORM` or `WORKLOADS` in `scripts/docs-applications.py`. The `docs-apps` pre-commit hook fails until this is done.
 
 Show the user the created files and get confirmation before committing. Commit style: `feat(<app>): deploy`.
 

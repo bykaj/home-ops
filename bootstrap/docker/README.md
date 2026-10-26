@@ -8,6 +8,6 @@ provisioning.
 just bootstrap docker <host>   # e.g. nas
 ```
 
-See the [Bootstrap runbook](https://docs.bykaj.com/runbooks/bootstrap/#docker-hosts)
-([source](../../docs/content/runbooks/bootstrap.md)) and the [Docker](https://docs.bykaj.com/docker/)
-page ([source](../../docs/content/docker/index.md)).
+See the [Bootstrap runbook](https://docs.bykaj.com/operations/runbooks/bootstrap/#docker-hosts)
+([source](../../docs/content/operations/runbooks/bootstrap.md)) and the [Docker](https://docs.bykaj.com/platforms/docker/)
+page ([source](../../docs/content/platforms/docker/index.md)).

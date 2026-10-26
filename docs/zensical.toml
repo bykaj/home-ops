@@ -17,78 +17,78 @@ nav = [
   { "Home" = "index.md" },
   { "Infrastructure" = [
     { "Architecture" = [
-      "architecture/index.md",
-      { "GitOps" = "architecture/gitops.md" },
-      { "Secrets" = "architecture/secrets.md" },
+      "infrastructure/architecture/index.md",
+      { "GitOps" = "infrastructure/architecture/gitops.md" },
+      { "Secrets" = "infrastructure/architecture/secrets.md" },
     ] },
-    { "Hardware" = "hardware/index.md" },
+    { "Hardware" = "infrastructure/hardware/index.md" },
     { "Networking" = [
-      "networking/index.md",
-      { "BGP & Load Balancing" = "networking/bgp.md" },
-      { "DNS" = "networking/dns.md" },
-      { "UDM Boot Scripts" = "networking/udm-boot-scripts.md" },
+      "infrastructure/networking/index.md",
+      { "BGP & Load Balancing" = "infrastructure/networking/bgp.md" },
+      { "DNS" = "infrastructure/networking/dns.md" },
+      { "UDM Boot Scripts" = "infrastructure/networking/udm-boot-scripts.md" },
     ] },
     { "Storage" = [
-      "storage/index.md",
-      { "Backups" = "storage/backups.md" },
-      { "PostgreSQL" = "storage/postgres.md" },
+      "infrastructure/storage/index.md",
+      { "Backups" = "infrastructure/storage/backups.md" },
+      { "PostgreSQL" = "infrastructure/storage/postgres.md" },
     ] },
   ] },
   { "Platforms" = [
     { "Kubernetes" = [
-      "kubernetes/index.md",
-      { "Talos" = "kubernetes/talos.md" },
-      { "Components" = "kubernetes/components.md" },
-      { "Applications" = "kubernetes/applications.md" },
-      { "App Notes" = "kubernetes/app-notes.md" },
+      "platforms/kubernetes/index.md",
+      { "Talos" = "platforms/kubernetes/talos.md" },
+      { "Components" = "platforms/kubernetes/components.md" },
+      { "Applications" = "platforms/kubernetes/applications.md" },
+      { "App Notes" = "platforms/kubernetes/app-notes.md" },
     ] },
-    { "Docker" = "docker/index.md" },
+    { "Docker" = "platforms/docker/index.md" },
   ] },
   { "Operations" = [
     { "Runbooks" = [
-      "runbooks/index.md",
-      { "Bootstrap" = "runbooks/bootstrap.md" },
-      { "Upgrades" = "runbooks/upgrades.md" },
-      { "Health Check" = "runbooks/health-check.md" },
-      { "New Database" = "runbooks/new-database.md" },
-      { "Adding an App" = "runbooks/adding-an-app.md" },
-      { "Retiring an App" = "runbooks/retiring-an-app.md" },
-      { "Adding a Domain" = "runbooks/adding-a-domain.md" },
+      "operations/runbooks/index.md",
+      { "Bootstrap" = "operations/runbooks/bootstrap.md" },
+      { "Upgrades" = "operations/runbooks/upgrades.md" },
+      { "Health Check" = "operations/runbooks/health-check.md" },
+      { "New Database" = "operations/runbooks/new-database.md" },
+      { "Adding an App" = "operations/runbooks/adding-an-app.md" },
+      { "Retiring an App" = "operations/runbooks/retiring-an-app.md" },
+      { "Adding a Domain" = "operations/runbooks/adding-a-domain.md" },
     ] },
-    { "Alerting" = "kubernetes/alerting.md" },
+    { "Alerting" = "operations/alerting.md" },
     { "Troubleshooting" = [
-      "troubleshooting/index.md",
-      { "Known Noise" = "troubleshooting/known-noise.md" },
+      "operations/troubleshooting/index.md",
+      { "Known Noise" = "operations/troubleshooting/known-noise.md" },
       { "Knowledge Base" = [
-        "troubleshooting/kb/001-flux-empty-object-null.md",
-        "troubleshooting/kb/002-helmrelease-missing-rollback-target.md",
-        "troubleshooting/kb/003-flux-instance-no-prune.md",
-        "troubleshooting/kb/004-resumed-helmrelease-stays-scaled-down.md",
-        "troubleshooting/kb/005-bootstrap-helm-field-manager-leftovers.md",
-        "troubleshooting/kb/006-tofqdns-timeouts.md",
-        "troubleshooting/kb/007-nfs-eperm-after-reboot.md",
-        "troubleshooting/kb/008-kopiur-mover-uid-change.md",
-        "troubleshooting/kb/009-certificate-retry-backoff.md",
-        "troubleshooting/kb/010-onepassword-connect-credentials.md",
-        "troubleshooting/kb/011-zot-ignores-config-changes.md",
-        "troubleshooting/kb/012-nut-exporter-access-denied.md",
-        "troubleshooting/kb/013-unifi-fixed-ip-nic-swap.md",
-        "troubleshooting/kb/014-renovate-mise-safe-mode.md",
-        "troubleshooting/kb/015-renovate-release-age-holds-forever.md",
-        "troubleshooting/kb/016-oxfmt-dash-comment-trailing-space.md",
-        "troubleshooting/kb/017-gatus-external-route-internal-host.md",
+        "operations/troubleshooting/kb/001-flux-empty-object-null.md",
+        "operations/troubleshooting/kb/002-helmrelease-missing-rollback-target.md",
+        "operations/troubleshooting/kb/003-flux-instance-no-prune.md",
+        "operations/troubleshooting/kb/004-resumed-helmrelease-stays-scaled-down.md",
+        "operations/troubleshooting/kb/005-bootstrap-helm-field-manager-leftovers.md",
+        "operations/troubleshooting/kb/006-tofqdns-timeouts.md",
+        "operations/troubleshooting/kb/007-nfs-eperm-after-reboot.md",
+        "operations/troubleshooting/kb/008-kopiur-mover-uid-change.md",
+        "operations/troubleshooting/kb/009-certificate-retry-backoff.md",
+        "operations/troubleshooting/kb/010-onepassword-connect-credentials.md",
+        "operations/troubleshooting/kb/011-zot-ignores-config-changes.md",
+        "operations/troubleshooting/kb/012-nut-exporter-access-denied.md",
+        "operations/troubleshooting/kb/013-unifi-fixed-ip-nic-swap.md",
+        "operations/troubleshooting/kb/014-renovate-mise-safe-mode.md",
+        "operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md",
+        "operations/troubleshooting/kb/016-oxfmt-dash-comment-trailing-space.md",
+        "operations/troubleshooting/kb/017-gatus-external-route-internal-host.md",
       ] },
     ] },
     { "History" = [
-      "history/index.md",
+      "operations/history/index.md",
       { "Incidents" = [
-        { "2026-09 Ceph NVMe Failure" = "history/2026-09-ceph-nvme-failure.md" },
-        { "2026-10 etcd Fragmentation" = "history/2026-10-etcd-fragmentation.md" },
-        { "2026-10 LiteLLM Compromise" = "history/2026-10-litellm-compromise.md" },
+        { "2026-09 Ceph NVMe Failure" = "operations/history/2026-09-ceph-nvme-failure.md" },
+        { "2026-10 etcd Fragmentation" = "operations/history/2026-10-etcd-fragmentation.md" },
+        { "2026-10 LiteLLM Compromise" = "operations/history/2026-10-litellm-compromise.md" },
       ] },
       { "Migrations" = [
-        { "2026-10 Cilium 1.20" = "history/2026-10-cilium-1-20.md" },
-        { "2026-10 Pocket ID" = "history/2026-10-pocket-id.md" },
+        { "2026-10 Cilium 1.20" = "operations/history/2026-10-cilium-1-20.md" },
+        { "2026-10 Pocket ID" = "operations/history/2026-10-pocket-id.md" },
       ] },
     ] },
   ] },
@@ -159,6 +159,33 @@ link = "https://bsky.app/profile/bykaj.com"
 # The theme's video player references Google's ad SDK, which pulls in
 # googlesyndication.com; the site has no video ads, so don't self-host it.
 assets_exclude = ["imasdk.googleapis.com/*"]
+
+# Old URLs from before the pages were grouped into Infrastructure, Platforms
+# and Operations (2026-10).
+[project.plugins.redirects.redirect_maps]
+"architecture/gitops.md" = "infrastructure/architecture/gitops.md"
+"architecture/index.md" = "infrastructure/architecture/index.md"
+"architecture/secrets.md" = "infrastructure/architecture/secrets.md"
+"docker/index.md" = "platforms/docker/index.md"
+"hardware/index.md" = "infrastructure/hardware/index.md"
+"kubernetes/alerting.md" = "operations/alerting.md"
+"kubernetes/applications.md" = "platforms/kubernetes/applications.md"
+"kubernetes/components.md" = "platforms/kubernetes/components.md"
+"kubernetes/index.md" = "platforms/kubernetes/index.md"
+"kubernetes/talos.md" = "platforms/kubernetes/talos.md"
+"networking/bgp.md" = "infrastructure/networking/bgp.md"
+"networking/dns.md" = "infrastructure/networking/dns.md"
+"networking/index.md" = "infrastructure/networking/index.md"
+"networking/udm-boot-scripts.md" = "infrastructure/networking/udm-boot-scripts.md"
+"runbooks/adding-a-domain.md" = "operations/runbooks/adding-a-domain.md"
+"runbooks/adding-an-app.md" = "operations/runbooks/adding-an-app.md"
+"runbooks/bootstrap.md" = "operations/runbooks/bootstrap.md"
+"runbooks/index.md" = "operations/runbooks/index.md"
+"runbooks/new-database.md" = "operations/runbooks/new-database.md"
+"runbooks/upgrades.md" = "operations/runbooks/upgrades.md"
+"storage/backups.md" = "infrastructure/storage/backups.md"
+"storage/index.md" = "infrastructure/storage/index.md"
+"storage/postgres.md" = "infrastructure/storage/postgres.md"
 
 [project.markdown_extensions.abbr]
 [project.markdown_extensions.admonition]

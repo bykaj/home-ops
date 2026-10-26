@@ -3,7 +3,7 @@
 # requires-python = ">=3.12"
 # dependencies = ["ruamel.yaml>=0.18"]
 # ///
-"""Regenerate the app tables in docs/content/kubernetes/applications.md.
+"""Regenerate the app tables in docs/content/platforms/kubernetes/applications.md.
 
 The app list, Exposure and Uses columns and the Disabled table are derived
 from kubernetes/apps. Purpose and Upstream are hand-written: they are read
@@ -25,7 +25,7 @@ from ruamel.yaml.error import ReusedAnchorWarning, YAMLError
 
 ROOT = Path(__file__).resolve().parent.parent
 APPS = ROOT / "kubernetes" / "apps"
-PAGE = ROOT / "docs" / "content" / "kubernetes" / "applications.md"
+PAGE = ROOT / "docs" / "content" / "platforms" / "kubernetes" / "applications.md"
 REPO_TREE = "https://github.com/bykaj/home-ops/tree/main/kubernetes/apps"
 START, END = "<!-- apps:start -->", "<!-- apps:end -->"
 TODO = "TODO"
