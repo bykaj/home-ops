@@ -44,6 +44,8 @@ kubectl get talosupgrade,kubernetesupgrade
 kubectl -n system-upgrade logs -l app.kubernetes.io/name=tuppr -f
 ```
 
+When it's done, run the [Health Check](health-check.md).
+
 ## Manual
 
 When tuppr can't be used (it's broken, or a node needs a one-off), use the

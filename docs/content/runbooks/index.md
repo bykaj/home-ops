@@ -9,6 +9,7 @@ Step-by-step procedures for recurring and disaster-recovery operations.
 
 - [Bootstrap](bootstrap.md): bring the cluster or the NAS up from scratch
 - [Upgrades](upgrades.md): Talos and Kubernetes upgrades with tuppr, or by hand
+- [Health Check](health-check.md): checks to run after an upgrade or a risky change
 - [New Database](new-database.md): first deploy of an app with a brand-new CNPG cluster
 - [Adding an App](adding-an-app.md): scaffold a new cluster app
 - [Adding a Domain](adding-a-domain.md): serve a new domain with DNS, routing and a wildcard certificate

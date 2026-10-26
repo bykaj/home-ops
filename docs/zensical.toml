@@ -48,6 +48,7 @@ nav = [
     "runbooks/index.md",
     { "Bootstrap" = "runbooks/bootstrap.md" },
     { "Upgrades" = "runbooks/upgrades.md" },
+    { "Health Check" = "runbooks/health-check.md" },
     { "New Database" = "runbooks/new-database.md" },
     { "Adding an App" = "runbooks/adding-an-app.md" },
     { "Adding a Domain" = "runbooks/adding-a-domain.md" },
