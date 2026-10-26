@@ -42,18 +42,13 @@ prune-pods:
         kubectl delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
     done
 
-[doc('Manual Kopiur backup of a volume and wait for it (keep pins it and keeps it after the app is removed)')]
-pvc-backup ns policy mode="":
-    case "{{ mode }}" in
-      "") extra="" ;;
-      keep) extra="pin: true, deletionPolicy: Retain, " ;;
-      *) just log fatal "Unknown mode, expected nothing or 'keep'" "mode" "{{ mode }}" ;;
-    esac
+[doc('Manual Kopiur backup of a volume, waits for it to finish')]
+pvc-backup ns policy:
     snapshot=$(kubectl create -o name -f - <<EOF
     apiVersion: kopiur.home-operations.com/v1alpha1
     kind: Snapshot
     metadata: { generateName: {{ policy }}-manual-, namespace: {{ ns }} }
-    spec: { ${extra}policyRef: { name: {{ policy }} } }
+    spec: { policyRef: { name: {{ policy }} } }
     EOF
     )
     just log info "Waiting for snapshot" "snapshot" "$snapshot"

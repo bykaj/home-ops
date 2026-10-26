@@ -32,13 +32,11 @@ hand.
     Then take a final snapshot of each one and wait for it to finish:
 
     ```sh
-    just k8s pvc-backup <namespace> <policy> keep
+    just k8s pvc-backup <namespace> <policy>
     ```
 
-    `keep` pins the snapshot, so retention never removes it, and sets
-    `deletionPolicy: Retain`. The `Snapshot` object is removed from the
-    cluster along with the app, and `Retain` makes sure that never deletes the
-    snapshot from the repository.
+    Removing the app later deletes the `Snapshot` objects from the cluster,
+    but the snapshots stay in the repository on the NAS.
 
     **Database (CNPG).** If the app has a `<app>-postgres` cluster:
 

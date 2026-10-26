@@ -117,9 +117,10 @@ Take a one-off snapshot of an app's volume, for example before a risky
 change:
 
 ```sh
-just k8s pvc-backup <namespace> <policy>             # routine, pruned by retention like the others
-just k8s pvc-backup <namespace> <policy> keep        # pinned, and kept in the repository after the app is removed
+just k8s pvc-backup <namespace> <policy>
 ```
+
+The snapshot falls under the policy's retention like the scheduled ones.
 
 `<policy>` is the app's `SnapshotPolicy`, normally named after the app (or
 after `KOPIUR_CLAIM`); `kubectl -n <namespace> get snapshotpolicy` lists them.
