@@ -1,12 +1,13 @@
 ---
 description: Prometheus alert rules, Alertmanager routing and silences
+icon: material/bell-alert
 ---
 
 # Alerting
 
 Prometheus (kube-prometheus-stack) evaluates the alert rules and Alertmanager
 sends them to Pushover. Two other detections, Flux reconciliation alerts and the
-[Yanked Images](../infrastructure/architecture/gitops.md#yanked-images) workflow, don't use
+[Yanked Images](../../infrastructure/architecture/gitops.md#yanked-images) workflow, don't use
 Prometheus rules; see [Outside Prometheus](#outside-prometheus).
 
 ## Routing
@@ -50,7 +51,7 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 
 | Alert | Severity | Fires when |
 | --- | --- | --- |
-| `CiliumEgressPolicyDenied` | critical | An egress policy dropped a packet on a node in the last 10 minutes; see [Cilium](../infrastructure/networking/index.md#cilium) |
+| `CiliumEgressPolicyDenied` | critical | An egress policy dropped a packet on a node in the last 10 minutes; see [Cilium](../../infrastructure/networking/index.md#cilium) |
 | `DockerhubRateLimitRisk` | critical | More than 100 running containers use `docker.io` images |
 | `NvmeTemperatureCritical` | critical | An NVMe drive is at or above its warning threshold for 1 minute |
 | `NvmeTemperatureHigh` | warning | An NVMe drive is within 2 °C of its warning threshold for 5 minutes |
@@ -78,7 +79,7 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 | [flux-instance](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/flux-instance/app/prometheusrule.yaml) | `FluxInstanceAbsent` | critical | The Flux instance metric is missing for 5 minutes |
 | flux-instance | `FluxInstanceNotReady` | critical | The Flux instance is not ready for 5 minutes |
 | [gatus](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/gatus/app/prometheusrule.yaml) | `GatusEndpointDown` | critical | An external or infrastructure endpoint in Gatus fails for 5 minutes |
-| gatus | `GatusEndpointExposed` | critical | An internal-only hostname has a public DNS record; see [Gatus](../infrastructure/networking/dns.md) |
+| gatus | `GatusEndpointExposed` | critical | An internal-only hostname has a public DNS record; see [Gatus](../../infrastructure/networking/dns.md) |
 | [nut-exporter](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/observability/nut-exporter/app/prometheusrule.yaml) | `NutExporterAbsent` | critical | The NUT exporter is down for 5 minutes |
 | nut-exporter | `UpsBatteryReplace` | warning | The UPS reports that its battery needs replacing |
 | nut-exporter | `UpsLowBattery` | warning | The UPS battery charge is below 50% |
@@ -118,10 +119,10 @@ Use the Alertmanager UI for temporary silences, such as during maintenance.
 
 ## Outside Prometheus
 
-- **Flux:** the [`alerts` component](../platforms/kubernetes/components.md#alerts) sends Kustomization
+- **Flux:** the [`alerts` component](../../platforms/kubernetes/components.md#alerts) sends Kustomization
   and HelmRelease reconciliation failures to Alertmanager and posts commit
   statuses to GitHub.
 - **Yanked images:** a GitHub workflow opens a `type/security` issue when a
   pinned image disappears from its registry; see
-  [Yanked images](../infrastructure/architecture/gitops.md#yanked-images).
+  [Yanked images](../../infrastructure/architecture/gitops.md#yanked-images).
 - **Gatus:** endpoint checks feed the `GatusEndpoint*` rules above.

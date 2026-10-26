@@ -49,7 +49,7 @@ bindings, and it had no database credentials. Nothing else was exposed.
 - **Detection** ([#2994](https://github.com/bykaj/home-ops/pull/2994)): the
   [Yanked Images](../../infrastructure/architecture/gitops.md#yanked-images) workflow opens an
   issue when a pinned image disappears upstream, and `CiliumEgressPolicyDenied`
-  alerts on any blocked egress (see [Alerting](../alerting.md)).
+  alerts on any blocked egress (see [Alerting](../alerting/index.md)).
 
 ## What to watch
 

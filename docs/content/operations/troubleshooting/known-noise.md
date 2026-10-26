@@ -46,7 +46,7 @@ to `HEALTH_OK` about 3 minutes after the last node returns. Along the way
   because the module reloads, so don't read that as finding the leak; compare
   growth over a day or more instead.
 - `CephNodeDiskspaceWarning` for NVMe devices and the `nfsmount.conf` mount is
-  silenced on purpose; see [Silences](../alerting.md#silences).
+  silenced on purpose; see [Silences](../alerting/index.md#silences).
 
 ## Gatus
 

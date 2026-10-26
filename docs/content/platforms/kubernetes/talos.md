@@ -37,7 +37,7 @@ Applied to every node from `cluster.yaml.j2`:
   reconnects can use any source port), and an `nfs.conf` that sets the
   `nfsrahead` read-ahead to 16 MiB for NFSv4 mounts
 - Registry mirrors for `docker.io`, `ghcr.io`, `quay.io` and `registry.k8s.io`,
-  pointing at the [Zot](../docker.md#07-zot) pull-through cache on the NAS
+  pointing at the [Zot](../docker/index.md#07-zot) pull-through cache on the NAS
   (`registry.bykaj.app`), falling back to upstream
 - KubePrism, and kubelet node IPs restricted to `10.73.20.0/24`
 

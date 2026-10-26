@@ -10,4 +10,4 @@ supporting services as Docker Compose stacks on the NAS.
 
 - [Kubernetes](kubernetes/index.md): Talos, the app layout and its
   conventions, reusable components, the app catalog and per-app notes
-- [Docker](docker.md): the Compose stacks on the NAS, deployed by doco-cd
+- [Docker](docker/index.md): the Compose stacks on the NAS, deployed by doco-cd

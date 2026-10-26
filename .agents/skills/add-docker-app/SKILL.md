@@ -45,7 +45,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
    - Don't publish HTTP `ports:`. Non-HTTP TCP goes through a Traefik entrypoint (`web-alt` 8080) or, failing that, a published port or `network_mode: host`. UDP protocols that answer from a new port (TFTP) break behind Traefik's UDP proxy; publish them on `10.73.2.100` instead.
    - OIDC apps use Pocket ID with issuer `https://cyrannus.id`; the user creates the client and stores the client ID/secret in 1Password.
 
-5. **Docs**: add a `### NN-<app>` section under "Stacks" in `docs/content/platforms/docker.md` (in directory order), and update any other page that describes what the stack touches (DNS, storage/backups, networking). Validate with `just docs build`.
+5. **Docs**: add a `### NN-<app>` section under "Stacks" in `docs/content/platforms/docker/index.md` (in directory order), and update any other page that describes what the stack touches (DNS, storage/backups, networking). Validate with `just docs build`.
 
 6. **Verify**: `docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet` (unset `${VAR}` warnings are expected) and `yamllint --config-file .yamllint.yaml docker/nas/NN-<app>`. Show the user the files before committing. Commit style: `feat(<app>): <what>` (e.g. `feat(zot): add zot OCI registry with pull-through cache to NAS`). Pushing to `main` deploys; `just docker sync-stacks` forces a run.
 

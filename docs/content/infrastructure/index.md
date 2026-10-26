@@ -10,7 +10,7 @@ network and storage underneath everything.
 
 - [Architecture](architecture/index.md): how the cluster, the NAS and the
   repository fit together, the GitOps flow and secrets
-- [Hardware](hardware.md): cluster nodes, NAS, network gear and power
+- [Hardware](hardware/index.md): cluster nodes, NAS, network gear and power
 - [Networking](networking/index.md): subnets, BGP-announced VIPs, gateways,
   split-horizon DNS and the UDM boot scripts
 - [Storage](storage/index.md): Rook-Ceph, OpenEBS, the NAS, backups and

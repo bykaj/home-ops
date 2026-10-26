@@ -66,7 +66,7 @@ one, and each policy file explains its own rules:
   ingress to each Dragonfly cache.
 
 Any blocked egress packet raises the
-[`CiliumEgressPolicyDenied`](../../operations/alerting.md#cluster-wide-additionalprometheusrulesmap)
+[`CiliumEgressPolicyDenied`](../../operations/alerting/index.md#cluster-wide-additionalprometheusrulesmap)
 alert (critical), per node. Only egress-restricted pods can cause egress policy drops,
 so the alert means such a pod tried to reach a host outside its allowlist:
 either a missing rule or something it should not be doing. Run

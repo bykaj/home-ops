@@ -25,7 +25,7 @@ pull requests for every dependency in the repository.
 | Area | Choice |
 | --- | --- |
 | OS | [Talos Linux](platforms/kubernetes/talos.md) on three control-plane nodes; upgrades by [tuppr](operations/runbooks/upgrades.md) |
-| GitOps | [Flux](infrastructure/architecture/gitops.md) for the cluster, [doco-cd](platforms/docker.md) for the NAS, Renovate for updates |
+| GitOps | [Flux](infrastructure/architecture/gitops.md) for the cluster, [doco-cd](platforms/docker/index.md) for the NAS, Renovate for updates |
 | CNI | [Cilium](infrastructure/networking/index.md#cilium): native routing, no kube-proxy, LoadBalancer IPs over [BGP](infrastructure/networking/bgp.md) |
 | Ingress | [Envoy Gateway](infrastructure/networking/index.md#gateways) (Gateway API), Cloudflare Tunnel for public apps |
 | DNS | [Split-horizon](infrastructure/networking/dns.md): external-dns to UniFi on the LAN and to Cloudflare publicly |
@@ -36,7 +36,7 @@ pull requests for every dependency in the repository.
 | Backups | [Kopiur](infrastructure/storage/backups.md) (Kopia) for PVCs, off-site to Backblaze B2 |
 | Databases | [CloudNativePG](infrastructure/storage/postgres.md) with Barman Cloud backups to Garage S3; Dragonfly caches |
 | Images | Spegel node-to-node sharing, Zot pull-through mirror on the NAS |
-| Monitoring | [kube-prometheus-stack](operations/alerting.md) with Pushover alerts, VictoriaLogs, Grafana, Gatus |
+| Monitoring | [kube-prometheus-stack](operations/alerting/index.md) with Pushover alerts, VictoriaLogs, Grafana, Gatus |
 
 ## Where to start
 
@@ -48,7 +48,7 @@ pull requests for every dependency in the repository.
 
     How the pieces fit together: GitOps flow, repository layout, secrets.
 
-- :material-server: **[Hardware](infrastructure/hardware.md)**
+- :material-server: **[Hardware](infrastructure/hardware/index.md)**
 
     ***
 
@@ -72,7 +72,7 @@ pull requests for every dependency in the repository.
 
     Talos, app layout conventions, reusable components and the app catalog.
 
-- :material-docker: **[Docker](platforms/docker.md)**
+- :material-docker: **[Docker](platforms/docker/index.md)**
 
     ***
 
