@@ -151,7 +151,7 @@ gets a protection level that fits how replaceable its data is:
 | `Downloads`, `Software`, `Transfer`, `Users` | Recreatable or transient data | None | None |
 | `Media` | Books, music and video libraries | Daily + monthly | Weekly, keep 12 (only `Books` and `Music`) |
 | `Photos` | Photo albums and the Immich library | Daily + monthly | Daily, keep 30 |
-| `TimeMachine` | Time Machine backups of the Macs | On every backup (share auto-snapshot) | None |
+| `TimeMachine` | Time Machine backups of the Macs | On every backup (share auto-snapshot), kept 7 days | None |
 
 ### ZFS snapshots
 
@@ -257,7 +257,7 @@ that churn would bloat the daily snapshots and be uploaded to B2 every night.
 | Quota | 3 TiB (ZFS quota on the dataset) |
 | Owner | A personal NAS user; the ACL grants only that user, its group and `builtin_administrators` (no `builtin_users`, so service accounts have no access) |
 | Share | `TimeMachine`, purpose **Time Machine Share**, advertised over mDNS |
-| Auto snapshot | On: the NAS takes a ZFS snapshot each time a Mac starts a backup |
+| Auto snapshot | On: the NAS takes a ZFS snapshot (`aapltm-<epoch>`) each time a Mac starts a backup, and deletes those older than 7 days |
 | Auto dataset creation | Off: all Macs share the dataset, one sparsebundle per Mac |
 | Server-side Time Machine quota | 0 (limits are set on the Macs) |
 
@@ -284,7 +284,12 @@ sudo tmutil setdestination -a -p smb://<user>@nas.internal/TimeMachine
 
 Time Machine versions the backups itself, so the dataset has no periodic
 snapshot task and no TrueCloud task. The auto snapshots are there to restore
-a sparsebundle when Time Machine reports a failed verification. All Macs share
+a sparsebundle when Time Machine reports a failed verification. Samba's
+`vfs_tmprotect` module takes them and prunes them itself: each time it takes
+a new snapshot, it deletes the ones older than 7 days, but always keeps at
+least 3. So their space levels off, at about 160 GiB with hourly backups from
+two Macs, instead of growing. List them with
+`zfs list -t snapshot -o name,creation,used vault/TimeMachine`. All Macs share
 the dataset, so never `zfs rollback` it: that reverts every Mac's backups, and
 rolling back past the latest snapshot needs `-r`, which destroys all newer
 snapshots. Restore only the affected sparsebundle instead, with that Mac's
