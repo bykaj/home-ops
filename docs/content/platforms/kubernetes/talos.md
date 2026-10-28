@@ -30,6 +30,8 @@ is applied automatically. Configs are rendered on demand and pushed with
 Applied to every node from `cluster.yaml.j2`:
 
 - DHCP on `bond0`, with the UDM as resolver
+- A 4096-slot RX ring on `enp1s0f0`, the X520 port behind `bond0`, instead of
+  the 512-slot default ([KB-018](../../operations/troubleshooting/kb/018-nic-rx-ring-overflow.md))
 - Filesystem trim and scrub schedules, and a hardware watchdog
 - Kernel modules for DRBD, `dm_thin_pool` and `nbd`
 - Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, NFS RPC slot limits, raised inotify limits, IPv6 disabled
