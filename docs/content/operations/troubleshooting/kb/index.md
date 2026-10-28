@@ -28,6 +28,7 @@ and fix. To find one from what you see, start at the
 | [016](016-oxfmt-dash-comment-trailing-space.md) | yamllint fails on a trailing space after `- ` |
 | [017](017-gatus-external-route-internal-host.md) | Gatus check fails with `no such host` |
 | [018](018-nic-rx-ring-overflow.md) | Packet drop alerts from NIC RX ring overflows |
+| [019](019-charts-mirror-chart-pruned.md) | Chart pull `DENIED` from the charts mirror |
 
 ## Adding an entry
 
