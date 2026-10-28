@@ -28,6 +28,9 @@ Start from what you see and follow the most likely entry.
   [KB-004](kb/004-resumed-helmrelease-stays-scaled-down.md)
 - A chart bump removed a field, but it's still on the live object:
   [KB-005](kb/005-bootstrap-helm-field-manager-leftovers.md)
+- An `OCIRepository` on `home-operations/charts-mirror` fails with `DENIED:
+  requested access to the resource is denied`:
+  [KB-019](kb/019-charts-mirror-chart-pruned.md)
 
 ### Networking and certificates
 

@@ -88,6 +88,7 @@ nav = [
         "operations/troubleshooting/kb/016-oxfmt-dash-comment-trailing-space.md",
         "operations/troubleshooting/kb/017-gatus-external-route-internal-host.md",
         "operations/troubleshooting/kb/018-nic-rx-ring-overflow.md",
+        "operations/troubleshooting/kb/019-charts-mirror-chart-pruned.md",
       ] },
     ] },
     { "History" = [
