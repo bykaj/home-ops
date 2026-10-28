@@ -18,7 +18,7 @@ is applied automatically. Configs are rendered on demand and pushed with
 | `cluster.yaml.j2` | Documents applied to every node |
 | `controlplane.yaml.j2` | Control-plane-only documents, including `machine.type` |
 | `workers.yaml.j2` | Worker-only documents (not created yet; added with the first worker) |
-| `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, install disk, volumes |
+| `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, NIC ring size, install disk, volumes |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override |
 | `schematic.yaml.j2` | Shared [Image Factory](https://factory.talos.dev) schematic |
 | `secrets.yaml.j2` | Talos secrets bundle as `op://` references, used to generate `talosconfig` |

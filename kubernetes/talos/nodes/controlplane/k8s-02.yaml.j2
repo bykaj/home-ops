@@ -39,6 +39,13 @@ links:
 bondMode: active-backup
 mtu: 1500
 ---
+# Default 512-slot RX ring overflows on traffic bursts (rx_missed_errors)
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp1s0f0
+rings:
+  rx: 4096
+---
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
 provisioning:

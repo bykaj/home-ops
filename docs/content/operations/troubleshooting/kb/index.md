@@ -27,6 +27,7 @@ and fix. To find one from what you see, start at the
 | [015](015-renovate-release-age-holds-forever.md) | Renovate never updates an image with a release-age rule |
 | [016](016-oxfmt-dash-comment-trailing-space.md) | yamllint fails on a trailing space after `- ` |
 | [017](017-gatus-external-route-internal-host.md) | Gatus check fails with `no such host` |
+| [018](018-nic-rx-ring-overflow.md) | Packet drop alerts from NIC RX ring overflows |
 
 ## Adding an entry
 

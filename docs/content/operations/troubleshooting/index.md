@@ -39,6 +39,8 @@ Start from what you see and follow the most likely entry.
   [KB-017](kb/017-gatus-external-route-internal-host.md)
 - UniFi refuses to move a node's fixed IP to a new NIC:
   [KB-013](kb/013-unifi-fixed-ip-nic-swap.md)
+- `CephNodeNetworkPacketDrops` fires for a node in short bursts:
+  [KB-018](kb/018-nic-rx-ring-overflow.md)
 
 ### Storage and backups
 
