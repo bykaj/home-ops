@@ -18,7 +18,7 @@ is applied automatically. Configs are rendered on demand and pushed with
 | `cluster.yaml.j2` | Documents applied to every node |
 | `controlplane.yaml.j2` | Control-plane-only documents, including `machine.type` |
 | `workers.yaml.j2` | Worker-only documents (not created yet; added with the first worker) |
-| `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, install disk, volumes |
+| `nodes/<role>/<node>.yaml.j2` | Per-node documents: hostname, NIC alias, bond, NIC ring size, install disk, volumes |
 | `nodes/<role>/<node>.schematic.yaml.j2` | Optional per-node schematic override |
 | `schematic.yaml.j2` | Shared [Image Factory](https://factory.talos.dev) schematic |
 | `secrets.yaml.j2` | Talos secrets bundle as `op://` references, used to generate `talosconfig` |
@@ -30,8 +30,6 @@ is applied automatically. Configs are rendered on demand and pushed with
 Applied to every node from `cluster.yaml.j2`:
 
 - DHCP on `bond0`, with the UDM as resolver
-- A 4096-slot RX ring on `enp1s0f0`, the X520 port behind `bond0`, instead of
-  the 512-slot default ([KB-018](../../operations/troubleshooting/kb/018-nic-rx-ring-overflow.md))
 - Filesystem trim and scrub schedules, and a hardware watchdog
 - Kernel modules for DRBD, `dm_thin_pool` and `nbd`
 - Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, NFS RPC slot limits, raised inotify limits, IPv6 disabled

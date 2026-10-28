@@ -20,7 +20,8 @@ small for short traffic bursts.
 
 ## Fix
 
-`cluster.yaml.j2` raises the ring with an `EthernetConfig` document:
+Each node's `nodes/<role>/<node>.yaml.j2` raises the ring on its X520 port
+with an `EthernetConfig` document:
 
 ```yaml
 apiVersion: v1alpha1
