@@ -31,8 +31,10 @@ Applied to every node from `cluster.yaml.j2`:
 
 - DHCP on `bond0`, with the UDM as resolver
 - Filesystem trim and scrub schedules, and a hardware watchdog
-- Kernel modules for DRBD, `dm_thin_pool` and `nbd`
-- Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, NFS RPC slot limits, raised inotify limits, IPv6 disabled
+- Kernel modules for DRBD, `dm_thin_pool` and `nbd`; other modules, such as
+  DRBD's `drbd_transport_tcp`, load on demand when the kernel requests them
+- Sysctl tuning: BBR with `fq`, large TCP buffers for QUIC, a raised inotify watch limit, IPv6 disabled.
+  Values that match the kernel or Talos defaults aren't set
 - `nfsmount.conf` with tuned NFS mount defaults (including `noresvport`, so
   reconnects can use any source port), and an `nfs.conf` that sets the
   `nfsrahead` read-ahead to 16 MiB for NFSv4 mounts

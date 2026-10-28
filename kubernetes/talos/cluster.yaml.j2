@@ -75,21 +75,15 @@ parameters:
 ---
 apiVersion: v1alpha1
 kind: KernelModuleConfig
-name: drbd_transport_tcp
----
-apiVersion: v1alpha1
-kind: KernelModuleConfig
 name: nbd
 ---
 apiVersion: v1alpha1
 kind: SysctlConfig
 params:
-  fs.inotify.max_user_instances: "8192"         # Watchdog: file watching
   fs.inotify.max_user_watches: "1048576"        # Watchdog: file watching
   net.core.default_qdisc: fq                    # FQ pacing qdisc, pairs with BBR
   net.core.rmem_max: "67108864"                 # Cloudflared / QUIC
   net.core.wmem_max: "67108864"                 # Cloudflared / QUIC
-  net.ipv4.ip_local_port_range: 32768 60999     # Kernel default, keeps fixed host ports (e.g. node-exporter 9100) out of the ephemeral range
   net.ipv4.neigh.default.gc_thresh1: "4096"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh2: "8192"     # Prevent ARP cache overflows
   net.ipv4.neigh.default.gc_thresh3: "16384"    # Prevent ARP cache overflows
@@ -100,13 +94,10 @@ params:
   net.ipv4.tcp_notsent_lowat: "131072"          # Cap unsent bytes in TCP send buffer (128 KiB) for lower latency
   net.ipv4.tcp_rmem: 4096 131072 67108864       # TCP receive buffer auto-tuning: min, default, max
   net.ipv4.tcp_slow_start_after_idle: "0"       # Keep congestion window after idle periods
-  net.ipv4.tcp_window_scaling: "1"              # RFC 1323 window scaling, allows TCP windows > 64 KiB
   net.ipv4.tcp_wmem: 4096 65536 67108864        # TCP send buffer auto-tuning: min, default, max
   net.ipv6.conf.all.disable_ipv6: "1"           # Disable IPv6
   net.ipv6.conf.default.disable_ipv6: "1"       # Disable IPv6
   net.ipv6.conf.lo.disable_ipv6: "1"            # Disable IPv6
-  sunrpc.tcp_max_slot_table_entries: "128"      # NFS: cap on concurrent RPC requests per TCP connection
-  sunrpc.tcp_slot_table_entries: "128"          # NFS: initial number of concurrent RPC requests per connection
   user.max_user_namespaces: "11255"             # User Namespaces
 ---
 apiVersion: v1alpha1
