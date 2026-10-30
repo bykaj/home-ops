@@ -7,7 +7,7 @@ networks:
 services:
   bootimus:
     container_name: bootimus
-    image: garybowers/bootimus:0.1.79@sha256:8d4c16797e6ca9efea5e31802a3da8a21e52284c7da4a9832909ce8a2a996b23
+    image: garybowers/bootimus:0.1.80@sha256:feb31856704cee5c02b691274bcabc91edbfbbd423b92a145de4b39bb864992e
     environment:
       BOOTIMUS_DATA_DIR: /data
       BOOTIMUS_TFTP_PORT: 69
