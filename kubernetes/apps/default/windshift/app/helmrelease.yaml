@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/windshiftapp/windshift
-              tag: 0.9.1
+              tag: 0.9.2
             env:
               ALLOW_LOCAL_CONNECTIONS: "true"
               ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
