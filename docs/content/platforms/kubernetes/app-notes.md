@@ -82,7 +82,8 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   [SMTP relay](../../infrastructure/networking/index.md#smtp-relay), which
   `litellm-egress` allows on port 25. The relay offers no STARTTLS, so
   `SMTP_TLS` is `"False"`; without it every send fails. The sender is
-  `MAIL_FROM` from the `smtp` 1Password item.
+  `MAIL_FROM` from the `smtp` 1Password item. LiteLLM only sends email with
+  `email` in `general_settings.alerting`.
 - Anything else LiteLLM fetches from the internet times out against that
   policy, so it uses bundled copies instead: the model cost map
   (`LITELLM_LOCAL_MODEL_COST_MAP`) and the Admin UI blog posts

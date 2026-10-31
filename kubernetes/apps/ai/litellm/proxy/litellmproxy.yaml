@@ -15,6 +15,10 @@ spec:
       name: litellm-secret
       key: LITELLM_MASTER_KEY
   generalSettings:
+    # Enables the email channel (key created, user invited and the UI's test
+    # email); without it LiteLLM skips every email, even with SMTP configured
+    alerting:
+      - email
     # Pocket ID (SSO) is the only Admin UI login, and the login page goes
     # straight to it; the master key no longer works as the UI password but
     # still authenticates API calls
