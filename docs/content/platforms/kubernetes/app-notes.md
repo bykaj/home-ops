@@ -35,6 +35,12 @@ Karakeep only stores the OIDC profile picture when a user is first created
 previous identity provider keeps an empty picture until it is set in its
 database.
 
+pgAdmin's OIDC is configured in the repository. `OAUTH2_AUTO_LOGIN` skips its
+login page and goes straight to Pocket ID; append `?no_auto_login` to `/login`
+to see the page anyway. Logging out also ends the Pocket ID session through
+`OAUTH2_LOGOUT_URL`, so the pgAdmin URL must be listed under the client's
+logout callback URLs in Pocket ID.
+
 ### Apps behind `gateway-oidc`
 
 Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through

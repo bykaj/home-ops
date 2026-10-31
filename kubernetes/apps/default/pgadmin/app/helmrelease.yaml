@@ -27,6 +27,7 @@ spec:
               PGADMIN_CONFIG_MAIL_SERVER: "'smtp.bykaj.io'"
               PGADMIN_CONFIG_MAIL_USE_TLS: "False"
               PGADMIN_CONFIG_OAUTH2_AUTO_CREATE_USER: "True"
+              PGADMIN_CONFIG_OAUTH2_AUTO_LOGIN: "True"
               PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
               PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 5050
