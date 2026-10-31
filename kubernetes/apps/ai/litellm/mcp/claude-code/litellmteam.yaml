@@ -8,6 +8,7 @@ spec:
   alias: claude-code
   # Virtual keys get no MCP servers unless granted
   mcpServers:
+    - context7
     - home_assistant
     - kguardian
     - kubesearch

@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: context7-mcp
+spec:
+  # Context7's hosted server (upstream library docs by version); the proxy
+  # sends the API key as a bearer token
+  alias: context7
+  authTokenRef:
+    name: context7-mcp-secret
+    key: CONTEXT7_API_KEY
+  authType: bearer_token
+  params:
+    description: >-
+      Upstream library and API reference docs by version. Fallback only: use
+      kubesearch first for how home-ops repos deploy and configure things.
+  proxyRef: litellm
+  transport: http
+  url: https://mcp.context7.com/mcp
