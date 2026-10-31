@@ -15,11 +15,22 @@ spec:
       name: litellm-secret
       key: LITELLM_MASTER_KEY
   generalSettings:
-    # Pocket ID (SSO) is the only Admin UI login; the master key no longer
-    # works as the UI password but still authenticates API calls
+    # Pocket ID (SSO) is the only Admin UI login, and the login page goes
+    # straight to it; the master key no longer works as the UI password but
+    # still authenticates API calls
+    auto_redirect_ui_login_to_sso: true
     disable_env_credential_login: true
     health_check_endpoint: /v1/health
+    # Envoy (pod network) appends the caller's address to X-Forwarded-For; the
+    # route is on envoy-internal only, so the rightmost entry is the real
+    # client. Used for MCP access control and the UI login throttle
+    mcp_trusted_proxy_ranges:
+      - 10.42.0.0/16
+    mcp_xff_num_trusted_hops: 1
     store_model_in_db: false
+    trusted_proxy_ranges:
+      - 10.42.0.0/16
+    use_x_forwarded_for: true
   routerSettings:
     routing_strategy: simple-shuffle
     redis_url: os.environ/REDIS_URL

@@ -43,8 +43,11 @@ These apps use their native OIDC support.
   `https://litellm.bykaj.app/sso/callback`, uses PKCE, and its credentials are
   `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` in the `litellm` 1Password item.
   The UI role comes from a `litellm_role` custom claim (`proxy_admin` for
-  admins). The free tier allows up to 5 SSO users. The master key no longer
-  works as a UI password (`disable_env_credential_login`).
+  admins). The free tier allows up to 5 SSO users. The login page redirects
+  straight to Pocket ID (`auto_redirect_ui_login_to_sso`), and the master key
+  no longer works as a UI password (`disable_env_credential_login`). Password
+  login remains only for database users with a password, and SSO users have
+  none.
 
 ### Apps behind `gateway-oidc`
 
@@ -101,6 +104,10 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
 - The proxy reaches Pocket ID for SSO through the envoy-external pods
   (`cyrannus.id` resolves to that LoadBalancer IP in the cluster), which
   `litellm-egress` allows on port 10443.
+- The proxy takes the client IP from the rightmost `X-Forwarded-For` entry,
+  which Envoy appends (`use_x_forwarded_for`, one trusted hop, pod network as
+  trusted proxies). That only holds while the route is on envoy-internal:
+  behind cloudflared there is one more hop.
 - `LITELLM_SALT_KEY` encrypts credentials stored in the database. It must
   never change once the database holds data.
 - Windshift's key is in the `windshift-litellm` Secret and is pasted into its
