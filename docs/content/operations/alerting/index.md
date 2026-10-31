@@ -51,7 +51,7 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 
 | Alert | Severity | Fires when |
 | --- | --- | --- |
-| `CiliumEgressPolicyDenied` | critical | An egress policy dropped a packet on a node in the last 10 minutes; see [Cilium](../../infrastructure/networking/index.md#cilium) |
+| `CiliumEgressPolicyDenied` | critical | An egress policy dropped a packet from a workload in the last 10 minutes; names the workload and destination; see [Cilium](../../infrastructure/networking/index.md#cilium) |
 | `DockerhubRateLimitRisk` | critical | More than 100 running containers use `docker.io` images |
 | `NvmeTemperatureCritical` | critical | An NVMe drive is at or above its warning threshold for 1 minute |
 | `NvmeTemperatureHigh` | warning | An NVMe drive is within 2 °C of its warning threshold for 5 minutes |

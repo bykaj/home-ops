@@ -70,12 +70,16 @@ one, and each policy file explains its own rules:
 
 Any blocked egress packet raises the
 [`CiliumEgressPolicyDenied`](../../operations/alerting/index.md#cluster-wide-additionalprometheusrulesmap)
-alert (critical), per node. Only egress-restricted pods can cause egress policy drops,
-so the alert means such a pod tried to reach a host outside its allowlist:
-either a missing rule or something it should not be doing. Run
-`cilium-dbg monitor --type drop` in the cilium-agent on that node to find the
-pod and destination. Ingress drops are not alerted on, because the Dragonfly
-and SMTP relay policies drop some ingress traffic as normal.
+alert (critical), per pod and destination. Only egress-restricted pods can cause
+egress policy drops, so the alert means such a pod tried to reach a host outside
+its allowlist: either a missing rule or something it should not be doing. The
+alert uses Hubble's `hubble_drop_total` metric, which names the source workload
+and the destination (DNS name when Cilium knows it, IP otherwise). Hubble runs
+on each agent for that metric; relay and UI are off. For the dropped flows
+themselves, run `hubble observe --verdict DROPPED` (or
+`cilium-dbg monitor --type drop`) in the cilium-agent on that node. Ingress drops
+are not alerted on, because the Dragonfly and SMTP relay policies drop some
+ingress traffic as normal.
 
 CoreDNS runs without `autopath`, because it stops `toFQDNs` rules from
 matching; see [KB-006](../../operations/troubleshooting/kb/006-tofqdns-timeouts.md).

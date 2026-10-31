@@ -35,8 +35,15 @@ spec:
       enabled: true
     envoy:
       enabled: false
+    # Hubble only for the drop metric, so CiliumEgressPolicyDenied can name the
+    # pod and destination; relay and UI stay off
     hubble:
-      enabled: false
+      enabled: true
+      metrics:
+        enabled:
+          - drop:destinationContext=dns|ip;labelsContext=source_namespace,source_workload,traffic_direction
+        serviceMonitor:
+          enabled: true
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: 10.42.0.0/16

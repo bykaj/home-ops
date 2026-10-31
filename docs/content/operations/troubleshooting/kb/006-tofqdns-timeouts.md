@@ -30,8 +30,12 @@ Check which name the IPs are tied to, in the `cilium-agent` on the pod's node:
 kubectl -n kube-system exec <cilium-pod> -c cilium-agent -- cilium-dbg fqdn cache list
 ```
 
-`hubble observe` doesn't work from inside the agent here, because the Hubble
-socket isn't there.
+Hubble shows the dropped flows with pod and destination names, from inside the
+agent on the pod's node:
+
+```bash
+kubectl -n kube-system exec <cilium-pod> -c cilium-agent -- hubble observe --verdict DROPPED --last 50
+```
 
 After merging an egress policy, send a real request through it. A server-side
 dry run doesn't test this.
