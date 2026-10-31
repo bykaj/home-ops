@@ -35,16 +35,6 @@ spec:
         - ports:
             - port: "5432"
               protocol: TCP
-    # LLMKube InferenceServices, auto-registered as models by the operator
-    # (llmkube.autoRegister); 8080 is the llmkube default endpoint port
-    - toEndpoints:
-        - matchExpressions:
-            - key: inference.llmkube.dev/service
-              operator: Exists
-      toPorts:
-        - ports:
-            - port: "8080"
-              protocol: TCP
     # MCP servers run by the operator (litellm/mcp); add the port here when
     # adding a server on a new one
     - toEndpoints:

@@ -208,7 +208,6 @@ Manifests kept in the repository but commented out of their namespace
 
 | Namespace | Apps |
 | --- | --- |
-| `ai` | [llmkube](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/llmkube), [memini](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/memini), [open-webui](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/open-webui) |
 | `default` | [filabridge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/filabridge), [n8n](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/n8n), [opencloud](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/opencloud) |
 | `development` | [coder](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/development/coder) |
 | `media` | [komga](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/komga) |

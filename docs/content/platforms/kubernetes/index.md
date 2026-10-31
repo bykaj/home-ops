@@ -39,23 +39,27 @@ commit statuses) and `kopiur/secret` (the repository credentials Kopiur needs).
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app memini
+  name: &app atuin
 spec:
   components:
     - ../../../../components/kopiur/backup
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/ai/memini/app
+  path: ./kubernetes/apps/default/atuin/app
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_MOVER_UID: "1000"
-      KOPIUR_MOVER_GID: "1000"
+      APP_NAME: Atuin
+      APP_SUBDOMAIN: sh
+      KOPIUR_CAPACITY: 1Gi
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: ai
+  targetNamespace: default
 ```
 
 !!! tip "What not to add"
