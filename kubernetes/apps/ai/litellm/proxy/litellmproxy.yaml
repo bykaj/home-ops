@@ -8,8 +8,15 @@ spec:
   # renovate: datasource=docker depName=docker.io/litellm/litellm
   image: docker.io/litellm/litellm:v1.106.2@sha256:7294b90f868c5c38c99b83021c7ba46f9b439e95f8e32964c925c7d2563a03f7
   replicas: 1
+  # Admin API for DB-backed resources (LiteLLMVirtualKey); models and MCP
+  # servers stay file-backed because applyMode is left at its default
+  apiAccess:
+    masterKeyRef:
+      name: litellm-secret
+      key: LITELLM_MASTER_KEY
   generalSettings:
     health_check_endpoint: /v1/health
+    store_model_in_db: false
   routerSettings:
     routing_strategy: simple-shuffle
     redis_url: os.environ/REDIS_URL
@@ -27,6 +34,11 @@ spec:
     merge_reasoning_content_in_choices: true
     set_verbose: false
   env:
+    - name: DATABASE_URL
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-postgres-app
+          key: uri
     # Use the bundled cost map instead of fetching it from GitHub at startup;
     # the egress policy only allows the model providers
     - name: LITELLM_LOCAL_MODEL_COST_MAP
@@ -40,6 +52,13 @@ spec:
         secretKeyRef:
           name: litellm-secret
           key: LITELLM_MASTER_KEY
+    # Encrypts credentials stored in the database; must never change once
+    # the database holds data
+    - name: LITELLM_SALT_KEY
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: LITELLM_SALT_KEY
     - name: REDIS_URL
       value: "redis://${APP}-dragonfly:6379"
   resources:

@@ -19,7 +19,7 @@ spec:
         enabled: true
       model: minimax/MiniMax-M3-anthropic
       provider: openai
-      secret: kguardian-secret
+      secret: kguardian-litellm
     broker:
       resources:
         limits:
