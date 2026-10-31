@@ -112,6 +112,19 @@ spec:
           key: LITELLM_SALT_KEY
     - name: REDIS_URL
       value: "redis://${APP}-dragonfly:6379"
+    # Email alerts and notifications through the in-cluster relay, which takes
+    # unauthenticated plain SMTP (no STARTTLS)
+    - name: SMTP_HOST
+      value: smtp.bykaj.io
+    - name: SMTP_PORT
+      value: "25"
+    - name: SMTP_SENDER_EMAIL
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: SMTP_SENDER_EMAIL
+    - name: SMTP_TLS
+      value: "False"
   resources:
     requests:
       cpu: 100m
