@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: home-assistant-mcp
+spec:
+  # ha-mcp runs as an add-on on the HA Yellow, not in the cluster; the proxy
+  # reaches it through a Home Assistant webhook whose ID is the only
+  # credential, so the URL comes from litellm-secret (HA_MCP_URL)
+  alias: home_assistant
+  proxyRef: litellm
+  transport: http
+  url: os.environ/HA_MCP_URL

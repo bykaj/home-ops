@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: unifi-network-mcp
+spec:
+  alias: unifi_network
+  proxyRef: litellm
+  transport: http
+  workload:
+    # renovate: datasource=docker depName=ghcr.io/sirkirby/unifi-network-mcp
+    image: ghcr.io/sirkirby/unifi-network-mcp:0.43.1@sha256:8b31a2e8895fc225a63893c32deef3d4151afd17793d3425f80dbfe95b983bb7
+    automountServiceAccountToken: false
+    env:
+      # Host headers the HTTP transport accepts (DNS rebinding protection)
+      - name: UNIFI_MCP_ALLOWED_HOSTS
+        value: unifi-network-mcp.ai.svc.cluster.local,unifi-network-mcp,localhost,127.0.0.1
+      - name: UNIFI_MCP_HOST
+        value: 0.0.0.0
+      - name: UNIFI_MCP_HTTP_ENABLED
+        value: "true"
+      - name: UNIFI_MCP_PORT
+        value: "3000"
+      # Dedicated local account on the gateway, the same one the Macs use
+      - name: UNIFI_NETWORK_HOST
+        value: gateway.home.cetana.net
+      - name: UNIFI_NETWORK_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: unifi-network-mcp-secret
+            key: UNIFI_NETWORK_PASSWORD
+      - name: UNIFI_NETWORK_PORT
+        value: "443"
+      - name: UNIFI_NETWORK_SITE
+        value: default
+      - name: UNIFI_NETWORK_USERNAME
+        value: claude
+      - name: UNIFI_NETWORK_VERIFY_SSL
+        value: "true"
+      # Meta-tools only; the rest load on demand
+      - name: UNIFI_TOOL_REGISTRATION_MODE
+        value: lazy
+    path: /mcp
+    podSecurityContext:
+      fsGroup: 65532
+      fsGroupChangePolicy: OnRootMismatch
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    port: 3000
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+    volumes:
+      - name: tmp
+        emptyDir: {}
