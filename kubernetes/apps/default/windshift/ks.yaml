@@ -6,11 +6,7 @@ metadata:
   name: &app windshift
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/postgres
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
@@ -23,7 +19,6 @@ spec:
       APP: *app
       APP_NAME: Windshift
       APP_SUBDOMAIN: projects
-      KOPIUR_CAPACITY: 10Gi
       POSTGRES_BACKUP_SCHEDULE: "54 0 * * *"
   prune: true
   sourceRef:
