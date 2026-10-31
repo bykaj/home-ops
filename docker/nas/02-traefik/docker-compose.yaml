@@ -25,7 +25,7 @@ services:
     container_name: traefik
     environment:
       - CLOUDFLARE_DNS_API_TOKEN=${CF_API_TOKEN}
-    image: traefik:v3.7.16
+    image: traefik:v3.7.17
     networks:
       - apps
     ports:
