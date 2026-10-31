@@ -6,8 +6,8 @@ metadata:
   name: litellm-egress
 spec:
   # Egress only: the proxy holds every provider key, so it may reach the model
-  # providers, its cache, its database, its MCP servers and Pocket ID and nothing
-  # else (BerriAI/litellm#47826)
+  # providers, its cache, its database, its MCP servers, Pocket ID and the SMTP
+  # relay and nothing else (BerriAI/litellm#47826)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -63,6 +63,16 @@ spec:
       toPorts:
         - ports:
             - port: "10443"
+              protocol: TCP
+    # SMTP relay for email alerts: smtp.bykaj.io resolves to the relay's
+    # LoadBalancer IP, which Cilium translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
               protocol: TCP
     # Model providers; add the host here when adding a model with a new apiBase
     - toFQDNs:
