@@ -3,21 +3,21 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: minimax-m3-anthropic
+  name: openai-gpt-6.1-sol
 spec:
   info:
-    extra:
-      supports_reasoning: true
-    maxInputTokens: 1000000
-    maxOutputTokens: 131072
+    maxInputTokens: 272000
+    maxOutputTokens: 128000
+    mode: responses
     supportsFunctionCalling: true
     supportsPromptCaching: true
     supportsVision: true
-  modelName: minimax/MiniMax-M3-anthropic
+  modelName: openai/gpt-6.1-sol
   params:
-    apiBase: https://api.minimax.io/anthropic
+    additional:
+      additional_drop_params:
+        - temperature
     apiKeyRef:
-      key: MINIMAX_API_KEY
+      key: OPENAI_API_KEY
       name: litellm-secret
-    dropParams: true
-    model: anthropic/MiniMax-M3
+    model: openai/gpt-6.1-sol
