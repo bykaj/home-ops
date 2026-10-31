@@ -61,8 +61,13 @@ spec:
     - name: pushover
       pushoverConfigs:
         - html: true
+          # Lists only the alerts matching the notification's status, so a resolved alert still in the
+          # group doesn't open a FIRING message; alertname (in the title) and prometheus are left out to
+          # stay under Pushover's 1024-character limit
           message: |-
-            {{- range .Alerts }}
+            {{- $alerts := .Alerts.Resolved }}
+            {{- if eq .Status "firing" }}{{ $alerts = .Alerts.Firing }}{{ end }}
+            {{- range $alerts }}
               {{- if ne .Annotations.description "" }}
                 {{ .Annotations.description }}
               {{- else if ne .Annotations.summary "" }}
@@ -75,7 +80,9 @@ spec:
               {{- if gt (len .Labels.SortedPairs) 0 }}
                 <small>
                   {{- range .Labels.SortedPairs }}
+                    {{- if and (ne .Name "alertname") (ne .Name "prometheus") }}
                     <b>{{ .Name }}:</b> {{ .Value }}
+                    {{- end }}
                   {{- end }}
                 </small>
               {{- end }}

@@ -25,7 +25,10 @@ The routing is defined in the
   10m) and repeat every 24h while firing.
 
 The message is the alert's `description`, or its `summary` if there is none,
-followed by its labels. Put what to do in `description`.
+followed by its labels except `alertname` and `prometheus`. A firing
+notification lists only the group's firing alerts, a resolved one only the
+resolved alerts. Pushover cuts messages off at 1024 characters, so put the most
+important part (what and where) at the start of `description`, then what to do.
 
 ## Rule sources
 
