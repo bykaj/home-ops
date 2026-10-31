@@ -105,12 +105,13 @@ spec:
                 annotations:
                   description: >-
                     Cilium dropped {{ $value | humanize }} egress packets on {{ $labels.node }} in the last 10 minutes
-                    because no egress policy allowed them. Only pods with an egress allowlist can cause this, so one
-                    of them on {{ $labels.node }} tried to reach a destination outside it: a missing rule or something
-                    it should not be doing. Find the pod and destination with `cilium-dbg monitor --type drop` in the
-                    cilium-agent on {{ $labels.node }}.
-                  summary: An egress-restricted pod tried to reach a host outside its allowlist.
-                expr: sum by (node) (increase(cilium_drop_count_total{direction="EGRESS",reason="Policy denied"}[10m])) > 0
+                    from {{ $labels.source_namespace }}/{{ $labels.source_workload }} to {{ $labels.destination }},
+                    because its egress policy does not allow that destination: a missing rule or something it should
+                    not be doing.
+                  summary: "{{ $labels.source_namespace }}/{{ $labels.source_workload }} tried to reach {{ $labels.destination }}, outside its egress allowlist."
+                expr: >-
+                  sum by (node, source_namespace, source_workload, destination)
+                  (increase(hubble_drop_total{reason="POLICY_DENIED",traffic_direction="egress"}[10m])) > 0
                 labels:
                   severity: critical
       dockerhub-rules:
