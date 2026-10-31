@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: openai-text-embedding-3-small
+spec:
+  info:
+    maxInputTokens: 8191
+    mode: embedding
+  modelName: openai/text-embedding-3-small
+  params:
+    apiKeyRef:
+      key: OPENAI_API_KEY
+      name: litellm-secret
+    model: openai/text-embedding-3-small

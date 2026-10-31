@@ -44,16 +44,23 @@ spec:
               # Email config
               SMTP_HOST: "smtp.bykaj.io"
               SMTP_PORT: "25"
-              # Inference config
+              # Inference config, through the LiteLLM proxy
               EMBEDDING_DIMENSIONS: "1536"
               EMBEDDING_ENABLE_AUTO_INDEXING: "true"
-              EMBEDDING_TEXT_MODEL: "text-embedding-3-small"
+              EMBEDDING_TEXT_MODEL: "openai/text-embedding-3-small"
               INFERENCE_CONTEXT_LENGTH: "8192"
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
               INFERENCE_ENABLE_AUTO_TAGGING: "true"
-              INFERENCE_IMAGE_MODEL: "gpt-4o-mini"
+              INFERENCE_IMAGE_MODEL: "openai/gpt-4o-mini"
               INFERENCE_LANG: "english"
+              INFERENCE_TEXT_MODEL: "openai/gpt-4.1-mini"
               INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
+              OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    key: api-key
+                    name: karakeep-litellm
+              OPENAI_BASE_URL: "http://litellm.ai.svc.cluster.local:4000/v1"
               # Crawler config
               BROWSER_CONNECT_ONDEMAND: "true"
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
