@@ -58,8 +58,8 @@ keys come from the `litellm` 1Password item through `litellm-secret`.
 | MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash-Preview` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
 | OpenAI | GPT-6 Astra/Luna, GPT-6.1 Sol, `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | GPT-6 models use the Responses API and drop `temperature` |
 
-All chat models have prompt-cache injection points for the system prompt and
-the last message.
+The MiniMax models have prompt-cache injection points for the system prompt
+and the last message; OpenAI caches prompts automatically.
 
 ## Keys and teams
 
@@ -81,7 +81,8 @@ may call.
 - **Consumer apps** depend on `litellm-operator`, not `litellm`, on purpose:
   they only need the CRD, and depending on the proxy would hold back every
   reconcile of the app while LiteLLM, its Postgres or Dragonfly is unhealthy.
-  On a fresh install the key waits for the proxy and Flux retries.
+  On a fresh install the key waits for the proxy and Flux retries. kguardian
+  is the exception: it depends on `litellm`, which is accepted as is.
 - **MCP access** is granted per team: a key gets no MCP servers unless its team
   lists them. The `claude-code` team lists every server and the model
   `no-default-models`, which matches nothing, so its key can't spend money.
