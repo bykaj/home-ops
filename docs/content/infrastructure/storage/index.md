@@ -75,8 +75,8 @@ It also serves an SMB share for the Macs' Time Machine backups (see
 
 The NAS also runs [Garage](https://garagehq.deuxfleurs.fr/) as an
 S3-compatible object store at `s3.bykaj.io`. CNPG uses it for WAL archives
-and base backups, and Windshift keeps its attachments in the `windshift`
-bucket.
+and base backups, and Karakeep and Windshift keep their assets and
+attachments in the `karakeep` and `windshift` buckets.
 
 ## Pages in this section
 
