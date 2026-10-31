@@ -95,6 +95,11 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   reach GitHub, and keeps the reference repos permanently cloned through
   `KUBESEARCH_POOL_REPOS`. Clients reach it through the proxy with a LiteLLM
   key.
+- The Context7 MCP server (upstream library docs by version) is Context7's
+  hosted server at `mcp.context7.com`, not run by the operator: the proxy
+  sends `CONTEXT7_API_KEY` from the `litellm` 1Password item as a bearer
+  token, and `litellm-egress` allows that host on port 443. Agents use it
+  only as a fallback after kubesearch (see `AGENTS.md`).
 - The kguardian MCP server isn't run by the operator: `kguardian-mcp` points
   the proxy at the `/mcp` endpoint kguardian's llm-bridge already serves
   (port 8080, no authentication). `litellm-egress` allows that port

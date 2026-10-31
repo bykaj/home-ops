@@ -82,6 +82,14 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
+    # External MCP servers (litellm/mcp); add the host here when adding one
+    # with a new url
+    - toFQDNs:
+        - matchName: mcp.context7.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
   endpointSelector:
     matchLabels:
       app.kubernetes.io/instance: litellm
