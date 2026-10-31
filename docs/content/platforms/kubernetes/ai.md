@@ -70,10 +70,10 @@ may call.
 
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
-| `karakeep` | `default/karakeep` | `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | — |
-| `windshift` | `default/windshift` | `MiniMax-M3` | — |
-| `kguardian` | `observability/kguardian` | `MiniMax-M3-anthropic` | — |
 | `claude-code` | `ai` (team `claude-code`) | none | all servers |
+| `karakeep` | `default/karakeep` | `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | — |
+| `kguardian` | `observability/kguardian` | `MiniMax-M3-anthropic` | — |
+| `windshift` | `default/windshift` | `MiniMax-M3` | — |
 
 - **Consumer keys** are declared in the consuming app's own `app/` folder, with
   `proxyNamespace: ai`. The app reads the Secret by `secretKeyRef`, except
