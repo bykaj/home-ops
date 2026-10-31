@@ -25,36 +25,33 @@ their notes on the [Docker](../docker/index.md#stacks) page.
 
 ### Apps with their own OIDC
 
-Immich, Wallos and Audiobookshelf use their native OIDC support, configured
-in each app's UI, not in the repository. Audiobookshelf's group claim is left
-empty, because it only accepts groups named exactly `admin`, `user` and
-`guest`, and its local password login is disabled.
+These apps use their native OIDC support.
 
-Karakeep only stores the OIDC profile picture when a user is first created
-(it doesn't refresh the profile on sign-in). An account created under a
-previous identity provider keeps an empty picture until it is set in its
-database.
-
-pgAdmin's OIDC is configured in the repository. `OAUTH2_AUTO_LOGIN` skips its
-login page and goes straight to Pocket ID; append `?no_auto_login` to `/login`
-to see the page anyway. Logging out also ends the Pocket ID session through
-`OAUTH2_LOGOUT_URL`, so the pgAdmin URL must be listed under the client's
-logout callback URLs in Pocket ID.
+- **Immich, Wallos and Audiobookshelf** are configured in their own UI, not in
+  the repository.
+- **Audiobookshelf** has an empty group claim, because it only accepts groups
+  named exactly `admin`, `user` and `guest`. Its local password login is off.
+- **Karakeep** stores the profile picture only when a user is created. An
+  account from a previous identity provider has no picture until it is set in
+  the database.
+- **pgAdmin** skips its login page (`OAUTH2_AUTO_LOGIN`); use
+  `/login?no_auto_login` to see it. Logging out also ends the Pocket ID session
+  (`OAUTH2_LOGOUT_URL`), so the pgAdmin URL must be in the client's logout
+  callback URLs in Pocket ID.
 
 ### Apps behind `gateway-oidc`
 
 Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
 [`gateway-oidc`](components.md#gateway-oidc).
 
-- **Sonarr stays on `gateway-oidc`.** Its native OIDC allows exactly one
-  user.
-- **Sonarr and Radarr** have `/signalr` on their `api` rule, because Bazarr
-  follows them over SignalR with an API key.
-- **Stash** gets its API key injected by an `HTTPRouteFilter` after the
-  Pocket ID login, so there is no second login. Its `api` rule matches the
-  `ApiKey` header (Whisparr) or the `apikey` query parameter (Homepage,
-  external players) instead of a path. Keep Stash's own form login on: the
-  API key only exists while credentials are set.
+- **Sonarr** stays here, because its native OIDC allows only one user.
+- **Sonarr and Radarr** have `/signalr` on their `api` rule, so Bazarr can
+  follow them over SignalR with an API key.
+- **Stash** gets its API key from an `HTTPRouteFilter` after the Pocket ID
+  login, so there is no second login. Its `api` rule matches the `ApiKey`
+  header (Whisparr) or the `apikey` query parameter (Homepage, external
+  players). Keep Stash's form login on: the API key only exists while
+  credentials are set.
 
 ### Not on single sign-on
 
