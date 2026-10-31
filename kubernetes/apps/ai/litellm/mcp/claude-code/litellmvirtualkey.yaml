@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: claude-code
+spec:
+  # MCP access from Claude Code on the Macs; Claude Code calls no models here
+  keyAlias: claude-code
+  # No model access, see the team
+  models:
+    - no-default-models
+  proxyRef: litellm
+  secretKey: api-key
+  secretName: claude-code-litellm
+  teamID: claude-code

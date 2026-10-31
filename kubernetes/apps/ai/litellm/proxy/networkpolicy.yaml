@@ -6,7 +6,7 @@ metadata:
   name: litellm-egress
 spec:
   # Egress only: the proxy holds every provider key, so it may reach the model
-  # providers, its cache and its MCP servers and nothing else (BerriAI/litellm#47826)
+  # providers, its cache, its database and its MCP servers and nothing else (BerriAI/litellm#47826)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -26,6 +26,13 @@ spec:
       toPorts:
         - ports:
             - port: "6379"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: litellm-postgres
+      toPorts:
+        - ports:
+            - port: "5432"
               protocol: TCP
     # LLMKube InferenceServices, auto-registered as models by the operator
     # (llmkube.autoRegister); 8080 is the llmkube default endpoint port

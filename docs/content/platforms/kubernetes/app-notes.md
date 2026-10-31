@@ -78,6 +78,23 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   reach GitHub, and keeps the reference repos permanently cloned through
   `KUBESEARCH_POOL_REPOS`. Clients reach it through the proxy with a LiteLLM
   key.
+- The proxy runs in DB mode on the `litellm-postgres` CNPG cluster, so every
+  client gets its own key: a `LiteLLMVirtualKey` next to the app, which the
+  operator creates through the proxy's admin API and writes to a Secret in
+  the app's namespace. Limit each key to the models the app uses; an empty
+  `models` list allows all of them, so a key that needs none (MCP only) gets
+  `models: [no-default-models]`. The master key is only for the operator;
+  don't hand it to apps.
+- Virtual keys get no MCP servers unless their team grants them
+  (`LiteLLMTeam.spec.mcpServers`), like the `claude-code` team in
+  `litellm/mcp/claude-code`.
+- Models and MCP servers stay file-backed (`applyMode` at its default, and
+  `store_model_in_db: false`); only keys, teams and spend live in the
+  database.
+- `LITELLM_SALT_KEY` encrypts credentials stored in the database. It must
+  never change once the database holds data.
+- Windshift's key is in the `windshift-litellm` Secret and is pasted into its
+  AI Connection by hand, so a new key needs a manual update there.
 - Background: [LiteLLM 1.107.0 compromise](../../operations/history/2026-10-litellm-compromise.md).
 
 ## Media

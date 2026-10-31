@@ -7,6 +7,10 @@ metadata:
 spec:
   components:
     - ../../../../components/postgres
+  # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
+  dependsOn:
+    - name: litellm-operator
+      namespace: ai
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
