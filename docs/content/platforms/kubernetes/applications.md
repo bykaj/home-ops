@@ -175,7 +175,7 @@ to date and every app has a purpose.
 | [thelounge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/thelounge) | IRC client | internal | [backup](components.md#kopiurbackup) | [thelounge/thelounge](https://github.com/thelounge/thelounge) |
 | [wallos](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wallos) | Subscription tracking | internal | [backup](components.md#kopiurbackup) | [ellite/Wallos](https://github.com/ellite/Wallos) |
 | [wastebin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wastebin) | Pastebin | external | [backup](components.md#kopiurbackup) | [matze/wastebin](https://github.com/matze/wastebin) |
-| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management | external | [backup](components.md#kopiurbackup), [postgres](components.md#postgres) | [windshiftapp/windshift](https://github.com/windshiftapp/windshift) |
+| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management | external | [postgres](components.md#postgres) | [windshiftapp/windshift](https://github.com/windshiftapp/windshift) |
 
 ### `downloads`
 

@@ -15,14 +15,6 @@ spec:
       windshift:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          # The PVC on /data hides the image's /data/attachments and Windshift
-          # never creates it, so uploads stay disabled until it exists
-          attachments-dir:
-            image:
-              repository: docker.io/library/busybox
-              tag: 1.38.0@sha256:a46257e06c82ad85242d0d38077d0a52d9896389ca60a1a59d3463db586e5fa4
-            command: ["mkdir", "-p", "-m", "0750", "/data/attachments"]
         containers:
           app:
             image:
@@ -31,6 +23,9 @@ spec:
             env:
               ALLOW_LOCAL_CONNECTIONS: "true"
               ALLOWED_HOSTS: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
+              # Attachments live in Garage. Older rows store absolute paths
+              # under ATTACHMENT_PATH, which Windshift strips to get the object
+              # key, so it has to stay; it's also the CSV import scratch dir
               ATTACHMENT_PATH: "/data/attachments"
               BASE_URL: "https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
               LOG_LEVEL: "info"
@@ -40,6 +35,11 @@ spec:
                   secretKeyRef:
                     name: windshift-postgres-app
                     key: uri
+              S3_BUCKET: "${APP}"
+              S3_ENDPOINT: "https://s3.bykaj.io"
+              S3_FORCE_PATH_STYLE: "true"
+              S3_REGION: "eu-west"
+              STORAGE_BACKEND: "s3"
               TZ: "Europe/Amsterdam"
               USE_PROXY: "true"
               WEBAUTHN_RP_ID: "${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}"
@@ -50,7 +50,20 @@ spec:
               - secretRef:
                   name: windshift-secret
             probes:
-              liveness: &probes
+              # /readyz also fails while Garage is down; liveness uses /healthz
+              # so a NAS outage doesn't restart the pod
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 5
+              readiness:
                 enabled: true
                 custom: true
                 spec:
@@ -61,7 +74,6 @@ spec:
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 5
-              readiness: *probes
               startup:
                 enabled: true
                 custom: true
@@ -89,14 +101,13 @@ spec:
         fsGroup: 4000
         fsGroupChangePolicy: OnRootMismatch
     persistence:
-      config:
-        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
-        globalMounts:
-          - path: /data
       tmpfs:
         type: emptyDir
         globalMounts:
+          - path: /data/attachments
+            subPath: attachments
           - path: /tmp
+            subPath: tmp
     route:
       app:
         hostnames:
