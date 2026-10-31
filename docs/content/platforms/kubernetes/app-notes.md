@@ -81,8 +81,10 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
 - The proxy runs in DB mode on the `litellm-postgres` CNPG cluster, so every
   client gets its own key: a `LiteLLMVirtualKey` next to the app, which the
   operator creates through the proxy's admin API and writes to a Secret in
-  the app's namespace. Limit each key to the models the app uses. The master
-  key is only for the operator; don't hand it to apps.
+  the app's namespace. Limit each key to the models the app uses; an empty
+  `models` list allows all of them, so a key that needs none (MCP only) gets
+  `models: [no-default-models]`. The master key is only for the operator;
+  don't hand it to apps.
 - Virtual keys get no MCP servers unless their team grants them
   (`LiteLLMTeam.spec.mcpServers`), like the `claude-code` team in
   `litellm/mcp/claude-code`.
