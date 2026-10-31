@@ -126,6 +126,9 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   `models` list allows all of them, so a key that needs none (MCP only) gets
   `models: [no-default-models]`. The master key is only for the operator;
   don't hand it to apps.
+- An app with a key `dependsOn` the `litellm` Kustomization (namespace `ai`),
+  not `litellm-operator`: the operator creates the key through the proxy, so
+  the proxy has to be up first.
 - Virtual keys get no MCP servers unless their team grants them
   (`LiteLLMTeam.spec.mcpServers`), like the `claude-code` team in
   `litellm/mcp/claude-code`.

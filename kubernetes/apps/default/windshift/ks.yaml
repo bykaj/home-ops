@@ -7,9 +7,9 @@ metadata:
 spec:
   components:
     - ../../../../components/postgres
-  # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
+  # litellm, not the operator: the LiteLLMVirtualKey is created through the proxy
   dependsOn:
-    - name: litellm-operator
+    - name: litellm
       namespace: ai
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
