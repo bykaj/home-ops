@@ -86,8 +86,8 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 | nut-exporter | `UpsLowRuntime` | critical | The UPS is on battery with less than 10 minutes of runtime left |
 | nut-exporter | `UpsOnBattery` | warning | The UPS runs on battery |
 
-Coder (`development/coder`, 14 rules under `app/rules/`) and LLMKube are
-disabled, so their rules are not loaded.
+Coder (`development/coder`, 14 rules under `app/rules/`) is disabled, so its
+rules are not loaded.
 
 ## Silences
 
