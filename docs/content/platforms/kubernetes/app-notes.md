@@ -78,6 +78,13 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
   new host needs a rule there, or its requests time out.
+- Anything else LiteLLM fetches from the internet times out against that
+  policy, so it uses bundled copies instead: the model cost map
+  (`LITELLM_LOCAL_MODEL_COST_MAP`) and the Admin UI blog posts
+  (`LITELLM_LOCAL_BLOG_POSTS`). The blog fetch is synchronous, so without that
+  setting every UI page load froze the whole proxy for 5 seconds. The UI's
+  GitHub release check also times out (5 seconds, once per 5 minutes), but
+  it's async and harmless.
 - MCP servers are `LiteLLMMCPServer` resources in `litellm/mcp` (Flux
   Kustomization `litellm-mcp`); the operator runs each one and registers it
   with the proxy. `litellm-egress` allows them by the operator's
