@@ -45,6 +45,7 @@ nav = [
       { "Components" = "platforms/kubernetes/components.md" },
       { "Applications" = "platforms/kubernetes/applications.md" },
       { "App Notes" = "platforms/kubernetes/app-notes.md" },
+      { "AI" = "platforms/kubernetes/ai.md" },
     ] },
     { "Docker" = [
       "platforms/docker/index.md",

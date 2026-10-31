@@ -74,6 +74,9 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
 
 ### LiteLLM
 
+How the gateway, models, keys and MCP servers fit together is on the
+[AI](ai.md) page; these are the gotchas.
+
 - Updates wait 3 days in Renovate, and the image comes from Docker Hub so that
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
