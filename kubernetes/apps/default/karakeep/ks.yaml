@@ -7,7 +7,10 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+  # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
   dependsOn:
+    - name: litellm-operator
+      namespace: ai
     - name: meilisearch
       namespace: database
     - name: rook-ceph-cluster
