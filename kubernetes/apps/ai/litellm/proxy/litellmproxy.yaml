@@ -15,6 +15,9 @@ spec:
       name: litellm-secret
       key: LITELLM_MASTER_KEY
   generalSettings:
+    # Pocket ID (SSO) is the only Admin UI login; the master key no longer
+    # works as the UI password but still authenticates API calls
+    disable_env_credential_login: true
     health_check_endpoint: /v1/health
     store_model_in_db: false
   routerSettings:
@@ -39,6 +42,38 @@ spec:
         secretKeyRef:
           name: ${APP}-postgres-app
           key: uri
+    # Admin UI SSO through Pocket ID; LiteLLM's free tier allows up to 5 SSO users
+    - name: GENERIC_AUTHORIZATION_ENDPOINT
+      value: https://cyrannus.id/authorize
+    - name: GENERIC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: GENERIC_CLIENT_ID
+    - name: GENERIC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: GENERIC_CLIENT_SECRET
+    - name: GENERIC_CLIENT_USE_PKCE
+      value: "true"
+    - name: GENERIC_SCOPE
+      value: openid profile email
+    - name: GENERIC_TOKEN_ENDPOINT
+      value: https://cyrannus.id/api/oidc/token
+    - name: GENERIC_USER_DISPLAY_NAME_ATTRIBUTE
+      value: name
+    - name: GENERIC_USER_EMAIL_ATTRIBUTE
+      value: email
+    - name: GENERIC_USER_ID_ATTRIBUTE
+      value: sub
+    # Pocket ID custom claim; proxy_admin for admins
+    - name: GENERIC_USER_ROLE_ATTRIBUTE
+      value: litellm_role
+    - name: GENERIC_USERINFO_ENDPOINT
+      value: https://cyrannus.id/api/oidc/userinfo
+    - name: PROXY_BASE_URL
+      value: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
     # Use the bundled cost map instead of fetching it from GitHub at startup;
     # the egress policy only allows the model providers
     - name: LITELLM_LOCAL_MODEL_COST_MAP
