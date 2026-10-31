@@ -60,7 +60,9 @@ one, and each policy file explains its own rules:
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are
   allowed by FQDN (`toFQDNs`), so a provider or MCP server on a new host needs
-  a rule there.
+  a rule there. `api.github.com` is allowed too, for the Admin UI's release
+  check; it's the one destination that can take data out (see the
+  [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
 - The [`dragonfly` component](../../platforms/kubernetes/components.md#dragonfly) limits

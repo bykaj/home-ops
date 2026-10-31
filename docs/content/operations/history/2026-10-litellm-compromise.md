@@ -58,5 +58,11 @@ bindings, and it had no database credentials. Nothing else was exposed.
   fixed its release pipeline.
 - A model on a new provider host needs a `toFQDNs` rule in `litellm-egress`,
   or its requests time out and the egress alert fires.
+- Since 2026-10-31 the allowlist includes `api.github.com`, for the Admin UI's
+  release check, which can't be turned off. GitHub's API accepts writes
+  (gists, issues, repo contents) with any token, so a compromised image could
+  send the provider keys out that way. Cilium can't narrow it to the release
+  endpoint without TLS interception. Remove the rule if LiteLLM gets a switch
+  for the check.
 - Not built yet: runtime detection (Tetragon) and diffing image contents on
   Renovate PRs.
