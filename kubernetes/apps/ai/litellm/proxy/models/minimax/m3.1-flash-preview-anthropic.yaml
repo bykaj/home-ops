@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: minimax-m3.1-flash-preview-anthropic
+spec:
+  info:
+    extra:
+      supports_reasoning: true
+    maxInputTokens: 1000000
+    maxOutputTokens: 131072
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+    supportsVision: true
+  modelName: minimax/MiniMax-M3.1-Flash-Preview-anthropic
+  params:
+    additional:
+      cache_control_injection_points:
+        - location: message
+          role: system
+        - index: -1
+          location: message
+    apiBase: https://api.minimax.io/anthropic
+    apiKeyRef:
+      key: MINIMAX_API_KEY
+      name: litellm-secret
+    dropParams: true
+    model: anthropic/MiniMax-M3.1-Flash-Preview

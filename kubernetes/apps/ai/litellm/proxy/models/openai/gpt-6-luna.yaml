@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: openai-gpt-6-luna
+spec:
+  info:
+    maxInputTokens: 272000
+    maxOutputTokens: 128000
+    mode: responses
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+    supportsVision: true
+  modelName: openai/gpt-6-luna
+  params:
+    additional:
+      additional_drop_params:
+        - temperature
+    apiKeyRef:
+      key: OPENAI_API_KEY
+      name: litellm-secret
+    model: openai/gpt-6-luna
