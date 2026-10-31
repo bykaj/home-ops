@@ -85,7 +85,7 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   setting every UI page load froze the whole proxy for 5 seconds. The UI's
   GitHub release check also times out (5 seconds, once per 5 minutes), but
   it's async and harmless.
-- MCP servers are `LiteLLMMCPServer` resources in `litellm/mcp` (Flux
+- MCP servers are `LiteLLMMCPServer` resources in `litellm/mcp/servers` (Flux
   Kustomization `litellm-mcp`); the operator runs each one and registers it
   with the proxy. `litellm-egress` allows them by the operator's
   `app.kubernetes.io/component: mcp-server` label on port 3000, so a server on
@@ -128,7 +128,7 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   don't hand it to apps.
 - Virtual keys get no MCP servers unless their team grants them
   (`LiteLLMTeam.spec.mcpServers`), like the `claude-code` team in
-  `litellm/mcp/claude-code`.
+  `litellm/mcp/teams/claude-code`.
 - Models and MCP servers stay file-backed (`applyMode` at its default, and
   `store_model_in_db: false`); only keys, teams and spend live in the
   database.

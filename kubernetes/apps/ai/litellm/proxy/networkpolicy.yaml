@@ -35,7 +35,7 @@ spec:
         - ports:
             - port: "5432"
               protocol: TCP
-    # MCP servers run by the operator (litellm/mcp); add the port here when
+    # MCP servers run by the operator (litellm/mcp/servers); add the port here when
     # adding a server on a new one
     - toEndpoints:
         - matchLabels:
@@ -45,7 +45,7 @@ spec:
         - ports:
             - port: "3000"
               protocol: TCP
-    # kguardian's /mcp on its llm-bridge (litellm/mcp/kguardian)
+    # kguardian's /mcp on its llm-bridge (litellm/mcp/servers/kguardian)
     - toEndpoints:
         - matchLabels:
             app.kubernetes.io/name: kguardian-llm-bridge
@@ -72,7 +72,7 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
-    # External MCP servers (litellm/mcp); add the host here when adding one
+    # External MCP servers (litellm/mcp/servers); add the host here when adding one
     # with a new url
     - toFQDNs:
         - matchName: mcp.context7.com
