@@ -68,6 +68,16 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
   new host needs a rule there, or its requests time out.
+- MCP servers are `LiteLLMMCPServer` resources in `litellm/mcp` (Flux
+  Kustomization `litellm-mcp`); the operator runs each one and registers it
+  with the proxy. `litellm-egress` allows them by the operator's
+  `app.kubernetes.io/component: mcp-server` label on port 3000, so a server on
+  another port needs that port added. Each server has its own policy that
+  admits only the proxy.
+- The kubesearch MCP server (kubesearch.dev search plus repo clones) may only
+  reach GitHub, and keeps the reference repos permanently cloned through
+  `KUBESEARCH_POOL_REPOS`. Clients reach it through the proxy with a LiteLLM
+  key.
 - Background: [LiteLLM 1.107.0 compromise](../../operations/history/2026-10-litellm-compromise.md).
 
 ## Media

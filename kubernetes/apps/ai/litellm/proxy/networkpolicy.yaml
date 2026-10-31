@@ -6,7 +6,7 @@ metadata:
   name: litellm-egress
 spec:
   # Egress only: the proxy holds every provider key, so it may reach the model
-  # providers and its cache and nothing else (BerriAI/litellm#47826)
+  # providers, its cache and its MCP servers and nothing else (BerriAI/litellm#47826)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -36,6 +36,16 @@ spec:
       toPorts:
         - ports:
             - port: "8080"
+              protocol: TCP
+    # MCP servers run by the operator (litellm/mcp); add the port here when
+    # adding a server on a new one
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/component: mcp-server
+            app.kubernetes.io/managed-by: litellm-operator
+      toPorts:
+        - ports:
+            - port: "3000"
               protocol: TCP
     # Model providers; add the host here when adding a model with a new apiBase
     - toFQDNs:
