@@ -93,10 +93,10 @@ one key for all of them. Tools appear as `<server>-<tool>`.
 
 | Server | Runs | Reaches |
 | --- | --- | --- |
-| `kubesearch` | Operator-run pod | kubesearch.dev and GitHub clones (reference repos always cloned) |
 | `context7` | Context7's hosted server | `mcp.context7.com`, bearer key from the `litellm` item |
-| `kguardian` | kguardian's own llm-bridge | `observability/kguardian-llm-bridge:8080`, no auth |
 | `home_assistant` | Operator-run pod (ha-mcp) | Home Assistant, as a dedicated user |
+| `kguardian` | kguardian's own llm-bridge | `observability/kguardian-llm-bridge:8080`, no auth |
+| `kubesearch` | Operator-run pod | kubesearch.dev and GitHub clones (reference repos always cloned) |
 | `unifi_network` | Operator-run pod | The UniFi gateway, as a dedicated local account |
 
 Operator-run servers are `LiteLLMMCPServer` resources with a `workload` and
