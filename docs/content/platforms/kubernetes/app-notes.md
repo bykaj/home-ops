@@ -103,13 +103,12 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   point, not a finished policy: it selects on `pod-template-hash`, only knows
   flows seen since the pods started, and attributes kubelet probes to
   whichever host-network pod shares the node.
-- The Home Assistant MCP server (ha-mcp) runs as an add-on on the HA Yellow,
-  not in the cluster. `home-assistant-mcp` points the proxy at its Home
-  Assistant webhook URL, whose webhook ID is the only credential. The URL is
-  the `HA_MCP_URL` field of the `litellm` 1Password item; it reaches the proxy
-  as an environment variable and the config only refers to it
-  (`os.environ/HA_MCP_URL`), so it never lands in the rendered config map.
-  `litellm-egress` allows `homeassistant.home.cetana.net` on port 443.
+- The Home Assistant MCP server (ha-mcp) has no route of its own: only the
+  proxy may call it, and it may only reach `homeassistant.home.cetana.net` on
+  port 443. It acts as a dedicated Home Assistant user through a long-lived
+  access token (`HOMEASSISTANT_TOKEN` in the `litellm` 1Password item);
+  revoking that token in Home Assistant cuts it off. Its settings page is
+  disabled, so configuration only comes from Git.
 - The UniFi MCP server (unifi-network-mcp) logs in to the gateway as the
   dedicated local account (password in the `unifi` 1Password item)
   and may only reach `gateway.home.cetana.net`. Its tools load on demand

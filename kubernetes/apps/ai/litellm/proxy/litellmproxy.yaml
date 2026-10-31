@@ -83,14 +83,6 @@ spec:
       value: litellm_role
     - name: GENERIC_USERINFO_ENDPOINT
       value: https://cyrannus.id/api/oidc/userinfo
-    # ha-mcp on the HA Yellow (litellm/mcp/home-assistant); the webhook ID in
-    # the URL is its only credential, so the URL stays in the Secret and the
-    # config refers to it as os.environ/HA_MCP_URL
-    - name: HA_MCP_URL
-      valueFrom:
-        secretKeyRef:
-          name: litellm-secret
-          key: HA_MCP_URL
     - name: PROXY_BASE_URL
       value: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
     # Use the bundled blog posts for the Admin UI: the RSS fetch is synchronous,

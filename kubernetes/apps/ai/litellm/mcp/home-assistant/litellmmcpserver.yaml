@@ -5,10 +5,66 @@ kind: LiteLLMMCPServer
 metadata:
   name: home-assistant-mcp
 spec:
-  # ha-mcp runs as an add-on on the HA Yellow, not in the cluster; the proxy
-  # reaches it through a Home Assistant webhook whose ID is the only
-  # credential, so the URL comes from litellm-secret (HA_MCP_URL)
   alias: home_assistant
   proxyRef: litellm
   transport: http
-  url: os.environ/HA_MCP_URL
+  workload:
+    # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
+    image: ghcr.io/homeassistant-ai/ha-mcp:9.0.0@sha256:0298113732140c9d725171dc3f1dc5b6a53b03815482536ee2236e17e8cd1bdd
+    args:
+      - ha-mcp-web
+    automountServiceAccountToken: false
+    env:
+      # Configuration comes from Git, not the server's web settings page
+      - name: HA_MCP_DISABLE_SETTINGS_UI
+        value: "true"
+      # Long-lived access token of a dedicated Home Assistant user
+      - name: HOMEASSISTANT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: home-assistant-mcp-secret
+            key: HOMEASSISTANT_TOKEN
+      - name: HOMEASSISTANT_URL
+        value: https://homeassistant.home.cetana.net
+      # Port 3000 is the one litellm-egress allows for operator MCP servers
+      - name: MCP_PORT
+        value: "3000"
+      # Fixed path instead of a random secret one; the policy admits only the
+      # proxy
+      - name: MCP_SECRET_PATH
+        value: /mcp
+      - name: READ_ONLY_MODE
+        value: "false"
+    path: /mcp
+    podSecurityContext:
+      fsGroup: 999
+      fsGroupChangePolicy: OnRootMismatch
+      runAsGroup: 999
+      runAsNonRoot: true
+      runAsUser: 999
+      seccompProfile:
+        type: RuntimeDefault
+    port: 3000
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+    volumeMounts:
+      - name: state
+        mountPath: /home/mcpuser/.ha-mcp
+      - name: tmp
+        mountPath: /tmp
+    volumes:
+      # Settings and caches, rebuilt on restart
+      - name: state
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
