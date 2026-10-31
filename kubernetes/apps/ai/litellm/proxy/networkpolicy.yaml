@@ -6,8 +6,8 @@ metadata:
   name: litellm-egress
 spec:
   # Egress only: the proxy holds every provider key, so it may reach the model
-  # providers, its cache, its database, its MCP servers, Pocket ID and the SMTP
-  # relay and nothing else (BerriAI/litellm#47826)
+  # providers, its cache, its database, its MCP servers, Pocket ID, the SMTP
+  # relay and GitHub's API and nothing else (BerriAI/litellm#47826)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -78,6 +78,15 @@ spec:
     - toFQDNs:
         - matchName: api.minimax.io
         - matchName: api.openai.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # The Admin UI's latest-release check (api.github.com, every 5 minutes while
+    # the UI is open); it can't be turned off, and when blocked it set off
+    # CiliumEgressPolicyDenied
+    - toFQDNs:
+        - matchName: api.github.com
       toPorts:
         - ports:
             - port: "443"
