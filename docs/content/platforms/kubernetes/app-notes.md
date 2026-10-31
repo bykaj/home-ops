@@ -95,6 +95,14 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
   reach GitHub, and keeps the reference repos permanently cloned through
   `KUBESEARCH_POOL_REPOS`. Clients reach it through the proxy with a LiteLLM
   key.
+- The kguardian MCP server isn't run by the operator: `kguardian-mcp` points
+  the proxy at the `/mcp` endpoint kguardian's llm-bridge already serves
+  (port 8080, no authentication). `litellm-egress` allows that port
+  separately, and the `kguardian-llm-bridge` policy admits only the proxy and
+  the kguardian frontend. Its `generate_network_policy` output is a starting
+  point, not a finished policy: it selects on `pod-template-hash`, only knows
+  flows seen since the pods started, and attributes kubelet probes to
+  whichever host-network pod shares the node.
 - The proxy runs in DB mode on the `litellm-postgres` CNPG cluster, so every
   client gets its own key: a `LiteLLMVirtualKey` next to the app, which the
   operator creates through the proxy's admin API and writes to a Secret in

@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kguardian-llm-bridge
+spec:
+  # The llm-bridge serves /mcp without authentication (ai.mcp.auth), so only
+  # the frontend (assistant chat) and LiteLLM (MCP gateway) may call it
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kguardian-llm-bridge
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: kguardian-frontend
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
