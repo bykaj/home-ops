@@ -6,7 +6,8 @@ metadata:
   name: litellm-egress
 spec:
   # Egress only: the proxy holds every provider key, so it may reach the model
-  # providers, its cache, its database and its MCP servers and nothing else (BerriAI/litellm#47826)
+  # providers, its cache, its database, its MCP servers and Pocket ID and nothing
+  # else (BerriAI/litellm#47826)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -53,6 +54,16 @@ spec:
       toPorts:
         - ports:
             - port: "3000"
+              protocol: TCP
+    # Pocket ID for Admin UI SSO: cyrannus.id resolves to the envoy-external
+    # LoadBalancer IP, which Cilium translates to the envoy pods (10443)
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
               protocol: TCP
     # Model providers; add the host here when adding a model with a new apiBase
     - toFQDNs:

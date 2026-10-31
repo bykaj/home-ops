@@ -38,6 +38,13 @@ These apps use their native OIDC support.
   `/login?no_auto_login` to see it. Logging out also ends the Pocket ID session
   (`OAUTH2_LOGOUT_URL`), so the pgAdmin URL must be in the client's logout
   callback URLs in Pocket ID.
+- **LiteLLM** uses native OIDC for its Admin UI only, so the API and `/mcp/`
+  keep working with keys. The Pocket ID client has callback URL
+  `https://litellm.bykaj.app/sso/callback`, uses PKCE, and its credentials are
+  `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` in the `litellm` 1Password item.
+  The UI role comes from a `litellm_role` custom claim (`proxy_admin` for
+  admins). The free tier allows up to 5 SSO users. The master key no longer
+  works as a UI password (`disable_env_credential_login`).
 
 ### Apps behind `gateway-oidc`
 
@@ -91,6 +98,9 @@ Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
 - Models and MCP servers stay file-backed (`applyMode` at its default, and
   `store_model_in_db: false`); only keys, teams and spend live in the
   database.
+- The proxy reaches Pocket ID for SSO through the envoy-external pods
+  (`cyrannus.id` resolves to that LoadBalancer IP in the cluster), which
+  `litellm-egress` allows on port 10443.
 - `LITELLM_SALT_KEY` encrypts credentials stored in the database. It must
   never change once the database holds data.
 - Windshift's key is in the `windshift-litellm` Secret and is pasted into its
