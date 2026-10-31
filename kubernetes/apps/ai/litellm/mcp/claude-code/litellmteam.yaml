@@ -8,6 +8,7 @@ spec:
   alias: claude-code
   # Virtual keys get no MCP servers unless granted
   mcpServers:
+    - kguardian
     - kubesearch
   # LiteLLM's "no models" value: it matches no model name, so every model
   # call is refused (403) while MCP access is unaffected

@@ -55,6 +55,15 @@ spec:
         - ports:
             - port: "3000"
               protocol: TCP
+    # kguardian's /mcp on its llm-bridge (litellm/mcp/kguardian)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: kguardian-llm-bridge
+            k8s:io.kubernetes.pod.namespace: observability
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
     # Pocket ID for Admin UI SSO: cyrannus.id resolves to the envoy-external
     # LoadBalancer IP, which Cilium translates to the envoy pods (10443)
     - toEndpoints:

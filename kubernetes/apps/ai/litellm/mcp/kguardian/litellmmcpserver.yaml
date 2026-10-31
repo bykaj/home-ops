@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: kguardian-mcp
+spec:
+  # kguardian's own /mcp endpoint on the llm-bridge (observability/kguardian),
+  # unauthenticated; its policy admits only the proxy and the kguardian frontend
+  alias: kguardian
+  proxyRef: litellm
+  transport: http
+  url: http://kguardian-llm-bridge.observability.svc.cluster.local:8080/mcp
