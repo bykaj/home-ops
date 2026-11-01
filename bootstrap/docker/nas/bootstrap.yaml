@@ -8,31 +8,18 @@
     ansible_python_interpreter: auto_silent
 
   tasks:
+    # Lookups are lazy and would call `op` on every use; set_fact resolves each one once per run
+    - name: Gather secrets
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ ansible_become_password }}"
+        doco_1pw_sa_token: "{{ lookup('community.general.onepassword', 'doco-cd', field='1PW_SA_TOKEN', vault='Homelab') }}"
+        doco_api_secret: "{{ lookup('community.general.onepassword', 'doco-cd', field='API_SECRET', vault='Homelab') }}"
+        doco_webhook_secret: "{{ lookup('community.general.onepassword', 'doco-cd', field='WEBHOOK_SECRET', vault='Homelab') }}"
+      become: false
+      no_log: true
+
     - name: Check host connectivity
       ansible.builtin.ping:
-
-    - name: Read secrets from 1Password
-      ansible.builtin.shell: "op read 'op://{{ item.key }}' < /dev/null"
-      delegate_to: localhost
-      become: false
-      loop:
-        - key: Homelab/doco-cd/1PW_SA_TOKEN
-          var: doco_1pw_sa_token
-        - key: Homelab/doco-cd/API_SECRET
-          var: doco_api_secret
-        - key: Homelab/doco-cd/WEBHOOK_SECRET
-          var: doco_webhook_secret
-      check_mode: false
-      changed_when: false
-      no_log: true
-      register: secrets_raw
-
-    - name: Set secret facts
-      ansible.builtin.set_fact:
-        doco_1pw_sa_token: "{{ secrets_raw.results[0].stdout }}"
-        doco_api_secret: "{{ secrets_raw.results[1].stdout }}"
-        doco_webhook_secret: "{{ secrets_raw.results[2].stdout }}"
-      no_log: true
 
     - name: doco-cd
       vars:

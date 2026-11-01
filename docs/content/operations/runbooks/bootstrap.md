@@ -185,5 +185,8 @@ writes doco-cd's secrets and starts doco-cd from `docker/nas/00-doco-cd`,
 which then reconciles the `docker/nas/` stacks, including its own. Nothing in
 `bootstrap/` is used again until the next provisioning.
 
-To add a host, create those three pieces. The become password is resolved
-with `op read` only when a task needs `become`, so it never sits on disk.
+To add a host, create those three pieces. Secrets, including the become
+password, are read with the `community.general.onepassword` lookup and never
+sit on disk. Lookups are lazy, so each playbook resolves them once in a
+`Gather secrets` `set_fact` task at the start; without it, `op` would run on
+every task that uses them.

@@ -8,6 +8,13 @@
     ansible_python_interpreter: auto_silent
 
   tasks:
+    # The inventory lookup is lazy and would call `op` on every become task; set_fact resolves it once
+    - name: Gather secrets
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ ansible_become_password }}"
+      become: false
+      no_log: true
+
     - name: doco-cd
       vars:
         dococd_config_dir: /home/truenas_admin/.config/doco-cd
