@@ -113,7 +113,7 @@ may call.
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
 | `claude-code` | `ai` (team `claude-code`) | none | all servers |
-| `karakeep` | `default/karakeep` | `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | — |
+| `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `MiniMax-M3-anthropic` | — |
 | `windshift` | `default/windshift` | `MiniMax-M3` | — |
 
