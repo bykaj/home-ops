@@ -31,12 +31,42 @@ spec:
               - "-c"
               - "opencloud init || true; opencloud server"
             env:
+              # Users are created on first login and get no role from OpenCloud
+              # itself: proxy.yaml maps their Pocket ID groups to roles
+              GRAPH_ASSIGN_DEFAULT_USER_ROLE: false
+              GRAPH_USERNAME_MATCH: "none"
               IDM_CREATE_DEMO_USERS: false
+              OC_ADMIN_USER_ID: ""
               OC_ENABLE_OCM: false
+              # Pocket ID replaces the built-in IdP; the built-in IDM keeps the
+              # provisioned accounts
+              OC_EXCLUDE_RUN_SERVICES: "idp"
               OC_INSECURE: false
               OC_LOG_LEVEL: "info"
+              OC_OIDC_ISSUER: "https://cyrannus.id"
               OC_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"
+              PROXY_AUTOPROVISION_ACCOUNTS: true
+              # Pocket ID's sub is stable across username changes
+              PROXY_AUTOPROVISION_CLAIM_USERNAME: "sub"
+              PROXY_CSP_CONFIG_FILE_LOCATION: "/etc/opencloud/csp.yaml"
+              # Clients ask OpenCloud for the IdP; point them at Pocket ID
+              PROXY_OIDC_REWRITE_WELLKNOWN: true
               PROXY_TLS: false
+              PROXY_USER_CS3_CLAIM: "username"
+              PROXY_USER_OIDC_CLAIM: "sub"
+              SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: false
+              STORAGE_USERS_DECOMPOSEDS3_BUCKET: "${APP}"
+              STORAGE_USERS_DECOMPOSEDS3_ENDPOINT: "https://s3.bykaj.io"
+              STORAGE_USERS_DECOMPOSEDS3_REGION: "eu-west"
+              STORAGE_USERS_DRIVER: "decomposeds3"
+              WEB_OIDC_CLIENT_ID: "opencloud-web"
+              # Pocket ID only sends the groups claim for the groups scope
+              WEB_OIDC_SCOPE: "openid profile email groups"
+              WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://cyrannus.id/settings/account"
+              # The desktop and mobile apps use their fixed default client IDs
+              WEBFINGER_ANDROID_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
+              WEBFINGER_DESKTOP_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
+              WEBFINGER_IOS_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
             envFrom:
               - secretRef:
                   name: opencloud-secret
@@ -57,12 +87,17 @@ spec:
               capabilities:
                 drop:
                   - ALL
-    service:
-      app:
-        ports:
-          http:
-            port: 9200
     persistence:
+      config:
+        type: configMap
+        name: opencloud-config
+        globalMounts:
+          - path: /etc/opencloud/csp.yaml
+            subPath: csp.yaml
+            readOnly: true
+          - path: /etc/opencloud/proxy.yaml
+            subPath: proxy.yaml
+            readOnly: true
       data:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
@@ -82,3 +117,8 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
+    service:
+      app:
+        ports:
+          http:
+            port: 9200

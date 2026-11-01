@@ -17,8 +17,8 @@ spec:
       APP: *app
       APP_NAME: OpenCloud
       APP_SUBDOMAIN: files
-      KOPIUR_CAPACITY: 20Gi
-      KOPIUR_CACHE_CAPACITY: 5Gi
+      # File blobs live in Garage; the PVC holds metadata, NATS, search index and thumbnails
+      KOPIUR_CAPACITY: 10Gi
   prune: true
   sourceRef:
     kind: GitRepository

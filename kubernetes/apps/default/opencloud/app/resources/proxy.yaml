@@ -1,0 +1,14 @@
+---
+# Roles come from Pocket ID group names, highest privilege first: a user in
+# several groups gets the first match. A user in none of them can't sign in
+role_assignment:
+  driver: oidc
+  oidc_role_mapper:
+    role_claim: groups
+    role_mapping:
+      - role_name: admin
+        claim_value: admins
+      - role_name: user
+        claim_value: family
+      - role_name: user-light
+        claim_value: friends

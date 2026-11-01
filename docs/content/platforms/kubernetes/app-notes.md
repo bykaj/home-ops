@@ -48,6 +48,25 @@ These apps use their native OIDC support.
   no longer works as a UI password (`disable_env_credential_login`). Password
   login remains only for database users with a password, and SSO users have
   none.
+- **OpenCloud** replaces its built-in IdP with Pocket ID and creates accounts
+  on first login, keyed on the `sub` claim. It has four public PKCE clients
+  in Pocket ID, with fixed client IDs:
+
+    | Client ID          | Callback URLs                                                                                                                 |
+    | ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+    | `opencloud-web`    | `https://files.bykaj.app/`, `https://files.bykaj.app/oidc-callback.html`, `https://files.bykaj.app/oidc-silent-redirect.html` |
+    | `OpenCloudDesktop` | `http://127.0.0.1`, `http://localhost` (any port is accepted)                                                                 |
+    | `OpenCloudIOS`     | `oc://ios.opencloud.eu`                                                                                                       |
+    | `OpenCloudAndroid` | `oc://android.opencloud.eu`                                                                                                   |
+
+    The role comes from the `groups` claim on every login (`resources/proxy.yaml`):
+    `admins` → Admin, `family` → User, `friends` → Guest, highest first. A
+    user in none of these groups can't sign in. Pocket ID only sends `groups`
+    for the `groups` scope, so the web and app scopes include it. The CSP
+    (`resources/csp.yaml`) is OpenCloud's default plus `https://cyrannus.id/`.
+    File contents are stored in the `opencloud` Garage bucket
+    (`decomposeds3`); the PVC keeps the metadata, so restoring files needs
+    both the PVC backup and the bucket.
 
 ### Apps behind `gateway-oidc`
 

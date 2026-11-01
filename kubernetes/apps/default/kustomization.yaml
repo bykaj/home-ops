@@ -15,7 +15,7 @@ resources:
   - ./karakeep/ks.yaml
   - ./mail-archiver/ks.yaml
   # - ./n8n/ks.yaml
-  # - ./opencloud/ks.yaml
+  - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
   - ./spoolman/ks.yaml
