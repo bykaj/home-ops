@@ -67,6 +67,8 @@ spec:
               STORAGE_USERS_DECOMPOSEDS3_ENDPOINT: "https://s3.bykaj.io"
               STORAGE_USERS_DECOMPOSEDS3_REGION: "eu-west"
               STORAGE_USERS_DRIVER: "decomposeds3"
+              # Web extensions are mounted from their images, see persistence.web-apps
+              WEB_ASSET_APPS_PATH: "/opt/web-apps"
               WEB_OIDC_CLIENT_ID: "opencloud-web"
               # Pocket ID only sends the groups claim for the groups scope
               WEB_OIDC_SCOPE: "openid profile email groups"
@@ -118,6 +120,15 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+      web-apps:
+        type: image
+        image:
+          repository: docker.io/opencloudeu/web-extensions
+          tag: pastebin-2.2.0@sha256:f54c9ae1e5fdb19f6649b60d7c81f229c8b7ac2cd00de1c26d88adb40e90e07e
+        globalMounts:
+          - path: /opt/web-apps/pastebin
+            subPath: web/apps/pastebin
+            readOnly: true
     route:
       app:
         hostnames:

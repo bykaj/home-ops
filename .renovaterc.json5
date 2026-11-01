@@ -240,5 +240,11 @@
       matchPackageNames: ["/instantlinux/nut-upsd/"],
       versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-r(?<build>\\d+)$",
     },
+    {
+      description: "Override OpenCloud web extension versioning, tags are <extension>-<version>",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/opencloudeu/web-extensions"],
+      versioning: "regex:^(?<compatibility>[a-z-]+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+    },
   ],
 }
