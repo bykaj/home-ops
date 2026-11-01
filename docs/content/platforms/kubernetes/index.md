@@ -29,9 +29,9 @@ kubernetes/apps/<namespace>/
 An app is enabled by listing its `ks.yaml` in the namespace `kustomization.yaml`.
 Commenting it out disables the app, and Flux prunes it.
 
-Namespace kustomizations usually pull in two [components](components.md) for
-every app in the namespace: `alerts` (Flux alerts to Alertmanager and GitHub
-commit statuses) and `kopiur/secret` (the repository credentials Kopiur needs).
+Namespace kustomizations pull in the `alerts` [component](components.md#alerts)
+for every app in the namespace: Flux alerts to Alertmanager and GitHub commit
+statuses.
 
 ## The Flux Kustomization
 
@@ -42,7 +42,7 @@ metadata:
   name: &app atuin
 spec:
   components:
-    - ../../../../components/kopiur/backup
+    - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

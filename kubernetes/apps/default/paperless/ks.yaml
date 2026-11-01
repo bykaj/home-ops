@@ -8,7 +8,7 @@ spec:
   components:
     - ../../../../components/dragonfly
     - ../../../../components/postgres
-    - ../../../../components/kopiur/backup
+    - ../../../../components/kopiur
     - ../../../../components/zeroscaler/nfs
   dependsOn:
     - name: rook-ceph-cluster
