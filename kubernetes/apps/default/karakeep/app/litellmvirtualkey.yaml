@@ -7,8 +7,8 @@ metadata:
 spec:
   keyAlias: karakeep
   models:
-    - openai/gpt-4.1-mini
-    - openai/gpt-4o-mini
+    - chatgpt/gpt-6-luna
+    # The ChatGPT subscription has no embeddings
     - openai/text-embedding-3-small
   proxyNamespace: ai
   proxyRef: litellm

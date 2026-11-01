@@ -51,9 +51,9 @@ spec:
               INFERENCE_CONTEXT_LENGTH: "8192"
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
               INFERENCE_ENABLE_AUTO_TAGGING: "true"
-              INFERENCE_IMAGE_MODEL: "openai/gpt-4o-mini"
+              INFERENCE_IMAGE_MODEL: "chatgpt/gpt-6-luna"
               INFERENCE_LANG: "english"
-              INFERENCE_TEXT_MODEL: "openai/gpt-4.1-mini"
+              INFERENCE_TEXT_MODEL: "chatgpt/gpt-6-luna"
               INFERENCE_USE_MAX_COMPLETION_TOKENS: "true"
               OPENAI_API_KEY:
                 valueFrom:
