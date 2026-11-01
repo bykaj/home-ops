@@ -81,6 +81,13 @@ How the gateway, models, keys and MCP servers fit together is on the
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
   new host needs a rule there, or its requests time out.
+- The ChatGPT token PVC is `ReadWriteOnce`, and the operator's Deployment
+  rolls out with a surge pod and has no `strategy` field. A required
+  `podAffinity` on the proxy's own labels keeps the new pod on the old pod's
+  node, where the volume can attach; elsewhere it would wait on a Multi-Attach
+  error forever. With no other proxy pod (first start, drain) the scheduler
+  lets it go anywhere. The proxy runs as root, so the Kopiur mover does too
+  (`KOPIUR_MOVER_UID`/`GID` `"0"`).
 - Email (alerts and the UI's test email) goes through the
   [SMTP relay](../../infrastructure/networking/index.md#smtp-relay), which
   `litellm-egress` allows on port 25. The relay offers no STARTTLS, so
@@ -92,6 +99,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   (`LITELLM_LOCAL_MODEL_COST_MAP`) and the Admin UI blog posts
   (`LITELLM_LOCAL_BLOG_POSTS`). The blog fetch is synchronous, so without that
   setting every UI page load froze the whole proxy for 5 seconds.
+- The Prisma CLI that LiteLLM runs at startup for its database contacts
+  `checkpoint.prisma.io` (version check and telemetry). `litellm-egress`
+  blocks it and `CiliumEgressPolicyDenied` fired, so `CHECKPOINT_DISABLE=1`
+  turns it off.
 - The Admin UI checks GitHub for the latest release every 5 minutes while it's
   open, and the check can't be turned off. `litellm-egress` allows
   `api.github.com` for it, because blocked attempts set off

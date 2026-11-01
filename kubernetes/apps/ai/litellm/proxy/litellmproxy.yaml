@@ -52,6 +52,16 @@ spec:
     merge_reasoning_content_in_choices: true
     set_verbose: false
   env:
+    # ChatGPT subscription login (chatgpt/ models): auth.json is copied in by
+    # hand once and the proxy rewrites it on every token refresh, so it lives
+    # on the Kopiur-backed PVC
+    - name: CHATGPT_TOKEN_DIR
+      value: /app/chatgpt_tokens
+    # The Prisma CLI that LiteLLM runs at startup phones home to
+    # checkpoint.prisma.io (version check and telemetry); litellm-egress
+    # blocks it, which set off CiliumEgressPolicyDenied
+    - name: CHECKPOINT_DISABLE
+      value: "1"
     - name: DATABASE_URL
       valueFrom:
         secretKeyRef:
@@ -135,6 +145,25 @@ spec:
       memory: 256Mi
     limits:
       memory: 2Gi
+  # The operator's Deployment rolls out with a surge pod (no strategy field)
+  # and the token PVC is ReadWriteOnce: keep the new pod on the old pod's node
+  # so the volume can attach there. With no other litellm pod (first start,
+  # drain) the scheduler's self-match rule lets it go anywhere
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: litellm
+              app.kubernetes.io/name: litellm
+          topologyKey: kubernetes.io/hostname
+  volumeMounts:
+    - name: chatgpt-tokens
+      mountPath: /app/chatgpt_tokens
+  volumes:
+    - name: chatgpt-tokens
+      persistentVolumeClaim:
+        claimName: ${APP}
   service:
     type: ClusterIP
     port: 4000

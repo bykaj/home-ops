@@ -39,7 +39,7 @@ over three Flux Kustomizations in
 | Kustomization | Path | Contents |
 | --- | --- | --- |
 | `litellm-operator` | `app/` | The operator HelmRelease and its CRDs |
-| `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#postgres)) and cache ([dragonfly](components.md#dragonfly)) |
+| `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#postgres)), cache ([dragonfly](components.md#dragonfly)) and the ChatGPT token volume ([kopiur/backup](components.md#kopiurbackup)) |
 | `litellm-mcp` | `mcp/` | MCP servers and the `claude-code` team and key |
 
 Postgres holds keys, teams, users and spend; Dragonfly is the response cache
@@ -55,11 +55,53 @@ keys come from the `litellm` 1Password item through `litellm-secret`.
 
 | Provider | Models | Notes |
 | --- | --- | --- |
+| ChatGPT | `chatgpt/gpt-6-astra`, `chatgpt/gpt-6-luna`, `chatgpt/gpt-6.1-sol` | The same GPT-6 models through the ChatGPT Plus subscription instead of the API key; see [ChatGPT subscription](#chatgpt-subscription) |
 | MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash-Preview` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
 | OpenAI | GPT-6 Astra/Luna, GPT-6.1 Sol, `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | GPT-6 models use the Responses API and drop `temperature` |
 
 The MiniMax models have prompt-cache injection points for the system prompt
 and the last message; OpenAI caches prompts automatically.
+
+### ChatGPT subscription
+
+The `chatgpt/` models use LiteLLM's
+[ChatGPT provider](https://docs.litellm.ai/docs/providers/chatgpt), which
+signs in to the ChatGPT Plus account through the Codex OAuth flow instead of
+using an API key. Usage counts against the subscription's rolling and weekly
+limits, not API billing. The provider calls `chatgpt.com` (Codex backend) and
+`auth.openai.com` (token refresh), which `litellm-egress` allows.
+
+The login lives in `auth.json` in `CHATGPT_TOKEN_DIR` (`/app/chatgpt_tokens`),
+on the `litellm` PVC, backed up hourly by Kopiur. The proxy rewrites the file
+whenever it refreshes the access token, and the refresh token is single-use,
+so the file has to be on writable storage that survives restarts: a copy kept
+anywhere else (1Password, a Secret) goes stale at the first refresh. The proxy
+can't run the device-code login itself, so the file is created on a
+workstation and copied in:
+
+1. Sign in, which prints a URL and a code to enter there; it writes
+   `~/.config/litellm/chatgpt/auth.json`:
+
+    ```bash
+    uvx --from litellm python -c \
+      "from litellm.llms.chatgpt.authenticator import Authenticator; Authenticator().get_access_token()"
+    ```
+
+2. Copy it onto the volume and restart the proxy, which only loads a
+   deployment's login at startup:
+
+    ```bash
+    kubectl -n ai cp ~/.config/litellm/chatgpt/auth.json \
+      "$(kubectl -n ai get pod -l app.kubernetes.io/name=litellm -o name | cut -d/ -f2)":/app/chatgpt_tokens/auth.json
+    kubectl -n ai rollout restart deployment litellm
+    ```
+
+3. Delete the local copy (`~/.config/litellm/chatgpt/auth.json`); the cluster
+   copy is the only one that stays current.
+
+Do the same when the proxy logs `ChatGPT refresh token failed, re-login
+required`. Without a valid file, requests to the `chatgpt/` models fail with
+`There are no healthy deployments for this model`.
 
 ## Keys and teams
 
