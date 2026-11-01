@@ -33,8 +33,11 @@ volume. See [Backups](../../infrastructure/storage/backups.md) for the full life
 
 The namespace needs no repository credentials: the password Secret lives next
 to the `nas` ClusterRepository in `system`, and Kopiur projects a copy into the
-app's namespace for each mover run (`credentialProjection`) and deletes it
-afterwards.
+app's namespace for each mover run (`credentialProjection`). Backup runs delete
+their copy afterwards. Restore runs don't, because of a bug in Kopiur 0.10.16:
+the Restore controller never reclaims its copy, so `<app>-restore-creds-0`
+stays after the PVC is restored. Delete it by exact name; a later restore of
+the app projects it again.
 
 | Variable | Default | Notes |
 | --- | --- | --- |
