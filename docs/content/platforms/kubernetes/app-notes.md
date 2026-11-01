@@ -74,6 +74,12 @@ These apps use their native OIDC support.
     Sharing with an email address uses guest links (`OC_ENABLE_GUEST_LINKS`,
     off by default): the recipient gets a one-time link that is valid for 30
     minutes and needs no account, and can request a new one with a PIN.
+    Web extensions (only Pastebin so far) are mounted from their
+    `opencloudeu/web-extensions` images as image volumes under `/opt/web-apps`
+    (`WEB_ASSET_APPS_PATH`); the built-in apps stay available. To add one, add
+    another image volume mounted at `/opt/web-apps/<name>` with subPath
+    `web/apps/<name>`. A Renovate rule treats the `<extension>-` tag prefix as
+    a separate line per extension.
 
 ### Apps behind `gateway-oidc`
 
