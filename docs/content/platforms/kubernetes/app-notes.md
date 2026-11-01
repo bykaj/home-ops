@@ -99,6 +99,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   (`LITELLM_LOCAL_MODEL_COST_MAP`) and the Admin UI blog posts
   (`LITELLM_LOCAL_BLOG_POSTS`). The blog fetch is synchronous, so without that
   setting every UI page load froze the whole proxy for 5 seconds.
+- The Prisma CLI that LiteLLM runs at startup for its database contacts
+  `checkpoint.prisma.io` (version check and telemetry). `litellm-egress`
+  blocks it and `CiliumEgressPolicyDenied` fired, so `CHECKPOINT_DISABLE=1`
+  turns it off.
 - The Admin UI checks GitHub for the latest release every 5 minutes while it's
   open, and the check can't be turned off. `litellm-egress` allows
   `api.github.com` for it, because blocked attempts set off

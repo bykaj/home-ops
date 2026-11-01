@@ -57,6 +57,11 @@ spec:
     # on the Kopiur-backed PVC
     - name: CHATGPT_TOKEN_DIR
       value: /app/chatgpt_tokens
+    # The Prisma CLI that LiteLLM runs at startup phones home to
+    # checkpoint.prisma.io (version check and telemetry); litellm-egress
+    # blocks it, which set off CiliumEgressPolicyDenied
+    - name: CHECKPOINT_DISABLE
+      value: "1"
     - name: DATABASE_URL
       valueFrom:
         secretKeyRef:
