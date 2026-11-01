@@ -71,6 +71,9 @@ These apps use their native OIDC support.
     sends share and space emails through the
     [SMTP relay](../../infrastructure/networking/index.md#smtp-relay); users can
     turn them off under Preferences.
+    Sharing with an email address uses guest links (`OC_ENABLE_GUEST_LINKS`,
+    off by default): the recipient gets a one-time link that is valid for 30
+    minutes and needs no account, and can request a new one with a PIN.
 
 ### Apps behind `gateway-oidc`
 

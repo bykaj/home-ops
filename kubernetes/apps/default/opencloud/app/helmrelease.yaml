@@ -43,6 +43,8 @@ spec:
               NOTIFICATIONS_SMTP_PORT: 25
               OC_ADD_RUN_SERVICES: "notifications"
               OC_ADMIN_USER_ID: ""
+              # Shares to email addresses: a one-time link, valid for 30 minutes
+              OC_ENABLE_GUEST_LINKS: true
               OC_ENABLE_OCM: false
               # Pocket ID replaces the built-in IdP; the built-in IDM keeps the
               # provisioned accounts
