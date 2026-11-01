@@ -36,6 +36,12 @@ spec:
               GRAPH_ASSIGN_DEFAULT_USER_ROLE: false
               GRAPH_USERNAME_MATCH: "none"
               IDM_CREATE_DEMO_USERS: false
+              # Sends email for shares and space changes through the SMTP relay
+              NOTIFICATIONS_SMTP_AUTHENTICATION: "none"
+              NOTIFICATIONS_SMTP_ENCRYPTION: "none"
+              NOTIFICATIONS_SMTP_HOST: "smtp.bykaj.io"
+              NOTIFICATIONS_SMTP_PORT: 25
+              OC_ADD_RUN_SERVICES: "notifications"
               OC_ADMIN_USER_ID: ""
               OC_ENABLE_OCM: false
               # Pocket ID replaces the built-in IdP; the built-in IDM keeps the
