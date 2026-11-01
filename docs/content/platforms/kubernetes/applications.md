@@ -157,7 +157,7 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiurbackup), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
 
 ### `default`
 
