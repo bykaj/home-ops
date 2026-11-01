@@ -51,11 +51,12 @@ Admin UI is lost on the next reconcile.
 
 Each model is a `LiteLLMModel` under `proxy/models/<provider>/`, named
 `<provider>/<model>` in LiteLLM (the name clients and keys use). Provider API
-keys come from the `litellm` 1Password item through `litellm-secret`.
+keys come from the `litellm` 1Password item through `litellm-secret`; the
+ChatGPT models sign in with a login instead (see below).
 
 | Provider | Models | Notes |
 | --- | --- | --- |
-| ChatGPT | `gpt-6-astra`, `gpt-6-luna`, `gpt-6.1-sol` | The same GPT-6 models through the ChatGPT Plus subscription instead of the API key; see [ChatGPT subscription](#chatgpt-subscription) |
+| ChatGPT | `gpt-6-astra`, `gpt-6-luna`, `gpt-6.1-sol` | The OpenAI row's GPT-6 models, billed to the ChatGPT Plus subscription instead of `OPENAI_API_KEY`; see [ChatGPT subscription](#chatgpt-subscription) |
 | MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash-Preview` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
 | OpenAI | GPT-6 Astra/Luna, GPT-6.1 Sol, `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | GPT-6 models use the Responses API and drop `temperature` |
 
@@ -69,7 +70,10 @@ The `chatgpt/` models use LiteLLM's
 signs in to the ChatGPT Plus account through the Codex OAuth flow instead of
 using an API key. Usage counts against the subscription's rolling and weekly
 limits, not API billing. The provider calls `chatgpt.com` (Codex backend) and
-`auth.openai.com` (token refresh), which `litellm-egress` allows.
+`auth.openai.com` (token refresh), which `litellm-egress` allows. The Codex
+backend adds its own system prompt to every request and ignores
+`response_format` and output token limits, so structured output comes only
+from the client's prompt.
 
 The login lives in `auth.json` in `CHATGPT_TOKEN_DIR` (`/app/chatgpt_tokens`),
 on the `litellm` PVC, backed up hourly by Kopiur. The proxy rewrites the file
