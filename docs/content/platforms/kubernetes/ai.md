@@ -113,9 +113,9 @@ may call.
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
 | `claude-code` | `ai` (team `claude-code`) | none | all servers |
-| `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `text-embedding-3-small` | — |
-| `kguardian` | `observability/kguardian` | `MiniMax-M3-anthropic` | — |
-| `windshift` | `default/windshift` | `MiniMax-M3` | — |
+| `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
+| `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
+| `windshift` | `default/windshift` | `minimax/MiniMax-M3` | — |
 
 - **Consumer keys** are declared in the consuming app's own `app/` folder, with
   `proxyNamespace: ai`. The app reads the Secret by `secretKeyRef`, except
