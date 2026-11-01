@@ -26,6 +26,7 @@ metadata:
 spec:
   components:
     - ../../../../components/dragonfly
+    - ../../../../components/kopiur/backup
     - ../../../../components/postgres
   dependsOn:
     - name: cloudnative-pg
@@ -33,6 +34,8 @@ spec:
     - name: dragonfly-operator
       namespace: database
     - name: litellm-operator
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
       kind: Dragonfly
@@ -47,6 +50,10 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      # ChatGPT token PVC; the proxy runs as root and writes auth.json
+      KOPIUR_CAPACITY: 1Gi
+      KOPIUR_MOVER_GID: "0"
+      KOPIUR_MOVER_UID: "0"
       POSTGRES_BACKUP_SCHEDULE: "4 0 * * *"
   prune: true
   sourceRef:

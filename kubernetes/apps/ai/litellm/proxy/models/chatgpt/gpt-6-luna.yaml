@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: chatgpt-gpt-6-luna
+spec:
+  info:
+    maxInputTokens: 272000
+    maxOutputTokens: 128000
+    mode: responses
+    supportsFunctionCalling: true
+    supportsPromptCaching: true
+    supportsVision: true
+  modelName: chatgpt/gpt-6-luna
+  params:
+    additional:
+      additional_drop_params:
+        - temperature
+    model: chatgpt/gpt-6-luna
