@@ -55,7 +55,7 @@ keys come from the `litellm` 1Password item through `litellm-secret`.
 
 | Provider | Models | Notes |
 | --- | --- | --- |
-| ChatGPT | `chatgpt/gpt-6-astra`, `chatgpt/gpt-6-luna`, `chatgpt/gpt-6.1-sol` | The same GPT-6 models through the ChatGPT Plus subscription instead of the API key; see [ChatGPT subscription](#chatgpt-subscription) |
+| ChatGPT | `gpt-6-astra`, `gpt-6-luna`, `gpt-6.1-sol` | The same GPT-6 models through the ChatGPT Plus subscription instead of the API key; see [ChatGPT subscription](#chatgpt-subscription) |
 | MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash-Preview` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
 | OpenAI | GPT-6 Astra/Luna, GPT-6.1 Sol, `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | GPT-6 models use the Responses API and drop `temperature` |
 
