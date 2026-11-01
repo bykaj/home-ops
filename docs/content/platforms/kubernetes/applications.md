@@ -169,6 +169,7 @@ to date and every app has a purpose.
 | [it-tools](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/it-tools) | Developer utilities | external | — | [sharevb/it-tools](https://github.com/sharevb/it-tools) |
 | [karakeep](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/karakeep) | Bookmarks and read-later | external | [backup](components.md#kopiur) | [karakeep-app/karakeep](https://github.com/karakeep-app/karakeep) |
 | [mail-archiver](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/mail-archiver) | Email archiving | internal | [postgres](components.md#postgres) | [s1t5/mail-archiver](https://github.com/s1t5/mail-archiver) |
+| [opencloud](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/opencloud) | File sync and sharing | external | [backup](components.md#kopiur) | [opencloud-eu/opencloud](https://github.com/opencloud-eu/opencloud) |
 | [paperless](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Document management | external | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [paperless-ngx/paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) |
 | [pgadmin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/pgadmin) | PostgreSQL administration | internal | [backup](components.md#kopiur) | [pgadmin-org/pgadmin4](https://github.com/pgadmin-org/pgadmin4) |
 | [spoolman](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/spoolman) | 3D printer filament inventory | internal | [backup](components.md#kopiur) | [Donkie/Spoolman](https://github.com/Donkie/Spoolman) |
@@ -208,7 +209,7 @@ Manifests kept in the repository but commented out of their namespace
 
 | Namespace | Apps |
 | --- | --- |
-| `default` | [filabridge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/filabridge), [n8n](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/n8n), [opencloud](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/opencloud) |
+| `default` | [filabridge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/filabridge), [n8n](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/n8n) |
 | `development` | [coder](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/development/coder) |
 | `media` | [komga](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/komga) |
 

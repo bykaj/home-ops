@@ -6,3 +6,10 @@ resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
   - ./helmrelease.yaml
+configMapGenerator:
+  - name: opencloud-config
+    files:
+      - csp.yaml=./resources/csp.yaml
+      - proxy.yaml=./resources/proxy.yaml
+generatorOptions:
+  disableNameSuffixHash: true
