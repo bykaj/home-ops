@@ -49,7 +49,7 @@ These apps use their native OIDC support.
   login remains only for database users with a password, and SSO users have
   none.
 - **OpenCloud** replaces its built-in IdP with Pocket ID and creates accounts
-  on first login, keyed on the `sub` claim. It has three public PKCE clients
+  on first login, keyed on the `sub` claim. It has four public PKCE clients
   in Pocket ID, with fixed client IDs:
 
     | Client ID          | Callback URLs                                                                                                                 |
@@ -57,6 +57,7 @@ These apps use their native OIDC support.
     | `opencloud-web`    | `https://files.bykaj.app/`, `https://files.bykaj.app/oidc-callback.html`, `https://files.bykaj.app/oidc-silent-redirect.html` |
     | `OpenCloudDesktop` | `http://127.0.0.1`, `http://localhost` (any port is accepted)                                                                 |
     | `OpenCloudIOS`     | `oc://ios.opencloud.eu`                                                                                                       |
+    | `OpenCloudAndroid` | `oc://android.opencloud.eu`                                                                                                   |
 
     The role comes from the `groups` claim on every login (`resources/proxy.yaml`):
     `admins` → Admin, `family` → User, `friends` → Guest, highest first. A

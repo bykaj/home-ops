@@ -63,7 +63,8 @@ spec:
               # Pocket ID only sends the groups claim for the groups scope
               WEB_OIDC_SCOPE: "openid profile email groups"
               WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://cyrannus.id/settings/account"
-              # The desktop and iOS apps use these fixed client IDs
+              # The desktop and mobile apps use their fixed default client IDs
+              WEBFINGER_ANDROID_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
               WEBFINGER_DESKTOP_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
               WEBFINGER_IOS_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
             envFrom:
