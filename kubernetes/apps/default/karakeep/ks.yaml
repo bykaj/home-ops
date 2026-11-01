@@ -6,7 +6,7 @@ metadata:
   name: &app karakeep
 spec:
   components:
-    - ../../../../components/kopiur/backup
+    - ../../../../components/kopiur
   # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
   dependsOn:
     - name: litellm-operator

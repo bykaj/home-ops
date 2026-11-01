@@ -13,7 +13,7 @@ is parameterized through `postBuild.substitute`:
 ```yaml
 spec:
   components:
-    - ../../../../components/kopiur/backup
+    - ../../../../components/kopiur
   postBuild:
     substitute:
       APP: *app
@@ -26,15 +26,18 @@ Included at the **namespace** level. It adds Flux notification `Provider`s and
 `Alert`s that send reconciliation failures to Alertmanager and post commit
 statuses to GitHub.
 
-## `kopiur/secret`
-
-Included at the **namespace** level wherever an app uses `kopiur/backup`. It
-provides the Kopia repository credentials through an `ExternalSecret`.
-
-## `kopiur/backup`
+## `kopiur`
 
 PVC creation, scheduled backup and declarative restore for an app's data
 volume. See [Backups](../../infrastructure/storage/backups.md) for the full lifecycle.
+
+The namespace needs no repository credentials: the password Secret lives next
+to the `nas` ClusterRepository in `system`, and Kopiur projects a copy into the
+app's namespace for each mover run (`credentialProjection`). Backup runs delete
+their copy afterwards. Restore runs don't, because of a bug in Kopiur 0.10.16:
+the Restore controller never reclaims its copy, so `<app>-restore-creds-0`
+stays after the PVC is restored. Delete it by exact name; a later restore of
+the app projects it again.
 
 | Variable | Default | Notes |
 | --- | --- | --- |

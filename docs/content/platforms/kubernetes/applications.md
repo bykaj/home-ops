@@ -23,7 +23,7 @@ The columns:
   (reachable from the internet), `internal` when it only has a route on
   `envoy-internal` (LAN and tailnet), `—` when it has no route.
 - **Uses**: the [components](components.md) its Flux Kustomization opts into:
-  PVC [backup](components.md#kopiurbackup), its own
+  PVC [backup](components.md#kopiur), its own
   [postgres](components.md#postgres) or [dragonfly](components.md#dragonfly),
   the [gpu](components.md#gpu), and
   [scale-to-zero](components.md#zeroscalernfs) when NFS on the NAS stops
@@ -58,7 +58,7 @@ to date and every app has a purpose.
 | [cloudnative-pg](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/cloudnative-pg) | PostgreSQL operator and Barman Cloud plugin | — | — | [cloudnative-pg/cloudnative-pg](https://github.com/cloudnative-pg/cloudnative-pg) |
 | [dragonfly](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/dragonfly) | Dragonfly operator (Redis-compatible) | — | — | [dragonflydb/dragonfly-operator](https://github.com/dragonflydb/dragonfly-operator) |
 | [emqx](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/emqx) | MQTT broker (operator and cluster) | internal | — | [emqx/emqx-operator](https://github.com/emqx/emqx-operator) |
-| [meilisearch](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/meilisearch) | Search engine | — | [backup](components.md#kopiurbackup) | [meilisearch/meilisearch](https://github.com/meilisearch/meilisearch) |
+| [meilisearch](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/meilisearch) | Search engine | — | [backup](components.md#kopiur) | [meilisearch/meilisearch](https://github.com/meilisearch/meilisearch) |
 
 ### `external-secrets`
 
@@ -128,7 +128,7 @@ to date and every app has a purpose.
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
 | [oidc-provider-debugger](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/oidc-provider-debugger) | Test client for OIDC flows | internal | — | [leplusorg/openid-connect-provider-debugger](https://github.com/leplusorg/openid-connect-provider-debugger) |
-| [pocket-id](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/pocket-id) | Passkey-only OIDC identity provider (`cyrannus.id`) | external | [backup](components.md#kopiurbackup) | [pocket-id/pocket-id](https://github.com/pocket-id/pocket-id) |
+| [pocket-id](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/security/pocket-id) | Passkey-only OIDC identity provider (`cyrannus.id`) | external | [backup](components.md#kopiur) | [pocket-id/pocket-id](https://github.com/pocket-id/pocket-id) |
 
 ### `system`
 
@@ -157,24 +157,24 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiurbackup), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
 
 ### `default`
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [atuin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/atuin) | Shell history sync | internal | [backup](components.md#kopiurbackup) | [atuinsh/atuin](https://github.com/atuinsh/atuin) |
-| [changedetection](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/changedetection) | Website change monitoring | internal | [backup](components.md#kopiurbackup) | [dgtlmoon/changedetection.io](https://github.com/dgtlmoon/changedetection.io) |
+| [atuin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/atuin) | Shell history sync | internal | [backup](components.md#kopiur) | [atuinsh/atuin](https://github.com/atuinsh/atuin) |
+| [changedetection](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/changedetection) | Website change monitoring | internal | [backup](components.md#kopiur) | [dgtlmoon/changedetection.io](https://github.com/dgtlmoon/changedetection.io) |
 | [homepage](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/homepage) | Dashboard | internal | — | [gethomepage/homepage](https://github.com/gethomepage/homepage) |
 | [it-tools](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/it-tools) | Developer utilities | external | — | [sharevb/it-tools](https://github.com/sharevb/it-tools) |
-| [karakeep](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/karakeep) | Bookmarks and read-later | external | [backup](components.md#kopiurbackup) | [karakeep-app/karakeep](https://github.com/karakeep-app/karakeep) |
+| [karakeep](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/karakeep) | Bookmarks and read-later | external | [backup](components.md#kopiur) | [karakeep-app/karakeep](https://github.com/karakeep-app/karakeep) |
 | [mail-archiver](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/mail-archiver) | Email archiving | internal | [postgres](components.md#postgres) | [s1t5/mail-archiver](https://github.com/s1t5/mail-archiver) |
-| [paperless](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Document management | external | [backup](components.md#kopiurbackup), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [paperless-ngx/paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) |
-| [pgadmin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/pgadmin) | PostgreSQL administration | internal | [backup](components.md#kopiurbackup) | [pgadmin-org/pgadmin4](https://github.com/pgadmin-org/pgadmin4) |
-| [spoolman](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/spoolman) | 3D printer filament inventory | internal | [backup](components.md#kopiurbackup) | [Donkie/Spoolman](https://github.com/Donkie/Spoolman) |
-| [thelounge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/thelounge) | IRC client | internal | [backup](components.md#kopiurbackup) | [thelounge/thelounge](https://github.com/thelounge/thelounge) |
-| [wallos](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wallos) | Subscription tracking | internal | [backup](components.md#kopiurbackup) | [ellite/Wallos](https://github.com/ellite/Wallos) |
-| [wastebin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wastebin) | Pastebin | external | [backup](components.md#kopiurbackup) | [matze/wastebin](https://github.com/matze/wastebin) |
+| [paperless](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Document management | external | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [paperless-ngx/paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) |
+| [pgadmin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/pgadmin) | PostgreSQL administration | internal | [backup](components.md#kopiur) | [pgadmin-org/pgadmin4](https://github.com/pgadmin-org/pgadmin4) |
+| [spoolman](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/spoolman) | 3D printer filament inventory | internal | [backup](components.md#kopiur) | [Donkie/Spoolman](https://github.com/Donkie/Spoolman) |
+| [thelounge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/thelounge) | IRC client | internal | [backup](components.md#kopiur) | [thelounge/thelounge](https://github.com/thelounge/thelounge) |
+| [wallos](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wallos) | Subscription tracking | internal | [backup](components.md#kopiur) | [ellite/Wallos](https://github.com/ellite/Wallos) |
+| [wastebin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wastebin) | Pastebin | external | [backup](components.md#kopiur) | [matze/wastebin](https://github.com/matze/wastebin) |
 | [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management | external | [postgres](components.md#postgres) | [windshiftapp/windshift](https://github.com/windshiftapp/windshift) |
 
 ### `downloads`
@@ -182,24 +182,24 @@ to date and every app has a purpose.
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
 | [autobrr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/autobrr) | Release automation | internal | [postgres](components.md#postgres) | [autobrr/autobrr](https://github.com/autobrr/autobrr) |
-| [bazarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/bazarr) | Subtitles | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [LavX/bazarr](https://github.com/LavX/bazarr) |
+| [bazarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/bazarr) | Subtitles | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [LavX/bazarr](https://github.com/LavX/bazarr) |
 | [configarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/configarr) | Syncs TRaSH quality profiles into the *arrs | — | — | [raydak-labs/configarr](https://github.com/raydak-labs/configarr) |
-| [prowlarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/prowlarr) | Indexer management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc) | [Prowlarr/Prowlarr](https://github.com/Prowlarr/Prowlarr) |
-| [radarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/radarr) | Movie management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Radarr/Radarr](https://github.com/Radarr/Radarr) |
-| [sabnzbd](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sabnzbd) | Usenet downloader | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [sabnzbd/sabnzbd](https://github.com/sabnzbd/sabnzbd) |
-| [sonarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sonarr) | TV series management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Sonarr/Sonarr](https://github.com/Sonarr/Sonarr) |
-| [whisparr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/whisparr) | Media management | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Whisparr/Whisparr](https://github.com/Whisparr/Whisparr) |
+| [prowlarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/prowlarr) | Indexer management | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc) | [Prowlarr/Prowlarr](https://github.com/Prowlarr/Prowlarr) |
+| [radarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/radarr) | Movie management | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Radarr/Radarr](https://github.com/Radarr/Radarr) |
+| [sabnzbd](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sabnzbd) | Usenet downloader | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [sabnzbd/sabnzbd](https://github.com/sabnzbd/sabnzbd) |
+| [sonarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/sonarr) | TV series management | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Sonarr/Sonarr](https://github.com/Sonarr/Sonarr) |
+| [whisparr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/whisparr) | Media management | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [Whisparr/Whisparr](https://github.com/Whisparr/Whisparr) |
 
 ### `media`
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [audiobookshelf](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/audiobookshelf) | Audiobooks and podcasts | external | [backup](components.md#kopiurbackup), [scale-to-zero](components.md#zeroscalernfs) | [advplyr/audiobookshelf](https://github.com/advplyr/audiobookshelf) |
+| [audiobookshelf](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/audiobookshelf) | Audiobooks and podcasts | external | [backup](components.md#kopiur), [scale-to-zero](components.md#zeroscalernfs) | [advplyr/audiobookshelf](https://github.com/advplyr/audiobookshelf) |
 | [immich](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich) | Photo and video library | external | [dragonfly](components.md#dragonfly), [gpu](components.md#gpu), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [immich-app/immich](https://github.com/immich-app/immich) |
-| [jellyfin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/jellyfin) | Media server | internal | [backup](components.md#kopiurbackup), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [jellyfin/jellyfin](https://github.com/jellyfin/jellyfin) |
-| [plex](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/plex) | Media server, published externally | external | [backup](components.md#kopiurbackup), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [plexinc/pms-docker](https://github.com/plexinc/pms-docker) |
-| [stash](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/stash) | Media organizer | internal | [backup](components.md#kopiurbackup), [gateway-oidc](components.md#gateway-oidc), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [stashapp/stash](https://github.com/stashapp/stash) |
-| [tautulli](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/tautulli) | Plex statistics | internal | [backup](components.md#kopiurbackup) | [Tautulli/Tautulli](https://github.com/Tautulli/Tautulli) |
+| [jellyfin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/jellyfin) | Media server | internal | [backup](components.md#kopiur), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [jellyfin/jellyfin](https://github.com/jellyfin/jellyfin) |
+| [plex](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/plex) | Media server, published externally | external | [backup](components.md#kopiur), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [plexinc/pms-docker](https://github.com/plexinc/pms-docker) |
+| [stash](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/stash) | Media organizer | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [stashapp/stash](https://github.com/stashapp/stash) |
+| [tautulli](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/tautulli) | Plex statistics | internal | [backup](components.md#kopiur) | [Tautulli/Tautulli](https://github.com/Tautulli/Tautulli) |
 
 ## Disabled
 

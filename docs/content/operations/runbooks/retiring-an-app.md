@@ -59,16 +59,13 @@ hand.
 1. **Remove** `./<app>/ks.yaml` from the namespace `kustomization.yaml`, and
    delete `kubernetes/apps/<namespace>/<app>/`.
 2. **Remove references** found above, such as `dependsOn` in other apps.
-3. **Last backed-up app in its namespace?** Remove the
-   `../../components/kopiur/secret` component from the namespace
-   `kustomization.yaml`.
-4. **Last app in its namespace?** Delete `kubernetes/apps/<namespace>/`
+3. **Last app in its namespace?** Delete `kubernetes/apps/<namespace>/`
    entirely (`cluster-apps` then prunes the namespace), and remove it from
    `PLATFORM` or `WORKLOADS` in `scripts/docs-applications.py`.
-5. **Update the docs**: run `just docs apps` to regenerate the
+4. **Update the docs**: run `just docs apps` to regenerate the
    [Applications](../../platforms/kubernetes/applications.md) tables, and update any other
    page that mentions the app.
-6. **Validate** with `just docs build`, and `kustomize build` on the namespace.
+5. **Validate** with `just docs build`, and `kustomize build` on the namespace.
 
 ## What Flux and the controllers remove
 
