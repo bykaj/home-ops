@@ -66,11 +66,11 @@ spec:
 
 Do not add `commonMetadata` or `timeout` — both were dropped as boilerplate; the app-template chart sets `app.kubernetes.io/*` labels on the workloads, and `timeout` falls back to the Flux default.
 
-**If the app has persistence**, add these to `spec` (components use `${APP}` and `${KOPIUR_*}` substitutions — see `kubernetes/components/kopiur/backup/` for all knobs and their defaults):
+**If the app has persistence**, add these to `spec` (components use `${APP}` and `${KOPIUR_*}` substitutions — see `kubernetes/components/kopiur/` for all knobs and their defaults):
 
 ```yaml
 components:
-  - ../../../../components/kopiur/backup
+  - ../../../../components/kopiur
 postBuild:
   substitute:
     APP: <app>
@@ -351,7 +351,7 @@ Convention: `metadata.name` is `<app>`, the generated Secret is `<app>-secret`, 
 
 Add `./<app>/ks.yaml` to `kubernetes/apps/<namespace>/kustomization.yaml` `resources`, in alphabetical position among the app entries (`namespace.yaml` stays first; leave existing entries where they are).
 
-**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `flux-alerts` and `kopiur/secret` components and the literal `name: _` in namespace.yaml (kustomize renames it) — and register the directory in `kubernetes/clusters/main`'s apps kustomization if namespaces are listed there.
+**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `alerts` component and the literal `name: _` in namespace.yaml (kustomize renames it) — and register the directory in `kubernetes/clusters/main`'s apps kustomization if namespaces are listed there.
 
 ## Step 4: Verify
 

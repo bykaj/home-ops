@@ -24,7 +24,7 @@ skill, which coding agents also follow. This page is the short version.
 2. **Create the directory** `kubernetes/apps/<namespace>/<app>/` with
    `ks.yaml` and `app/{kustomization,ocirepository,helmrelease}.yaml`. Copy
    the closest reference app rather than starting from nothing.
-3. **State?** Add the [`kopiur/backup`](../../platforms/kubernetes/components.md#kopiurbackup)
+3. **State?** Add the [`kopiur`](../../platforms/kubernetes/components.md#kopiur)
    component and mount the `${APP}` PVC. Set `KOPIUR_MOVER_UID`/`GID` to the
    app's UID/GID if it isn't `4000`.
 4. **Database?** Add the [`postgres`](../../infrastructure/storage/postgres.md) component and
@@ -55,5 +55,3 @@ skill, which coding agents also follow. This page is the short version.
   depends on this app and it has no health checks. Then `wait: true` is what
   gives the dependent a readiness gate.
 - `readOnlyRootFilesystem: true` without a writable `tmpfs` for `/tmp`.
-- Forgetting the `kopiur/secret` component at the namespace level when the
-  app's namespace has no other backed-up apps.

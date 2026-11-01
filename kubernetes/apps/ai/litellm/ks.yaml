@@ -26,7 +26,7 @@ metadata:
 spec:
   components:
     - ../../../../components/dragonfly
-    - ../../../../components/kopiur/backup
+    - ../../../../components/kopiur
     - ../../../../components/postgres
   dependsOn:
     - name: cloudnative-pg

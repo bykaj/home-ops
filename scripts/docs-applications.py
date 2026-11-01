@@ -55,7 +55,7 @@ COMPONENTS = {
     "dragonfly/authentication": ("dragonfly", "components.md#dragonfly"),
     "gateway-oidc": ("gateway-oidc", "components.md#gateway-oidc"),
     "gpu": ("gpu", "components.md#gpu"),
-    "kopiur/backup": ("backup", "components.md#kopiurbackup"),
+    "kopiur": ("backup", "components.md#kopiur"),
     "postgres": ("postgres", "components.md#postgres"),
     "zeroscaler/nfs": ("scale-to-zero", "components.md#zeroscalernfs"),
 }

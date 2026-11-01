@@ -32,8 +32,8 @@ cluster.
 
 ### PVC backups with Kopiur
 
-Apps opt in by adding the `kopiur/backup` component to their Flux
-Kustomization (see [Components](../../platforms/kubernetes/components.md#kopiurbackup)).
+Apps opt in by adding the `kopiur` component to their Flux
+Kustomization (see [Components](../../platforms/kubernetes/components.md#kopiur)).
 The component creates, per app:
 
 - a `SnapshotPolicy`: what to back up (the app's PVC), how (zstd compression,
