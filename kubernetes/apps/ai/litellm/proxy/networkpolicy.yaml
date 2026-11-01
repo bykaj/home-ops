@@ -78,6 +78,9 @@ spec:
     - toFQDNs:
         - matchName: api.minimax.io
         - matchName: api.openai.com
+        # chatgpt/ models: Codex backend and OAuth token refresh
+        - matchName: auth.openai.com
+        - matchName: chatgpt.com
       toPorts:
         - ports:
             - port: "443"
