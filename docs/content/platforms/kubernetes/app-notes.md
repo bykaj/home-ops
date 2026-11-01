@@ -67,6 +67,10 @@ These apps use their native OIDC support.
     File contents are stored in the `opencloud` Garage bucket
     (`decomposeds3`); the PVC keeps the metadata, so restoring files needs
     both the PVC backup and the bucket.
+    The optional `notifications` service is on (`OC_ADD_RUN_SERVICES`) and
+    sends share and space emails through the
+    [SMTP relay](../../infrastructure/networking/index.md#smtp-relay); users can
+    turn them off under Preferences.
 
 ### Apps behind `gateway-oidc`
 
