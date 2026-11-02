@@ -220,7 +220,7 @@ allows anonymous reads, and the hostname only resolves on the LAN.
     change, restart the container (`sudo docker restart zot`) for it to take
     effect.
 
-### `08-filen`
+### `08-filen-cli`
 
 [Filen CLI](https://github.com/FilenCloudDienste/filen-cli-releases) serving the
 Filen drive over WebDAV at `webdav.bykaj.io` (basic auth). A TrueNAS Cloud Sync
@@ -234,7 +234,7 @@ the file's contents (one line, no trailing newline) in the
 `FILEN_AUTH_CONFIG` field of the `filen-cli` 1Password item. Changing
 the Filen password invalidates it.
 The CLI downloads its managed rclone and keeps its VFS cache (up to 5 GiB) and
-logs in `/mnt/vault/Applications/filen/data`.
+logs in `/mnt/vault/Applications/filen-cli/data`.
 
 ## Adding a stack
 

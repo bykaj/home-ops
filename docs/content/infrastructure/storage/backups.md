@@ -16,7 +16,7 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
-| Documents | TrueNAS Cloud Sync (WebDAV) | [Filen](https://filen.io), through the [`08-filen`](../../platforms/docker/index.md#08-filen) stack | Hourly | Mirror |
+| Documents | TrueNAS Cloud Sync (WebDAV) | [Filen](https://filen.io), through the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack | Hourly | Mirror |
 | Macs | Time Machine over SMB | NAS, `/mnt/vault/TimeMachine` | Hourly (macOS) | Time Machine thinning, see [Time Machine](#time-machine) |
 
 The cluster's data lands on the NAS first. From there the Kopia repository is
@@ -313,7 +313,7 @@ original documents rather than a backup: deletions on the NAS are mirrored too.
 The versioned copy is the Archive TrueCloud task.
 
 Filen has no WebDAV endpoint of its own; the task talks to the WebDAV server of
-the [`08-filen`](../../platforms/docker/index.md#08-filen) stack at
+the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack at
 `https://webdav.bykaj.io`, which logs in to the Filen account. The task's WebDAV
 credential (vendor *Other*) uses the `FILEN_WEBDAV_USERNAME` and
 `FILEN_WEBDAV_PASSWORD` fields of the `filen-cli` 1Password item. If that stack

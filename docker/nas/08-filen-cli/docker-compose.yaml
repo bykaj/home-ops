@@ -1,14 +1,14 @@
 ---
 configs:
-  filen_auth_config:
+  filen_cli_auth_config:
     environment: FILEN_AUTH_CONFIG
-name: filen
+name: filen-cli
 networks:
   apps:
     name: apps
     external: true
 services:
-  filen:
+  filen-cli:
     command:
       - --config-dir
       - /config
@@ -26,15 +26,15 @@ services:
       - --password
       - ${FILEN_WEBDAV_PASSWORD}
     configs:
-      - source: filen_auth_config
+      - source: filen_cli_auth_config
         target: /run/secrets/filen-cli-auth-config.txt
-    container_name: filen
+    container_name: filen-cli
     image: docker.io/filen/cli:0.2.9
     labels:
       dexd.enabled: "true"
       traefik.enable: "true"
-      traefik.http.routers.filen-webdav.rule: Host(`webdav.bykaj.io`)
-      traefik.http.services.filen-webdav.loadbalancer.server.port: "8080"
+      traefik.http.routers.filen-cli-webdav.rule: Host(`webdav.bykaj.io`)
+      traefik.http.services.filen-cli-webdav.loadbalancer.server.port: "8080"
     networks:
       - apps
     restart: unless-stopped
@@ -45,6 +45,6 @@ volumes:
   data:
     driver: local
     driver_opts:
-      device: /mnt/vault/Applications/filen/data
+      device: /mnt/vault/Applications/filen-cli/data
       o: bind
       type: none
