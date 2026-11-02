@@ -1,7 +1,10 @@
 # Imported by Seahub's OAuth login (seahub/oauth/views.py): maps the role value,
 # here Pocket ID's groups claim (see OAUTH_ATTRIBUTE_MAP), to a Seafile role from
 # ENABLED_ROLE_PERMISSIONS in local_settings.py. The container command links it
-# next to the seahub package. Highest group first; users in none get "default".
+# next to the seahub package. Highest group first; users in none of these get
+# "default". Seahub doesn't call this at all when the claim is empty (no groups),
+# and the user keeps their previous role; the Pocket ID client's allowed groups
+# keep such users from signing in.
 ROLES = ("admins", "family", "friends")
 
 

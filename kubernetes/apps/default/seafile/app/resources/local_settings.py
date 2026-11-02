@@ -27,9 +27,15 @@ OAUTH_ATTRIBUTE_MAP = {
 # The desktop and mobile apps sign in through the system browser
 CLIENT_SSO_VIA_LOCAL_BROWSER = True
 
-# Roles from the Pocket ID groups; everything not set here comes from the
-# "default" role. 100 AI credits = USD 1 at the prices in LLM_MODELS
+# Roles from the Pocket ID groups; everything not set here comes from Seahub's
+# built-in "default" role. 100 AI credits = USD 1 at the prices in LLM_MODELS
 ENABLED_ROLE_PERMISSIONS = {
+    # Seahub's own default is unlimited AI and no quota; it applies to users in
+    # none of the groups, the local admin and accounts until their next login
+    "default": {
+        "monthly_ai_credit_per_user": 0,
+        "role_quota": "1g",
+    },
     "admins": {
         "monthly_ai_credit_per_user": -1,
         "role_quota": "100g",

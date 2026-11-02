@@ -104,10 +104,16 @@ These apps use their native OIDC support.
     sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
     Roles come from the Pocket ID `groups` claim (the `groups` scope) on
     every login: `resources/seahub_custom_functions.py` picks the highest of
-    `admins`, `family` and `friends` (anything else is `default`), and
+    `admins`, `family` and `friends` (other groups give `default`), and
     `ENABLED_ROLE_PERMISSIONS` in `local_settings.py` gives them their disk
     quota (100 GB, 100 GB, 50 GB) and monthly AI credits (unlimited, 500,
-    200; 100 credits = USD 1). The credits are counted at OpenAI's list
+    200; 100 credits = USD 1). `default` is set explicitly to 1 GB and no AI,
+    because Seahub's own default is unlimited; it also applies to accounts
+    until their next login. Seahub skips the role update when the `groups`
+    claim is empty, so a user removed from every group would keep their last
+    role. The Pocket ID client's allowed groups (`admins`, `family`,
+    `friends`) prevent that by keeping them from signing in; keep that list
+    in sync with the roles. The credits are counted at OpenAI's list
     prices from LiteLLM's cost map, set as `price` in `LLM_MODELS` and
     `EMBEDDING_MODEL`; the ChatGPT route itself is subscription. A role set
     by hand in Seafile is overwritten at the next login; a per-user quota
