@@ -119,7 +119,7 @@ may call.
 | `claude-code` | `ai` (team `claude-code`) | none | all servers |
 | `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
-| `seafile` | `default/seafile` | `chatgpt/gpt-6-luna` | — |
+| `seafile` | `default/seafile` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `windshift` | `default/windshift` | `minimax/MiniMax-M3` | — |
 
 - **Consumer keys** are declared in the consuming app's own `app/` folder, with
