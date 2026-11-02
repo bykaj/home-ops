@@ -41,6 +41,8 @@ spec:
     substitute:
       APP: *app
       APP_NAME: Seafile
+      # Took over from OpenCloud, which is disabled; only one can have it
+      APP_SUBDOMAIN: files
       # File blocks live in Garage; the PVC holds the generated config, avatars,
       # thumbnails and logs
       KOPIUR_CAPACITY: 5Gi
