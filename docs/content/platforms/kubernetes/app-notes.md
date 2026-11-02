@@ -104,7 +104,11 @@ These apps use their native OIDC support.
     Admin → Users, then deactivate the local admin. It counts toward the
     three free users.
     The image starts as root; `NON_ROOT` runs the Seafile processes as uid
-    8000, which is also the Kopiur mover UID.
+    8000, which is also the Kopiur mover UID. Its entrypoint refuses to start
+    unless `/shared/seafile` is mode 777, but its own boot script creates
+    that folder as 755 first, so the `shared-permissions` init container
+    creates it with 777 beforehand. SeaDoc's `NON_ROOT` start chowns its whole
+    install dir, so it has a startup probe.
     SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
     server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
     `seafile-ai`, `seafile-seasearch`, `seafile-notification`), because the
