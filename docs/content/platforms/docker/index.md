@@ -233,7 +233,7 @@ account's two-factor authentication doesn't block it. Create one with
 the file's contents (one line, no trailing newline) in the `auth-config` field
 of the `filen-cli` 1Password item. Changing the Filen password invalidates it.
 The CLI downloads its managed rclone and keeps its VFS cache (up to 5 GiB) and
-logs in `/mnt/vault/Applications/filen/config`.
+logs in `/mnt/vault/Applications/filen/data`.
 
 ## Adding a stack
 

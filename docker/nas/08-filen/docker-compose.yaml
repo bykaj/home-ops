@@ -40,11 +40,11 @@ services:
     restart: unless-stopped
     user: "4000:4000"
     volumes:
-      - config:/config
+      - data:/config
 volumes:
-  config:
+  data:
     driver: local
     driver_opts:
-      device: /mnt/vault/Applications/filen/config
+      device: /mnt/vault/Applications/filen/data
       o: bind
       type: none
