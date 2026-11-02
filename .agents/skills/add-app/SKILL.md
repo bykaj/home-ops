@@ -21,7 +21,7 @@ Ask the user (AskUserQuestion) for anything not already given:
 2. **Image** repository + tag (upstream's current release)
 3. **Port** the app listens on, and whether it gets a **route** (hostname); internal (`envoy-internal`, default) or public (`envoy-external`)
 4. **Persistence** — does the app store state? (→ kopiur backup component)
-5. **Database** — does the app need PostgreSQL? If so, is it a brand-new database, or does a Barman backup of it already exist? (→ postgres component)
+5. **Database** — does the app need PostgreSQL (→ `database/postgres` component) or MySQL/MariaDB (→ `database/mariadb` component)? If so, is it a brand-new database, or does a backup of it already exist?
 6. **Cache** — does the app need Redis (or a Redis-compatible store for queues, sessions or websockets)? (→ dragonfly component)
 7. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
 8. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
@@ -87,10 +87,10 @@ postBuild:
 metadata:
   name: <app>
   labels:
-    components.postgres/cnpg: init # only for a brand-new database, see below
+    components.database/postgres: init # only for a brand-new database, see below
 spec:
   components:
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
@@ -103,7 +103,9 @@ spec:
 ```
 
 - `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
-- The `components.postgres/cnpg: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/operations/runbooks/new-database.md`); tell the user.
+- The `components.database/postgres: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/operations/runbooks/new-database.md`); tell the user.
+
+**If the app needs MySQL or MariaDB**, it gets its own replicated MariaDB from the `database/mariadb` component instead. Same pattern: `../../../../components/database/mariadb`, the `MariaDB` health check (`current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')`), `MARIADB_BACKUP_SCHEDULE` from `just k8s cron-minute <app>`, `dependsOn: []` in the HelmRelease, and the `components.database/mariadb: init` label for a brand-new database (remove it after the first base backup). The app connects to `${APP}-mariadb-primary:3306` as `${APP}` with the password in the `${APP}-mariadb-app` Secret (key `password`). All knobs, and the timeline bump a rebuild needs, are in `docs/content/infrastructure/storage/mariadb.md`.
 
 **If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `dragonfly` section of `docs/content/platforms/kubernetes/components.md`):
 
@@ -284,7 +286,7 @@ envFrom:
       name: <app>-secret
 ```
 
-Components that patch the HelmRelease (postgres, dragonfly): add an empty `dependsOn` list to the HelmRelease `spec`, after `interval` (see the sorting rules), so the components can append their operator to it. Keep it even when the app has no dependencies of its own:
+Components that patch the HelmRelease (postgres, mariadb, dragonfly): add an empty `dependsOn` list to the HelmRelease `spec`, after `interval` (see the sorting rules), so the components can append their operator to it. Keep it even when the app has no dependencies of its own:
 
 ```yaml
 spec:
@@ -374,6 +376,6 @@ Show the user the created files and get confirmation before committing. Commit s
 - **Skipping the sorting conventions** — HelmRelease values follow `.agents/instructions/sorting.instructions.md`.
 - **Adding a CiliumNetworkPolicy by default** — only some apps lock down ingress; copy `searxng`'s if the user asks for one.
 - **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
-- **Adding the `components.postgres/cnpg: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
-- **Adding the postgres or dragonfly component without `dependsOn: []` in the HelmRelease** — both components' JSON patches append to that list, and the Kustomization build fails if it's missing.
+- **Adding the `components.database/postgres: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
+- **Adding the postgres, mariadb or dragonfly component without `dependsOn: []` in the HelmRelease** — their JSON patches append to that list, and the Kustomization build fails if it's missing.
 - **Adding `wait`, `commonMetadata`, or `timeout` to `ks.yaml`** — all three are boilerplate now. Leave `wait` unset unless another Kustomization depends on this one and it has no `healthChecks` (then, and only then, `wait: true`).

@@ -50,10 +50,16 @@ the app projects it again.
 | `KOPIUR_CACHE_STORAGECLASS` | `openebs-hostpath` | |
 | `KOPIUR_MOVER_UID` / `KOPIUR_MOVER_GID` | `4000` | Must match the file ownership in the volume |
 
-## `postgres`
+## `database/postgres`
 
 A CloudNative-PG cluster per app, with Barman backups to Garage S3 and local
 dumps to NFS. See [PostgreSQL](../../infrastructure/storage/postgres.md).
+
+## `database/mariadb`
+
+A replicated MariaDB per app from mariadb-operator, with base backups and
+binlog archiving to Garage S3 and dumps to NFS. See
+[MariaDB](../../infrastructure/storage/mariadb.md).
 
 ## `dragonfly`
 

@@ -80,7 +80,25 @@ spec:
                   path: /spec/externalClusters
       target:
         kind: Kustomization
-        labelSelector: "components.postgres/cnpg=init"
+        labelSelector: "components.database/postgres=init"
+    - # Net-new MariaDB: empty instance instead of a point-in-time recovery (see docs/content/infrastructure/storage/mariadb.md)
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: _
+        spec:
+          patches:
+            - target:
+                group: k8s.mariadb.com
+                version: v1alpha1
+                kind: MariaDB
+              patch: |-
+                - op: remove
+                  path: /spec/bootstrapFrom
+      target:
+        kind: Kustomization
+        labelSelector: "components.database/mariadb=init"
   path: ./kubernetes/apps
   prune: true
   retryInterval: 2m

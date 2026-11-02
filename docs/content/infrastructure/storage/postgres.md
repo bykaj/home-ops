@@ -6,8 +6,9 @@ description: The CloudNative-PG component that backs every app database
 
 Every app that needs PostgreSQL gets its own [CloudNative-PG](https://cloudnative-pg.io)
 cluster from the shared
-[`kubernetes/components/postgres`](https://github.com/bykaj/home-ops/tree/main/kubernetes/components/postgres)
-component. There is no shared database server.
+[`kubernetes/components/database/postgres`](https://github.com/bykaj/home-ops/tree/main/kubernetes/components/database/postgres)
+component. There is no shared database server. Apps that need MySQL or
+MariaDB use the [MariaDB](mariadb.md) component instead.
 
 ## Using the component
 
@@ -16,7 +17,7 @@ Add the component and its health check to the app's Flux Kustomization:
 ```yaml
 spec:
   components:
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster

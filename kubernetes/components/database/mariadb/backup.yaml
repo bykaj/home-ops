@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/backup_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Backup
+metadata:
+  name: ${APP}-mariadb-dump
+spec:
+  # Logical dump to the NAS, like postgres-backup-local; the folder
+  # /mnt/vault/Backups/Database/${APP} must exist, owned by 4000:4000
+  compression: gzip
+  mariaDbRef:
+    name: ${APP}-mariadb
+  maxRetention: 720h # 30 days
+  podSecurityContext:
+    runAsGroup: 4000
+    runAsNonRoot: true
+    runAsUser: 4000
+  schedule:
+    cron: "${MARIADB_BACKUP_SCHEDULE:=23 0 * * *}"
+  storage:
+    volume:
+      nfs:
+        path: /mnt/vault/Backups/Database/${APP}
+        server: nas.internal
+  timeZone: Europe/Amsterdam

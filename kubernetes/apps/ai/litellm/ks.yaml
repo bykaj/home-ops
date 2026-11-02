@@ -27,7 +27,7 @@ spec:
   components:
     - ../../../../components/dragonfly
     - ../../../../components/kopiur
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   dependsOn:
     - name: cloudnative-pg
       namespace: database

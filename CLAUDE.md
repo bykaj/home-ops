@@ -48,7 +48,7 @@ Run automatically on `git commit`, staged-file-scoped: `gofmt`/`cargo fmt` for G
 
 ### `kubernetes/` — Flux-managed cluster state
 
-Flux's top-level `Kustomization` (`kubernetes/clusters/main/apps.yaml`, name `cluster-apps`) points at `./kubernetes/apps` and recurses: it finds the top-most `kustomization.yaml` in each app directory and applies everything it references. `cluster-apps` also injects cluster-wide defaults via Kustomize patches onto _every_ Kustomization/HelmRelease it manages — default `retryInterval`/`timeout`, HelmRelease install/upgrade `CreateReplace`/`RetryOnFailure`/`RemediateOnFailure` strategy — so individual apps don't repeat that boilerplate (see the "common mistakes" notes in the add-app skill about not adding `wait`, `commonMetadata`, `timeout`). It also has a label-driven patch: a Flux Kustomization tagged `components.postgres/cnpg=init` gets its CNPG `Cluster` rewritten to a plain `initdb` bootstrap instead of Barman recovery, for brand-new databases with no prior backup.
+Flux's top-level `Kustomization` (`kubernetes/clusters/main/apps.yaml`, name `cluster-apps`) points at `./kubernetes/apps` and recurses: it finds the top-most `kustomization.yaml` in each app directory and applies everything it references. `cluster-apps` also injects cluster-wide defaults via Kustomize patches onto _every_ Kustomization/HelmRelease it manages — default `retryInterval`/`timeout`, HelmRelease install/upgrade `CreateReplace`/`RetryOnFailure`/`RemediateOnFailure` strategy — so individual apps don't repeat that boilerplate (see the "common mistakes" notes in the add-app skill about not adding `wait`, `commonMetadata`, `timeout`). It also has a label-driven patch: a Flux Kustomization tagged `components.database/postgres=init` gets its CNPG `Cluster` rewritten to a plain `initdb` bootstrap instead of Barman recovery, for brand-new databases with no prior backup; `components.database/mariadb=init` does the same for a `MariaDB` (drops its `bootstrapFrom`).
 
 Each app lives at `kubernetes/apps/<namespace>/<app>/`:
 
@@ -63,7 +63,7 @@ Each app lives at `kubernetes/apps/<namespace>/<app>/`:
     └── resources/              # optional — files wired in via configMapGenerator
 ```
 
-`kubernetes/components/` holds reusable kustomize components consumed by apps via `postBuild.substitute` (e.g. `kopiur` for PVC backups, `postgres` for CNPG clusters, `dragonfly`, `gpu`, `zeroscaler`, `alerts`). `kubernetes/talos/` holds Talos machine-config Jinja templates (rendered with `minijinja-cli` + 1Password `op inject`, see `.justfile`'s `template` recipe) and `version.yaml` (pinned Talos/Kubernetes versions used by `kubernetes/talos/mod.just`).
+`kubernetes/components/` holds reusable kustomize components consumed by apps via `postBuild.substitute` (e.g. `kopiur` for PVC backups, `database/postgres` for CNPG clusters, `database/mariadb` for mariadb-operator clusters, `dragonfly`, `gpu`, `zeroscaler`, `alerts`). `kubernetes/talos/` holds Talos machine-config Jinja templates (rendered with `minijinja-cli` + 1Password `op inject`, see `.justfile`'s `template` recipe) and `version.yaml` (pinned Talos/Kubernetes versions used by `kubernetes/talos/mod.just`).
 
 Scaffolding a new cluster app should follow the `add-app` skill (`.agents/skills/add-app/SKILL.md`), which encodes current conventions (probes, resources, securityContext, route/persistence/secret blocks) — mirror a recent real app (it names good references) rather than inventing structure.
 

@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/mariadb_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: ${APP}-mariadb
+spec:
+  affinity:
+    antiAffinityEnabled: true
+  # Only read when the instance is created: restore the latest physical backup
+  # and replay the archived binlogs (see pointintimerecovery.yaml)
+  bootstrapFrom:
+    pointInTimeRecoveryRef:
+      name: ${APP}-mariadb-recovery
+  database: ${MARIADB_DATABASE:=${APP}}
+  image: docker.io/library/mariadb:11.8.9@sha256:c4124d1afa875e47f2892edf26b482fa54f796e2f342d3717a04ca091a22a9bd
+  metrics:
+    enabled: true
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    binlog_expire_logs_seconds=604800
+    default_storage_engine=InnoDB
+    max_allowed_packet=256M
+    max_binlog_size=128M
+  # Generated into ${APP}-mariadb-app; the user gets all privileges on the database
+  passwordSecretKeyRef:
+    name: ${APP}-mariadb-app
+    key: password
+    generate: true
+  # Archives the binlogs to S3 (sidecar agent on the primary)
+  pointInTimeRecoveryRef:
+    name: ${APP}-mariadb
+  replicas: 3
+  replication:
+    enabled: true
+    replica:
+      # A replica that lost its data (hostpath PVC on a lost node) is rebuilt
+      # from a fresh physical backup of a healthy replica
+      bootstrapFrom:
+        physicalBackupTemplateRef:
+          name: ${APP}-mariadb-replica
+      recovery:
+        enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+  rootPasswordSecretKeyRef:
+    name: ${APP}-mariadb
+    key: ROOT_PASSWORD
+  storage:
+    size: 5Gi
+    storageClassName: openebs-hostpath
+  username: ${MARIADB_USERNAME:=${APP}}
