@@ -29,3 +29,7 @@ Brewfile.lock.json
 # Docs
 .cache/
 site/
+
+# Python bytecode
+__pycache__/
+*.pyc
