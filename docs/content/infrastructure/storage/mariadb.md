@@ -56,8 +56,27 @@ A brand-new database has no backup to restore yet. Deploy it once with the
 label `components.database/mariadb: init` on the Flux Kustomization: a patch
 in `cluster-apps` then removes `bootstrapFrom` and the instance starts empty.
 Remove the label once the first base backup has completed (the
-`PhysicalBackup` takes one right away), as with
+`PhysicalBackup` takes one right away) and `kubectl get pitr` shows a last
+recoverable time, as with
 [PostgreSQL](../../operations/runbooks/new-database.md#3-remove-the-label).
+Right after that change is applied, mark the instance as initialized:
+
+```sh
+just k8s mariadb-mark-initialized <namespace> <app>
+```
+
+!!! warning "Without this step the operator stops managing the instance"
+
+    mariadb-operator only sets the `Initialized` condition at the end of a
+    `bootstrapFrom` restore. An instance created without `bootstrapFrom` (the
+    init label) doesn't have it, so once the label is gone the operator tries
+    to restore into the existing PVCs and stops with "Init error: storage
+    PVCs already exist" (`Ready=False`). The database keeps running, but the
+    operator does nothing else for it, failover included, and the app's
+    health check fails. The recipe sets the condition, which a restore would
+    have set. A `MariaDB` that is later recreated has no status yet and
+    restores from `bootstrapFrom` as intended.
+
 Create the NAS dump folder before the first scheduled dump:
 
 ```sh

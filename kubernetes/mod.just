@@ -52,6 +52,25 @@ debug-node node:
 delete-ks ns ks:
     just k8s render-local-ks "{{ ns }}" "{{ ks }}" | kubectl delete -f -
 
+[doc('Mark a MariaDB as initialized, after removing its components.database/mariadb init label')]
+mariadb-mark-initialized ns app:
+    # mariadb-operator only sets Initialized=True at the end of a bootstrapFrom
+    # restore; an instance created without one would otherwise try to restore
+    # into its existing PVCs ("storage PVCs already exist") once it gets one
+    mdb="{{ app }}-mariadb"
+    index=$(kubectl -n "{{ ns }}" get mariadbs.k8s.mariadb.com "$mdb" -o json \
+        | jq '[.status.conditions[]?.type] | index("Initialized")')
+    condition=$(jq -cn --arg now "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        '{type: "Initialized", status: "True", reason: "Initialized", message: "Initialized", lastTransitionTime: $now}')
+    if [[ "$index" == "null" ]]; then
+        patch="[{\"op\": \"add\", \"path\": \"/status/conditions/-\", \"value\": $condition}]"
+    else
+        patch="[{\"op\": \"test\", \"path\": \"/status/conditions/$index/type\", \"value\": \"Initialized\"},
+            {\"op\": \"replace\", \"path\": \"/status/conditions/$index\", \"value\": $condition}]"
+    fi
+    kubectl -n "{{ ns }}" patch mariadbs.k8s.mariadb.com "$mdb" --subresource=status --type=json -p "$patch"
+    just log info "Marked as initialized" "mariadb" "$mdb"
+
 [doc('Prune pods in Failed, Pending, or Succeeded state')]
 prune-pods:
     for phase in Failed Pending Succeeded; do
