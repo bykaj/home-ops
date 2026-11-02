@@ -20,6 +20,7 @@ spec:
             env:
               TZ: "Europe/Amsterdam"
               UP_UNIFI_DEFAULT_ROLE: home-ops
+              UP_UNIFI_DEFAULT_SKIP_DEVICE_TAGS: true # Device tags unused; each request leaks an HTTP/2 stream in unifi-core (unpoller/unpoller#1119)
               UP_PROMETHEUS_HTTP_LISTEN: 0.0.0.0:80
               UP_INFLUXDB_DISABLE: true
             envFrom:
