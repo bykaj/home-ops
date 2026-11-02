@@ -18,7 +18,7 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
-| Documents | TrueNAS Cloud Sync (WebDAV) | [Filen](https://filen.io), through the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack | Hourly | Mirror |
+| Documents | TrueNAS Cloud Sync (WebDAV) | [Filen](https://filen.io), through the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack, and a shared [Seafile](../../platforms/kubernetes/app-notes.md#seafile) library | Hourly | Mirror |
 | Macs | Time Machine over SMB | NAS, `/mnt/vault/TimeMachine` | Hourly (macOS) | Time Machine thinning, see [Time Machine](#time-machine) |
 
 The cluster's data lands on the NAS first. From there the Kopia repository is
@@ -312,33 +312,31 @@ cp -a ".zfs/snapshot/<snapshot>/<Mac>.sparsebundle" .
 
 Delete the `.broken` copy once Time Machine verifies the backup again.
 
-### Documents to Filen
+### Document sync
 
-A TrueNAS Cloud Sync task pushes `/mnt/vault/Archive/media/documents/originals`
-to the `/Archief` folder of the [Filen](https://filen.io) drive over WebDAV,
-every hour. It runs in sync mode, so it is a convenient, readable mirror of the
-original documents rather than a backup: deletions on the NAS are mirrored too.
-The versioned copy is the Archive TrueCloud task.
+Two TrueNAS Cloud Sync tasks push `/mnt/vault/Archive/media/documents/originals`
+over WebDAV every hour, in sync mode: one to the `/Archief` folder of the
+[Filen](https://filen.io) drive, one to a shared `Archief` library in Seafile.
+Both are convenient, readable mirrors of the original documents rather than
+backups: deletions on the NAS are mirrored too. The versioned copy is the
+Archive TrueCloud task.
 
-Filen has no WebDAV endpoint of its own; the task talks to the WebDAV server of
-the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack at
-`https://webdav.bykaj.io`, which logs in to the Filen account. The task's WebDAV
-credential (vendor *Other*) uses the `FILEN_WEBDAV_USERNAME` and
-`FILEN_WEBDAV_PASSWORD` fields of the `filen-cli` 1Password item. If that stack
-is down, the task fails until it is back.
+| Destination | WebDAV URL | Credential (vendor *Other*) | Remote folder |
+| --- | --- | --- | --- |
+| Filen | `https://webdav.bykaj.io` | `FILEN_WEBDAV_USERNAME` and `FILEN_WEBDAV_PASSWORD` from the `filen-cli` 1Password item | `/Archief` |
+| Seafile | `https://files.bykaj.app/seafdav` | The library owner's contact email and the WebDAV password set under Settings in Seafile | `/Archief-<id>`, the `Archief` library |
 
-### Documents to Seafile
-
-The same folder can be pushed to a Seafile library over WebDAV, so the
-documents can be shared with other Seafile users. The library is created in the
-Seafile web UI and owned by one account (the files count toward its quota).
-The task's WebDAV credential (vendor *Other*) uses
-`https://files.bykaj.app/seafdav`, that account's contact email and the WebDAV
-password set under Settings in Seafile; the remote folder is the library name.
-
-In sync mode the task deletes anything in the library that isn't on the NAS,
-including files other users add, so share the library read-only. A task in
-copy mode keeps their files, but deletions on the NAS don't come through.
+- **Filen** has no WebDAV endpoint of its own; the task talks to the WebDAV
+  server of the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli)
+  stack, which logs in to the Filen account. If that stack is down, the task
+  fails until it is back.
+- **Seafile** serves WebDAV itself (SeafDAV), and the NAS reaches it directly on
+  the envoy-external LoadBalancer, so there is no upload size limit. The
+  library is owned by one account, whose quota the files count toward, and is
+  shared with the other users read-only: sync mode deletes anything in it that
+  isn't on the NAS, files other users add included. SeafDAV always shows a
+  library as its name plus `-` and the first six characters of its ID, so the
+  remote folder only changes if the library is recreated.
 
 ### Restoring NAS data
 
@@ -356,7 +354,7 @@ copy mode keeps their files, but deletions on the NAS don't come through.
 
 | Time | Job |
 | --- | --- |
-| Every hour | `Applications` snapshot, Kopiur PVC backups, document sync to Filen |
+| Every hour | `Applications` snapshot, Kopiur PVC backups, document sync to Filen and Seafile |
 | 00:00 | `Applications` daily (and Sunday weekly) snapshot |
 | 01:00 | `Archive` snapshot |
 | 01:30 | Kopia repository replication to B2 |
