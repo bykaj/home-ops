@@ -1,44 +1,38 @@
 ---
-description: Per-app setup choices and gotchas that aren't obvious from the manifests
+description: Per-app setup choices, sign-in methods and gotchas that aren't obvious from the manifests
 ---
 
 # App Notes
 
 Notes on apps where the manifests don't tell the whole story: settings that
 live in the app's own UI, decisions not to change something, and gotchas
-found the hard way. Apps that behave as their manifests say aren't listed.
-For the full catalog, see [Applications](applications.md). NAS stacks have
-their notes on the [Docker](../docker/index.md#stacks) page.
+found the hard way, grouped by namespace. Each namespace starts with how its
+apps sign in. For the full catalog, see [Applications](applications.md). NAS
+stacks have their notes on the [Docker](../docker/index.md#stacks) page.
 
-## Identity
+Sign-in methods:
 
-### Pocket ID
+- **Native OIDC**: the app's own OpenID Connect support, with its own client
+  in [Pocket ID](#pocket-id).
+- **gateway-oidc**: Envoy logs the user in to Pocket ID before the request
+  reaches the app ([`gateway-oidc`](components.md#gateway-oidc)), for apps
+  without usable OIDC of their own.
+- **Own login**: the app's own accounts, not on single sign-on.
+- **No login**: deliberately open, so it stays reachable when something is
+  broken.
 
-- SMTP and app settings live in Pocket ID's own UI and database, not in Git,
-  so the Kopiur backup of its volume is the only copy.
-- It downloads the GeoLite2 City database with `MAXMIND_LICENSE_KEY`. Only the
-  license key is needed, no MaxMind account ID.
-- `ICON_LIBRARY_URL` points at the selfh.st icons on GitHub directly. jsDelivr
-  serves only some files from that repository, because it exceeds jsDelivr's
-  50 MB package limit.
-- Background: [Authentik to Pocket ID](../../operations/history/2026-10-pocket-id.md).
+## `ai`
 
-### Apps with their own OIDC
+| App | Sign-in |
+| --- | --- |
+| [LiteLLM](#litellm) | Native OIDC for the Admin UI; the API and `/mcp/` use keys |
 
-These apps use their native OIDC support.
+### LiteLLM
 
-- **Immich, Wallos and Audiobookshelf** are configured in their own UI, not in
-  the repository.
-- **Audiobookshelf** has an empty group claim, because it only accepts groups
-  named exactly `admin`, `user` and `guest`. Its local password login is off.
-- **Karakeep** stores the profile picture only when a user is created. An
-  account from a previous identity provider has no picture until it is set in
-  the database.
-- **pgAdmin** skips its login page (`OAUTH2_AUTO_LOGIN`); use
-  `/login?no_auto_login` to see it. Logging out also ends the Pocket ID session
-  (`OAUTH2_LOGOUT_URL`), so the pgAdmin URL must be in the client's logout
-  callback URLs in Pocket ID.
-- **LiteLLM** uses native OIDC for its Admin UI only, so the API and `/mcp/`
+How the gateway, models, keys and MCP servers fit together is on the
+[AI](ai.md) page; these are the gotchas.
+
+- **Sign-in.** Native OIDC covers the Admin UI only, so the API and `/mcp/`
   keep working with keys. The Pocket ID client has callback URL
   `https://litellm.bykaj.app/sso/callback`, uses PKCE, and its credentials are
   `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` in the `litellm` 1Password item.
@@ -48,160 +42,6 @@ These apps use their native OIDC support.
   no longer works as a UI password (`disable_env_credential_login`). Password
   login remains only for database users with a password, and SSO users have
   none.
-- **OpenCloud** is disabled since Seafile took over `files.bykaj.app` (its
-  `ks.yaml` is commented out). Enabling it again needs a different hostname,
-  or Seafile moved off `files`; its PVC comes back from the newest Kopiur
-  snapshot, and its files are still in the `opencloud` bucket. It replaces
-  its built-in IdP with Pocket ID and creates accounts
-  on first login, keyed on the `sub` claim. It has four public PKCE clients
-  in Pocket ID, with fixed client IDs:
-
-    | Client ID          | Callback URLs                                                                                                                 |
-    | ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-    | `opencloud-web`    | `https://files.bykaj.app/`, `https://files.bykaj.app/oidc-callback.html`, `https://files.bykaj.app/oidc-silent-redirect.html` |
-    | `OpenCloudDesktop` | `http://127.0.0.1`, `http://localhost` (any port is accepted)                                                                 |
-    | `OpenCloudIOS`     | `oc://ios.opencloud.eu`                                                                                                       |
-    | `OpenCloudAndroid` | `oc://android.opencloud.eu`                                                                                                   |
-
-    The role comes from the `groups` claim on every login (`resources/proxy.yaml`):
-    `admins` → Admin, `family` → User, `friends` → Guest, highest first. A
-    user in none of these groups can't sign in. Pocket ID only sends `groups`
-    for the `groups` scope, so the web and app scopes include it. The CSP
-    (`resources/csp.yaml`) is OpenCloud's default plus `https://cyrannus.id/`.
-    File contents are stored in the `opencloud` Garage bucket
-    (`decomposeds3`); the PVC keeps the metadata, so restoring files needs
-    both the PVC backup and the bucket.
-    The optional `notifications` service is on (`OC_ADD_RUN_SERVICES`) and
-    sends share and space emails through the
-    [SMTP relay](../../infrastructure/networking/index.md#smtp-relay); users can
-    turn them off under Preferences.
-    Sharing with an email address uses guest links (`OC_ENABLE_GUEST_LINKS`,
-    off by default): the recipient gets a one-time link that is valid for 30
-    minutes and needs no account, and can request a new one with a PIN.
-    Web extensions (only Pastebin so far) are mounted from their
-    `opencloudeu/web-extensions` images as image volumes under `/opt/web-apps`
-    (`WEB_ASSET_APPS_PATH`); the built-in apps stay available. To add one, add
-    another image volume mounted at `/opt/web-apps/<name>` with subPath
-    `web/apps/<name>`. A Renovate rule treats the `<extension>-` tag prefix as
-    a separate line per extension.
-- **Seafile** replaced OpenCloud at `files.bykaj.app` (`APP_SUBDOMAIN`). It
-  is the Pro edition, because only Pro stores libraries in S3 (the
-  `seafile-commits`, `seafile-fs` and `seafile-blocks` Garage buckets). Pro
-  is free for up to three users, and every Pocket ID login creates an
-  account, so the Pocket ID client is limited to the groups that should get
-  one. Its database comes from the
-  [mariadb component](../../infrastructure/storage/mariadb.md) (user
-  `seafile`, database `seafile_db`); `mariadb.yaml` adds `ccnet_db` and
-  `seahub_db` with grants, so Seafile's first start uses them
-  (`USE_EXISTING_DB`) and needs no root password.
-    Seahub reads OAuth and email settings only from Python, so
-    `resources/local_settings.py` is linked into the versioned install
-    directory by the container command, and Seahub loads it before the
-    `seahub_settings.py` that the first start generates on the PVC. Secrets
-    come from the environment. Accounts are keyed on the `sub` claim. The
-    Pocket ID client is confidential, with callback URL
-    `https://files.bykaj.app/oauth/callback/`; the desktop and mobile apps
-    sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
-    WebDAV (SeafDAV) is at `https://files.bykaj.app/seafdav`: the username
-    is the contact email, the password the WebDAV password each user sets
-    under Settings (Pocket ID accounts have no other). `ENABLE_SEAFDAV` only
-    switches on that setting in Seahub; the controller reads `enabled` from
-    `seafdav.conf` on the PVC, which the `shared-permissions` init container
-    turns on at every start (on a fresh volume, from the second start). The
-    NAS reaches it directly on the envoy-external LoadBalancer, not through
-    Cloudflare, so uploads have no size limit; see
-    [Documents to Seafile](../../infrastructure/storage/backups.md#documents-to-seafile).
-    Pocket ID accounts can't use or set a password
-    (`DISABLE_SSO_USER_LOCAL_PWD_LOGIN`; Seafile exempts system admins), but
-    the login page still shows the password form: Seahub has no setting to
-    hide it.
-    Roles come from the Pocket ID `groups` claim (the `groups` scope) on
-    every login: `resources/seahub_custom_functions.py` picks the highest of
-    `admins`, `family` and `friends` (other groups give `default`), and
-    `ENABLED_ROLE_PERMISSIONS` in `local_settings.py` gives them their disk
-    quota (100 GB, 100 GB, 50 GB) and monthly AI credits (unlimited, 500,
-    200; 100 credits = USD 1). `default` is set explicitly to 1 GB and no AI,
-    because Seahub's own default is unlimited; it also applies to accounts
-    until their next login. Seahub skips the role update when the `groups`
-    claim is empty, so a user removed from every group would keep their last
-    role. The Pocket ID client's allowed groups (`admins`, `family`,
-    `friends`) prevent that by keeping them from signing in; keep that list
-    in sync with the roles. The credits are counted at OpenAI's list
-    prices from LiteLLM's cost map, set as `price` in `LLM_MODELS` and
-    `EMBEDDING_MODEL`; the ChatGPT route itself is subscription. A role set
-    by hand in Seafile is overwritten at the next login; a per-user quota
-    still wins over the role quota. Seafile system admin rights are separate
-    from the `admins` role.
-    The local admin from the `seafile` 1Password item exists only to hand
-    out admin rights: a Pocket ID login creates a separate account (14.0 has
-    no way to link the two), so make that account an admin under System
-    Admin → Users, then deactivate the local admin. It counts toward the
-    three free users.
-    The image starts as root; `NON_ROOT` runs the Seafile processes as uid
-    8000, which is also the Kopiur mover UID. Its entrypoint refuses to start
-    unless `/shared/seafile` is mode 777, but its own boot script creates
-    that folder as 755 first, so the `shared-permissions` init container
-    creates it with 777 beforehand. It also clears the setgid bit the folder
-    inherits from the PVC root: the check compares the mode to `777`
-    literally, and `2777` fails it. SeaDoc runs without `NON_ROOT`: its boot
-    script creates `/shared/logs` as root, and its converter then can't
-    write its log as `seafile`. It only keeps logs, in an emptyDir.
-    SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
-    server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
-    `seafile-ai`, `seafile-seasearch`, `seafile-notification`), because the
-    PVC can only be mounted on one node. All but SeaSearch only get an
-    emptyDir for logs. The metadata
-    server and Seafile AI read the libraries straight from S3 with the shared
-    settings in `resources/seafile.env`, and the metadata server keeps its
-    data in the `seafile-metadata` bucket. SeaDoc is routed under
-    `/sdoc-server/` (prefix stripped) and `/socket.io`. The notification
-    server pushes library, file lock and folder permission changes to the
-    desktop client (8.0.11+), SeaDrive (3.0.1+) and the web UI over a
-    websocket, so they don't wait for their next poll. It's routed under
-    `/notification` with the prefix stripped: clients open the websocket on
-    `/notification` itself (`/` on the server), and Seafile posts events to
-    `/events` on the Service, which requires a JWT. Seafile AI needs the
-    metadata server, and calls LiteLLM with the `seafile` virtual key. Its
-    model list (`LLM_MODELS`) and embedding model (`EMBEDDING_MODEL`, for
-    vector search in AI chat) are env vars on both Seahub and Seafile AI,
-    which override `seafile_ai_config.yaml`. The kubelet expands
-    `$(AI_API_KEY)` in them, so the key never sits in a file; that only works
-    because `AI_API_KEY` sorts before them in the rendered env.
-    SeaSearch is the full-text search engine, with its index on its own
-    `ceph-block` PVC and no backup: the index can be rebuilt, and S3 mode
-    would still keep its metadata locally. Its admin (`seafile`, password
-    `SEASEARCH_PASSWORD` in the `seafile` item) is created on its first
-    start; Seafile and Seafile AI use base64(`seafile:<password>`) as
-    `SEASEARCH_TOKEN`.
-
-### Apps behind `gateway-oidc`
-
-Sonarr, Radarr, Prowlarr, Whisparr, Bazarr, SABnzbd and Stash sign in through
-[`gateway-oidc`](components.md#gateway-oidc).
-
-- **Sonarr** stays here, because its native OIDC allows only one user.
-- **Sonarr and Radarr** have `/signalr` on their `api` rule, so Bazarr can
-  follow them over SignalR with an API key.
-- **Stash** gets its API key from an `HTTPRouteFilter` after the Pocket ID
-  login, so there is no second login. Its `api` rule matches the `ApiKey`
-  header (Whisparr) or the `apikey` query parameter (Homepage, external
-  players). Keep Stash's form login on: the API key only exists while
-  credentials are set.
-
-### Not on single sign-on
-
-- **Jellyfin.** The SSO plugin is archived and only worked in the browser.
-- **Observability tools** (Prometheus, Alertmanager, VictoriaLogs, Grafana,
-  the Flux UI, Goldilocks, kguardian) deliberately have no login, so they stay
-  reachable when something is broken.
-
-## AI
-
-### LiteLLM
-
-How the gateway, models, keys and MCP servers fit together is on the
-[AI](ai.md) page; these are the gotchas.
-
 - Updates wait 3 days in Renovate, and the image comes from Docker Hub so that
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
@@ -292,15 +132,160 @@ How the gateway, models, keys and MCP servers fit together is on the
   AI Connection by hand, so a new key needs a manual update there.
 - Background: [LiteLLM 1.107.0 compromise](../../operations/history/2026-10-litellm-compromise.md).
 
-## Media
+## `default`
 
-### Plex
+| App | Sign-in |
+| --- | --- |
+| [Karakeep](#karakeep) | Native OIDC |
+| [pgAdmin](#pgadmin) | Native OIDC |
+| [Seafile](#seafile) | Native OIDC (OAuth), no password login |
+| Wallos | Native OIDC, configured in its own UI |
 
-`PLEX_NO_AUTH_NETWORKS` covers the LAN and the pod and Service networks. The
-Tailscale range was removed with the Tailscale ingresses, so don't add it
-back.
+### Karakeep
 
-## Platform
+- It stores the profile picture only when a user is created. An account from
+  a previous identity provider has no picture until it is set in the
+  database.
+
+### pgAdmin
+
+- It skips its login page (`OAUTH2_AUTO_LOGIN`); use `/login?no_auto_login` to
+  see it.
+- Logging out also ends the Pocket ID session (`OAUTH2_LOGOUT_URL`), so the
+  pgAdmin URL must be in the client's logout callback URLs in Pocket ID.
+
+### Seafile
+
+Seafile Pro serves `files.bykaj.app` (`APP_SUBDOMAIN: files`) and replaced
+[OpenCloud](#opencloud). Pro is needed to store libraries in S3, and is free
+for up to three active users.
+
+#### Sign-in and roles
+
+- Pocket ID is configured in `resources/local_settings.py`: Seahub only reads
+  OAuth, email and role settings from Python, so the container command links
+  the file into its install directory. The client is confidential, with
+  callback URL `https://files.bykaj.app/oauth/callback/`. Accounts are keyed on
+  the `sub` claim; the desktop and mobile apps sign in through the system
+  browser.
+- Every Pocket ID login creates an account, so the Pocket ID client only allows
+  the `admins`, `family` and `friends` groups.
+- Pocket ID accounts can't use or set a password
+  (`DISABLE_SSO_USER_LOCAL_PWD_LOGIN`). Seafile exempts system admins, and the
+  login page keeps showing the password form; Seahub can't hide it.
+- The role follows the `groups` claim on every login: the highest group wins
+  (`resources/seahub_custom_functions.py`), and `ENABLED_ROLE_PERMISSIONS` in
+  `local_settings.py` sets the limits:
+
+| Role | Disk | AI credits per month |
+| --- | --- | --- |
+| `admins` | 100 GB | unlimited |
+| `family` | 100 GB | 500 |
+| `friends` | 50 GB | 200 |
+| `default` | 1 GB | none |
+
+- 100 credits are USD 1, counted at OpenAI's list prices (`price` in
+  `LLM_MODELS` and `EMBEDDING_MODEL`); the ChatGPT route itself is
+  subscription. `default` is explicit because Seahub's own default is
+  unlimited; it also applies to an account until its next login.
+- A role set by hand is overwritten at the next login; a per-user quota still
+  wins over the role quota. System admin rights are separate from the
+  `admins` role.
+- With an empty `groups` claim Seahub skips the update and the user keeps
+  their last role. The client's allowed groups prevent that, so keep them in
+  sync with the roles.
+- The local admin from the `seafile` 1Password item is deactivated. A Pocket ID
+  account can't be linked to it, so it only served to make the first Pocket ID
+  account an admin. Inactive accounts don't count toward the three users.
+
+#### Storage and database
+
+- Libraries are in the `seafile-commits`, `seafile-fs` and `seafile-blocks`
+  Garage buckets; the PVC (Kopiur) holds the generated config, avatars,
+  thumbnails and logs.
+- The database comes from the
+  [mariadb component](../../infrastructure/storage/mariadb.md) (user
+  `seafile`, database `seafile_db`); `mariadb.yaml` adds `ccnet_db` and
+  `seahub_db`, so the first start uses existing databases (`USE_EXISTING_DB`)
+  and needs no root password.
+
+#### Extensions
+
+They run as their own Deployments, because the PVC can only be mounted on one
+node. The metadata server and Seafile AI read the libraries straight from S3
+(`resources/seafile.env`).
+
+| Deployment | Purpose | Notes |
+| --- | --- | --- |
+| `seafile-seadoc` | SeaDoc editor | Routed under `/sdoc-server/` (prefix stripped) and `/socket.io` |
+| `seafile-metadata` | Metadata server | Data in the `seafile-metadata` bucket |
+| `seafile-ai` | Seafile AI | Needs the metadata server; calls LiteLLM with the `seafile` virtual key |
+| `seafile-seasearch` | Full-text search | Index on its own `ceph-block` PVC without backup, since it can be rebuilt |
+| `seafile-notification` | Pushes library, lock and permission changes to clients | Websocket on `/notification`; Seafile posts events to `/events` internally (JWT) |
+
+- The AI models are the `LLM_MODELS` and `EMBEDDING_MODEL` env vars on Seahub
+  and Seafile AI, which override `seafile_ai_config.yaml`. The kubelet expands
+  `$(AI_API_KEY)` in them, which only works because `AI_API_KEY` sorts first in
+  the rendered env.
+- SeaSearch's admin is `seafile` with `SEASEARCH_PASSWORD` from the `seafile`
+  item, created on its first start; Seafile and Seafile AI send
+  base64(`seafile:<password>`) as `SEASEARCH_TOKEN`.
+
+#### WebDAV
+
+- SeafDAV serves `https://files.bykaj.app/seafdav`. The username is the contact
+  email, the password the WebDAV password each user sets under Settings.
+- Libraries show up as their name plus `-` and the first six characters of
+  their ID.
+- `ENABLE_SEAFDAV` only adds the WebDAV setting to Seahub; the server starts
+  from `enabled` in `seafdav.conf` on the PVC, which the `shared-permissions`
+  init container switches on at every start (on a fresh volume from the second
+  start).
+- The NAS reaches it on the envoy-external LoadBalancer directly, so uploads
+  have no size limit; see
+  [Document sync](../../infrastructure/storage/backups.md#document-sync).
+
+#### Running as non-root
+
+- The image starts as root; `NON_ROOT` runs the Seafile processes as uid 8000,
+  which is also the Kopiur mover UID.
+- The entrypoint refuses to start unless `/shared/seafile` has mode exactly
+  `777`, but the image's boot script creates it as 755, and it inherits the
+  setgid bit of the PVC root. The `shared-permissions` init container creates
+  it with 777 and clears setgid first.
+- SeaDoc runs without `NON_ROOT`: its boot script creates `/shared/logs` as
+  root, after which its converter can't write its log. It only keeps logs, in
+  an emptyDir.
+
+## `downloads`
+
+| App | Sign-in |
+| --- | --- |
+| Bazarr | gateway-oidc |
+| Prowlarr | gateway-oidc |
+| [Radarr](#radarr) | gateway-oidc |
+| SABnzbd | gateway-oidc |
+| [Sonarr](#sonarr) | gateway-oidc |
+| Whisparr | gateway-oidc |
+
+Each app has its own Pocket ID client; an `api` rule on the route stays open
+for app-to-app calls that carry an API key.
+
+### Sonarr
+
+- It stays on gateway-oidc, because its native OIDC allows only one user.
+- Its `api` rule includes `/signalr`, so Bazarr can follow it over SignalR
+  with an API key.
+
+### Radarr
+
+- Like Sonarr, its `api` rule includes `/signalr` for Bazarr.
+
+## `external-secrets`
+
+| App | Sign-in |
+| --- | --- |
+| [1Password Connect](#1password-connect) | No UI; External Secrets uses its API token |
 
 ### 1Password Connect
 
@@ -309,7 +294,117 @@ base64; a mistake here also stops External Secrets from fixing it. See
 [KB-010](../../operations/troubleshooting/kb/010-onepassword-connect-credentials.md) before
 changing how Connect reads its credentials.
 
+## `media`
+
+| App | Sign-in |
+| --- | --- |
+| [Audiobookshelf](#audiobookshelf) | Native OIDC, configured in its own UI |
+| Immich | Native OIDC, configured in its own UI |
+| [Jellyfin](#jellyfin) | Own login |
+| [Plex](#plex) | Plex account; no login from the LAN and cluster networks |
+| [Stash](#stash) | gateway-oidc, with its API key injected |
+
+### Audiobookshelf
+
+- Its group claim is empty, because it only accepts groups named exactly
+  `admin`, `user` and `guest`.
+- Its local password login is off.
+
+### Jellyfin
+
+- Not on single sign-on: the SSO plugin is archived and only worked in the
+  browser.
+
+### Plex
+
+`PLEX_NO_AUTH_NETWORKS` covers the LAN and the pod and Service networks. The
+Tailscale range was removed with the Tailscale ingresses, so don't add it
+back.
+
+### Stash
+
+- It gets its API key from an `HTTPRouteFilter` after the Pocket ID login, so
+  there is no second login.
+- Its `api` rule matches the `ApiKey` header (Whisparr) or the `apikey` query
+  parameter (Homepage, external players).
+- Keep Stash's form login on: the API key only exists while credentials are
+  set.
+
+## `observability`
+
+| App | Sign-in |
+| --- | --- |
+| Prometheus, Alertmanager, VictoriaLogs, Grafana (anonymous), Goldilocks, kguardian | No login |
+
+The Flux UI (`flux-system`) has no login either. These tools deliberately stay
+open, so they are reachable when something is broken.
+
+## `rook-ceph`
+
+| App | Sign-in |
+| --- | --- |
+| [Rook-Ceph](#rook-ceph) dashboard | Own login (Ceph dashboard) |
+
 ### Rook-Ceph
 
 The active mgr leaks memory slowly; see
 [Known Noise](../../operations/troubleshooting/known-noise.md#ceph).
+
+## `security`
+
+| App | Sign-in |
+| --- | --- |
+| [Pocket ID](#pocket-id) | Passkeys; it is the identity provider for everything above |
+
+### Pocket ID
+
+- SMTP and app settings live in Pocket ID's own UI and database, not in Git,
+  so the Kopiur backup of its volume is the only copy.
+- It downloads the GeoLite2 City database with `MAXMIND_LICENSE_KEY`. Only the
+  license key is needed, no MaxMind account ID.
+- `ICON_LIBRARY_URL` points at the selfh.st icons on GitHub directly. jsDelivr
+  serves only some files from that repository, because it exceeds jsDelivr's
+  50 MB package limit.
+- Background: [Authentik to Pocket ID](../../operations/history/2026-10-pocket-id.md).
+
+## Disabled apps
+
+Notes for apps whose `ks.yaml` is commented out (see
+[Applications](applications.md#disabled)), kept for when they come back.
+
+### OpenCloud
+
+- **Disabled** since Seafile took over `files.bykaj.app`. Enabling it again
+  needs another hostname, or Seafile moved off `files`. Its PVC comes back from
+  the newest Kopiur snapshot, and its files are still in the `opencloud` Garage
+  bucket (`decomposeds3`); the PVC holds the metadata, so a restore needs both.
+- **Sign-in.** Pocket ID replaces its built-in IdP, and accounts are created on
+  first login, keyed on the `sub` claim. It has four public PKCE clients in
+  Pocket ID, with fixed client IDs:
+
+    | Client ID          | Callback URLs                                                                                                                 |
+    | ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+    | `opencloud-web`    | `https://files.bykaj.app/`, `https://files.bykaj.app/oidc-callback.html`, `https://files.bykaj.app/oidc-silent-redirect.html` |
+    | `OpenCloudDesktop` | `http://127.0.0.1`, `http://localhost` (any port is accepted)                                                                 |
+    | `OpenCloudIOS`     | `oc://ios.opencloud.eu`                                                                                                       |
+    | `OpenCloudAndroid` | `oc://android.opencloud.eu`                                                                                                   |
+
+- **Roles** come from the `groups` claim on every login
+  (`resources/proxy.yaml`): `admins` → Admin, `family` → User, `friends` →
+  Guest, highest first. A user in none of these groups can't sign in. Pocket ID
+  only sends `groups` for the `groups` scope, so the web and app scopes include
+  it.
+- **CSP** (`resources/csp.yaml`) is OpenCloud's default plus
+  `https://cyrannus.id/`.
+- **Email.** The optional `notifications` service is on (`OC_ADD_RUN_SERVICES`)
+  and sends share and space emails through the
+  [SMTP relay](../../infrastructure/networking/index.md#smtp-relay); users can
+  turn them off under Preferences. Sharing with an email address uses guest
+  links (`OC_ENABLE_GUEST_LINKS`): a one-time link, valid for 30 minutes and
+  without an account, renewable with a PIN.
+- **Web extensions** (only Pastebin so far) are mounted from their
+  `opencloudeu/web-extensions` images as image volumes under `/opt/web-apps`
+  (`WEB_ASSET_APPS_PATH`); the built-in apps stay available. To add one, add
+  another image volume at `/opt/web-apps/<name>` with subPath
+  `web/apps/<name>`. A Renovate rule treats the `<extension>-` tag prefix as a
+  separate line per extension.

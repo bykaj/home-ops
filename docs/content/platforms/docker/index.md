@@ -225,7 +225,7 @@ allows anonymous reads, and the hostname only resolves on the LAN.
 [Filen CLI](https://github.com/FilenCloudDienste/filen-cli-releases) serving the
 Filen drive over WebDAV at `webdav.bykaj.io` (basic auth). A TrueNAS Cloud Sync
 task pushes the Paperless documents to it (see
-[Documents to Filen](../../infrastructure/storage/backups.md#documents-to-filen)).
+[Document sync](../../infrastructure/storage/backups.md#document-sync)).
 
 The CLI logs in with an auth config instead of email and password, so the
 account's two-factor authentication doesn't block it. Create one with

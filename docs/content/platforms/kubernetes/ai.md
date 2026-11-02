@@ -29,7 +29,7 @@ graph LR
 - **Workstations** reach it at `https://litellm.bykaj.app`, which only has a
   route on `envoy-internal`. They use it for MCP only.
 - **Admin UI** logins go through Pocket ID; the API and `/mcp/` take keys (see
-  [App Notes](app-notes.md#apps-with-their-own-oidc)).
+  [App Notes](app-notes.md#litellm)).
 
 Everything is declared as custom resources of the
 [litellm-operator](https://github.com/home-operations/litellm-operator), split
