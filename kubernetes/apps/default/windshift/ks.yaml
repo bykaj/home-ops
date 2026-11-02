@@ -11,11 +11,17 @@ spec:
   dependsOn:
     - name: litellm-operator
       namespace: ai
+  # Only evaluated for the resources listed in healthChecks; current-only, so
+  # a database that is still starting counts as in progress, not failed
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
+  healthChecks:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: windshift-postgres
+      namespace: default
   interval: 1h
   path: ./kubernetes/apps/default/windshift/app
   postBuild:

@@ -20,14 +20,24 @@ spec:
       namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  # Only evaluated for the resources listed in healthChecks; current-only, so
+  # a database that is still starting counts as in progress, not failed
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1
       kind: Dragonfly
-      failed: status.phase != 'ready'
-      current: status.phase == 'ready'
+      current: has(status.phase) && status.phase == 'Ready'
     - apiVersion: k8s.mariadb.com/v1alpha1
       kind: MariaDB
       current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
+  healthChecks:
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      name: seafile-dragonfly
+      namespace: default
+    - apiVersion: k8s.mariadb.com/v1alpha1
+      kind: MariaDB
+      name: seafile-mariadb
+      namespace: default
   interval: 1h
   path: ./kubernetes/apps/default/seafile/app
   postBuild:
