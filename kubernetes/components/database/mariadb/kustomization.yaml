@@ -8,6 +8,7 @@ resources:
   - ./mariadb.yaml
   - ./physicalbackup.yaml
   - ./pointintimerecovery.yaml
+  - ./user.yaml
 patches:
   - target:
       group: helm.toolkit.fluxcd.io

@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/user_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  # The operator creates this User for spec.username with a fixed limit of 20
+  # connections, too few for apps with several services; it only creates it
+  # when missing, so declaring it here sets the limit
+  name: ${APP}-mariadb-user
+spec:
+  host: "%"
+  mariaDbRef:
+    name: ${APP}-mariadb
+  maxUserConnections: ${MARIADB_MAX_USER_CONNECTIONS:=100}
+  name: ${MARIADB_USERNAME:=${APP}}
+  passwordSecretKeyRef:
+    name: ${APP}-mariadb-app
+    key: password

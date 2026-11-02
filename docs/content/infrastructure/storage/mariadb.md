@@ -39,6 +39,7 @@ The app's HelmRelease needs `dependsOn: []`: the component appends
 | `APP` | _(required)_ | Name of the consuming app; used for the `MariaDB`, its Secrets and the backup paths |
 | `MARIADB_USERNAME` | `${APP}` | User created with the instance; can't change afterwards |
 | `MARIADB_DATABASE` | `${APP}` | Database created with the instance, the user gets all privileges on it; can't change afterwards |
+| `MARIADB_MAX_USER_CONNECTIONS` | `100` | Connection limit of that user. The operator would give it a fixed 20, which Seafile exceeds at idle |
 | `MARIADB_BACKUP_SCHEDULE` | `23 0 * * *` | Cron schedule for the dump to the NAS. Set it per app to `<minute> 0 * * *` with the minute from `just k8s cron-minute <app>` |
 | `MARIADB_TIMELINE` | `1` | Archive generation in S3, see [Rebuilding](#rebuilding) |
 | `MARIADB_RECOVERY_TIMELINE` | `${MARIADB_TIMELINE}` | Generation a new instance restores from, see [Rebuilding](#rebuilding) |
