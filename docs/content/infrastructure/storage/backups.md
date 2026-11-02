@@ -145,7 +145,7 @@ gets a protection level that fits how replaceable its data is:
 
 | Dataset | Contents | ZFS snapshots | Off-site (TrueCloud) |
 | --- | --- | --- | --- |
-| `Applications` | Data of the [Compose stacks](../../platforms/docker/index.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot`) |
+| `Applications` | Data of the [Compose stacks](../../platforms/docker/index.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot` and `filen-cli`) |
 | `Archive` | Paperless documents | Daily + monthly | Daily, keep 30 |
 | `Backups` | Client and server backups, Postgres dumps | Daily | Daily, keep 14 (without `Cluster` and `Excluded`) |
 | `Downloads`, `Software`, `Transfer`, `Users` | Recreatable or transient data | None | None |
@@ -199,7 +199,7 @@ everything on the NAS before upload, so B2 only ever sees encrypted chunks.
 
 | Task | Source | B2 folder | Schedule | Keep last | Exclude |
 | --- | --- | --- | --- | --- | --- |
-| Applications Daily | `/mnt/vault/Applications` | `/nas/applications` | Daily at 06:30 | 14 | `**/zot` |
+| Applications Daily | `/mnt/vault/Applications` | `/nas/applications` | Daily at 06:30 | 14 | `**/zot`, `**/filen-cli` |
 | Archive Daily | `/mnt/vault/Archive` | `/nas/archive` | Daily at 02:00 | 30 | |
 | Backups Daily | `/mnt/vault/Backups` | `/nas/backups` | Daily at 04:30 | 14 | `**/Cluster`, `**/Excluded` |
 | Media Weekly | `/mnt/vault/Media` | `/nas/media` | Weekly, Sunday at 04:00 | 12 | `**/Series`, `**/Movies`, `**/Documentaries` |
@@ -222,6 +222,10 @@ Why some data is excluded:
   local.
 - **`Applications/zot`** is the [Zot](../../platforms/docker/index.md#07-zot) pull-through
   cache. It refills itself from the upstream registries.
+- **`Applications/filen-cli`** holds the [Filen CLI](../../platforms/docker/index.md#08-filen-cli)'s
+  managed rclone and its WebDAV cache. The CLI downloads rclone again when it is
+  missing, the cache only holds copies of documents that are already backed up,
+  and the auth config comes from 1Password.
 - **`Media/Series`, `Movies`, `Documentaries`** are large and recreatable. Only
   `Books` and `Music` go off-site.
 
