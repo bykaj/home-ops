@@ -52,6 +52,22 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           GITHUB_BOT_APP_CLIENT_ID: op://Homelab/github-bot/GITHUB_BOT_APP_CLIENT_ID
           GITHUB_BOT_APP_PRIVATE_KEY: op://Homelab/github-bot/GITHUB_BOT_APP_PRIVATE_KEY
+          DOCKER_HUB_USERNAME: op://Homelab/docker-hub/DOCKER_HUB_USERNAME
+          DOCKER_HUB_TOKEN: op://Homelab/docker-hub/DOCKER_HUB_TOKEN
+
+      # Docker Hub's tags API (the only source of release timestamps) doesn't
+      # take the access token directly, only a 15-minute JWT exchanged for it
+      - name: Get Docker Hub Token
+        id: docker-hub
+        env:
+          DOCKER_HUB_TOKEN: ${{ steps.load-secrets.outputs.DOCKER_HUB_TOKEN }}
+          DOCKER_HUB_USERNAME: ${{ steps.load-secrets.outputs.DOCKER_HUB_USERNAME }}
+        run: |
+          token=$(jq -n --arg u "$DOCKER_HUB_USERNAME" --arg s "$DOCKER_HUB_TOKEN" '{identifier: $u, secret: $s}' \
+            | curl -fsS -X POST -H 'Content-Type: application/json' -d @- https://hub.docker.com/v2/auth/token \
+            | jq -er .access_token)
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
 
       - name: Generate Token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
@@ -80,6 +96,16 @@ jobs:
           RENOVATE_AUTODISCOVER: true
           RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }}
           RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
+          # Docker Hub only pages through the first 1,000 tags anonymously; an
+          # image with more tags gets no release timestamps, which holds it
+          # forever under a minimumReleaseAge rule. Registry pulls go to
+          # docker.io, the tags API (with timestamps) to hub.docker.com
+          RENOVATE_HOST_RULES: >-
+            [{"hostType": "docker", "matchHost": "docker.io",
+            "username": "${{ steps.load-secrets.outputs.DOCKER_HUB_USERNAME }}",
+            "password": "${{ steps.load-secrets.outputs.DOCKER_HUB_TOKEN }}"},
+            {"hostType": "docker", "matchHost": "hub.docker.com",
+            "token": "${{ steps.docker-hub.outputs.token }}"}]
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
           RENOVATE_PLATFORM_COMMIT: true
