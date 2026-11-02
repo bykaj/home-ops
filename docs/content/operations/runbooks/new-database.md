@@ -54,6 +54,22 @@ the `${APP}-postgres-app` Secret as usual.
     Kustomization. If `cluster-apps` ever gains a `postBuild`, escape them as
     `$${...}` in the patch, so they survive that first (outer) substitution.
 
+!!! warning "Create the local dump folder on the NAS"
+
+    The `${APP}-postgres-backup-local` CronJob writes to
+    `/mnt/vault/Backups/Database/${APP}`, but doesn't create that folder.
+    The image checks that it exists and is writable before it creates
+    anything, so the first run fails with "BACKUP_DIR points to a file or
+    folder with insufficient permissions." Create it on the NAS before the
+    first scheduled run, owned by the pod's UID/GID:
+
+    ```sh
+    sudo install -d -o 4000 -g 4000 /mnt/vault/Backups/Database/myapp
+    ```
+
+    Test it with
+    `kubectl -n <namespace> create job --from=cronjob/myapp-postgres-backup-local myapp-backup-manual`.
+
 ## 2. Get a first backup
 
 Wait for the nightly `ScheduledBackup`, or force one:

@@ -76,7 +76,9 @@ so names don't collide.
   `retentionPolicy: 14d`.
 - **Local dumps** with
   [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local)
-  to an NFS share on the NAS, keeping 7 daily, 4 weekly and 1 monthly.
+  to an NFS share on the NAS, keeping 7 daily, 4 weekly and 1 monthly. The
+  per-app folder `/mnt/vault/Backups/Database/${APP}` must exist first, see
+  [New Database](../../operations/runbooks/new-database.md#1-deploy-with-the-init-label).
 
 Trigger a manual base backup with `just k8s db-backup <namespace> <app>`.
 
