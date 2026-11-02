@@ -39,14 +39,16 @@ spec:
         containers:
           app:
             image: *image
-            # Seahub only reads OAuth and email settings from Python, so link
-            # local_settings.py into the versioned install dir before starting
+            # Seahub only reads OAuth, email and role settings from Python, so
+            # link them into the versioned install dir before starting
             command:
               - /bin/sh
               - -c
               - >-
                 ln -sf /etc/seafile/local_settings.py
                 "/opt/seafile/$SEAFILE_SERVER-$SEAFILE_VERSION/seahub/seahub/local_settings.py"
+                && ln -sf /etc/seafile/seahub_custom_functions.py
+                "/opt/seafile/$SEAFILE_SERVER-$SEAFILE_VERSION/seahub/seahub_custom_functions.py"
                 && exec /sbin/my_init -- /scripts/enterpoint.sh
             env:
               AI_API_KEY: &litellmKey
@@ -59,7 +61,7 @@ spec:
               EMBEDDING_MODEL: &embeddingModel >-
                 {"type": "other", "url": "http://litellm.ai.svc.cluster.local:4000/v1",
                 "key": "$(AI_API_KEY)", "model": "openai/text-embedding-3-small",
-                "dimensions": 1536}
+                "dimensions": 1536, "price": {"input_tokens": 0.02, "output_tokens": 0}}
               ENABLE_FULL_TEXT_SEARCH: "true"
               ENABLE_METADATA_MANAGEMENT: "true"
               # Pushes library, lock and permission changes to clients over a websocket
@@ -69,13 +71,17 @@ spec:
               ENABLE_SEARCH: "true"
               INNER_METADATA_SERVER_URL: &metadataUrl "http://${APP}-metadata.default.svc.cluster.local:8084"
               INNER_NOTIFICATION_SERVER_URL: "http://${APP}-notification.default.svc.cluster.local:8083"
+              # Prices (USD per 1M tokens) are OpenAI's list prices from LiteLLM's
+              # cost map; only used for the AI credits of the roles in
+              # local_settings.py (the chatgpt/ route itself is subscription)
               # Overrides seafile_ai_config.yaml, read by both Seahub (model
               # list) and Seafile AI (requests); $(AI_API_KEY) is expanded
               # by the kubelet
               LLM_MODELS: &llmModels >-
                 [{"type": "other", "url": "http://litellm.ai.svc.cluster.local:4000/v1",
                 "key": "$(AI_API_KEY)", "model": "chatgpt/gpt-6-luna",
-                "label": "GPT-6 Luna", "default": true, "tier": "low"}]
+                "label": "GPT-6 Luna", "default": true, "tier": "low",
+                "price": {"input_tokens": 0.10, "output_tokens": 0.50}}]
               NON_ROOT: "true"
               NOTIFICATION_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/notification"
               SEADOC_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/sdoc-server"
@@ -309,6 +315,9 @@ spec:
               - path: /etc/seafile/local_settings.py
                 readOnly: true
                 subPath: local_settings.py
+              - path: /etc/seafile/seahub_custom_functions.py
+                readOnly: true
+                subPath: seahub_custom_functions.py
       data:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         advancedMounts:

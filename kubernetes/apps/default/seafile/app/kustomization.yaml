@@ -12,6 +12,7 @@ configMapGenerator:
   - name: seafile-config
     files:
       - local_settings.py=./resources/local_settings.py
+      - seahub_custom_functions.py=./resources/seahub_custom_functions.py
   - name: seafile-env
     envs:
       - ./resources/seafile.env
