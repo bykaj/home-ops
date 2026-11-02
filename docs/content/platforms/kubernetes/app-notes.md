@@ -102,6 +102,10 @@ These apps use their native OIDC support.
     Pocket ID client is confidential, with callback URL
     `https://files.bykaj.app/oauth/callback/`; the desktop and mobile apps
     sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
+    Pocket ID accounts can't use or set a password
+    (`DISABLE_SSO_USER_LOCAL_PWD_LOGIN`; Seafile exempts system admins), but
+    the login page still shows the password form: Seahub has no setting to
+    hide it.
     Roles come from the Pocket ID `groups` claim (the `groups` scope) on
     every login: `resources/seahub_custom_functions.py` picks the highest of
     `admins`, `family` and `friends` (other groups give `default`), and

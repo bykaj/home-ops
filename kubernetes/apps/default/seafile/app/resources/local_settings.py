@@ -26,6 +26,9 @@ OAUTH_ATTRIBUTE_MAP = {
 }
 # The desktop and mobile apps sign in through the system browser
 CLIENT_SSO_VIA_LOCAL_BROWSER = True
+# Pocket ID accounts can't log in with a password (web, apps, API) or set one;
+# Seafile exempts system admins, and the deactivated local admin isn't affected
+DISABLE_SSO_USER_LOCAL_PWD_LOGIN = True
 
 # Roles from the Pocket ID groups; everything not set here comes from Seahub's
 # built-in "default" role. 100 AI credits = USD 1 at the prices in LLM_MODELS
