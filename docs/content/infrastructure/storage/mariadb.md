@@ -108,6 +108,18 @@ copies them into the `${APP}-mariadb` Secret.
 
 `kubectl get pitr -n <namespace>` shows the last recoverable time.
 
+Take a base backup outside the schedule, for example before a risky change,
+with:
+
+```sh
+just k8s db-backup <namespace> <app>
+```
+
+It sets a new `spec.schedule.onDemand` on the current timeline's
+`PhysicalBackup`, which runs it once. Flux leaves that field alone, because
+it isn't in the manifest. The backup counts toward the 14-day retention like
+the scheduled ones.
+
 ## Rebuilding
 
 A new `MariaDB` (deleted together with its PVCs, or on a fresh cluster)
@@ -126,7 +138,7 @@ starts a new timeline:
 2. Delete the `MariaDB` and its PVCs (`storage-${APP}-mariadb-*`). Flux
    recreates it, restoring from the old timeline and archiving to the new one.
    A base backup of the new timeline is taken at the next 04:50; to get one
-   sooner, set `spec.schedule.onDemand` on the `PhysicalBackup`.
+   sooner, run `just k8s db-backup <namespace> <app>`.
 
 Leave both values in place afterwards; the next rebuild moves them up by one
 again. The old timeline's objects in S3 aren't deleted.

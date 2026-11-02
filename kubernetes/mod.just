@@ -18,16 +18,30 @@ browse-pvc ns claim:
 cron-minute name:
     echo $(( $(echo -n "{{ name }}" | cksum | cut -d' ' -f1) % 60 ))
 
-[doc('Manual database backup')]
+[doc('Manual database base backup (CNPG and/or MariaDB, whichever the app has)')]
 db-backup ns app:
-    backup=$(kubectl create -o name -f - <<EOF
-    apiVersion: postgresql.cnpg.io/v1
-    kind: Backup
-    metadata: { generateName: {{ app }}-postgres-manual-, namespace: {{ ns }} }
-    spec: { cluster: { name: {{ app }}-postgres }, method: plugin, pluginConfiguration: { name: barman-cloud.cloudnative-pg.io } }
-    EOF
-    )
-    just log info "Backup started" "backup" "$backup"
+    found=false
+    if kubectl get clusters.postgresql.cnpg.io -n "{{ ns }}" "{{ app }}-postgres" >/dev/null 2>&1; then
+        backup=$(echo '{"apiVersion": "postgresql.cnpg.io/v1", "kind": "Backup",
+            "metadata": {"generateName": "{{ app }}-postgres-manual-", "namespace": "{{ ns }}"},
+            "spec": {"cluster": {"name": "{{ app }}-postgres"}, "method": "plugin",
+            "pluginConfiguration": {"name": "barman-cloud.cloudnative-pg.io"}}}' | kubectl create -o name -f -)
+        just log info "Backup started" "backup" "$backup"
+        found=true
+    fi
+    if kubectl get mariadbs.k8s.mariadb.com -n "{{ ns }}" "{{ app }}-mariadb" >/dev/null 2>&1; then
+        # The scheduled PhysicalBackup of the current timeline; a new onDemand value runs it once
+        physicalbackup=$(kubectl get pointintimerecoveries.k8s.mariadb.com -n "{{ ns }}" "{{ app }}-mariadb" \
+            -o jsonpath='{.spec.physicalBackupRef.name}')
+        kubectl patch physicalbackups.k8s.mariadb.com -n "{{ ns }}" "$physicalbackup" --type merge \
+            -p "{\"spec\": {\"schedule\": {\"onDemand\": \"$(date +%s)\"}}}" >/dev/null
+        just log info "Backup started" "physicalbackup" "$physicalbackup"
+        found=true
+    fi
+    if [[ "$found" == false ]]; then
+        just log error "No CNPG cluster or MariaDB found" "namespace" "{{ ns }}" "app" "{{ app }}"
+        exit 1
+    fi
 
 [doc('Debug a node')]
 debug-node node:

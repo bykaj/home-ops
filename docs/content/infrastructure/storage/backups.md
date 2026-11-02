@@ -129,8 +129,8 @@ falls under the policy's retention like the scheduled ones.
 ### Database backups
 
 See [PostgreSQL → Backups](postgres.md#backups) and
-[MariaDB → Backups](mariadb.md#backups). A manual CNPG base backup is one
-recipe away:
+[MariaDB → Backups](mariadb.md#backups). A manual base backup is one recipe
+away; it finds out whether the app has a CNPG cluster or a MariaDB:
 
 ```sh
 just k8s db-backup <namespace> <app>
