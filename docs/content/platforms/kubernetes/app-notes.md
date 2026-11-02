@@ -116,8 +116,10 @@ These apps use their native OIDC support.
     `/sdoc-server/` (prefix stripped) and `/socket.io`. The notification
     server pushes library, file lock and folder permission changes to the
     desktop client (8.0.11+), SeaDrive (3.0.1+) and the web UI over a
-    websocket, so they don't wait for their next poll; it's routed under
-    `/notification` (prefix stripped, the websocket is `/events`). Seafile AI needs the
+    websocket, so they don't wait for their next poll. It's routed under
+    `/notification` with the prefix stripped: clients open the websocket on
+    `/notification` itself (`/` on the server), and Seafile posts events to
+    `/events` on the Service, which requires a JWT. Seafile AI needs the
     metadata server, and calls LiteLLM with the `seafile` virtual key. Its
     model list (`LLM_MODELS`) and embedding model (`EMBEDDING_MODEL`, for
     vector search in AI chat) are env vars on both Seahub and Seafile AI,

@@ -348,7 +348,8 @@ spec:
               - path:
                   type: PathPrefix
                   value: /socket.io
-          # The notification server's websocket (/events) under /notification
+          # The notification server under /notification: clients open the
+          # websocket on / (Seafile posts its events to /events internally)
           - backendRefs:
               - identifier: notification
                 port: *notificationPort
