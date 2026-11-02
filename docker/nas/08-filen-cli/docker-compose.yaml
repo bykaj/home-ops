@@ -10,21 +10,15 @@ networks:
 services:
   filen-cli:
     command:
-      - --config-dir
-      - /config
-      - --auth-config-path
-      - /run/secrets/filen-cli-auth-config.txt
+      - --config-dir=/config
+      - --auth-config-path=/run/secrets/filen-cli-auth-config.txt
       - --skip-update
       - serve
       - webdav
-      - --addr
-      - 0.0.0.0:8080
-      - --cache-size
-      - 5Gi
-      - --user
-      - ${FILEN_WEBDAV_USERNAME}
-      - --password
-      - ${FILEN_WEBDAV_PASSWORD}
+      - --addr=0.0.0.0:8080
+      - --cache-size=5Gi
+      - --user=${FILEN_WEBDAV_USERNAME}
+      - --password=${FILEN_WEBDAV_PASSWORD}
     configs:
       - source: filen_cli_auth_config
         target: /run/secrets/filen-cli-auth-config.txt
