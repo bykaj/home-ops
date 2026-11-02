@@ -219,7 +219,7 @@ spec:
           app:
             image:
               repository: docker.io/seafileltd/sdoc-server
-              tag: 2.0.11@sha256:ec9a7d0baa61835b903a8815baca00e63cebfc5a63577ab167181a37aa93c7c3
+              tag: 3.0.8@sha256:239c59a0ba37a1c2e37a6e982792ea1d2a164958342ee4778efb8646fc9c1f63
             env:
               DB_HOST: "${APP}-mariadb-primary"
               DB_NAME: "seahub_db"
