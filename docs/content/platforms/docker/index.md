@@ -230,8 +230,9 @@ task pushes the Paperless documents to it (see
 The CLI logs in with an auth config instead of email and password, so the
 account's two-factor authentication doesn't block it. Create one with
 `filen export-auth-config` on a machine where the CLI is logged in, and store
-the file's contents (one line, no trailing newline) in the `auth-config` field
-of the `filen-cli` 1Password item. Changing the Filen password invalidates it.
+the file's contents (one line, no trailing newline) in the
+`filen-cli-auth-config.txt` field of the `filen-cli` 1Password item. Changing
+the Filen password invalidates it.
 The CLI downloads its managed rclone and keeps its VFS cache (up to 5 GiB) and
 logs in `/mnt/vault/Applications/filen/data`.
 
