@@ -7,6 +7,9 @@ auto_discovery:
   delete: true
 external_secrets:
   CF_API_TOKEN: op://Homelab/doco-cd/CF_API_TOKEN
+  FILEN_AUTH_CONFIG: op://Homelab/filen-cli/FILEN_AUTH_CONFIG
+  FILEN_WEBDAV_PASSWORD: op://Homelab/filen-cli/FILEN_WEBDAV_PASSWORD
+  FILEN_WEBDAV_USERNAME: op://Homelab/filen-cli/FILEN_WEBDAV_USERNAME
   GARAGE_ADMIN_TOKEN: op://Homelab/garage/ADMIN_TOKEN
   GARAGE_RPC_SECRET: op://Homelab/garage/RPC_SECRET
   GARAGE_UI_OIDC_ADMIN_ROLE: op://Homelab/garage/OIDC_ADMIN_ROLE

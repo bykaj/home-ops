@@ -16,7 +16,7 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
-| Documents | TrueNAS Cloud Sync (WebDAV) | Nextcloud | Hourly | Mirror |
+| Documents | TrueNAS Cloud Sync (WebDAV) | [Filen](https://filen.io), through the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack | Hourly | Mirror |
 | Macs | Time Machine over SMB | NAS, `/mnt/vault/TimeMachine` | Hourly (macOS) | Time Machine thinning, see [Time Machine](#time-machine) |
 
 The cluster's data lands on the NAS first. From there the Kopia repository is
@@ -145,7 +145,7 @@ gets a protection level that fits how replaceable its data is:
 
 | Dataset | Contents | ZFS snapshots | Off-site (TrueCloud) |
 | --- | --- | --- | --- |
-| `Applications` | Data of the [Compose stacks](../../platforms/docker/index.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot`) |
+| `Applications` | Data of the [Compose stacks](../../platforms/docker/index.md) (Garage, Bootimus) | Hourly + daily + weekly | Daily, keep 14 (without `zot` and `filen-cli`) |
 | `Archive` | Paperless documents | Daily + monthly | Daily, keep 30 |
 | `Backups` | Client and server backups, Postgres dumps | Daily | Daily, keep 14 (without `Cluster` and `Excluded`) |
 | `Downloads`, `Software`, `Transfer`, `Users` | Recreatable or transient data | None | None |
@@ -199,7 +199,7 @@ everything on the NAS before upload, so B2 only ever sees encrypted chunks.
 
 | Task | Source | B2 folder | Schedule | Keep last | Exclude |
 | --- | --- | --- | --- | --- | --- |
-| Applications Daily | `/mnt/vault/Applications` | `/nas/applications` | Daily at 06:30 | 14 | `**/zot` |
+| Applications Daily | `/mnt/vault/Applications` | `/nas/applications` | Daily at 06:30 | 14 | `**/zot`, `**/filen-cli` |
 | Archive Daily | `/mnt/vault/Archive` | `/nas/archive` | Daily at 02:00 | 30 | |
 | Backups Daily | `/mnt/vault/Backups` | `/nas/backups` | Daily at 04:30 | 14 | `**/Cluster`, `**/Excluded` |
 | Media Weekly | `/mnt/vault/Media` | `/nas/media` | Weekly, Sunday at 04:00 | 12 | `**/Series`, `**/Movies`, `**/Documentaries` |
@@ -222,6 +222,10 @@ Why some data is excluded:
   local.
 - **`Applications/zot`** is the [Zot](../../platforms/docker/index.md#07-zot) pull-through
   cache. It refills itself from the upstream registries.
+- **`Applications/filen-cli`** holds the [Filen CLI](../../platforms/docker/index.md#08-filen-cli)'s
+  managed rclone and its WebDAV cache. The CLI downloads rclone again when it is
+  missing, the cache only holds copies of documents that are already backed up,
+  and the auth config comes from 1Password.
 - **`Media/Series`, `Movies`, `Documentaries`** are large and recreatable. Only
   `Books` and `Music` go off-site.
 
@@ -304,14 +308,20 @@ cp -a ".zfs/snapshot/<snapshot>/<Mac>.sparsebundle" .
 
 Delete the `.broken` copy once Time Machine verifies the backup again.
 
-### Documents to Nextcloud
+### Documents to Filen
 
-A TrueNAS Cloud Sync task (`Archive Sync`) pushes
-`/mnt/vault/Archive/media/documents/originals` to the `/Archief` folder of an
-off-site Nextcloud instance over WebDAV, every hour. It runs in sync mode, so it is a
-convenient, readable mirror of the original documents rather than a backup:
-deletions on the NAS are mirrored too. The versioned copy is the Archive
-TrueCloud task.
+A TrueNAS Cloud Sync task pushes `/mnt/vault/Archive/media/documents/originals`
+to the `/Archief` folder of the [Filen](https://filen.io) drive over WebDAV,
+every hour. It runs in sync mode, so it is a convenient, readable mirror of the
+original documents rather than a backup: deletions on the NAS are mirrored too.
+The versioned copy is the Archive TrueCloud task.
+
+Filen has no WebDAV endpoint of its own; the task talks to the WebDAV server of
+the [`08-filen-cli`](../../platforms/docker/index.md#08-filen-cli) stack at
+`https://webdav.bykaj.io`, which logs in to the Filen account. The task's WebDAV
+credential (vendor *Other*) uses the `FILEN_WEBDAV_USERNAME` and
+`FILEN_WEBDAV_PASSWORD` fields of the `filen-cli` 1Password item. If that stack
+is down, the task fails until it is back.
 
 ### Restoring NAS data
 
@@ -329,7 +339,7 @@ TrueCloud task.
 
 | Time | Job |
 | --- | --- |
-| Every hour | `Applications` snapshot, Kopiur PVC backups, Archive Sync to Nextcloud |
+| Every hour | `Applications` snapshot, Kopiur PVC backups, document sync to Filen |
 | 00:00 | `Applications` daily (and Sunday weekly) snapshot |
 | 01:00 | `Archive` snapshot |
 | 01:30 | Kopia repository replication to B2 |

@@ -1,0 +1,50 @@
+---
+configs:
+  filen_cli_auth_config:
+    environment: FILEN_AUTH_CONFIG
+name: filen-cli
+networks:
+  apps:
+    name: apps
+    external: true
+services:
+  filen-cli:
+    command:
+      - --config-dir
+      - /config
+      - --auth-config-path
+      - /run/secrets/filen-cli-auth-config.txt
+      - --skip-update
+      - serve
+      - webdav
+      - --addr
+      - 0.0.0.0:8080
+      - --cache-size
+      - 5Gi
+      - --user
+      - ${FILEN_WEBDAV_USERNAME}
+      - --password
+      - ${FILEN_WEBDAV_PASSWORD}
+    configs:
+      - source: filen_cli_auth_config
+        target: /run/secrets/filen-cli-auth-config.txt
+    container_name: filen-cli
+    image: docker.io/filen/cli:0.2.9
+    labels:
+      dexd.enabled: "true"
+      traefik.enable: "true"
+      traefik.http.routers.filen-cli-webdav.rule: Host(`webdav.bykaj.io`)
+      traefik.http.services.filen-cli-webdav.loadbalancer.server.port: "8080"
+    networks:
+      - apps
+    restart: unless-stopped
+    user: "4000:4000"
+    volumes:
+      - data:/config
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      device: /mnt/vault/Applications/filen-cli/data
+      o: bind
+      type: none
