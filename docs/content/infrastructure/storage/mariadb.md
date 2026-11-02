@@ -25,11 +25,19 @@ spec:
     - apiVersion: k8s.mariadb.com/v1alpha1
       kind: MariaDB
       current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
+  healthChecks:
+    - apiVersion: k8s.mariadb.com/v1alpha1
+      kind: MariaDB
+      name: myapp-mariadb
+      namespace: <namespace>
   postBuild:
     substitute:
       APP: *app
       MARIADB_BACKUP_SCHEDULE: "<minute> 0 * * *"
 ```
+
+Flux only evaluates `healthCheckExprs` for the resources listed in
+`healthChecks` (or with `wait: true`), so both are needed.
 
 The app's HelmRelease needs `dependsOn: []`: the component appends
 `mariadb-operator` to it.

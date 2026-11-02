@@ -94,18 +94,23 @@ spec:
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
+  healthChecks:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: <app>-postgres
+      namespace: <namespace>
   postBuild:
     substitute:
       APP: <app>
       POSTGRES_BACKUP_SCHEDULE: "<minute> 0 * * *"
 ```
 
+- `healthCheckExprs` alone does nothing: Flux only evaluates it for resources listed in `healthChecks` (or with `wait: true`, which this skill avoids). List the app's own database resources there by name. Keep the expressions `current`-only and guarded with `has()`, so a database that is still starting counts as in progress, not failed.
 - `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
 - The `components.database/postgres: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/operations/runbooks/new-database.md`); tell the user.
 
-**If the app needs MySQL or MariaDB**, it gets its own replicated MariaDB from the `database/mariadb` component instead. Same pattern: `../../../../components/database/mariadb`, the `MariaDB` health check (`current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')`), `MARIADB_BACKUP_SCHEDULE` from `just k8s cron-minute <app>`, `dependsOn: []` in the HelmRelease, and the `components.database/mariadb: init` label for a brand-new database (remove it after the first base backup). The app connects to `${APP}-mariadb-primary:3306` as `${APP}` with the password in the `${APP}-mariadb-app` Secret (key `password`). All knobs, and the timeline bump a rebuild needs, are in `docs/content/infrastructure/storage/mariadb.md`.
+**If the app needs MySQL or MariaDB**, it gets its own replicated MariaDB from the `database/mariadb` component instead. Same pattern: `../../../../components/database/mariadb`, the `MariaDB` health check (`current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')`, plus a `healthChecks` entry for `<app>-mariadb`), `MARIADB_BACKUP_SCHEDULE` from `just k8s cron-minute <app>`, `dependsOn: []` in the HelmRelease, and the `components.database/mariadb: init` label for a brand-new database (remove it after the first base backup). The app connects to `${APP}-mariadb-primary:3306` as `${APP}` with the password in the `${APP}-mariadb-app` Secret (key `password`). All knobs, and the timeline bump a rebuild needs, are in `docs/content/infrastructure/storage/mariadb.md`.
 
 **If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `database/dragonfly` section of `docs/content/platforms/kubernetes/components.md`):
 
@@ -118,6 +123,7 @@ spec:
       APP: <app>
 ```
 
+- Health check: add a `Dragonfly` entry to `healthCheckExprs` (`current: has(status.phase) && status.phase == 'Ready'`; the operator reports `Ready` with a capital R) and `<app>-dragonfly` to `healthChecks`.
 - No password by default: the instance only accepts connections from its own namespace (and Prometheus). `components/database/dragonfly/authentication` is an optional sub-component that adds password auth from `${DRAGONFLY_PASSWORD_SECRET}`; no app uses it yet.
 
 **Postgres or dragonfly → the HelmRelease needs `dependsOn: []`.** Both components append their operator (`cloudnative-pg`, `dragonfly-operator`) to the HelmRelease's `spec.dependsOn` with a JSON patch (`op: add`, `path: /spec/dependsOn/-`), and that patch fails the Flux Kustomization build when the list doesn't exist. See "Components that patch the HelmRelease" in the HelmRelease section.

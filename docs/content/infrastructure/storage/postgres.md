@@ -21,12 +21,21 @@ spec:
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
+  healthChecks:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: myapp-postgres
+      namespace: <namespace>
   postBuild:
     substitute:
       APP: *app
 ```
+
+Flux only evaluates `healthCheckExprs` for the resources listed in
+`healthChecks` (or with `wait: true`), so both are needed. The expression only
+defines `current`: a cluster that is still starting or switching over counts as
+in progress until the Kustomization's timeout, instead of failing at once.
 
 | Variable | Default | Notes |
 | --- | --- | --- |
