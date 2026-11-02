@@ -33,7 +33,7 @@ services:
     ports:
       - "10.73.2.100:69:69/udp"
     volumes:
-      - /mnt/vault/Applications/bootimus/data:/data
+      - data:/data
     cap_add:
       - NET_BIND_SERVICE
     restart: unless-stopped
@@ -41,3 +41,10 @@ services:
     # command: ["serve", "--db-disable"]
     # Uncomment to reset the admin password, remember to comment out afterwards
     # command: ["serve", "--reset-admin-password"]
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      device: /mnt/vault/Applications/bootimus/data
+      o: bind
+      type: none

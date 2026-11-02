@@ -24,7 +24,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
    - Registry-qualified image with a pinned version tag (digest optional, see `06-bootimus`). **Never write a tag from memory**: look up the upstream project's current release first. Renovate handles updates.
    - Set `user:` where the image supports it (garage runs as `4000:4000`).
    - Config files: `config/` subdirectory, bind-mounted read-only (`./config/<file>:/path:ro`). A single-file bind mount isn't refreshed in a running container; note in the docs if the app needs a restart after config changes (see `07-zot`).
-   - Persistent data on the pool under `/mnt/vault/Applications/<app>/<vol>`: either a named volume with `driver: local` + `driver_opts` (`device`, `o: bind`, `type: none`) like garage/zot, or a direct host-path bind like bootimus. Ask the user to create the dataset/directory first; doco-cd won't.
+   - Persistent data on the pool under `/mnt/vault/Applications/<app>/<vol>`: a named volume with `driver: local` + `driver_opts` (`device`, `o: bind`, `type: none`) like garage/zot, so the service only mounts `data:/<path>`. Ask the user to create the dataset/directory first; doco-cd won't.
    - Keep the YAML keys sorted per `.agents/instructions/sorting.instructions.md`.
 
 3. **Secrets**: add `VAR_NAME: op://Homelab/<item>/<field>` under `external_secrets` in `docker/nas/.doco-cd.yaml` (keep it sorted) and reference it as `${VAR_NAME}` in the compose file. For secrets the app reads from files, build them with a top-level `configs:` block (`environment:` or `content:` with `${VAR}`) like `07-zot`. Use the item's **real field names** (ask the user, never guess).
