@@ -51,12 +51,13 @@ WORKLOADS = {"ai", "default", "development", "downloads", "media"}
 
 # Component path (relative to kubernetes/components) -> (label, link)
 COMPONENTS = {
-    "dragonfly": ("dragonfly", "components.md#dragonfly"),
-    "dragonfly/authentication": ("dragonfly", "components.md#dragonfly"),
+    "database/dragonfly": ("dragonfly", "components.md#databasedragonfly"),
+    "database/dragonfly/authentication": ("dragonfly", "components.md#databasedragonfly"),
     "gateway-oidc": ("gateway-oidc", "components.md#gateway-oidc"),
     "gpu": ("gpu", "components.md#gpu"),
     "kopiur": ("backup", "components.md#kopiur"),
-    "postgres": ("postgres", "components.md#postgres"),
+    "database/mariadb": ("mariadb", "components.md#databasemariadb"),
+    "database/postgres": ("postgres", "components.md#databasepostgres"),
     "zeroscaler/nfs": ("scale-to-zero", "components.md#zeroscalernfs"),
 }
 

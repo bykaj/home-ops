@@ -6,7 +6,7 @@ metadata:
   name: &app autobrr
 spec:
   components:
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster

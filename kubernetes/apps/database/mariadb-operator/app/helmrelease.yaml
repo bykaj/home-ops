@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mariadb-operator
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: mariadb-operator
+  interval: 1h
+  values:
+    # The CRDs come from the separate mariadb-operator-crds release, so
+    # uninstalling the operator can't take the databases with it
+    crds:
+      enabled: false
+    metrics:
+      enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 256Mi

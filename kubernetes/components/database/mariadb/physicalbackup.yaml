@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/physicalbackup_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  # Storage can't change on a PhysicalBackup, so the timeline is in the name
+  name: ${APP}-mariadb-v${MARIADB_TIMELINE:=1}
+spec:
+  compression: bzip2
+  mariaDbRef:
+    name: ${APP}-mariadb
+  maxRetention: 336h # 14 days, like the CNPG base backups
+  schedule:
+    cron: "50 4 * * *"
+    # A base backup right away, so the archived binlogs are recoverable
+    immediate: true
+  storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_ACCESS_KEY_ID
+      bucket: mariadb
+      endpoint: s3.bykaj.io
+      prefix: ${APP}/v${MARIADB_TIMELINE:=1}/base
+      region: eu-west
+      secretAccessKeySecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+  target: PreferReplica
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/physicalbackup_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: ${APP}-mariadb-recovery-v${MARIADB_RECOVERY_TIMELINE:=${MARIADB_TIMELINE:=1}}
+spec:
+  # Never runs; only tells the recovery where the base backups of the timeline
+  # to restore are
+  compression: bzip2
+  mariaDbRef:
+    name: ${APP}-mariadb
+    waitForIt: false
+  schedule:
+    suspend: true
+  storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_ACCESS_KEY_ID
+      bucket: mariadb
+      endpoint: s3.bykaj.io
+      prefix: ${APP}/v${MARIADB_RECOVERY_TIMELINE:=${MARIADB_TIMELINE:=1}}/base
+      region: eu-west
+      secretAccessKeySecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/physicalbackup_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: ${APP}-mariadb-replica
+spec:
+  # Template for replica recovery and scaling out, see mariadb.yaml
+  compression: bzip2
+  mariaDbRef:
+    name: ${APP}-mariadb
+    waitForIt: false
+  maxRetention: 24h
+  schedule:
+    suspend: true
+  storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_ACCESS_KEY_ID
+      bucket: mariadb
+      endpoint: s3.bykaj.io
+      prefix: ${APP}/replica
+      region: eu-west
+      secretAccessKeySecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+  target: PreferReplica

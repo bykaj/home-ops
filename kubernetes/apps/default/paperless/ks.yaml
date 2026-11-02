@@ -6,8 +6,8 @@ metadata:
   name: &app paperless
 spec:
   components:
-    - ../../../../components/dragonfly
-    - ../../../../components/postgres
+    - ../../../../components/database/dragonfly
+    - ../../../../components/database/postgres
     - ../../../../components/kopiur
     - ../../../../components/zeroscaler/nfs
   dependsOn:

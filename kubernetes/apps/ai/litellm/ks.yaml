@@ -25,9 +25,9 @@ metadata:
   name: &app litellm
 spec:
   components:
-    - ../../../../components/dragonfly
+    - ../../../../components/database/dragonfly
     - ../../../../components/kopiur
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   dependsOn:
     - name: cloudnative-pg
       namespace: database

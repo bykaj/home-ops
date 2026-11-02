@@ -24,7 +24,8 @@ The columns:
   `envoy-internal` (LAN and tailnet), `—` when it has no route.
 - **Uses**: the [components](components.md) its Flux Kustomization opts into:
   PVC [backup](components.md#kopiur), its own
-  [postgres](components.md#postgres) or [dragonfly](components.md#dragonfly),
+  [postgres](components.md#databasepostgres),
+  [mariadb](components.md#databasemariadb) or [dragonfly](components.md#databasedragonfly),
   the [gpu](components.md#gpu), and
   [scale-to-zero](components.md#zeroscalernfs) when NFS on the NAS stops
   answering.
@@ -58,6 +59,7 @@ to date and every app has a purpose.
 | [cloudnative-pg](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/cloudnative-pg) | PostgreSQL operator and Barman Cloud plugin | — | — | [cloudnative-pg/cloudnative-pg](https://github.com/cloudnative-pg/cloudnative-pg) |
 | [dragonfly](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/dragonfly) | Dragonfly operator (Redis-compatible) | — | — | [dragonflydb/dragonfly-operator](https://github.com/dragonflydb/dragonfly-operator) |
 | [emqx](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/emqx) | MQTT broker (operator and cluster) | internal | — | [emqx/emqx-operator](https://github.com/emqx/emqx-operator) |
+| [mariadb-operator](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/mariadb-operator) | MariaDB operator (CRDs in a separate release) | — | — | [mariadb-operator/mariadb-operator](https://github.com/mariadb-operator/mariadb-operator) |
 | [meilisearch](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/database/meilisearch) | Search engine | — | [backup](components.md#kopiur) | [meilisearch/meilisearch](https://github.com/meilisearch/meilisearch) |
 
 ### `external-secrets`
@@ -157,7 +159,7 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway (LiteLLM operator and proxy) for hosted models and the Context7, Home Assistant, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#databasedragonfly), [postgres](components.md#databasepostgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
 
 ### `default`
 
@@ -168,21 +170,21 @@ to date and every app has a purpose.
 | [homepage](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/homepage) | Dashboard | internal | — | [gethomepage/homepage](https://github.com/gethomepage/homepage) |
 | [it-tools](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/it-tools) | Developer utilities | external | — | [sharevb/it-tools](https://github.com/sharevb/it-tools) |
 | [karakeep](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/karakeep) | Bookmarks and read-later | external | [backup](components.md#kopiur) | [karakeep-app/karakeep](https://github.com/karakeep-app/karakeep) |
-| [mail-archiver](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/mail-archiver) | Email archiving | internal | [postgres](components.md#postgres) | [s1t5/mail-archiver](https://github.com/s1t5/mail-archiver) |
+| [mail-archiver](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/mail-archiver) | Email archiving | internal | [postgres](components.md#databasepostgres) | [s1t5/mail-archiver](https://github.com/s1t5/mail-archiver) |
 | [opencloud](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/opencloud) | File sync and sharing | external | [backup](components.md#kopiur) | [opencloud-eu/opencloud](https://github.com/opencloud-eu/opencloud) |
-| [paperless](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Document management | external | [backup](components.md#kopiur), [dragonfly](components.md#dragonfly), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [paperless-ngx/paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) |
+| [paperless](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/paperless) | Document management | external | [backup](components.md#kopiur), [dragonfly](components.md#databasedragonfly), [postgres](components.md#databasepostgres), [scale-to-zero](components.md#zeroscalernfs) | [paperless-ngx/paperless-ngx](https://github.com/paperless-ngx/paperless-ngx) |
 | [pgadmin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/pgadmin) | PostgreSQL administration | internal | [backup](components.md#kopiur) | [pgadmin-org/pgadmin4](https://github.com/pgadmin-org/pgadmin4) |
 | [spoolman](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/spoolman) | 3D printer filament inventory | internal | [backup](components.md#kopiur) | [Donkie/Spoolman](https://github.com/Donkie/Spoolman) |
 | [thelounge](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/thelounge) | IRC client | internal | [backup](components.md#kopiur) | [thelounge/thelounge](https://github.com/thelounge/thelounge) |
 | [wallos](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wallos) | Subscription tracking | internal | [backup](components.md#kopiur) | [ellite/Wallos](https://github.com/ellite/Wallos) |
 | [wastebin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/wastebin) | Pastebin | external | [backup](components.md#kopiur) | [matze/wastebin](https://github.com/matze/wastebin) |
-| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management | external | [postgres](components.md#postgres) | [windshiftapp/windshift](https://github.com/windshiftapp/windshift) |
+| [windshift](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/default/windshift) | Jira-like project management | external | [postgres](components.md#databasepostgres) | [windshiftapp/windshift](https://github.com/windshiftapp/windshift) |
 
 ### `downloads`
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [autobrr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/autobrr) | Release automation | internal | [postgres](components.md#postgres) | [autobrr/autobrr](https://github.com/autobrr/autobrr) |
+| [autobrr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/autobrr) | Release automation | internal | [postgres](components.md#databasepostgres) | [autobrr/autobrr](https://github.com/autobrr/autobrr) |
 | [bazarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/bazarr) | Subtitles | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [scale-to-zero](components.md#zeroscalernfs) | [LavX/bazarr](https://github.com/LavX/bazarr) |
 | [configarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/configarr) | Syncs TRaSH quality profiles into the *arrs | — | — | [raydak-labs/configarr](https://github.com/raydak-labs/configarr) |
 | [prowlarr](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/downloads/prowlarr) | Indexer management | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc) | [Prowlarr/Prowlarr](https://github.com/Prowlarr/Prowlarr) |
@@ -196,7 +198,7 @@ to date and every app has a purpose.
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
 | [audiobookshelf](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/audiobookshelf) | Audiobooks and podcasts | external | [backup](components.md#kopiur), [scale-to-zero](components.md#zeroscalernfs) | [advplyr/audiobookshelf](https://github.com/advplyr/audiobookshelf) |
-| [immich](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich) | Photo and video library | external | [dragonfly](components.md#dragonfly), [gpu](components.md#gpu), [postgres](components.md#postgres), [scale-to-zero](components.md#zeroscalernfs) | [immich-app/immich](https://github.com/immich-app/immich) |
+| [immich](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich) | Photo and video library | external | [dragonfly](components.md#databasedragonfly), [gpu](components.md#gpu), [postgres](components.md#databasepostgres), [scale-to-zero](components.md#zeroscalernfs) | [immich-app/immich](https://github.com/immich-app/immich) |
 | [jellyfin](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/jellyfin) | Media server | internal | [backup](components.md#kopiur), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [jellyfin/jellyfin](https://github.com/jellyfin/jellyfin) |
 | [plex](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/plex) | Media server, published externally | external | [backup](components.md#kopiur), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [plexinc/pms-docker](https://github.com/plexinc/pms-docker) |
 | [stash](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/stash) | Media organizer | internal | [backup](components.md#kopiur), [gateway-oidc](components.md#gateway-oidc), [gpu](components.md#gpu), [scale-to-zero](components.md#zeroscalernfs) | [stashapp/stash](https://github.com/stashapp/stash) |

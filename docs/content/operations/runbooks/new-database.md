@@ -4,10 +4,16 @@ description: First deploy of an app that gets a brand-new CNPG cluster with no p
 
 # New Database
 
+!!! note "MariaDB"
+
+    This runbook is for the `postgres` component. The `mariadb` component has
+    the same flow with the `components.database/mariadb: init` label, see
+    [MariaDB](../../infrastructure/storage/mariadb.md#using-the-component).
+
 The [`postgres` component](../../infrastructure/storage/postgres.md) bootstraps every cluster
 from a Barman backup by default. For a brand-new app, nothing exists at
 `s3://postgresql/${APP}/` yet, so that would fail with "no target backup
-found". The `components.postgres/cnpg: init` label switches the cluster to a
+found". The `components.database/postgres: init` label switches the cluster to a
 plain `initdb` for its first deploy.
 
 ## 1. Deploy with the init label
@@ -18,10 +24,10 @@ kind: Kustomization
 metadata:
   name: &app myapp
   labels:
-    components.postgres/cnpg: init # (1)!
+    components.database/postgres: init # (1)!
 spec:
   components:
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
@@ -81,7 +87,7 @@ kubectl -n <namespace> get backup
 
 ## 3. Remove the label
 
-Once a backup has completed, remove `components.postgres/cnpg: init` and
+Once a backup has completed, remove `components.database/postgres: init` and
 merge. From then on, a cluster rebuild follows the default `recovery` path.
 
 !!! warning "Don't leave the label in place"

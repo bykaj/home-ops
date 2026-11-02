@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/pointintimerecovery_v1alpha1.json
+# Binlog archival only starts on an empty prefix, and a recreated MariaDB has
+# no archival state, so every rebuild archives to a new timeline: bump
+# MARIADB_TIMELINE and point MARIADB_RECOVERY_TIMELINE at the old one (see
+# docs/content/infrastructure/storage/mariadb.md)
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PointInTimeRecovery
+metadata:
+  name: ${APP}-mariadb
+spec:
+  compression: bzip2
+  physicalBackupRef:
+    name: ${APP}-mariadb-v${MARIADB_TIMELINE:=1}
+  storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_ACCESS_KEY_ID
+      bucket: mariadb
+      endpoint: s3.bykaj.io
+      prefix: ${APP}/v${MARIADB_TIMELINE:=1}/binlogs
+      region: eu-west
+      secretAccessKeySecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/pointintimerecovery_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PointInTimeRecovery
+metadata:
+  name: ${APP}-mariadb-recovery
+spec:
+  compression: bzip2
+  physicalBackupRef:
+    name: ${APP}-mariadb-recovery-v${MARIADB_RECOVERY_TIMELINE:=${MARIADB_TIMELINE:=1}}
+  storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_ACCESS_KEY_ID
+      bucket: mariadb
+      endpoint: s3.bykaj.io
+      prefix: ${APP}/v${MARIADB_RECOVERY_TIMELINE:=${MARIADB_TIMELINE:=1}}/binlogs
+      region: eu-west
+      secretAccessKeySecretKeyRef:
+        name: ${APP}-mariadb
+        key: S3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true

@@ -6,7 +6,7 @@ metadata:
   name: &app windshift
 spec:
   components:
-    - ../../../../components/postgres
+    - ../../../../components/database/postgres
   # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
   dependsOn:
     - name: litellm-operator

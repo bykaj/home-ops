@@ -37,9 +37,12 @@ so individual apps don't repeat this boilerplate:
 recreating it (for example during a re-bootstrap) leaves the apps it applied
 running instead of deleting all of them.
 
-A third, label-driven patch rewrites a CNPG `Cluster` to a plain `initdb`
-bootstrap when its Flux Kustomization carries
-`components.postgres/cnpg: init`. See [New Database](../../operations/runbooks/new-database.md).
+Two label-driven patches handle brand-new databases: a CNPG `Cluster` gets a
+plain `initdb` bootstrap when its Flux Kustomization carries
+`components.database/postgres: init` (see
+[New Database](../../operations/runbooks/new-database.md)), and a `MariaDB`
+loses its `bootstrapFrom` with `components.database/mariadb: init` (see
+[MariaDB](../storage/mariadb.md)).
 
 ### Dependencies
 

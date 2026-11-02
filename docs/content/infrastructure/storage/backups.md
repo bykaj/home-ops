@@ -13,6 +13,8 @@ snapshots and an encrypted off-site copy in Backblaze B2.
 | App PVCs | [Kopiur](https://github.com/home-operations/kopiur) (Kopia) | NFS repo on the NAS, `/mnt/vault/Backups/Cluster/main/kopiur` | Hourly (minute hashed per app) | 3 latest, 24 hourly, 7 daily, 4 weekly |
 | PostgreSQL (WAL + base) | CNPG Barman Cloud plugin | Garage S3, `s3://postgresql/<app>/` | Continuous WAL, daily base | 14 days |
 | PostgreSQL (dumps) | [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local) | NAS, `/mnt/vault/Backups/Database` | Daily | 7 daily, 4 weekly, 1 monthly |
+| MariaDB (binlogs + base) | mariadb-operator `PointInTimeRecovery` and `PhysicalBackup` | Garage S3, `s3://mariadb/<app>/v<timeline>/` | Continuous binlogs, daily base | 14 days (base backups) |
+| MariaDB (dumps) | mariadb-operator `Backup` | NAS, `/mnt/vault/Backups/Database` | Daily | 30 days |
 | Kopia repository (off-site copy) | Kopiur `RepositoryReplication` | [Backblaze B2](https://www.backblaze.com/cloud-storage), `b2://bykaj-backups/cluster/main/` | Daily at 01:30 | Exact mirror of the NAS repository |
 | NAS datasets (local versions) | ZFS periodic snapshots | Same pool (`vault`) | Hourly to monthly, per dataset | See [ZFS snapshots](#zfs-snapshots) |
 | NAS datasets (off-site copy) | TrueCloud Backup (restic) | Backblaze B2, `b2://bykaj-backups/nas/<dataset>` | Daily or weekly, per dataset | See [TrueCloud Backup](#truecloud-backup) |
@@ -126,8 +128,9 @@ falls under the policy's retention like the scheduled ones.
 
 ### Database backups
 
-See [PostgreSQL → Backups](postgres.md#backups). A manual base backup is one
-recipe away:
+See [PostgreSQL → Backups](postgres.md#backups) and
+[MariaDB → Backups](mariadb.md#backups). A manual base backup is one recipe
+away; it finds out whether the app has a CNPG cluster or a MariaDB:
 
 ```sh
 just k8s db-backup <namespace> <app>
@@ -233,7 +236,7 @@ Everything else in `Backups` does go off-site. Clients drop backups there
 without keeping a copy of their own, so for them the NAS is the only copy. It
 also holds the daily Postgres dumps (`Backups/Database`) and cluster app backups
 (`Backups/Apps`). Garage's data in `Applications` includes the CNPG WAL
-archives and base backups and the Karakeep, Windshift and OpenCloud buckets, so those go
+archives and base backups, the MariaDB base backups and binlogs, and the Karakeep, Windshift and OpenCloud buckets, so those go
 off-site through the Applications task. Kopiur doesn't cover them.
 
 !!! warning "Exclude patterns with Use Snapshot"

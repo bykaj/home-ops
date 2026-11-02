@@ -6,8 +6,8 @@ metadata:
   name: &app immich
 spec:
   components:
-    - ../../../../components/dragonfly
-    - ../../../../components/postgres
+    - ../../../../components/database/dragonfly
+    - ../../../../components/database/postgres
     - ../../../../components/zeroscaler/nfs
   healthCheckExprs:
     - apiVersion: dragonflydb.io/v1alpha1

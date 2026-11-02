@@ -75,7 +75,8 @@ It also serves an SMB share for the Macs' Time Machine backups (see
 
 The NAS also runs [Garage](https://garagehq.deuxfleurs.fr/) as an
 S3-compatible object store at `s3.bykaj.io`. CNPG uses it for WAL archives
-and base backups. Karakeep and Windshift keep their assets and
+and base backups, and mariadb-operator for base backups and binlogs (`mariadb`
+bucket). Karakeep and Windshift keep their assets and
 attachments in the `karakeep` and `windshift` buckets, and OpenCloud its
 file contents in the `opencloud` bucket.
 
@@ -83,4 +84,6 @@ file contents in the `opencloud` bucket.
 
 - [Backups](backups.md): what is backed up, where, and how restores work,
   for both the cluster and the NAS
-- [PostgreSQL](postgres.md): the CNPG component every database uses
+- [PostgreSQL](postgres.md): the CNPG component for apps that need PostgreSQL
+- [MariaDB](mariadb.md): the mariadb-operator component for apps that need
+  MySQL or MariaDB

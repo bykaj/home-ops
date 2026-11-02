@@ -165,6 +165,16 @@
       minimumGroupSize: 2,
     },
     {
+      description: "MariaDB Operator Group",
+      groupName: "mariadb-operator",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/mariadb-operator/", "/mariadb-operator-crds/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Mise Tools Group",
       matchManagers: ["mise"],
       matchDepNames: ["!node", "!oxfmt"],
