@@ -50,6 +50,15 @@
       matchPackageNames: ["/postgresql/"],
       allowedVersions: "<19",
     },
+    {
+      // From 12 on the LTS of each major is its .3 release (12.3, 13.3, ...);
+      // the other minors are short-lived rolling releases. 11.8 is the LTS
+      // still running until the upgrade
+      description: "Keep MariaDB on LTS releases",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/library/mariadb"],
+      allowedVersions: "/^(11\\.8|\\d{2}\\.3)\\.\\d+$/",
+    },
     //
     // Release age rules
     //
