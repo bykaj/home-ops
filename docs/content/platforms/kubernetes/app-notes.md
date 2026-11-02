@@ -48,7 +48,11 @@ These apps use their native OIDC support.
   no longer works as a UI password (`disable_env_credential_login`). Password
   login remains only for database users with a password, and SSO users have
   none.
-- **OpenCloud** replaces its built-in IdP with Pocket ID and creates accounts
+- **OpenCloud** is disabled since Seafile took over `files.bykaj.app` (its
+  `ks.yaml` is commented out). Enabling it again needs a different hostname,
+  or Seafile moved off `files`; its PVC comes back from the newest Kopiur
+  snapshot, and its files are still in the `opencloud` bucket. It replaces
+  its built-in IdP with Pocket ID and creates accounts
   on first login, keyed on the `sub` claim. It has four public PKCE clients
   in Pocket ID, with fixed client IDs:
 
@@ -80,7 +84,7 @@ These apps use their native OIDC support.
     another image volume mounted at `/opt/web-apps/<name>` with subPath
     `web/apps/<name>`. A Renovate rule treats the `<extension>-` tag prefix as
     a separate line per extension.
-- **Seafile** runs as a trial next to OpenCloud, at `seafile.bykaj.app`. It
+- **Seafile** replaced OpenCloud at `files.bykaj.app` (`APP_SUBDOMAIN`). It
   is the Pro edition, because only Pro stores libraries in S3 (the
   `seafile-commits`, `seafile-fs` and `seafile-blocks` Garage buckets). Pro
   is free for up to three users, and every Pocket ID login creates an
@@ -96,7 +100,7 @@ These apps use their native OIDC support.
     `seahub_settings.py` that the first start generates on the PVC. Secrets
     come from the environment. Accounts are keyed on the `sub` claim. The
     Pocket ID client is confidential, with callback URL
-    `https://seafile.bykaj.app/oauth/callback/`; the desktop and mobile apps
+    `https://files.bykaj.app/oauth/callback/`; the desktop and mobile apps
     sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
     The local admin from the `seafile` 1Password item exists only to hand
     out admin rights: a Pocket ID login creates a separate account (14.0 has
