@@ -50,11 +50,13 @@ spec:
                 "dimensions": 1536}
               ENABLE_FULL_TEXT_SEARCH: "true"
               ENABLE_METADATA_MANAGEMENT: "true"
-              ENABLE_NOTIFICATION_SERVER: "false"
+              # Pushes library, lock and permission changes to clients over a websocket
+              ENABLE_NOTIFICATION_SERVER: "true"
               ENABLE_SEADOC: "true"
               ENABLE_SEAFILE_AI: "true"
               ENABLE_SEARCH: "true"
               INNER_METADATA_SERVER_URL: &metadataUrl "http://${APP}-metadata.default.svc.cluster.local:8084"
+              INNER_NOTIFICATION_SERVER_URL: "http://${APP}-notification.default.svc.cluster.local:8083"
               # Overrides seafile_ai_config.yaml, read by both Seahub (model
               # list) and Seafile AI (requests); $(AI_API_KEY) is expanded
               # by the kubelet
@@ -63,6 +65,7 @@ spec:
                 "key": "$(AI_API_KEY)", "model": "chatgpt/gpt-6-luna",
                 "label": "GPT-6 Luna", "default": true, "tier": "low"}]
               NON_ROOT: "true"
+              NOTIFICATION_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/notification"
               SEADOC_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/sdoc-server"
               SEAFILE_MYSQL_DB_PASSWORD: &dbPassword
                 valueFrom:
@@ -169,6 +172,34 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 1Gi
+      notification:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/notification-server
+              tag: 14.0.8@sha256:f442e9ae3a12f0f30371e054f30b8edf692a20e1331a6b81d4e5f51d49de8e94
+            env:
+              NOTIFICATION_SERVER_LOG_LEVEL: "info"
+              SEAFILE_MYSQL_DB_PASSWORD: *dbPassword
+            envFrom: *envFrom
+            probes:
+              liveness: &notificationProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &notificationPort 8083
+                  periodSeconds: 10
+              readiness: *notificationProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 256Mi
       seadoc:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -281,6 +312,10 @@ spec:
           metadata:
             app:
               - path: /shared
+          # Its command logs to this folder
+          notification:
+            app:
+              - path: /shared/seafile/logs
           seadoc:
             app:
               - path: /shared
@@ -313,6 +348,20 @@ spec:
               - path:
                   type: PathPrefix
                   value: /socket.io
+          # The notification server's websocket (/events) under /notification
+          - backendRefs:
+              - identifier: notification
+                port: *notificationPort
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: /
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /notification
           - backendRefs:
               - identifier: *app
                 port: *port
@@ -333,6 +382,11 @@ spec:
         ports:
           http:
             port: *metadataPort
+      notification:
+        controller: notification
+        ports:
+          http:
+            port: *notificationPort
       seadoc:
         controller: seadoc
         ports:

@@ -105,14 +105,19 @@ These apps use their native OIDC support.
     three free users.
     The image starts as root; `NON_ROOT` runs the Seafile processes as uid
     8000, which is also the Kopiur mover UID.
-    SeaDoc, the metadata server, Seafile AI and SeaSearch run as their own
-    Deployments (`seafile-seadoc`, `seafile-metadata`, `seafile-ai`,
-    `seafile-seasearch`), because the PVC can only be mounted on one node.
-    The first three only get an emptyDir for logs. The metadata
+    SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
+    server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
+    `seafile-ai`, `seafile-seasearch`, `seafile-notification`), because the
+    PVC can only be mounted on one node. All but SeaSearch only get an
+    emptyDir for logs. The metadata
     server and Seafile AI read the libraries straight from S3 with the shared
     settings in `resources/seafile.env`, and the metadata server keeps its
     data in the `seafile-metadata` bucket. SeaDoc is routed under
-    `/sdoc-server/` (prefix stripped) and `/socket.io`. Seafile AI needs the
+    `/sdoc-server/` (prefix stripped) and `/socket.io`. The notification
+    server pushes library, file lock and folder permission changes to the
+    desktop client (8.0.11+), SeaDrive (3.0.1+) and the web UI over a
+    websocket, so they don't wait for their next poll; it's routed under
+    `/notification` (prefix stripped, the websocket is `/events`). Seafile AI needs the
     metadata server, and calls LiteLLM with the `seafile` virtual key. Its
     model list (`LLM_MODELS`) and embedding model (`EMBEDDING_MODEL`, for
     vector search in AI chat) are env vars on both Seahub and Seafile AI,
