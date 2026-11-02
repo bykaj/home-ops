@@ -25,7 +25,7 @@ metadata:
   name: &app litellm
 spec:
   components:
-    - ../../../../components/dragonfly
+    - ../../../../components/database/dragonfly
     - ../../../../components/kopiur
     - ../../../../components/database/postgres
   dependsOn:

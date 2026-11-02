@@ -107,18 +107,18 @@ spec:
 
 **If the app needs MySQL or MariaDB**, it gets its own replicated MariaDB from the `database/mariadb` component instead. Same pattern: `../../../../components/database/mariadb`, the `MariaDB` health check (`current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')`), `MARIADB_BACKUP_SCHEDULE` from `just k8s cron-minute <app>`, `dependsOn: []` in the HelmRelease, and the `components.database/mariadb: init` label for a brand-new database (remove it after the first base backup). The app connects to `${APP}-mariadb-primary:3306` as `${APP}` with the password in the `${APP}-mariadb-app` Secret (key `password`). All knobs, and the timeline bump a rebuild needs, are in `docs/content/infrastructure/storage/mariadb.md`.
 
-**If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `dragonfly` section of `docs/content/platforms/kubernetes/components.md`):
+**If the app needs Redis**, it gets its own [Dragonfly](https://www.dragonflydb.io) instance (Redis-compatible) from the dragonfly component, named `<app>-dragonfly` (see the `database/dragonfly` section of `docs/content/platforms/kubernetes/components.md`):
 
 ```yaml
 spec:
   components:
-    - ../../../../components/dragonfly
+    - ../../../../components/database/dragonfly
   postBuild:
     substitute:
       APP: <app>
 ```
 
-- No password by default: the instance only accepts connections from its own namespace (and Prometheus). `components/dragonfly/authentication` is an optional sub-component that adds password auth from `${DRAGONFLY_PASSWORD_SECRET}`; no app uses it yet.
+- No password by default: the instance only accepts connections from its own namespace (and Prometheus). `components/database/dragonfly/authentication` is an optional sub-component that adds password auth from `${DRAGONFLY_PASSWORD_SECRET}`; no app uses it yet.
 
 **Postgres or dragonfly → the HelmRelease needs `dependsOn: []`.** Both components append their operator (`cloudnative-pg`, `dragonfly-operator`) to the HelmRelease's `spec.dependsOn` with a JSON patch (`op: add`, `path: /spec/dependsOn/-`), and that patch fails the Flux Kustomization build when the list doesn't exist. See "Components that patch the HelmRelease" in the HelmRelease section.
 

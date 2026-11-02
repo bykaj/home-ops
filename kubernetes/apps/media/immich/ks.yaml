@@ -6,7 +6,7 @@ metadata:
   name: &app immich
 spec:
   components:
-    - ../../../../components/dragonfly
+    - ../../../../components/database/dragonfly
     - ../../../../components/database/postgres
     - ../../../../components/zeroscaler/nfs
   healthCheckExprs:

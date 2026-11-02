@@ -39,7 +39,7 @@ over three Flux Kustomizations in
 | Kustomization | Path | Contents |
 | --- | --- | --- |
 | `litellm-operator` | `app/` | The operator HelmRelease and its CRDs |
-| `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#dragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
+| `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
 | `litellm-mcp` | `mcp/` | MCP servers and the `claude-code` team and key |
 
 Postgres holds keys, teams, users and spend; Dragonfly is the response cache

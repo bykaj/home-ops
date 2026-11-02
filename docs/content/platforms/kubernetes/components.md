@@ -61,7 +61,7 @@ A replicated MariaDB per app from mariadb-operator, with base backups and
 binlog archiving to Garage S3 and dumps to NFS. See
 [MariaDB](../../infrastructure/storage/mariadb.md).
 
-## `dragonfly`
+## `database/dragonfly`
 
 A [Dragonfly](https://www.dragonflydb.io) (Redis-compatible) instance per app,
 with a `NetworkPolicy` and `PodMonitor`. It runs with `--cluster_mode=emulated`

@@ -63,7 +63,7 @@ Each app lives at `kubernetes/apps/<namespace>/<app>/`:
     └── resources/              # optional — files wired in via configMapGenerator
 ```
 
-`kubernetes/components/` holds reusable kustomize components consumed by apps via `postBuild.substitute` (e.g. `kopiur` for PVC backups, `database/postgres` for CNPG clusters, `database/mariadb` for mariadb-operator clusters, `dragonfly`, `gpu`, `zeroscaler`, `alerts`). `kubernetes/talos/` holds Talos machine-config Jinja templates (rendered with `minijinja-cli` + 1Password `op inject`, see `.justfile`'s `template` recipe) and `version.yaml` (pinned Talos/Kubernetes versions used by `kubernetes/talos/mod.just`).
+`kubernetes/components/` holds reusable kustomize components consumed by apps via `postBuild.substitute` (e.g. `kopiur` for PVC backups, `database/postgres` for CNPG clusters, `database/mariadb` for mariadb-operator clusters, `database/dragonfly` for Dragonfly (Redis) instances, `gpu`, `zeroscaler`, `alerts`). `kubernetes/talos/` holds Talos machine-config Jinja templates (rendered with `minijinja-cli` + 1Password `op inject`, see `.justfile`'s `template` recipe) and `version.yaml` (pinned Talos/Kubernetes versions used by `kubernetes/talos/mod.just`).
 
 Scaffolding a new cluster app should follow the `add-app` skill (`.agents/skills/add-app/SKILL.md`), which encodes current conventions (probes, resources, securityContext, route/persistence/secret blocks) — mirror a recent real app (it names good references) rather than inventing structure.
 

@@ -65,7 +65,7 @@ one, and each policy file explains its own rules:
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
-- The [`dragonfly` component](../../platforms/kubernetes/components.md#dragonfly) limits
+- The [`database/dragonfly` component](../../platforms/kubernetes/components.md#databasedragonfly) limits
   ingress to each Dragonfly cache.
 
 Any blocked egress packet raises the
