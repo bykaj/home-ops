@@ -122,6 +122,20 @@ The root password comes from the `mariadb` 1Password item
 (`MARIADB_ROOT_PASSWORD`), shared by every instance: a restore needs the root
 password the backup was taken with, so it can't be generated per cluster.
 
+## Upgrades
+
+The image stays on MariaDB's LTS releases: 11.8, and from 12 on the `.3`
+release of each major (12.3, 13.3, ...). The other minors are rolling
+releases with about six months of support, so Renovate's `allowedVersions`
+rule in `.renovaterc.json5` doesn't offer them.
+
+The operator updates the replicas first and the primary last. With
+`updateStrategy.mariadbAutoUpgradeEnabled`, each instance runs
+`mariadb-upgrade` on start, which migrates the system tables after a major
+upgrade and does nothing otherwise. MariaDB doesn't support downgrades, so
+take a base backup with `just k8s db-backup <namespace> <app>` before merging
+a major upgrade; going back means [rebuilding](#rebuilding) from it.
+
 ## Backups
 
 All in the `mariadb` Garage bucket, under the app's name, plus a dump on the
