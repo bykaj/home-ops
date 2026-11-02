@@ -315,9 +315,9 @@ The versioned copy is the Archive TrueCloud task.
 Filen has no WebDAV endpoint of its own; the task talks to the WebDAV server of
 the [`08-filen`](../../platforms/docker/index.md#08-filen) stack at
 `https://webdav.bykaj.io`, which logs in to the Filen account. The task's WebDAV
-credential (vendor *Other*) uses the `webdav-username` and `webdav-password`
-fields of the `filen-cli` 1Password item. If that stack is down, the task fails
-until it is back.
+credential (vendor *Other*) uses the `FILEN_WEBDAV_USERNAME` and
+`FILEN_WEBDAV_PASSWORD` fields of the `filen-cli` 1Password item. If that stack
+is down, the task fails until it is back.
 
 ### Restoring NAS data
 
