@@ -236,8 +236,9 @@ Everything else in `Backups` does go off-site. Clients drop backups there
 without keeping a copy of their own, so for them the NAS is the only copy. It
 also holds the daily Postgres dumps (`Backups/Database`) and cluster app backups
 (`Backups/Apps`). Garage's data in `Applications` includes the CNPG WAL
-archives and base backups, the MariaDB base backups and binlogs, and the Karakeep, Windshift and OpenCloud buckets, so those go
-off-site through the Applications task. Kopiur doesn't cover them.
+archives and base backups, the MariaDB base backups and binlogs, and the
+Karakeep, Windshift, OpenCloud and Seafile buckets, so those go off-site
+through the Applications task. Kopiur doesn't cover them.
 
 !!! warning "Exclude patterns with Use Snapshot"
 

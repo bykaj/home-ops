@@ -1,0 +1,400 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app seafile
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: seafile
+  interval: 1h
+  dependsOn: []
+  values:
+    defaultPodOptions:
+      # The images start nginx, cron and their init as root; NON_ROOT runs
+      # Seafile and SeaDoc themselves as uid 8000
+      securityContext:
+        runAsGroup: 0
+        runAsNonRoot: false
+        runAsUser: 0
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/seafile-pro-mc
+              tag: 14.0.9@sha256:94c03caa19a53d0fda44c00a7528225e221f5ec641ddf5e83637561d92ab987d
+            # Seahub only reads OAuth and email settings from Python, so link
+            # local_settings.py into the versioned install dir before starting
+            command:
+              - /bin/sh
+              - -c
+              - >-
+                ln -sf /etc/seafile/local_settings.py
+                "/opt/seafile/$SEAFILE_SERVER-$SEAFILE_VERSION/seahub/seahub/local_settings.py"
+                && exec /sbin/my_init -- /scripts/enterpoint.sh
+            env:
+              AI_API_KEY: &litellmKey
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-litellm"
+                    key: api-key
+              CSRF_TRUSTED_ORIGINS: '["https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"]'
+              # For vector search in AI chat; same expansion as LLM_MODELS
+              EMBEDDING_MODEL: &embeddingModel >-
+                {"type": "other", "url": "http://litellm.ai.svc.cluster.local:4000/v1",
+                "key": "$(AI_API_KEY)", "model": "openai/text-embedding-3-small",
+                "dimensions": 1536}
+              ENABLE_FULL_TEXT_SEARCH: "true"
+              ENABLE_METADATA_MANAGEMENT: "true"
+              # Pushes library, lock and permission changes to clients over a websocket
+              ENABLE_NOTIFICATION_SERVER: "true"
+              ENABLE_SEADOC: "true"
+              ENABLE_SEAFILE_AI: "true"
+              ENABLE_SEARCH: "true"
+              INNER_METADATA_SERVER_URL: &metadataUrl "http://${APP}-metadata.default.svc.cluster.local:8084"
+              INNER_NOTIFICATION_SERVER_URL: "http://${APP}-notification.default.svc.cluster.local:8083"
+              # Overrides seafile_ai_config.yaml, read by both Seahub (model
+              # list) and Seafile AI (requests); $(AI_API_KEY) is expanded
+              # by the kubelet
+              LLM_MODELS: &llmModels >-
+                [{"type": "other", "url": "http://litellm.ai.svc.cluster.local:4000/v1",
+                "key": "$(AI_API_KEY)", "model": "chatgpt/gpt-6-luna",
+                "label": "GPT-6 Luna", "default": true, "tier": "low"}]
+              NON_ROOT: "true"
+              NOTIFICATION_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/notification"
+              SEADOC_SERVER_URL: "https://${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}/sdoc-server"
+              SEAFILE_MYSQL_DB_PASSWORD: &dbPassword
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-mariadb-app"
+                    key: password
+              SEAFILE_AI_SERVER_URL: "http://${APP}-ai.default.svc.cluster.local:8888"
+              SEAFILE_SERVER_HOSTNAME: "${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"
+              SEAFILE_SERVER_PROTOCOL: "https"
+              SEARCH_ENGINE: "seasearch"
+              # The databases and user come from the mariadb component and
+              # mariadb.yaml, so the first-start setup needs no root password
+              USE_EXISTING_DB: "1"
+            envFrom: &envFrom
+              - configMapRef:
+                  name: seafile-env
+              - secretRef:
+                  name: seafile-secret
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /api2/ping/
+                    port: &port 80
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+              readiness: *probe
+              # The first start creates the tables and config, give it time
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 60
+                  httpGet:
+                    path: /api2/ping/
+                    port: *port
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 50m
+                memory: 1Gi
+              limits:
+                memory: 3Gi
+      ai:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/seafile-ai
+              tag: 14.0.9@sha256:9c54642b0e072692afd79202b88f3b3a11d9773ccd9df81858a1bd765d47adf5
+            env:
+              AI_API_KEY: *litellmKey
+              EMBEDDING_MODEL: *embeddingModel
+              INNER_METADATA_SERVER_URL: *metadataUrl
+              LLM_MODELS: *llmModels
+              SEAFILE_MYSQL_DB_PASSWORD: *dbPassword
+              SEAFILE_SERVER_URL: "http://${APP}.default.svc.cluster.local"
+            envFrom: *envFrom
+            probes:
+              liveness: &aiProbe
+                enabled: true
+                custom: true
+                spec:
+                  periodSeconds: 10
+                  tcpSocket:
+                    port: &aiPort 8888
+              readiness: *aiProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+      metadata:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/seafile-md-server
+              tag: 14.0.7@sha256:e1f0136b9d9b13cff603f89f02ff8b5853b91433a5a0e381121d9e41babc84e0
+            env:
+              # In-memory cache; the metadata itself lives in the seafile-metadata bucket
+              MD_MAX_CACHE_SIZE: 512MB
+              SEAFILE_MYSQL_DB_PASSWORD: *dbPassword
+            envFrom: *envFrom
+            probes:
+              # The entrypoint idles instead of exiting when the server stops
+              liveness: &metadataProbe
+                enabled: true
+                custom: true
+                spec:
+                  periodSeconds: 10
+                  tcpSocket:
+                    port: &metadataPort 8084
+              readiness: *metadataProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+      notification:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/notification-server
+              tag: 14.0.8@sha256:f442e9ae3a12f0f30371e054f30b8edf692a20e1331a6b81d4e5f51d49de8e94
+            env:
+              NOTIFICATION_SERVER_LOG_LEVEL: "info"
+              SEAFILE_MYSQL_DB_PASSWORD: *dbPassword
+            envFrom: *envFrom
+            probes:
+              liveness: &notificationProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &notificationPort 8083
+                  periodSeconds: 10
+              readiness: *notificationProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 256Mi
+      seadoc:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/sdoc-server
+              tag: 2.0.11@sha256:ec9a7d0baa61835b903a8815baca00e63cebfc5a63577ab167181a37aa93c7c3
+            env:
+              DB_HOST: "${APP}-mariadb-primary"
+              DB_NAME: "seahub_db"
+              DB_PASSWORD: *dbPassword
+              DB_PORT: "3306"
+              DB_USER: "seafile"
+              JWT_PRIVATE_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: seafile-secret
+                    key: JWT_PRIVATE_KEY
+              NON_ROOT: "true"
+              SEAHUB_SERVICE_URL: "http://${APP}.default.svc.cluster.local"
+              TIME_ZONE: "Europe/Amsterdam"
+            probes:
+              liveness: &seadocProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 10
+              readiness: *seadocProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+      seasearch:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/seafileltd/seasearch
+              tag: 1.0.8@sha256:1d5c3f0bbbae5716be0c4b6222ac80e0310233d31683a7e989b4dfd9976514af
+            env:
+              # Only used on the first start, to create the admin
+              SS_FIRST_ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: seafile-secret
+                    key: SEASEARCH_PASSWORD
+              SS_FIRST_ADMIN_USER: "seafile"
+              SS_LOG_LEVEL: "info"
+              SS_LOG_TO_STDOUT: "true"
+              # The index can be rebuilt, so it stays on its own PVC; S3 mode
+              # would still keep the index metadata locally
+              SS_STORAGE_TYPE: "disk"
+            probes:
+              liveness: &seasearchProbe
+                enabled: true
+                custom: true
+                spec:
+                  periodSeconds: 10
+                  tcpSocket:
+                    port: &seasearchPort 4080
+              readiness: *seasearchProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+    persistence:
+      config:
+        type: configMap
+        name: seafile-config
+        advancedMounts:
+          *app :
+            app:
+              - path: /etc/seafile/local_settings.py
+                readOnly: true
+                subPath: local_settings.py
+      data:
+        existingClaim: "${KOPIUR_CLAIM:=${APP}}"
+        advancedMounts:
+          *app :
+            app:
+              - path: /shared
+      # Search index, rebuilt by Seafile if lost; no backup
+      seasearch:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        storageClass: ceph-block
+        # Otherwise named after the release, like the Kopiur PVC
+        suffix: seasearch
+        advancedMounts:
+          seasearch:
+            app:
+              - path: /opt/seasearch/data
+      # The extensions only keep logs and caches; Seafile's own data is on the PVC
+      shared:
+        type: emptyDir
+        advancedMounts:
+          ai:
+            app:
+              - path: /shared
+          metadata:
+            app:
+              - path: /shared
+          # Its command logs to this folder
+          notification:
+            app:
+              - path: /shared/seafile/logs
+          seadoc:
+            app:
+              - path: /shared
+    route:
+      app:
+        hostnames:
+          - "${APP_DOMAIN:-${APP_SUBDOMAIN:-${APP}}.bykaj.app}"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+        rules:
+          # SeaDoc is served under /sdoc-server/, its websocket under /socket.io
+          - backendRefs:
+              - identifier: seadoc
+                port: *port
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: /
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /sdoc-server/
+          - backendRefs:
+              - identifier: seadoc
+                port: *port
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /socket.io
+          # The notification server under /notification: clients open the
+          # websocket on / (Seafile posts its events to /events internally)
+          - backendRefs:
+              - identifier: notification
+                port: *notificationPort
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: /
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /notification
+          - backendRefs:
+              - identifier: *app
+                port: *port
+    service:
+      *app :
+        primary: true
+        controller: *app
+        ports:
+          http:
+            port: *port
+      ai:
+        controller: ai
+        ports:
+          http:
+            port: *aiPort
+      metadata:
+        controller: metadata
+        ports:
+          http:
+            port: *metadataPort
+      notification:
+        controller: notification
+        ports:
+          http:
+            port: *notificationPort
+      seadoc:
+        controller: seadoc
+        ports:
+          http:
+            port: *port
+      seasearch:
+        controller: seasearch
+        ports:
+          http:
+            port: *seasearchPort

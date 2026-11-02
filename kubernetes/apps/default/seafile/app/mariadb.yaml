@@ -1,0 +1,56 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/database_v1alpha1.json
+# The mariadb component creates the instance, the seafile user and seafile_db;
+# Seafile also needs ccnet_db and seahub_db
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: ${APP}-ccnet
+spec:
+  characterSet: utf8mb4
+  collate: utf8mb4_general_ci
+  mariaDbRef:
+    name: ${APP}-mariadb
+  name: ccnet_db
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/database_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: ${APP}-seahub
+spec:
+  characterSet: utf8mb4
+  collate: utf8mb4_general_ci
+  mariaDbRef:
+    name: ${APP}-mariadb
+  name: seahub_db
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/grant_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: ${APP}-ccnet
+spec:
+  database: ccnet_db
+  host: "%"
+  mariaDbRef:
+    name: ${APP}-mariadb
+  privileges:
+    - ALL PRIVILEGES
+  table: "*"
+  username: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/grant_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: ${APP}-seahub
+spec:
+  database: seahub_db
+  host: "%"
+  mariaDbRef:
+    name: ${APP}-mariadb
+  privileges:
+    - ALL PRIVILEGES
+  table: "*"
+  username: seafile

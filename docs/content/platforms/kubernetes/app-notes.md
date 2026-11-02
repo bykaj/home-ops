@@ -80,6 +80,58 @@ These apps use their native OIDC support.
     another image volume mounted at `/opt/web-apps/<name>` with subPath
     `web/apps/<name>`. A Renovate rule treats the `<extension>-` tag prefix as
     a separate line per extension.
+- **Seafile** runs as a trial next to OpenCloud, at `seafile.bykaj.app`. It
+  is the Pro edition, because only Pro stores libraries in S3 (the
+  `seafile-commits`, `seafile-fs` and `seafile-blocks` Garage buckets). Pro
+  is free for up to three users, and every Pocket ID login creates an
+  account, so the Pocket ID client is limited to the groups that should get
+  one. Its database comes from the
+  [mariadb component](../../infrastructure/storage/mariadb.md) (user
+  `seafile`, database `seafile_db`); `mariadb.yaml` adds `ccnet_db` and
+  `seahub_db` with grants, so Seafile's first start uses them
+  (`USE_EXISTING_DB`) and needs no root password.
+    Seahub reads OAuth and email settings only from Python, so
+    `resources/local_settings.py` is linked into the versioned install
+    directory by the container command, and Seahub loads it before the
+    `seahub_settings.py` that the first start generates on the PVC. Secrets
+    come from the environment. Accounts are keyed on the `sub` claim. The
+    Pocket ID client is confidential, with callback URL
+    `https://seafile.bykaj.app/oauth/callback/`; the desktop and mobile apps
+    sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
+    The local admin from the `seafile` 1Password item exists only to hand
+    out admin rights: a Pocket ID login creates a separate account (14.0 has
+    no way to link the two), so make that account an admin under System
+    Admin → Users, then deactivate the local admin. It counts toward the
+    three free users.
+    The image starts as root; `NON_ROOT` runs the Seafile processes as uid
+    8000, which is also the Kopiur mover UID.
+    SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
+    server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
+    `seafile-ai`, `seafile-seasearch`, `seafile-notification`), because the
+    PVC can only be mounted on one node. All but SeaSearch only get an
+    emptyDir for logs. The metadata
+    server and Seafile AI read the libraries straight from S3 with the shared
+    settings in `resources/seafile.env`, and the metadata server keeps its
+    data in the `seafile-metadata` bucket. SeaDoc is routed under
+    `/sdoc-server/` (prefix stripped) and `/socket.io`. The notification
+    server pushes library, file lock and folder permission changes to the
+    desktop client (8.0.11+), SeaDrive (3.0.1+) and the web UI over a
+    websocket, so they don't wait for their next poll. It's routed under
+    `/notification` with the prefix stripped: clients open the websocket on
+    `/notification` itself (`/` on the server), and Seafile posts events to
+    `/events` on the Service, which requires a JWT. Seafile AI needs the
+    metadata server, and calls LiteLLM with the `seafile` virtual key. Its
+    model list (`LLM_MODELS`) and embedding model (`EMBEDDING_MODEL`, for
+    vector search in AI chat) are env vars on both Seahub and Seafile AI,
+    which override `seafile_ai_config.yaml`. The kubelet expands
+    `$(AI_API_KEY)` in them, so the key never sits in a file; that only works
+    because `AI_API_KEY` sorts before them in the rendered env.
+    SeaSearch is the full-text search engine, with its index on its own
+    `ceph-block` PVC and no backup: the index can be rebuilt, and S3 mode
+    would still keep its metadata locally. Its admin (`seafile`, password
+    `SEASEARCH_PASSWORD` in the `seafile` item) is created on its first
+    start; Seafile and Seafile AI use base64(`seafile:<password>`) as
+    `SEASEARCH_TOKEN`.
 
 ### Apps behind `gateway-oidc`
 

@@ -77,8 +77,10 @@ The NAS also runs [Garage](https://garagehq.deuxfleurs.fr/) as an
 S3-compatible object store at `s3.bykaj.io`. CNPG uses it for WAL archives
 and base backups, and mariadb-operator for base backups and binlogs (`mariadb`
 bucket). Karakeep and Windshift keep their assets and
-attachments in the `karakeep` and `windshift` buckets, and OpenCloud its
-file contents in the `opencloud` bucket.
+attachments in the `karakeep` and `windshift` buckets, OpenCloud its
+file contents in the `opencloud` bucket, and Seafile its libraries in the
+`seafile-commits`, `seafile-fs` and `seafile-blocks` buckets (plus its
+metadata server's `seafile-metadata`).
 
 ## Pages in this section
 
