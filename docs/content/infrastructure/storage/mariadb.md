@@ -100,14 +100,22 @@ NAS:
 | What | Resource | Where | When | Kept |
 | --- | --- | --- | --- | --- |
 | Base backups (`mariadb-backup`) | `PhysicalBackup` `${APP}-mariadb-v<timeline>` | `s3://mariadb/${APP}/v<timeline>/base/` | Daily at 04:50, and once right after creation | 14 days |
-| Binlogs | `PointInTimeRecovery` `${APP}-mariadb`, archived by the agent sidecar on the primary | `s3://mariadb/${APP}/v<timeline>/binlogs/` | Continuously, per rotated binlog (128 MB) | Not pruned by the operator |
+| Binlogs | `PointInTimeRecovery` `${APP}-mariadb`, archived by the agent sidecar on the primary | `s3://mariadb/${APP}/v<timeline>/binlogs/` | Every 10 minutes; `SqlJob` `${APP}-mariadb-flush-binlogs` closes the current binlog every 15 minutes | Not pruned by the operator |
 | Logical dump (`mariadb-dump`) | `Backup` `${APP}-mariadb-dump` | NAS, `/mnt/vault/Backups/Database/${APP}` | `MARIADB_BACKUP_SCHEDULE` | 30 days |
 
 The S3 credentials are `MARIADB_S3_ACCESS_KEY_ID` and
 `MARIADB_S3_SECRET_ACCESS_KEY` in the `mariadb` 1Password item; the component
 copies them into the `${APP}-mariadb` Secret.
 
-`kubectl get pitr -n <namespace>` shows the last recoverable time.
+The agent only uploads closed binlogs, on a fixed 10-minute cycle. MariaDB
+closes one at 128 MB (`max_binlog_size`), which a quiet database takes days to
+reach, so the `${APP}-mariadb-flush-binlogs` `SqlJob` runs `FLUSH BINARY LOGS`
+on the primary (as root) every 15 minutes. The archive is then at most 25
+minutes behind, at the cost of up to 96 small binlogs a day per app; the
+operator never prunes archived binlogs.
+
+`kubectl get pitr -n <namespace>` shows the last recoverable time. It stays
+empty until a binlog closed after the first base backup has been archived.
 
 Take a base backup outside the schedule, for example before a risky change,
 with:
