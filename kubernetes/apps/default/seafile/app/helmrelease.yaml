@@ -231,7 +231,10 @@ spec:
                   secretKeyRef:
                     name: seafile-secret
                     key: JWT_PRIVATE_KEY
-              NON_ROOT: "true"
+              # Its boot script creates /shared/logs as root, so under NON_ROOT
+              # the converter can't write its log and crashes; it only keeps
+              # logs, so it runs as root like the image's default
+              NON_ROOT: "false"
               SEAHUB_SERVICE_URL: "http://${APP}.default.svc.cluster.local"
               TIME_ZONE: "Europe/Amsterdam"
             probes:
@@ -244,8 +247,7 @@ spec:
                     port: *port
                   periodSeconds: 10
               readiness: *seadocProbe
-              # NON_ROOT first chowns the whole install dir, which takes longer
-              # than the liveness probe allows
+              # Node and the converter take a while to start
               startup:
                 enabled: true
                 custom: true

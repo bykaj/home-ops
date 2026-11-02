@@ -109,8 +109,9 @@ These apps use their native OIDC support.
     that folder as 755 first, so the `shared-permissions` init container
     creates it with 777 beforehand. It also clears the setgid bit the folder
     inherits from the PVC root: the check compares the mode to `777`
-    literally, and `2777` fails it. SeaDoc's `NON_ROOT` start chowns its whole
-    install dir, so it has a startup probe.
+    literally, and `2777` fails it. SeaDoc runs without `NON_ROOT`: its boot
+    script creates `/shared/logs` as root, and its converter then can't
+    write its log as `seafile`. It only keeps logs, in an emptyDir.
     SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
     server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
     `seafile-ai`, `seafile-seasearch`, `seafile-notification`), because the
