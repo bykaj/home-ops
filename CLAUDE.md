@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a personal home infrastructure monorepo, not an application. It manages a bare-metal Talos/Kubernetes cluster (GitOps via Flux), Docker Compose stacks on a TrueNAS host (GitOps via doco-cd), and the Ansible/Talos/just tooling used to bootstrap and operate all of it. There is no app to build or test in the traditional sense — "correctness" means manifests render and lint cleanly; validation happens via `kustomize build`, `yamllint`, `kubeconform`, `actionlint`, `zizmor`, and `shellcheck`, mostly wired into pre-commit hooks.
 
-Tool versions are pinned via mise (`.mise/config.toml`); `mise install` provisions `just`, `flux2`, `kubectl`, `kustomize`, `helm`, `helmfile`, `talosctl`, `1password-cli`, `yq`, etc. `mise`'s `postinstall` hook runs `lefthook install`.
+Tool versions are pinned via mise (`.mise/config.toml`); `mise install` provisions `just`, `flux2`, `kubectl`, `kustomize`, `helm`, `helmfile`, `talosctl`, `1password-cli`, `yq`, `docker-compose` (standalone Compose, no Docker engine needed for `config`), etc. `mise`'s `postinstall` hook runs `lefthook install`.
 
 ## Commands
 
@@ -37,7 +37,7 @@ yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 ### Validating a single Docker Compose stack
 
 ```bash
-docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet   # unset ${VAR} warnings are expected
+docker-compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet   # unset ${VAR} warnings are expected
 ```
 
 ### Pre-commit hooks (lefthook, `.lefthook.toml`)

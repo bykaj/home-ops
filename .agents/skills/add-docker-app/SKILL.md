@@ -47,7 +47,7 @@ Apps live in `docker/nas/NN-<app>/docker-compose.yaml`, deployed GitOps-style by
 
 5. **Docs**: add a `### NN-<app>` section under "Stacks" in `docs/content/platforms/docker/index.md` (in directory order), and update any other page that describes what the stack touches (DNS, storage/backups, networking). Validate with `just docs build`.
 
-6. **Verify**: `docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet` (unset `${VAR}` warnings are expected) and `yamllint --config-file .yamllint.yaml docker/nas/NN-<app>`. Show the user the files before committing. Commit style: `feat(<app>): <what>` (e.g. `feat(zot): add zot OCI registry with pull-through cache to NAS`). Pushing to `main` deploys; `just docker sync-stacks` forces a run.
+6. **Verify**: `docker-compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet` (unset `${VAR}` warnings are expected) and `yamllint --config-file .yamllint.yaml docker/nas/NN-<app>`. Show the user the files before committing. Commit style: `feat(<app>): <what>` (e.g. `feat(zot): add zot OCI registry with pull-through cache to NAS`). Pushing to `main` deploys; `just docker sync-stacks` forces a run.
 
 ## Common mistakes
 

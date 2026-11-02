@@ -16,6 +16,7 @@ pipx.uvx = true
 "crane" = "0.22.1"
 "flux2" = "2.10.0"
 "gh" = "2.103.3"
+"github:docker/compose" = "v5.6.1"
 "github:home-operations/flate" = "v0.6.5"
 "github:mitsuhiko/minijinja" = "3.0.5"
 "github:postfinance/topf" = "v0.6.2"

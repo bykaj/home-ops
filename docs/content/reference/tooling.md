@@ -12,8 +12,8 @@ manifests render and lint cleanly.
 [mise](https://mise.jdx.dev) pins every tool in
 [`.mise/config.toml`](https://github.com/bykaj/home-ops/blob/main/.mise/config.toml)
 (`just`, `flux2`, `kubectl`, `kustomize`, `helm`, `helmfile`, `talos`,
-`1password-cli`, `yq`, `flate`, `minijinja`, `zensical`, and more) and sets
-the environment:
+`1password-cli`, `yq`, `flate`, `minijinja`, `zensical`, `docker-compose`, and
+more) and sets the environment:
 
 | Variable | Points at |
 | --- | --- |
@@ -48,7 +48,7 @@ kustomize build kubernetes/apps/<namespace>/<app>/app
 yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
 
 # A Docker stack
-docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
+docker-compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
 
 # These docs
 just docs build           # strict build, what CI runs

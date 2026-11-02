@@ -243,7 +243,7 @@ Follow the
 skill for proxy, network and secret conventions. Validate locally with:
 
 ```sh
-docker compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
+docker-compose -f docker/nas/NN-<app>/docker-compose.yaml config --quiet
 ```
 
 Warnings about unset `${VAR}`s are expected; doco-cd provides those at deploy
