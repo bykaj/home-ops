@@ -54,4 +54,8 @@ spec:
   storage:
     size: 5Gi
     storageClassName: openebs-hostpath
+  updateStrategy:
+    # Runs mariadb-upgrade on start (a no-op unless the major version changed),
+    # so a major image bump also migrates the system tables
+    mariadbAutoUpgradeEnabled: true
   username: ${MARIADB_USERNAME:=${APP}}
