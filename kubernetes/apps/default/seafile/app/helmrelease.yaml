@@ -22,11 +22,21 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        containers:
-          app:
-            image:
+        initContainers:
+          # The image's own boot script creates /shared/seafile (755, root)
+          # before the NON_ROOT check runs, which then refuses to start; the
+          # first start makes everything under /shared world-writable anyway
+          shared-permissions:
+            image: &image
               repository: docker.io/seafileltd/seafile-pro-mc
               tag: 14.0.9@sha256:94c03caa19a53d0fda44c00a7528225e221f5ec641ddf5e83637561d92ab987d
+            command:
+              - /bin/sh
+              - -c
+              - mkdir -p /shared/seafile && chmod 777 /shared/seafile
+        containers:
+          app:
+            image: *image
             # Seahub only reads OAuth and email settings from Python, so link
             # local_settings.py into the versioned install dir before starting
             command:
@@ -232,6 +242,17 @@ spec:
                     port: *port
                   periodSeconds: 10
               readiness: *seadocProbe
+              # NON_ROOT first chowns the whole install dir, which takes longer
+              # than the liveness probe allows
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 60
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 5
             resources:
               requests:
                 cpu: 10m
@@ -289,6 +310,8 @@ spec:
         advancedMounts:
           *app :
             app:
+              - path: /shared
+            shared-permissions:
               - path: /shared
       # Search index, rebuilt by Seafile if lost; no backup
       seasearch:
