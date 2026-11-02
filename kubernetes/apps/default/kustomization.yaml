@@ -18,6 +18,7 @@ resources:
   - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./pgadmin/ks.yaml
+  - ./seafile/ks.yaml
   - ./spoolman/ks.yaml
   - ./thelounge/ks.yaml
   - ./wallos/ks.yaml
