@@ -25,7 +25,9 @@ spec:
         initContainers:
           # The image's own boot script creates /shared/seafile (755, root)
           # before the NON_ROOT check runs, which then refuses to start; the
-          # first start makes everything under /shared world-writable anyway
+          # first start makes everything under /shared world-writable anyway.
+          # The check compares the mode to "777" literally, so the setgid bit
+          # the folder inherits from the PVC root has to go too
           shared-permissions:
             image: &image
               repository: docker.io/seafileltd/seafile-pro-mc
@@ -33,7 +35,7 @@ spec:
             command:
               - /bin/sh
               - -c
-              - mkdir -p /shared/seafile && chmod 777 /shared/seafile
+              - mkdir -p /shared/seafile && chmod 777 /shared/seafile && chmod g-s /shared/seafile
         containers:
           app:
             image: *image

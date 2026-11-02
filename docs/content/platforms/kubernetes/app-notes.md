@@ -107,7 +107,9 @@ These apps use their native OIDC support.
     8000, which is also the Kopiur mover UID. Its entrypoint refuses to start
     unless `/shared/seafile` is mode 777, but its own boot script creates
     that folder as 755 first, so the `shared-permissions` init container
-    creates it with 777 beforehand. SeaDoc's `NON_ROOT` start chowns its whole
+    creates it with 777 beforehand. It also clears the setgid bit the folder
+    inherits from the PVC root: the check compares the mode to `777`
+    literally, and `2777` fails it. SeaDoc's `NON_ROOT` start chowns its whole
     install dir, so it has a startup probe.
     SeaDoc, the metadata server, Seafile AI, SeaSearch and the notification
     server run as their own Deployments (`seafile-seadoc`, `seafile-metadata`,
