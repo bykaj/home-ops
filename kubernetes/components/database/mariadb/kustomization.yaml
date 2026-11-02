@@ -8,6 +8,7 @@ resources:
   - ./mariadb.yaml
   - ./physicalbackup.yaml
   - ./pointintimerecovery.yaml
+  - ./sqljob.yaml
   - ./user.yaml
 patches:
   - target:

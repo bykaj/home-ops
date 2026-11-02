@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/k8s.mariadb.com/sqljob_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: SqlJob
+metadata:
+  name: ${APP}-mariadb-flush-binlogs
+spec:
+  # The agent only archives closed binlogs (every 10 minutes), and a quiet
+  # database takes days to fill one (max_binlog_size); closing it every 15
+  # minutes keeps the archive at most 25 minutes behind
+  failedJobsHistoryLimit: 1
+  mariaDbRef:
+    name: ${APP}-mariadb
+  passwordSecretKeyRef:
+    name: ${APP}-mariadb
+    key: ROOT_PASSWORD
+  schedule:
+    cron: "*/15 * * * *"
+  sql: FLUSH BINARY LOGS;
+  successfulJobsHistoryLimit: 1
+  username: root
