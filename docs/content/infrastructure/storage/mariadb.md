@@ -67,15 +67,18 @@ just k8s mariadb-mark-initialized <namespace> <app>
 
 !!! warning "Without this step the operator stops managing the instance"
 
-    mariadb-operator only sets the `Initialized` condition at the end of a
-    `bootstrapFrom` restore. An instance created without `bootstrapFrom` (the
-    init label) doesn't have it, so once the label is gone the operator tries
-    to restore into the existing PVCs and stops with "Init error: storage
-    PVCs already exist" (`Ready=False`). The database keeps running, but the
-    operator does nothing else for it, failover included, and the app's
-    health check fails. The recipe sets the condition, which a restore would
-    have set. A `MariaDB` that is later recreated has no status yet and
-    restores from `bootstrapFrom` as intended.
+    mariadb-operator only sets the `Initialized` and `BinlogsReplayed`
+    conditions at the end of a `bootstrapFrom` restore. An instance created
+    without `bootstrapFrom` (the init label) has neither, so once the label is
+    gone the operator tries to restore into the existing PVCs and stops with
+    "Init error: storage PVCs already exist" (`Ready=False`), and then waits
+    for a binlog replay that never comes. The database keeps running, but the
+    operator does nothing else for it (failover included), binlog archiving
+    and the scheduled base backups stop, Users, Grants and Databases aren't
+    reconciled, and the app's health check fails. The recipe sets both
+    conditions, as a restore would have (`BinlogsReplayed` with reason
+    `ReplayBinlogsSkipped`). A `MariaDB` that is later recreated has no
+    status yet and restores from `bootstrapFrom` as intended.
 
 Create the NAS dump folder before the first scheduled dump:
 

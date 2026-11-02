@@ -54,22 +54,35 @@ delete-ks ns ks:
 
 [doc('Mark a MariaDB as initialized, after removing its components.database/mariadb init label')]
 mariadb-mark-initialized ns app:
-    # mariadb-operator only sets Initialized=True at the end of a bootstrapFrom
-    # restore; an instance created without one would otherwise try to restore
-    # into its existing PVCs ("storage PVCs already exist") once it gets one
+    # mariadb-operator only sets Initialized and BinlogsReplayed at the end of a
+    # bootstrapFrom restore. An instance created without one would otherwise
+    # try to restore into its existing PVCs ("storage PVCs already exist") and
+    # wait for a binlog replay that never comes, which also stops archiving,
+    # scheduled base backups and User/Grant/Database reconciliation
     mdb="{{ app }}-mariadb"
-    index=$(kubectl -n "{{ ns }}" get mariadbs.k8s.mariadb.com "$mdb" -o json \
-        | jq '[.status.conditions[]?.type] | index("Initialized")')
-    condition=$(jq -cn --arg now "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-        '{type: "Initialized", status: "True", reason: "Initialized", message: "Initialized", lastTransitionTime: $now}')
-    if [[ "$index" == "null" ]]; then
-        patch="[{\"op\": \"add\", \"path\": \"/status/conditions/-\", \"value\": $condition}]"
-    else
-        patch="[{\"op\": \"test\", \"path\": \"/status/conditions/$index/type\", \"value\": \"Initialized\"},
-            {\"op\": \"replace\", \"path\": \"/status/conditions/$index\", \"value\": $condition}]"
-    fi
-    kubectl -n "{{ ns }}" patch mariadbs.k8s.mariadb.com "$mdb" --subresource=status --type=json -p "$patch"
-    just log info "Marked as initialized" "mariadb" "$mdb"
+    now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    for condition in \
+        "{\"type\": \"Initialized\", \"status\": \"True\", \"reason\": \"Initialized\", \"message\": \"Initialized\"}" \
+        "{\"type\": \"BinlogsReplayed\", \"status\": \"True\", \"reason\": \"ReplayBinlogsSkipped\", \"message\": \"Created empty with the init label\"}"; do
+        condition=$(jq -c --arg now "$now" '. + {lastTransitionTime: $now}' <<<"$condition")
+        type=$(jq -r .type <<<"$condition")
+        current=$(kubectl -n "{{ ns }}" get mariadbs.k8s.mariadb.com "$mdb" -o json \
+            | jq -c --arg type "$type" '[.status.conditions[]?.type] as $types
+                | {index: ($types | index($type)), status: ([.status.conditions[]? | select(.type == $type)][0].status)}')
+        index=$(jq -r .index <<<"$current")
+        if [[ "$(jq -r .status <<<"$current")" == "True" ]]; then
+            just log info "Already set" "mariadb" "$mdb" "condition" "$type"
+            continue
+        fi
+        if [[ "$index" == "null" ]]; then
+            patch="[{\"op\": \"add\", \"path\": \"/status/conditions/-\", \"value\": $condition}]"
+        else
+            patch="[{\"op\": \"test\", \"path\": \"/status/conditions/$index/type\", \"value\": \"$type\"},
+                {\"op\": \"replace\", \"path\": \"/status/conditions/$index\", \"value\": $condition}]"
+        fi
+        kubectl -n "{{ ns }}" patch mariadbs.k8s.mariadb.com "$mdb" --subresource=status --type=json -p "$patch" >/dev/null
+        just log info "Set condition" "mariadb" "$mdb" "condition" "$type"
+    done
 
 [doc('Prune pods in Failed, Pending, or Succeeded state')]
 prune-pods:

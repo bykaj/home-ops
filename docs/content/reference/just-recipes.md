@@ -56,7 +56,7 @@ Day-2 cluster operations
 | `debug-node <node>` | Privileged debug shell on a node (`kubectl debug --profile=sysadmin`) |
 | `delete-ks <ns> <ks>` | Render a Flux Kustomization locally and delete its resources |
 | `prune-pods` | Delete pods in `Failed`, `Pending` or `Succeeded` phase |
-| `mariadb-mark-initialized <ns> <app>` | Set `Initialized=True` on `<app>-mariadb` after removing its init label ([details](../infrastructure/storage/mariadb.md#using-the-component)) |
+| `mariadb-mark-initialized <ns> <app>` | Set `Initialized` and `BinlogsReplayed` on `<app>-mariadb` after removing its init label ([details](../infrastructure/storage/mariadb.md#using-the-component)) |
 | `pvc-backup <ns> <app>` | Create a one-off Kopiur `Snapshot` ([details](../infrastructure/storage/backups.md#manual-backups)) |
 | `sync <hr\|ks\|gitrepo\|ocirepo\|es>` | Force reconciliation of every resource of that kind |
 | `sync-es <ns> <name>` | Force-sync one ExternalSecret |
