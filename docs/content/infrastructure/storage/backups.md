@@ -327,6 +327,19 @@ credential (vendor *Other*) uses the `FILEN_WEBDAV_USERNAME` and
 `FILEN_WEBDAV_PASSWORD` fields of the `filen-cli` 1Password item. If that stack
 is down, the task fails until it is back.
 
+### Documents to Seafile
+
+The same folder can be pushed to a Seafile library over WebDAV, so the
+documents can be shared with other Seafile users. The library is created in the
+Seafile web UI and owned by one account (the files count toward its quota).
+The task's WebDAV credential (vendor *Other*) uses
+`https://files.bykaj.app/seafdav`, that account's contact email and the WebDAV
+password set under Settings in Seafile; the remote folder is the library name.
+
+In sync mode the task deletes anything in the library that isn't on the NAS,
+including files other users add, so share the library read-only. A task in
+copy mode keeps their files, but deletions on the NAS don't come through.
+
 ### Restoring NAS data
 
 - **Recent mistakes**: restore the file or dataset from a ZFS snapshot

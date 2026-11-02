@@ -27,7 +27,9 @@ spec:
           # before the NON_ROOT check runs, which then refuses to start; the
           # first start makes everything under /shared world-writable anyway.
           # The check compares the mode to "777" literally, so the setgid bit
-          # the folder inherits from the PVC root has to go too
+          # the folder inherits from the PVC root has to go too.
+          # The controller only starts SeafDAV (WebDAV) when seafdav.conf, which
+          # the first start generates, says so
           shared-permissions:
             image: &image
               repository: docker.io/seafileltd/seafile-pro-mc
@@ -35,7 +37,10 @@ spec:
             command:
               - /bin/sh
               - -c
-              - mkdir -p /shared/seafile && chmod 777 /shared/seafile && chmod g-s /shared/seafile
+              - >-
+                mkdir -p /shared/seafile && chmod 777 /shared/seafile && chmod g-s /shared/seafile
+                && if [ -f /shared/seafile/conf/seafdav.conf ]; then
+                sed -i 's/^enabled = false$/enabled = true/' /shared/seafile/conf/seafdav.conf; fi
         containers:
           app:
             image: *image
@@ -67,6 +72,9 @@ spec:
               # Pushes library, lock and permission changes to clients over a websocket
               ENABLE_NOTIFICATION_SERVER: "true"
               ENABLE_SEADOC: "true"
+              # WebDAV at /seafdav (see the init container); users log in with
+              # their contact email and the WebDAV password from their settings
+              ENABLE_SEAFDAV: "true"
               ENABLE_SEAFILE_AI: "true"
               ENABLE_SEARCH: "true"
               INNER_METADATA_SERVER_URL: &metadataUrl "http://${APP}-metadata.default.svc.cluster.local:8084"

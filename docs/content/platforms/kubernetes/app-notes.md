@@ -102,6 +102,15 @@ These apps use their native OIDC support.
     Pocket ID client is confidential, with callback URL
     `https://files.bykaj.app/oauth/callback/`; the desktop and mobile apps
     sign in through the system browser (`CLIENT_SSO_VIA_LOCAL_BROWSER`).
+    WebDAV (SeafDAV) is at `https://files.bykaj.app/seafdav`: the username
+    is the contact email, the password the WebDAV password each user sets
+    under Settings (Pocket ID accounts have no other). `ENABLE_SEAFDAV` only
+    switches on that setting in Seahub; the controller reads `enabled` from
+    `seafdav.conf` on the PVC, which the `shared-permissions` init container
+    turns on at every start (on a fresh volume, from the second start). The
+    NAS reaches it directly on the envoy-external LoadBalancer, not through
+    Cloudflare, so uploads have no size limit; see
+    [Documents to Seafile](../../infrastructure/storage/backups.md#documents-to-seafile).
     Pocket ID accounts can't use or set a password
     (`DISABLE_SSO_USER_LOCAL_PWD_LOGIN`; Seafile exempts system admins), but
     the login page still shows the password form: Seahub has no setting to
