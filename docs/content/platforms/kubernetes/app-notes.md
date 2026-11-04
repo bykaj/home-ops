@@ -154,7 +154,11 @@ How the gateway, models, keys and MCP servers fit together is on the
   special-purpose ranges), since they fetch whatever is bookmarked.
   Inside the cluster and on the LAN, the app may only reach Meilisearch,
   Chrome, LiteLLM, Garage, envoy-external (Pocket ID) and the SMTP relay;
-  Chrome reaches nothing.
+  Chrome reaches nothing, except ICMP port unreachable to the kube-dns
+  Service IP (`10.43.0.10`): Chrome sends several DNS queries per hostname
+  and closes the socket once one answers, so the late answers bounce. Without
+  that rule, every page with many hosts set off `CiliumEgressPolicyDenied`
+  (`karakeep-chrome -> 10.43.0.10`).
 - Bookmarks of internal hosts (`*.bykaj.app` behind envoy-internal, the LAN)
   can't be crawled: `CRAWLER_ALLOWED_INTERNAL_HOSTNAMES` is unset, so the
   crawler refuses private addresses itself, and the policies block them too.
