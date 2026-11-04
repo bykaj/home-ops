@@ -10,7 +10,10 @@ spec:
     - ../../../../components/database/postgres
     - ../../../../components/kopiur
     - ../../../../components/zeroscaler/nfs
+  # LiteLLMVirtualKey CRD only; the key itself waits for the proxy
   dependsOn:
+    - name: litellm-operator
+      namespace: ai
     - name: rook-ceph-cluster
       namespace: rook-ceph
   # Only evaluated for the resources listed in healthChecks; current-only, so

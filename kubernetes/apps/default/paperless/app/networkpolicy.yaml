@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: paperless-egress
+spec:
+  # Egress only: Paperless is public, holds every document plus the database,
+  # OIDC and LiteLLM credentials, so it may reach its database, cache, LiteLLM,
+  # Pocket ID, the SMTP relay, the Debian mirror and GitHub's API and nothing
+  # else. The archive is an NFS volume, mounted by the kubelet, not the pod
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every Postgres instance, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: paperless-postgres
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app: paperless-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # AI suggestions, chat and embeddings (PAPERLESS_AI_LLM_*)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Pocket ID discovery and token calls: cyrannus.id resolves to the
+    # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+    # Email: smtp.bykaj.io resolves to the relay's LoadBalancer IP, which Cilium
+    # translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    # The image has no Dutch OCR data; init-tesseract-langs apt-installs
+    # tesseract-ocr-nld (PAPERLESS_OCR_LANGUAGES) on every start, over plain
+    # HTTP from the image's Debian sources
+    - toFQDNs:
+        - matchName: deb.debian.org
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+    # The dashboard's update check (/api/remote_version/ calls
+    # api.github.com), enabled per user in the UI settings
+    - toFQDNs:
+        - matchName: api.github.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: paperless
+      app.kubernetes.io/instance: paperless

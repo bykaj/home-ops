@@ -56,6 +56,19 @@ spec:
               PAPERLESS_EMAIL_PORT: "25"
               PAPERLESS_EMAIL_USE_SSL: "false"
               PAPERLESS_EMAIL_USE_TLS: "false"
+              # AI suggestions and document chat, through the LiteLLM proxy;
+              # embeddings use the same endpoint and key
+              PAPERLESS_AI_ENABLED: "true"
+              PAPERLESS_AI_LLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-litellm"
+                    key: api-key
+              PAPERLESS_AI_LLM_BACKEND: "openai-like"
+              PAPERLESS_AI_LLM_EMBEDDING_BACKEND: "openai-like"
+              PAPERLESS_AI_LLM_EMBEDDING_MODEL: "openai/text-embedding-3-small"
+              PAPERLESS_AI_LLM_ENDPOINT: "http://litellm.ai.svc.cluster.local:4000/v1"
+              PAPERLESS_AI_LLM_MODEL: "chatgpt/gpt-6-luna"
               # Configure folders
               PAPERLESS_CONSUMPTION_DIR: /mnt/archive/consume
               PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data

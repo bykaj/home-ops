@@ -63,6 +63,12 @@ one, and each policy file explains its own rules:
   a rule there. `api.github.com` is allowed too, for the Admin UI's release
   check; it's the one destination that can take data out (see the
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
+- [`paperless-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/paperless/app/networkpolicy.yaml)
+  limits Paperless, which holds every document and its LiteLLM key, to its
+  database, cache, LiteLLM, Pocket ID and the SMTP relay, plus two hosts by
+  FQDN: `deb.debian.org` (port 80, for the Dutch OCR package installed at
+  every start) and `api.github.com` (the dashboard's update check) (see
+  [Paperless](../../platforms/kubernetes/app-notes.md#paperless)).
 - [`seafile-*-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
   give every Seafile pod its own egress allowlist, since they hold the
   libraries or the S3, database and OAuth credentials. Seahub may reach its

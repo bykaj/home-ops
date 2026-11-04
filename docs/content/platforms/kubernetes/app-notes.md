@@ -137,6 +137,7 @@ How the gateway, models, keys and MCP servers fit together is on the
 | App | Sign-in |
 | --- | --- |
 | [Karakeep](#karakeep) | Native OIDC |
+| [Paperless](#paperless) | Native OIDC, no password login |
 | [pgAdmin](#pgadmin) | Native OIDC |
 | [Seafile](#seafile) | Native OIDC (OAuth), no password login |
 | Wallos | Native OIDC, configured in its own UI |
@@ -146,6 +147,25 @@ How the gateway, models, keys and MCP servers fit together is on the
 - It stores the profile picture only when a user is created. An account from
   a previous identity provider has no picture until it is set in the
   database.
+
+### Paperless
+
+- AI suggestions and document chat go through LiteLLM with the `paperless`
+  virtual key (`PAPERLESS_AI_LLM_*`): `chatgpt/gpt-6-luna` for suggestions and
+  chat, `openai/text-embedding-3-small` for the chat's embeddings. Suggestions
+  always ask for a tool call, so a replacement model must support forced tool
+  calls through LiteLLM.
+- The embeddings are a SQLite file (`llmindex.db`) on the data PVC, rebuilt
+  daily at 02:10 (`PAPERLESS_LLM_INDEX_TASK_CRON` default), so it is backed up
+  with the rest of the PVC but can be regenerated.
+- `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
+  LiteLLM, envoy-external (Pocket ID), the SMTP relay, `deb.debian.org` on
+  port 80 and `api.github.com`. The image has no Dutch OCR data, so its
+  `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` on every start;
+  without the Debian rule the package is skipped and Dutch OCR is missing. The GitHub rule is for the
+  dashboard's update check, which users switch on in their UI settings.
+- No mail accounts are configured. Adding one needs an egress rule for its
+  IMAP server.
 
 ### pgAdmin
 
