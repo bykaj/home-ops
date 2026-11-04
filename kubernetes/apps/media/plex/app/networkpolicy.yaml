@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: plex-egress
+spec:
+  # Egress only: Plex is public and holds the Plex account token, and it talks
+  # to many plex.tv hosts (sign-in, metadata, artwork, discovery) that change
+  # without notice. So it may reach the internet (the `internet` group: public
+  # space only) on any port and nothing in the cluster or on the LAN. The media
+  # share is NFS, mounted by the kubelet, not the pod; clients and remote access
+  # come in through envoy-external and the LoadBalancer, which this doesn't
+  # touch. Casting or remote control towards LAN devices would need a rule
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toCIDRSet:
+        - cidrGroupRef: internet
+    # SSDP device discovery (about every 30 s): with TTL 1 it never leaves the
+    # node and is dropped as TTL_EXCEEDED either way, but without this rule the
+    # policy drops it first and sets off CiliumEgressPolicyDenied
+    - toCIDR:
+        - 239.255.255.250/32
+      toPorts:
+        - ports:
+            - port: "1900"
+              protocol: UDP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: plex
+      app.kubernetes.io/instance: plex
