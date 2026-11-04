@@ -1,0 +1,116 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: karakeep-egress
+spec:
+  # Egress only: Karakeep is public, holds every bookmark plus the S3, OIDC,
+  # Meilisearch and LiteLLM credentials, and its workers fetch any URL that is
+  # bookmarked (metadata, banner images, PDFs, yt-dlp videos, RSS). So it may
+  # reach the internet (the `internet` group: public space only, no private,
+  # CGNAT or link-local ranges), its search engine, Chrome, LiteLLM, Garage,
+  # Pocket ID and the SMTP relay, and nothing else in the cluster or on the LAN
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Crawler and feed fetches, on any port
+    - toCIDRSet:
+        - cidrGroupRef: internet
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: meilisearch
+            app.kubernetes.io/name: meilisearch
+            k8s:io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - port: "7700"
+              protocol: TCP
+    # Page rendering and screenshots (BROWSER_WEB_URL)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: chrome
+            app.kubernetes.io/instance: karakeep
+      toPorts:
+        - ports:
+            - port: "9222"
+              protocol: TCP
+    # Tagging, summaries, OCR and embeddings (OPENAI_BASE_URL)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Assets in Garage (ASSET_STORE_S3_ENDPOINT s3.bykaj.io) behind Traefik on
+    # the NAS
+    - toCIDRSet:
+        - cidrGroupRef: nas
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # Pocket ID discovery and token calls: cyrannus.id resolves to the
+    # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+    # Email: smtp.bykaj.io resolves to the relay's LoadBalancer IP, which Cilium
+    # translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: karakeep
+      app.kubernetes.io/instance: karakeep
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: karakeep-chrome-egress
+spec:
+  # Egress only: Chrome renders any bookmarked page, so it is the most exposed
+  # pod; it may reach the internet (the `internet` group: public space only, on
+  # any port and over QUIC) and nothing in the cluster or on the LAN
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toCIDRSet:
+        - cidrGroupRef: internet
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: chrome
+      app.kubernetes.io/instance: karakeep

@@ -49,13 +49,15 @@ Service topology (`loadBalancer.serviceTopology`) is enabled, so Cilium honours
 `PreferSameNode` (Cilium 1.20 or newer). Spegel's registry Service relies on
 `PreferSameNode` to serve image pulls from the Spegel instance on the same node.
 
-Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
-public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
-`10.73.2.100/32`, both addresses on the NAS interface).
+Two `CiliumCIDRGroup`s are available to network policies: `internet` (public
+IPv4 space only, excluding private, CGNAT, loopback, link-local, multicast and
+other special-purpose ranges) and `nas` (`10.73.1.10/32` and `10.73.2.100/32`,
+both addresses on the NAS interface).
 
 Network policies are not the default; they are being added to the public
-apps and to pods that hold secrets or data. Each policy file explains its own
-rules:
+apps and to pods that hold secrets or data. Gatus has none on purpose: it
+checks internal endpoints all over the cluster and LAN, so an allowlist would
+have to follow every check. Each policy file explains its own rules:
 
 - [`audiobookshelf-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/media/audiobookshelf/app/networkpolicy.yaml)
   limits Audiobookshelf to Pocket ID, the SMTP relay and its metadata and
@@ -71,6 +73,13 @@ rules:
 - `it-tools-egress`, `wastebin-egress`, `echo-server-egress` and
   `kromgo-egress` (a `networkpolicy.yaml` in each app) give these public apps
   no egress besides DNS; kromgo may also query Prometheus for its badges.
+- [`karakeep-egress` and `karakeep-chrome-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/karakeep/app/networkpolicy.yaml)
+  allow Karakeep and its Chrome the internet through the `internet`
+  `CiliumCIDRGroup` (public space only: no private, CGNAT, link-local or other
+  special-purpose ranges, so not Talos's host DNS on 169.254.116.108 either),
+  since they fetch whatever is bookmarked, but nothing in the cluster or on the
+  LAN besides the app's own services (see
+  [Karakeep](../../platforms/kubernetes/app-notes.md#karakeep)).
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are

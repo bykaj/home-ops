@@ -148,6 +148,17 @@ How the gateway, models, keys and MCP servers fit together is on the
 - It stores the profile picture only when a user is created. An account from
   a previous identity provider has no picture until it is set in the
   database.
+- `karakeep-egress` and `karakeep-chrome-egress` (`networkpolicy.yaml`) let
+  the app and Chrome reach the internet on any port, through the `internet`
+  CIDR group (public space only: no private, CGNAT, link-local or other
+  special-purpose ranges), since they fetch whatever is bookmarked.
+  Inside the cluster and on the LAN, the app may only reach Meilisearch,
+  Chrome, LiteLLM, Garage, envoy-external (Pocket ID) and the SMTP relay;
+  Chrome reaches nothing.
+- Bookmarks of internal hosts (`*.bykaj.app` behind envoy-internal, the LAN)
+  can't be crawled: `CRAWLER_ALLOWED_INTERNAL_HOSTNAMES` is unset, so the
+  crawler refuses private addresses itself, and the policies block them too.
+  There were none when this was set up (2026-11-04).
 
 ### Paperless
 
