@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kromgo-egress
+spec:
+  # Egress only: kromgo is public and queries Prometheus for its badges (the
+  # icon sets are embedded), so it may reach Prometheus and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: prometheus
+            k8s:io.kubernetes.pod.namespace: observability
+            operator.prometheus.io/name: kube-prometheus-stack
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: kromgo
+      app.kubernetes.io/name: kromgo

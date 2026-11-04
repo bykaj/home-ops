@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: it-tools-egress
+spec:
+  # Egress only: IT Tools is public and a static site; every tool runs in the
+  # browser, so it may reach DNS and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: it-tools
+      app.kubernetes.io/instance: it-tools
