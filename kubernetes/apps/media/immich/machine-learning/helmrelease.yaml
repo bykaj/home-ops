@@ -28,6 +28,8 @@ spec:
       immich-machine-learning:
         annotations:
           reloader.stakater.com/auto: "true"
+        # The model cache is a ReadWriteOnce volume
+        strategy: Recreate
         containers:
           app:
             image:
@@ -96,13 +98,24 @@ spec:
         server: "nas.internal"
         globalMounts:
           - path: *mediaLocation
+      # Models downloaded from Hugging Face on first use, downloaded again if
+      # lost; no backup
+      cache:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 10Gi
+        storageClass: ceph-block
+        # Otherwise named after the release
+        suffix: cache
+        advancedMounts:
+          immich-machine-learning:
+            app:
+              - path: /cache
       tmpfs:
         type: emptyDir
         advancedMounts:
           immich-machine-learning:
             app:
-              - path: /cache
-                subPath: cache
               - path: /.cache
                 subPath: dotCache
               - path: /tmp

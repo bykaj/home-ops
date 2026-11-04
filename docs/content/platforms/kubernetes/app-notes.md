@@ -384,9 +384,13 @@ changing how Connect reads its credentials.
   `version.immich.cloud` is blocked. The setting is server-wide, so switching
   it back on sets off `CiliumEgressPolicyDenied`; switch it off rather than
   adding a rule.
-- Machine learning may only reach Hugging Face. Its model cache is an
-  emptyDir, so the models are downloaded again on first use after every
-  restart.
+- Machine learning may only reach Hugging Face. It downloads each model on
+  first use into its `immich-machine-learning-cache` volume (10Gi
+  `ceph-block`, no backup), so a restart keeps them; only a new model or a lost
+  volume needs Hugging Face again. The volume is ReadWriteOnce, so the
+  deployment uses the `Recreate` strategy. Model files redirect to CDN hosts
+  several levels below `hf.co`, hence `**.hf.co` in the policy (`*.` matches
+  one level only).
 - onnxruntime in the machine-learning image sends usage telemetry to
   `mobile.events.data.microsoft.com`. `ORT_DISABLE_TELEMETRY` switches it off;
   without it, every start sets off `CiliumEgressPolicyDenied` (seen on the
