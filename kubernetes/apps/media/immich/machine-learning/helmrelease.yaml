@@ -48,6 +48,9 @@ spec:
               # which the egress policy blocks
               ORT_DISABLE_TELEMETRY: "1"
               REDIS_HOSTNAME: "immich-dragonfly"
+            envFrom:
+              - secretRef:
+                  name: immich-machine-learning-secret
             probes:
               liveness: &probes
                 enabled: true
