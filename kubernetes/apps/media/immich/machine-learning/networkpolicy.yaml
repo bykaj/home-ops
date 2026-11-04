@@ -6,9 +6,9 @@ metadata:
   name: immich-machine-learning-egress
 spec:
   # Egress only: machine learning gets every photo it is asked about and mounts
-  # the library, so it may reach Hugging Face and nothing else. Its model cache
-  # is an emptyDir, so the models are downloaded again after every restart, on
-  # first use. onnxruntime's telemetry (mobile.events.data.microsoft.com) is
+  # the library, so it may reach Hugging Face and nothing else: models are
+  # downloaded on first use into the cache volume, and again only when they
+  # change or the volume is lost. onnxruntime's telemetry (mobile.events.data.microsoft.com) is
   # switched off with ORT_DISABLE_TELEMETRY and stays blocked
   egress:
     - toEndpoints:
