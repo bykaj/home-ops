@@ -110,6 +110,17 @@ spec:
               - matchPattern: "*"
     - toCIDRSet:
         - cidrGroupRef: internet
+    # Chrome sends several DNS queries per hostname (A and HTTPS records, each
+    # search domain) and closes the socket once one answers; the late answers
+    # get an ICMP port unreachable back to the kube-dns Service IP, which
+    # Cilium sees as `world`. Harmless, but dropped it sets off
+    # CiliumEgressPolicyDenied on every page with many hosts
+    - toCIDR:
+        - 10.43.0.10/32
+      icmps:
+        - fields:
+            - family: IPv4
+              type: 3
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: chrome
