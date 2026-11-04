@@ -49,9 +49,10 @@ Service topology (`loadBalancer.serviceTopology`) is enabled, so Cilium honours
 `PreferSameNode` (Cilium 1.20 or newer). Spegel's registry Service relies on
 `PreferSameNode` to serve image pulls from the Spegel instance on the same node.
 
-Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
-public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
-`10.73.2.100/32`, both addresses on the NAS interface).
+Two `CiliumCIDRGroup`s are available to network policies: `internet` (public
+IPv4 space only, excluding private, CGNAT, loopback, link-local, multicast and
+other special-purpose ranges) and `nas` (`10.73.1.10/32` and `10.73.2.100/32`,
+both addresses on the NAS interface).
 
 Network policies are not the default; they are being added to the public
 apps and to pods that hold secrets or data. Gatus has none on purpose: it
