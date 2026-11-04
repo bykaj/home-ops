@@ -8,7 +8,8 @@ spec:
   # Egress only: machine learning gets every photo it is asked about and mounts
   # the library, so it may reach Hugging Face and nothing else. Its model cache
   # is an emptyDir, so the models are downloaded again after every restart, on
-  # first use
+  # first use. onnxruntime's telemetry (mobile.events.data.microsoft.com) is
+  # switched off with ORT_DISABLE_TELEMETRY and stays blocked
   egress:
     - toEndpoints:
         - matchLabels:
