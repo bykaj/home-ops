@@ -68,6 +68,9 @@ rules:
   learning and the SMTP relay, plus Pocket ID (API), and machine learning to
   Hugging Face (see
   [Immich](../../platforms/kubernetes/app-notes.md#immich)).
+- `it-tools-egress`, `wastebin-egress`, `echo-server-egress` and
+  `kromgo-egress` (a `networkpolicy.yaml` in each app) give these public apps
+  no egress besides DNS; kromgo may also query Prometheus for its badges.
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are

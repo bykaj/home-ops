@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: wastebin-egress
+spec:
+  # Egress only: wastebin is public, accepts anonymous pastes and keeps them
+  # (and its signing key) in SQLite on the PVC, so it may reach DNS and nothing
+  # else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: wastebin
+      app.kubernetes.io/instance: wastebin
