@@ -63,6 +63,11 @@ one, and each policy file explains its own rules:
   a rule there. `api.github.com` is allowed too, for the Admin UI's release
   check; it's the one destination that can take data out (see the
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
+- [`seafile-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
+  limits Seahub, which is public and holds every library plus the S3 and
+  database credentials, to its extensions, database, cache, LiteLLM, Garage
+  (the `nas` group on port 443), Pocket ID and the SMTP relay. It has no
+  internet egress at all (see [Seafile](../../platforms/kubernetes/app-notes.md#seafile)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
 - The [`database/dragonfly` component](../../platforms/kubernetes/components.md#databasedragonfly) limits

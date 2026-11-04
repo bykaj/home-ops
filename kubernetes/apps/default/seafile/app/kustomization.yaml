@@ -6,6 +6,7 @@ resources:
   - ./externalsecret.yaml
   - ./litellmvirtualkey.yaml
   - ./mariadb.yaml
+  - ./networkpolicy.yaml
   - ./ocirepository.yaml
   - ./helmrelease.yaml
 configMapGenerator:
