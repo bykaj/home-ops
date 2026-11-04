@@ -444,7 +444,8 @@ The active mgr leaks memory slowly; see
   serves only some files from that repository, because it exceeds jsDelivr's
   50 MB package limit.
 - `pocket-id-egress` (`networkpolicy.yaml`) allows the SMTP relay and, by
-  FQDN, `download.maxmind.com` (GeoLite2, refreshed every 14 days) and
+  FQDN, `download.maxmind.com` and the Cloudflare R2 host it redirects the
+  download to (GeoLite2, refreshed every 14 days), and
   `raw.githubusercontent.com` (the icon index). LDAP, SCIM and backchannel
   logout are unused and blocked, and so is setting a client logo by URL:
   upload the image instead, or the download sets off

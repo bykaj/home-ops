@@ -83,7 +83,8 @@ rules:
   [Paperless](../../platforms/kubernetes/app-notes.md#paperless)).
 - [`pocket-id-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/security/pocket-id/app/networkpolicy.yaml)
   limits Pocket ID, which signs every app's tokens, to the SMTP relay,
-  `download.maxmind.com` and `raw.githubusercontent.com` (see
+  `download.maxmind.com` with the Cloudflare R2 host it redirects downloads to,
+  and `raw.githubusercontent.com` (see
   [Pocket ID](../../platforms/kubernetes/app-notes.md#pocket-id)).
 - [`seafile-*-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
   give every Seafile pod its own egress allowlist, since they hold the

@@ -33,9 +33,12 @@ spec:
             - port: "25"
               protocol: TCP
     # GeoLite2 City database for sign-in locations (MAXMIND_LICENSE_KEY),
-    # refreshed every 14 days, and the logo preset index (ICON_LIBRARY_URL)
+    # refreshed every 14 days: download.maxmind.com redirects the download to a
+    # presigned URL on MaxMind's Cloudflare R2 bucket. Plus the logo preset
+    # index (ICON_LIBRARY_URL)
     - toFQDNs:
         - matchName: download.maxmind.com
+        - matchName: mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com
         - matchName: raw.githubusercontent.com
       toPorts:
         - ports:
