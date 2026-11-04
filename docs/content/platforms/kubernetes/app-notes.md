@@ -387,6 +387,10 @@ changing how Connect reads its credentials.
 - Machine learning may only reach Hugging Face. Its model cache is an
   emptyDir, so the models are downloaded again on first use after every
   restart.
+- onnxruntime in the machine-learning image sends usage telemetry to
+  `mobile.events.data.microsoft.com`. `ORT_DISABLE_TELEMETRY` switches it off;
+  without it, every start sets off `CiliumEgressPolicyDenied` (seen on the
+  rollout, 2026-11-04).
 
 ### Jellyfin
 
