@@ -32,13 +32,16 @@ graph LR
   [App Notes](app-notes.md#litellm)).
 
 Everything is declared as custom resources of the
-[litellm-operator](https://github.com/home-operations/litellm-operator), split
-over three Flux Kustomizations in
+[litellm-operator](https://github.com/home-operations/litellm-operator), which
+runs from its own folder,
+[`kubernetes/apps/ai/litellm-operator`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm-operator)
+(Flux Kustomization `litellm-operator`: the operator HelmRelease and its CRDs).
+Apps that declare their own LiteLLM keys depend on it. The proxy is split over
+two Flux Kustomizations in
 [`kubernetes/apps/ai/litellm`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm):
 
 | Kustomization | Path | Contents |
 | --- | --- | --- |
-| `litellm-operator` | `app/` | The operator HelmRelease and its CRDs |
 | `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
 | `litellm-mcp` | `mcp/` | MCP servers and the `claude-code` team and key |
 
