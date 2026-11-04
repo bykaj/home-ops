@@ -35,6 +35,16 @@ spec:
         - ports:
             - port: "1900"
               protocol: UDP
+    # NAT-PMP port-mapping check (about hourly) to the pod's default gateway,
+    # the node's cilium_host address. Nothing listens there, so Plex logs "Not
+    # Supported by gateway" and moves on; dropped, it retries 12 times and sets
+    # off CiliumEgressPolicyDenied. Remote access uses the manual port instead
+    - toEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "5351"
+              protocol: UDP
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: plex

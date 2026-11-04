@@ -434,8 +434,12 @@ access comes in through envoy-external and the LoadBalancer
 policy also allows Plex's SSDP discovery to `239.255.255.250:1900`: those
 packets have TTL 1 and are dropped as `TTL_EXCEEDED` anyway, but without the
 rule the policy would drop them first, about twice a minute, and set off
-`CiliumEgressPolicyDenied`. Casting or remote control towards LAN devices
-would need a rule.
+`CiliumEgressPolicyDenied`. It also allows Plex's hourly NAT-PMP check
+(UDP 5351) to its own node, the pod's default gateway: nothing answers, so
+Plex logs `NAT: PMP, got an error: Not Supported by gateway` and moves on;
+dropped, it showed up as `plex -> 10.42.x.y` (the node's `cilium_host`
+address, not a pod). Casting or remote control towards LAN devices would need
+a rule.
 
 ### Stash
 
