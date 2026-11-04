@@ -6,8 +6,10 @@ metadata:
   name: immich-microservices-egress
 spec:
   # Egress only: the Immich workers read every photo and hold the database
-  # credentials, so they may reach the database, cache, machine learning, the
-  # SMTP relay and the version check and nothing else
+  # credentials, so they may reach the database, cache, machine learning and
+  # the SMTP relay and nothing else. The version check (version.immich.cloud)
+  # is off server-wide and stays blocked; switching it on in Administration →
+  # Settings → Version Check sets off CiliumEgressPolicyDenied
   egress:
     - toEndpoints:
         - matchLabels:
@@ -54,13 +56,6 @@ spec:
       toPorts:
         - ports:
             - port: "25"
-              protocol: TCP
-    # New-version check (Immich's own endpoint, returns the latest release only)
-    - toFQDNs:
-        - matchName: version.immich.cloud
-      toPorts:
-        - ports:
-            - port: "443"
               protocol: TCP
   endpointSelector:
     matchLabels:

@@ -65,8 +65,8 @@ rules:
   `immich-machine-learning-egress` (one
   [`networkpolicy.yaml`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich)
   per pod) limit the API and the workers to the database, cache, machine
-  learning and the SMTP relay, plus Pocket ID (API) and
-  `version.immich.cloud` (workers), and machine learning to Hugging Face (see
+  learning and the SMTP relay, plus Pocket ID (API), and machine learning to
+  Hugging Face (see
   [Immich](../../platforms/kubernetes/app-notes.md#immich)).
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress

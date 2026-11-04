@@ -379,8 +379,11 @@ changing how Connect reads its credentials.
 - Each of the three pods has its own egress policy (`networkpolicy.yaml` in
   `app/`, `microservices/` and `machine-learning/`). The API and the workers
   may reach Postgres, Dragonfly, machine learning and the SMTP relay; the API
-  also reaches envoy-external (Pocket ID), and the workers
-  `version.immich.cloud` for the new-version check.
+  also reaches envoy-external (Pocket ID).
+- The version check is off (Administration → Settings → Version Check) and
+  `version.immich.cloud` is blocked. The setting is server-wide, so switching
+  it back on sets off `CiliumEgressPolicyDenied`; switch it off rather than
+  adding a rule.
 - Machine learning may only reach Hugging Face. Its model cache is an
   emptyDir, so the models are downloaded again on first use after every
   restart.
