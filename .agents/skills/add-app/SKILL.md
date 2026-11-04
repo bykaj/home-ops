@@ -26,6 +26,7 @@ Ask the user (AskUserQuestion) for anything not already given:
 7. **Secrets** — env vars from 1Password? (→ ExternalSecret). Get the 1Password item name AND its exact field names — never guess field names
 8. **Config files** — mounted config? (→ configMapGenerator + `resources/`)
 9. **Dependencies** — other Flux Kustomizations this app needs
+10. **Outbound connections** — what the app itself connects to: its database and cache, LiteLLM, Pocket ID (OIDC), the SMTP relay, Garage (S3), other in-cluster services, and which internet hosts (or "any URL", for crawlers and media servers). Needed for the egress policy, which every `envoy-external` app gets
 
 ## Step 2: Create the files
 
@@ -39,6 +40,7 @@ kubernetes/apps/<namespace>/<app>/
     ├── ocirepository.yaml
     ├── helmrelease.yaml
     ├── externalsecret.yaml      # only if secrets
+    ├── networkpolicy.yaml       # every envoy-external app; also internal apps holding secrets or data
     └── resources/               # only if config files
 ```
 
@@ -139,6 +141,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./externalsecret.yaml # only if secrets
+  - ./networkpolicy.yaml # every envoy-external app
   - ./ocirepository.yaml
   - ./helmrelease.yaml
 ```
@@ -355,6 +358,63 @@ spec:
 
 Convention: `metadata.name` is `<app>`, the generated Secret is `<app>-secret`, and `dataFrom.extract` + `rewrite` prefixes 1Password fields for use in `template.data` (see wotcher for a multi-item example). The `.<prefix>_<field>` references must use the item's real field names (from Step 1) — a wrong field name renders an empty value with no error. If the field names weren't provided and you can't ask, insert `<FIXME: 1password field name>` placeholders and call them out.
 
+### app/networkpolicy.yaml (every envoy-external app)
+
+Every app behind `envoy-external` gets an egress-only `CiliumNetworkPolicy`, and so does an internal app that holds secrets or data. Egress-only means ingress (envoy, Prometheus scrapes) keeps working without rules. One policy per pod (controller); name it `<app>-egress` (`<app>-<controller>-egress` for extra controllers). Mirror a real one: `security/pocket-id` (FQDN allowlist), `default/windshift` (database, Garage, LiteLLM, GitHub), `media/immich` (one per pod), `default/karakeep` (open internet for a crawler), `default/it-tools` (DNS only).
+
+```yaml
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: <app>-egress
+spec:
+  # Egress only: <why this app is worth locking down: public, which secrets or
+  # data it holds>, so it may reach <list> and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # <one rule per destination, each with a comment saying what uses it>
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: <controller>
+      app.kubernetes.io/instance: <app>
+```
+
+Always keep the DNS rule, even for an app with no egress at all: an empty `egress: [{}]` deny rule breaks, because Flux turns `{}` into `null`. Add a rule for each outbound connection from Step 1, copying these blocks from an existing policy:
+
+| Destination                                                      | Rule                                                                                                                                                    |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Own Postgres                                                     | `toEndpoints` `cnpg.io/cluster: <app>-postgres`, 5432 (every instance, the primary moves)                                                               |
+| Own MariaDB                                                      | `toEndpoints` `app.kubernetes.io/instance: <app>-mariadb` + `app.kubernetes.io/name: mariadb`, 3306                                                     |
+| Own Dragonfly                                                    | `toEndpoints` `app: <app>-dragonfly` + `app.kubernetes.io/name: dragonfly`, 6379                                                                        |
+| LiteLLM                                                          | `toEndpoints` `app.kubernetes.io/instance: litellm` + `app.kubernetes.io/name: litellm` in `ai`, 4000                                                   |
+| Pocket ID, or any other public `*.bykaj.app` / `cyrannus.id` URL | `toEndpoints` `gateway.envoyproxy.io/owning-gateway-name: envoy-external` in `network`, **10443** (the LoadBalancer IP is translated to the envoy pods) |
+| SMTP relay (`smtp.bykaj.io`)                                     | `toEndpoints` `app.kubernetes.io/name: smtp-relay` in `network`, 25                                                                                     |
+| Garage (`s3.bykaj.io`) or anything else on the NAS               | `toCIDRSet` `cidrGroupRef: nas`, 443                                                                                                                    |
+| Known internet hosts                                             | `toFQDNs` `matchName` (or `matchPattern`), with ports                                                                                                   |
+| Any URL (crawlers, media servers, renderers)                     | `toCIDRSet` `cidrGroupRef: internet` (public space only), ports optional                                                                                |
+
+Rules for finding the destinations:
+
+- Build the list from the app's config, its source code (search for hardcoded URLs and HTTP clients) and its settings in the database, then compare with kguardian (`get_pod_network_traffic`) for an existing pod. kguardian can miss flows.
+- Prefer switching off update checks, telemetry and analytics (env var or setting) over allowing their hosts; say in the comment that they stay blocked.
+- Check redirects with a real `GET` (`curl -s -o /dev/null -r 0-0 -D - <url>`), never `curl -I`: downloads often redirect to a CDN on another host, and `HEAD` can hide that (MaxMind → Cloudflare R2, Hugging Face → `us.aws.cdn.hf.co`).
+- In `matchPattern`, `*.` matches exactly one label; use `**.example.com` for CDN hosts at any depth.
+- Multicast with TTL 1 (SSDP to `239.255.255.250:1900`, mDNS) dies on the node anyway, but under a policy it becomes a policy drop. Allow it explicitly if the app sends it regularly (see `media/plex`).
+
+Document the policy: a bullet in the policy list on `docs/content/infrastructure/networking/index.md` and, for anything non-obvious (blocked features, hosts that need a rule when a feature is switched on), a line in the app's section of `docs/content/platforms/kubernetes/app-notes.md`.
+
 ## Step 3: Register in the namespace kustomization
 
 Add `./<app>/ks.yaml` to `kubernetes/apps/<namespace>/kustomization.yaml` `resources`, in alphabetical position among the app entries (`namespace.yaml` stays first; leave existing entries where they are).
@@ -366,7 +426,10 @@ Add `./<app>/ks.yaml` to `kubernetes/apps/<namespace>/kustomization.yaml` `resou
 ```bash
 kustomize build kubernetes/apps/<namespace>/<app>/app   # must render; ${APP} vars staying literal is expected
 yamllint --config-file .yamllint.yaml kubernetes/apps/<namespace>/<app>
+kustomize build kubernetes/apps/<namespace>/<app>/app | yq 'select(.kind=="CiliumNetworkPolicy")' | kubectl apply -n <namespace> --dry-run=server -f -
 ```
+
+After the rollout, check `CiliumEgressPolicyDenied` and test the allowed destinations from inside the pod. Don't test blocked ones: every blocked attempt fires the critical alert. A drop or two within a minute of a policy first being applied, then none, is Cilium's DNS proxy taking over port 53, not a missing rule; a pod that fails its first start on a new `toFQDNs` rule usually gets through on a restart.
 
 Then run `just docs apps` and, in the new row on `docs/content/platforms/kubernetes/applications.md`, replace the `TODO` purpose with a short description and set Upstream to `[owner/repo](https://github.com/owner/repo)` of the project. A new namespace must first be added to `PLATFORM` or `WORKLOADS` in `scripts/docs-applications.py`. The `docs-apps` pre-commit hook fails until this is done.
 
@@ -380,7 +443,8 @@ Show the user the created files and get confirmation before committing. Commit s
 - **Forgetting `reloader.stakater.com/auto`** — without it, secret/config changes don't restart pods.
 - **`readOnlyRootFilesystem: true` without a tmpfs** — apps that write to `/tmp` will crash; mount an emptyDir.
 - **Skipping the sorting conventions** — HelmRelease values follow `.agents/instructions/sorting.instructions.md`.
-- **Adding a CiliumNetworkPolicy by default** — only some apps lock down ingress; copy `searxng`'s if the user asks for one.
+- **A public app without an egress policy** — every `envoy-external` app gets `networkpolicy.yaml` (see above); only Gatus is exempt, on purpose.
+- **Allowing `*.example.com` for a CDN** — it matches one label only; downloads that redirect to `a.b.example.com` are dropped. Use `**.example.com`.
 - **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
 - **Adding the `components.database/postgres: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
 - **Adding the postgres, mariadb or dragonfly component without `dependsOn: []` in the HelmRelease** — their JSON patches append to that list, and the Kustomization build fails if it's missing.
