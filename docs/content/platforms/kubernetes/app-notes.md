@@ -391,6 +391,11 @@ changing how Connect reads its credentials.
   deployment uses the `Recreate` strategy. Model files redirect to CDN hosts
   several levels below `hf.co`, hence `**.hf.co` in the policy (`*.` matches
   one level only).
+- Downloads use `HF_TOKEN` (the `immich` item in 1Password) for Hugging Face's
+  higher rate limits. It's a fine-grained token without permissions, since
+  the models are public. A revoked or expired token makes downloads fail
+  with a 401 rather than fall back to anonymous, so replace it in 1Password
+  (Reloader restarts the pod).
 - onnxruntime in the machine-learning image sends usage telemetry to
   `mobile.events.data.microsoft.com`. `ORT_DISABLE_TELEMETRY` switches it off;
   without it, every start sets off `CiliumEgressPolicyDenied` (seen on the
