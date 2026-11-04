@@ -18,6 +18,10 @@ spec:
       # Configuration comes from Git, not the server's web settings page
       - name: HA_MCP_DISABLE_SETTINGS_UI
         value: "true"
+      # Renovate tracks new releases; the check would call pypi.org, which the
+      # policy denies
+      - name: HA_MCP_DISABLE_UPDATE_CHECK
+        value: "true"
       # Long-lived access token of a dedicated Home Assistant user
       - name: HOMEASSISTANT_TOKEN
         valueFrom:
