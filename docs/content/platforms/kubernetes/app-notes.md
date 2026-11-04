@@ -423,6 +423,16 @@ changing how Connect reads its credentials.
 Tailscale range was removed with the Tailscale ingresses, so don't add it
 back.
 
+`plex-egress` (`networkpolicy.yaml`) lets Plex reach the internet on any port
+(the `internet` CIDR group) and nothing in the cluster or on the LAN. Remote
+access comes in through envoy-external and the LoadBalancer
+(`ManualPortMappingMode`, relay and DLNA off), so it isn't affected. The
+policy also allows Plex's SSDP discovery to `239.255.255.250:1900`: those
+packets have TTL 1 and are dropped as `TTL_EXCEEDED` anyway, but without the
+rule the policy would drop them first, about twice a minute, and set off
+`CiliumEgressPolicyDenied`. Casting or remote control towards LAN devices
+would need a rule.
+
 ### Stash
 
 - It gets its API key from an `HTTPRouteFilter` after the Pocket ID login, so

@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: notification-controller-egress
+spec:
+  # Egress only: the notification controller serves the public webhook
+  # receiver (flux-webhook.bykaj.io) and can annotate any Flux object, so it
+  # may reach the Kubernetes API, Alertmanager and GitHub and nothing else.
+  # A Provider of another type (Slack, a webhook, ...) needs a rule. This
+  # Kustomization has prune: false, so removing this file doesn't delete the
+  # policy; delete it by hand
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Watching and annotating the Flux objects (Receivers trigger reconciles)
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
+    # Every `alertmanager` Provider
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: alertmanager
+            k8s:io.kubernetes.pod.namespace: observability
+      toPorts:
+        - ports:
+            - port: "9093"
+              protocol: TCP
+    # Every `github-status` Provider (commit statuses)
+    - toFQDNs:
+        - matchName: api.github.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app: notification-controller

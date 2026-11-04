@@ -54,10 +54,16 @@ IPv4 space only, excluding private, CGNAT, loopback, link-local, multicast and
 other special-purpose ranges) and `nas` (`10.73.1.10/32` and `10.73.2.100/32`,
 both addresses on the NAS interface).
 
-Network policies are not the default; they are being added to the public
-apps and to pods that hold secrets or data. Gatus has none on purpose: it
-checks internal endpoints all over the cluster and LAN, so an allowlist would
-have to follow every check. Each policy file explains its own rules:
+Network policies are not the default, but every app reachable through
+`envoy-external` has an egress policy, as do some internal pods that hold
+secrets or data. A new public app needs one too. Two exceptions:
+
+- Gatus has none on purpose: it checks internal endpoints all over the
+  cluster and LAN, so an allowlist would have to follow every check.
+- `doco-cd-webhook` has no pod: it's an Envoy Gateway `Backend` that forwards
+  two paths to doco-cd on the NAS.
+
+Each policy file explains its own rules:
 
 - [`audiobookshelf-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/media/audiobookshelf/app/networkpolicy.yaml)
   limits Audiobookshelf to Pocket ID, the SMTP relay and its metadata and
@@ -80,6 +86,10 @@ have to follow every check. Each policy file explains its own rules:
   since they fetch whatever is bookmarked, but nothing in the cluster or on the
   LAN besides the app's own services (see
   [Karakeep](../../platforms/kubernetes/app-notes.md#karakeep)).
+- [`konflate-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/konflate/app/networkpolicy.yaml)
+  limits konflate, which holds the GitHub App key for PR checks and comments,
+  to the `internet` group on port 443: GitHub, the chart and image registries
+  and the signature checks.
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are
@@ -87,12 +97,21 @@ have to follow every check. Each policy file explains its own rules:
   a rule there. `api.github.com` is allowed too, for the Admin UI's release
   check; it's the one destination that can take data out (see the
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
+- [`notification-controller-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/flux-instance/app/networkpolicy.yaml)
+  limits Flux's notification controller, which serves the public webhook
+  receiver, to the Kubernetes API, Alertmanager and `api.github.com` (commit
+  statuses). A Provider of another type needs a rule. `flux-instance` has
+  `prune: false`, so a removed policy has to be deleted by hand.
 - [`paperless-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/paperless/app/networkpolicy.yaml)
   limits Paperless, which holds every document and its LiteLLM key, to its
   database, cache, LiteLLM, Pocket ID and the SMTP relay, plus
   `deb.debian.org` by FQDN (port 80, for the Dutch OCR package installed at
   every start) (see
   [Paperless](../../platforms/kubernetes/app-notes.md#paperless)).
+- [`plex-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/media/plex/app/networkpolicy.yaml)
+  allows Plex the `internet` group on any port, since its plex.tv hosts change
+  without notice, but nothing in the cluster or on the LAN (see
+  [Plex](../../platforms/kubernetes/app-notes.md#plex)).
 - [`pocket-id-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/security/pocket-id/app/networkpolicy.yaml)
   limits Pocket ID, which signs every app's tokens, to the SMTP relay,
   `download.maxmind.com` with the Cloudflare R2 host it redirects downloads to,

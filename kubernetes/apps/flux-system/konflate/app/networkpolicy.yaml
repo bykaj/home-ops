@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: konflate-egress
+spec:
+  # Egress only: konflate is public and holds the GitHub App key that posts
+  # status checks and PR comments. It renders every PR from GitHub, pulls the
+  # charts and images it references from any registry and verifies their
+  # signatures, so it may reach the internet (the `internet` group: public
+  # space only) on 443 and nothing in the cluster or on the LAN. It has no
+  # Kubernetes API token (automountServiceAccountToken is off)
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toCIDRSet:
+        - cidrGroupRef: internet
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: konflate
+      app.kubernetes.io/name: konflate
