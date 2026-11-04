@@ -231,6 +231,16 @@ node. The metadata server and Seafile AI read the libraries straight from S3
   item, created on its first start; Seafile and Seafile AI send
   base64(`seafile:<password>`) as `SEASEARCH_TOKEN`.
 
+#### Egress policy
+
+- `seafile-egress` (`networkpolicy.yaml`) only covers the main `seafile` pod;
+  the extensions have no policy. It allows the extensions' ports, MariaDB,
+  Dragonfly, LiteLLM, envoy-external (Pocket ID and Seafile's own public URLs
+  for SeaDoc and notifications), the SMTP relay and Garage on the NAS.
+- Nothing on the internet is allowed. A new feature or upgrade that calls out
+  raises `CiliumEgressPolicyDenied`; add a rule only if the destination is
+  expected. A new extension port needs adding to the extensions rule.
+
 #### WebDAV
 
 - SeafDAV serves `https://files.bykaj.app/seafdav`. The username is the contact

@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-egress
+spec:
+  # Egress only: Seahub is public, holds every library plus the S3 and database
+  # credentials, so it may reach its extensions, database, cache, LiteLLM,
+  # Garage, Pocket ID and the SMTP relay and nothing else. The extensions
+  # (other controllers) have no policy
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Extensions: seasearch, notification, metadata and Seafile AI
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile
+            app.kubernetes.io/name: seafile
+      toPorts:
+        - ports:
+            - port: "4080"
+              protocol: TCP
+            - port: "8083"
+              protocol: TCP
+            - port: "8084"
+              protocol: TCP
+            - port: "8888"
+              protocol: TCP
+    # Every MariaDB pod, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile-mariadb
+            app.kubernetes.io/name: mariadb
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app: seafile-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # AI chat and embeddings (LLM_MODELS, EMBEDDING_MODEL)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Pocket ID token and userinfo calls, and Seafile's own public URLs (SeaDoc,
+    # notification server): cyrannus.id and files.bykaj.app resolve to the
+    # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+    # Email: smtp.bykaj.io resolves to the relay's LoadBalancer IP, which Cilium
+    # translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    # Garage (S3_HOST s3.bykaj.io) behind Traefik on the NAS
+    - toCIDRSet:
+        - cidrGroupRef: nas
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: seafile
+      app.kubernetes.io/instance: seafile
