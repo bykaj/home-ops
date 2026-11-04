@@ -22,13 +22,13 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    # Model downloads: huggingface.co redirects the files to its Xet and LFS
-    # CDNs (cas-bridge.xethub.hf.co, cdn-lfs*.hf.co)
+    # Model downloads: huggingface.co redirects the files to its CDNs, several
+    # levels deep (us.aws.cdn.hf.co, cas-bridge.xethub.hf.co, cdn-lfs.hf.co);
+    # "**." matches subdomains at any depth, "*." only one level
     - toFQDNs:
         - matchName: huggingface.co
-        - matchPattern: "*.hf.co"
-        - matchPattern: "*.xethub.hf.co"
-        - matchPattern: "*.huggingface.co"
+        - matchPattern: "**.hf.co"
+        - matchPattern: "**.huggingface.co"
       toPorts:
         - ports:
             - port: "443"
