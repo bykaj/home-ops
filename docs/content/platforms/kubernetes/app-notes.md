@@ -141,6 +141,7 @@ How the gateway, models, keys and MCP servers fit together is on the
 | [pgAdmin](#pgadmin) | Native OIDC |
 | [Seafile](#seafile) | Native OIDC (OAuth), no password login |
 | Wallos | Native OIDC, configured in its own UI |
+| [Windshift](#windshift) | Native OIDC |
 
 ### Karakeep
 
@@ -305,6 +306,14 @@ being internal-only is no reason to leave one open.
   root, after which its converter can't write its log. It only keeps logs, in
   an emptyDir.
 
+### Windshift
+
+- `windshift-egress` (`networkpolicy.yaml`) allows Postgres, LiteLLM,
+  envoy-external (Pocket ID), the SMTP relay, Garage (the `nas` group on port
+  443) and `github.com` and `api.github.com` for the GitHub SCM integration.
+- Web push has no subscriptions yet, and Jira, Zammad and email intake aren't
+  set up. Each needs an egress rule for its host when it is.
+
 ## `downloads`
 
 | App | Sign-in |
@@ -347,7 +356,7 @@ changing how Connect reads its credentials.
 | App | Sign-in |
 | --- | --- |
 | [Audiobookshelf](#audiobookshelf) | Native OIDC, configured in its own UI |
-| Immich | Native OIDC, configured in its own UI |
+| [Immich](#immich) | Native OIDC, configured in its own UI |
 | [Jellyfin](#jellyfin) | Own login |
 | [Plex](#plex) | Plex account; no login from the LAN and cluster networks |
 | [Stash](#stash) | gateway-oidc, with its API key injected |
@@ -357,6 +366,24 @@ changing how Connect reads its credentials.
 - Its group claim is empty, because it only accepts groups named exactly
   `admin`, `user` and `guest`.
 - Its local password login is off.
+- `audiobookshelf-egress` (`networkpolicy.yaml`) allows envoy-external
+  (Pocket ID), the SMTP relay and, by FQDN, the metadata providers in use:
+  the Audible catalog (every region), Audnexus, Google Books, iTunes and Open
+  Library, plus their cover hosts. FantLab, audiobookcovers.com, MusicBrainz,
+  podcast feeds and custom providers need a rule before they are used.
+- Its email settings (send to e-reader) live in its own UI and database; they
+  point at the SMTP relay (`smtp.bykaj.io`, port 25, no TLS or login).
+
+### Immich
+
+- Each of the three pods has its own egress policy (`networkpolicy.yaml` in
+  `app/`, `microservices/` and `machine-learning/`). The API and the workers
+  may reach Postgres, Dragonfly, machine learning and the SMTP relay; the API
+  also reaches envoy-external (Pocket ID), and the workers
+  `version.immich.cloud` for the new-version check.
+- Machine learning may only reach Hugging Face. Its model cache is an
+  emptyDir, so the models are downloaded again on first use after every
+  restart.
 
 ### Jellyfin
 
@@ -413,6 +440,12 @@ The active mgr leaks memory slowly; see
 - `ICON_LIBRARY_URL` points at the selfh.st icons on GitHub directly. jsDelivr
   serves only some files from that repository, because it exceeds jsDelivr's
   50 MB package limit.
+- `pocket-id-egress` (`networkpolicy.yaml`) allows the SMTP relay and, by
+  FQDN, `download.maxmind.com` (GeoLite2, refreshed every 14 days) and
+  `raw.githubusercontent.com` (the icon index). LDAP, SCIM and backchannel
+  logout are unused and blocked, and so is setting a client logo by URL:
+  upload the image instead, or the download sets off
+  `CiliumEgressPolicyDenied`.
 - Background: [Authentik to Pocket ID](../../operations/history/2026-10-pocket-id.md).
 
 ## Disabled apps

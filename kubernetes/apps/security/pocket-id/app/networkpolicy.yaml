@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pocket-id-egress
+spec:
+  # Egress only: Pocket ID is public and signs every app's tokens, so it may
+  # reach the SMTP relay, MaxMind and the icon index and nothing else. Its
+  # database is SQLite on the PVC. LDAP, SCIM and backchannel logout are unused
+  # and stay blocked; so is downloading a client logo by URL (upload it
+  # instead), which sets off CiliumEgressPolicyDenied
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Email: smtp.bykaj.io resolves to the relay's LoadBalancer IP, which Cilium
+    # translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    # GeoLite2 City database for sign-in locations (MAXMIND_LICENSE_KEY),
+    # refreshed every 14 days, and the logo preset index (ICON_LIBRARY_URL)
+    - toFQDNs:
+        - matchName: download.maxmind.com
+        - matchName: raw.githubusercontent.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: pocket-id
+      app.kubernetes.io/instance: pocket-id
