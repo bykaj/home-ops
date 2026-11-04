@@ -7,8 +7,8 @@ metadata:
 spec:
   # Egress only: Seahub is public, holds every library plus the S3 and database
   # credentials, so it may reach its extensions, database, cache, LiteLLM,
-  # Garage, Pocket ID and the SMTP relay and nothing else. The extensions
-  # (other controllers) have no policy
+  # Garage, Pocket ID and the SMTP relay and nothing else. Of the extensions
+  # (other controllers) only SeaDoc has a policy (seafile-seadoc-egress)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -94,4 +94,47 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: seafile
+      app.kubernetes.io/instance: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-seadoc-egress
+spec:
+  # Egress only: SeaDoc is public (/sdoc-server/, /socket.io), runs as root and
+  # holds the database password and JWT key, so it may reach DNS, the database
+  # and Seahub (SEAHUB_SERVICE_URL) and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every MariaDB pod, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile-mariadb
+            app.kubernetes.io/name: mariadb
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: seafile
+            app.kubernetes.io/instance: seafile
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: seadoc
       app.kubernetes.io/instance: seafile
