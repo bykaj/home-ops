@@ -16,7 +16,7 @@ Per-server details and gotchas are in [App Notes](app-notes.md#litellm).
 graph LR
     cc(Claude Code / Desktop<br/>on a Mac) -->|litellm.bykaj.app/mcp/| int[envoy-internal]
     int --> proxy[LiteLLM proxy]
-    apps(Karakeep, Windshift,<br/>Seafile, kguardian) -->|litellm.ai.svc:4000/v1| proxy
+    apps(Karakeep, Paperless, Windshift,<br/>Seafile, kguardian) -->|litellm.ai.svc:4000/v1| proxy
     proxy --> models[(MiniMax, OpenAI)]
     proxy --> mcp[MCP servers]
     proxy --- pg[(Postgres)]
@@ -122,6 +122,7 @@ may call.
 | `claude-code` | `ai` (team `claude-code`) | none | all servers |
 | `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
+| `paperless` | `default/paperless` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `seafile` | `default/seafile` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `windshift` | `default/windshift` | `minimax/MiniMax-M3` | — |
 
