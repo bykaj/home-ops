@@ -161,8 +161,12 @@ How the gateway, models, keys and MCP servers fit together is on the
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
   LiteLLM, envoy-external (Pocket ID), the SMTP relay and `deb.debian.org` on
   port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
-  apt-installs `tesseract-ocr-nld` on every start; without the Debian rule the
-  package is skipped and Dutch OCR is missing.
+  apt-installs `tesseract-ocr-nld` on every start. If the install fails, the
+  step only logs `Skipped tesseract-ocr-nld`, but the Django checks then stop
+  the container (`ocr language nld is not installed`) and the pod restarts.
+  On the rollout that added the policy (2026-11-04), the first start's
+  requests to the mirror (a CNAME to `debian.map.fastlydns.net`) were dropped
+  and the pod restarted once; the restart got through on the same rule.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
