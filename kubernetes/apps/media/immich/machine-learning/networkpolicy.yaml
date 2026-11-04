@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-machine-learning-egress
+spec:
+  # Egress only: machine learning gets every photo it is asked about and mounts
+  # the library, so it may reach Hugging Face and nothing else. Its model cache
+  # is an emptyDir, so the models are downloaded again after every restart, on
+  # first use
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Model downloads: huggingface.co redirects the files to its Xet and LFS
+    # CDNs (cas-bridge.xethub.hf.co, cdn-lfs*.hf.co)
+    - toFQDNs:
+        - matchName: huggingface.co
+        - matchPattern: "*.hf.co"
+        - matchPattern: "*.xethub.hf.co"
+        - matchPattern: "*.huggingface.co"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: immich-machine-learning
+      app.kubernetes.io/instance: immich-machine-learning

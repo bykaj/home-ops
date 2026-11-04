@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: windshift-egress
+spec:
+  # Egress only: Windshift is public, holds every project plus the database,
+  # S3, OIDC, LiteLLM and GitHub credentials, so it may reach its database,
+  # LiteLLM, Garage, Pocket ID, the SMTP relay and GitHub and nothing else.
+  # Web push (no subscriptions yet) and other integrations (Jira, Zammad, email
+  # intake) need a rule when they are set up
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every Postgres instance, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: windshift-postgres
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    # AI features (LLM connection with the operator's virtual key)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Pocket ID discovery and token calls: cyrannus.id resolves to the
+    # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+    # Email: smtp.bykaj.io resolves to the relay's LoadBalancer IP, which Cilium
+    # translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    # Attachments in Garage (S3_ENDPOINT s3.bykaj.io) behind Traefik on the NAS
+    - toCIDRSet:
+        - cidrGroupRef: nas
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # GitHub SCM integration: OAuth token exchange (github.com) and the API for
+    # repositories, commits and webhooks
+    - toFQDNs:
+        - matchName: api.github.com
+        - matchName: github.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: windshift
+      app.kubernetes.io/instance: windshift

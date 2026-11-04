@@ -53,9 +53,21 @@ Two `CiliumCIDRGroup`s are available to network policies: `internet` (all
 public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
 `10.73.2.100/32`, both addresses on the NAS interface).
 
-Network policies are the exception, not the default. Only a few pods have
-one, and each policy file explains its own rules:
+Network policies are not the default; they are being added to the public
+apps and to pods that hold secrets or data. Each policy file explains its own
+rules:
 
+- [`audiobookshelf-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/media/audiobookshelf/app/networkpolicy.yaml)
+  limits Audiobookshelf to Pocket ID, the SMTP relay and its metadata and
+  cover providers by FQDN (see
+  [Audiobookshelf](../../platforms/kubernetes/app-notes.md#audiobookshelf)).
+- `immich-egress`, `immich-microservices-egress` and
+  `immich-machine-learning-egress` (one
+  [`networkpolicy.yaml`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/media/immich)
+  per pod) limit the API and the workers to the database, cache, machine
+  learning and the SMTP relay, plus Pocket ID (API), and machine learning to
+  Hugging Face (see
+  [Immich](../../platforms/kubernetes/app-notes.md#immich)).
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are
@@ -69,6 +81,11 @@ one, and each policy file explains its own rules:
   `deb.debian.org` by FQDN (port 80, for the Dutch OCR package installed at
   every start) (see
   [Paperless](../../platforms/kubernetes/app-notes.md#paperless)).
+- [`pocket-id-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/security/pocket-id/app/networkpolicy.yaml)
+  limits Pocket ID, which signs every app's tokens, to the SMTP relay,
+  `download.maxmind.com` with the Cloudflare R2 host it redirects downloads to,
+  and `raw.githubusercontent.com` (see
+  [Pocket ID](../../platforms/kubernetes/app-notes.md#pocket-id)).
 - [`seafile-*-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
   give every Seafile pod its own egress allowlist, since they hold the
   libraries or the S3, database and OAuth credentials. Seahub may reach its
@@ -78,6 +95,10 @@ one, and each policy file explains its own rules:
   [Seafile](../../platforms/kubernetes/app-notes.md#egress-policy)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
+- [`windshift-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/windshift/app/networkpolicy.yaml)
+  limits Windshift to its database, LiteLLM, Garage, Pocket ID, the SMTP relay
+  and GitHub (its SCM integration) (see
+  [Windshift](../../platforms/kubernetes/app-notes.md#windshift)).
 - The [`database/dragonfly` component](../../platforms/kubernetes/components.md#databasedragonfly) limits
   ingress to each Dragonfly cache.
 

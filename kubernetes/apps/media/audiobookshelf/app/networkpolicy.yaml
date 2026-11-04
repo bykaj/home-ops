@@ -1,0 +1,78 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: audiobookshelf-egress
+spec:
+  # Egress only: Audiobookshelf is public and holds the OIDC and JWT secrets,
+  # so it may reach Pocket ID, the SMTP relay and the metadata providers it
+  # uses (Audible, Google Books, iTunes, Open Library) and nothing else. ffmpeg
+  # and the nunicode extension are in the image. Other providers (FantLab,
+  # audiobookcovers.com, MusicBrainz), podcast feeds and custom providers need
+  # a rule when they are used
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Pocket ID discovery, token and userinfo calls: cyrannus.id resolves to
+    # the envoy-external LoadBalancer IP, which Cilium translates to the envoy
+    # pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+    # Email (send to e-reader): smtp.bykaj.io resolves to the relay's
+    # LoadBalancer IP, which Cilium translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    # Metadata and cover lookups: the Audible catalog in every region the
+    # search offers, Audnexus, Google Books, iTunes and Open Library, plus the
+    # hosts their cover URLs point to (Open Library redirects to archive.org)
+    - toFQDNs:
+        - matchName: api.audible.ca
+        - matchName: api.audible.co.jp
+        - matchName: api.audible.co.uk
+        - matchName: api.audible.com
+        - matchName: api.audible.com.au
+        - matchName: api.audible.de
+        - matchName: api.audible.es
+        - matchName: api.audible.fr
+        - matchName: api.audible.in
+        - matchName: api.audible.it
+        - matchName: api.audnex.us
+        - matchName: archive.org
+        - matchName: books.google.com
+        - matchName: covers.openlibrary.org
+        - matchName: itunes.apple.com
+        - matchName: m.media-amazon.com
+        - matchName: openlibrary.org
+        - matchName: www.googleapis.com
+        - matchPattern: "*.mzstatic.com"
+        - matchPattern: "*.us.archive.org"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: audiobookshelf
+      app.kubernetes.io/instance: audiobookshelf

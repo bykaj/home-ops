@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-microservices-egress
+spec:
+  # Egress only: the Immich workers read every photo and hold the database
+  # credentials, so they may reach the database, cache, machine learning and
+  # the SMTP relay and nothing else. The version check (version.immich.cloud)
+  # is off server-wide and stays blocked; switching it on in Administration →
+  # Settings → Version Check sets off CiliumEgressPolicyDenied
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every Postgres instance, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: immich-postgres
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app: immich-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # Smart search, face detection and OCR jobs
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: immich-machine-learning
+            app.kubernetes.io/instance: immich-machine-learning
+      toPorts:
+        - ports:
+            - port: "3003"
+              protocol: TCP
+    # Email notifications: smtp.bykaj.io resolves to the relay's LoadBalancer
+    # IP, which Cilium translates to the relay pods
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: immich-microservices
+      app.kubernetes.io/instance: immich-microservices
