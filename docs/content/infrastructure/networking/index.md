@@ -56,7 +56,7 @@ public IPv4 space, excluding RFC 1918 ranges) and `nas` (`10.73.1.10/32` and
 Network policies are the exception, not the default. Only a few pods have
 one, and each policy file explains its own rules:
 
-- [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
+- [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/proxy/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are
   allowed by FQDN (`toFQDNs`), so a provider or MCP server on a new host needs
