@@ -150,7 +150,8 @@ How the gateway, models, keys and MCP servers fit together is on the
   database.
 - `karakeep-egress` and `karakeep-chrome-egress` (`networkpolicy.yaml`) let
   the app and Chrome reach the internet on any port, through the `internet`
-  CIDR group (no private ranges), since they fetch whatever is bookmarked.
+  CIDR group (public space only: no private, CGNAT, link-local or other
+  special-purpose ranges), since they fetch whatever is bookmarked.
   Inside the cluster and on the LAN, the app may only reach Meilisearch,
   Chrome, LiteLLM, Garage, envoy-external (Pocket ID) and the SMTP relay;
   Chrome reaches nothing.

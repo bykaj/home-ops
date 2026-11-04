@@ -8,9 +8,9 @@ spec:
   # Egress only: Karakeep is public, holds every bookmark plus the S3, OIDC,
   # Meilisearch and LiteLLM credentials, and its workers fetch any URL that is
   # bookmarked (metadata, banner images, PDFs, yt-dlp videos, RSS). So it may
-  # reach the internet (the `internet` group, no private ranges), its search
-  # engine, Chrome, LiteLLM, Garage, Pocket ID and the SMTP relay, and nothing
-  # else in the cluster or on the LAN
+  # reach the internet (the `internet` group: public space only, no private,
+  # CGNAT or link-local ranges), its search engine, Chrome, LiteLLM, Garage,
+  # Pocket ID and the SMTP relay, and nothing else in the cluster or on the LAN
   egress:
     - toEndpoints:
         - matchLabels:
@@ -94,7 +94,7 @@ metadata:
   name: karakeep-chrome-egress
 spec:
   # Egress only: Chrome renders any bookmarked page, so it is the most exposed
-  # pod; it may reach the internet (the `internet` group, no private ranges, on
+  # pod; it may reach the internet (the `internet` group: public space only, on
   # any port and over QUIC) and nothing in the cluster or on the LAN
   egress:
     - toEndpoints:

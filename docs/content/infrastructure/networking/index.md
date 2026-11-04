@@ -74,9 +74,10 @@ have to follow every check. Each policy file explains its own rules:
   no egress besides DNS; kromgo may also query Prometheus for its badges.
 - [`karakeep-egress` and `karakeep-chrome-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/karakeep/app/networkpolicy.yaml)
   allow Karakeep and its Chrome the internet through the `internet`
-  `CiliumCIDRGroup` (all public space, no private ranges), since they fetch
-  whatever is bookmarked, but nothing in the cluster or on the LAN besides the
-  app's own services (see
+  `CiliumCIDRGroup` (public space only: no private, CGNAT, link-local or other
+  special-purpose ranges, so not Talos's host DNS on 169.254.116.108 either),
+  since they fetch whatever is bookmarked, but nothing in the cluster or on the
+  LAN besides the app's own services (see
   [Karakeep](../../platforms/kubernetes/app-notes.md#karakeep)).
 - [`litellm-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/litellm/app/networkpolicy.yaml)
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
