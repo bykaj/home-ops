@@ -42,7 +42,7 @@ two Flux Kustomizations in
 
 | Kustomization | Path | Contents |
 | --- | --- | --- |
-| `litellm` | `proxy/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
+| `litellm` | `app/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
 | `litellm-mcp` | `mcp/` | MCP servers and the `claude-code` team and key |
 
 Postgres holds keys, teams, users and spend; Dragonfly is the response cache
@@ -52,7 +52,7 @@ Admin UI is lost on the next reconcile.
 
 ## Models
 
-Each model is a `LiteLLMModel` under `proxy/models/<provider>/`, named
+Each model is a `LiteLLMModel` under `app/models/<provider>/`, named
 `<provider>/<model>` in LiteLLM (the name clients and keys use). Provider API
 keys come from the `litellm` 1Password item through `litellm-secret`; the
 ChatGPT models sign in with a login instead (see below).
@@ -197,7 +197,7 @@ own email alerts through the [SMTP relay](../../infrastructure/networking/index.
 ## Changing things
 
 Add a model
-:   Add a `LiteLLMModel` under `proxy/models/<provider>/` and to that folder's
+:   Add a `LiteLLMModel` under `app/models/<provider>/` and to that folder's
     `kustomization.yaml`. A new provider host also needs a `toFQDNs` entry in
     `litellm-egress`, and its API key a field in the `litellm` item and
     `externalsecret.yaml`. Then add the model to the keys that should use it.
