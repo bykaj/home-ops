@@ -7,8 +7,10 @@ metadata:
 spec:
   # Egress only: Paperless is public, holds every document plus the database,
   # OIDC and LiteLLM credentials, so it may reach its database, cache, LiteLLM,
-  # Pocket ID, the SMTP relay, the Debian mirror and GitHub's API and nothing
-  # else. The archive is an NFS volume, mounted by the kubelet, not the pod
+  # Pocket ID, the SMTP relay and the Debian mirror and nothing else. The
+  # archive is an NFS volume, mounted by the kubelet, not the pod. The update
+  # check (api.github.com) is off for every user and stays blocked; switching
+  # it on in the UI settings sets off CiliumEgressPolicyDenied
   egress:
     - toEndpoints:
         - matchLabels:
@@ -75,14 +77,6 @@ spec:
       toPorts:
         - ports:
             - port: "80"
-              protocol: TCP
-    # The dashboard's update check (/api/remote_version/ calls
-    # api.github.com), enabled per user in the UI settings
-    - toFQDNs:
-        - matchName: api.github.com
-      toPorts:
-        - ports:
-            - port: "443"
               protocol: TCP
   endpointSelector:
     matchLabels:

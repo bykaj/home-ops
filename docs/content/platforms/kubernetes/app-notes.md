@@ -159,11 +159,14 @@ How the gateway, models, keys and MCP servers fit together is on the
   daily at 02:10 (`PAPERLESS_LLM_INDEX_TASK_CRON` default), so it is backed up
   with the rest of the PVC but can be regenerated.
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
-  LiteLLM, envoy-external (Pocket ID), the SMTP relay, `deb.debian.org` on
-  port 80 and `api.github.com`. The image has no Dutch OCR data, so its
-  `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` on every start;
-  without the Debian rule the package is skipped and Dutch OCR is missing. The GitHub rule is for the
-  dashboard's update check, which users switch on in their UI settings.
+  LiteLLM, envoy-external (Pocket ID), the SMTP relay and `deb.debian.org` on
+  port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
+  apt-installs `tesseract-ocr-nld` on every start; without the Debian rule the
+  package is skipped and Dutch OCR is missing.
+- The update check is off for every user and `api.github.com` is blocked.
+  It is a per-user UI setting (Settings → General → Update checking) with no
+  server-wide switch, so a user switching it on sets off
+  `CiliumEgressPolicyDenied`; switch it back off rather than adding a rule.
 - No mail accounts are configured. Adding one needs an egress rule for its
   IMAP server.
 
