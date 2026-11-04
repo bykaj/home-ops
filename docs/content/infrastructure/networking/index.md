@@ -63,12 +63,12 @@ one, and each policy file explains its own rules:
   a rule there. `api.github.com` is allowed too, for the Admin UI's release
   check; it's the one destination that can take data out (see the
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
-- [`seafile-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
-  limits Seahub, which is public and holds every library plus the S3 and
-  database credentials, to its extensions, database, cache, LiteLLM, Garage
-  (the `nas` group on port 443), Pocket ID and the SMTP relay.
-  `seafile-seadoc-egress`, in the same file, limits the public SeaDoc editor to
-  the database and Seahub. Neither has internet egress (see
+- [`seafile-*-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/seafile/app/networkpolicy.yaml)
+  give every Seafile pod its own egress allowlist, since they hold the
+  libraries or the S3, database and OAuth credentials. Seahub may reach its
+  extensions, database, cache, LiteLLM, Garage (the `nas` group on port 443),
+  Pocket ID and the SMTP relay; the extensions get a subset of that. None has
+  internet egress (see
   [Seafile](../../platforms/kubernetes/app-notes.md#egress-policy)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).

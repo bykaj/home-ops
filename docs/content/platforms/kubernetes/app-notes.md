@@ -233,18 +233,24 @@ node. The metadata server and Seafile AI read the libraries straight from S3
 
 #### Egress policy
 
-- `networkpolicy.yaml` restricts egress for the two public pods:
-    - `seafile-egress` (main `seafile` pod) allows the extensions' ports,
-      MariaDB, Dragonfly, LiteLLM, envoy-external (Pocket ID and Seafile's own
-      public URLs for SeaDoc and notifications), the SMTP relay and Garage on
-      the NAS.
-    - `seafile-seadoc-egress` allows MariaDB and Seahub on port 80
-      (`SEAHUB_SERVICE_URL`).
-- The other extensions (`ai`, `metadata`, `notification`, `seasearch`) only
-  talk inside the cluster and have no policy.
+`networkpolicy.yaml` gives every pod its own egress allowlist, besides DNS.
+All but SeaSearch get the shared secrets and settings through `envFrom`, so
+being internal-only is no reason to leave one open.
+
+| Policy | Allows |
+| --- | --- |
+| `seafile-egress` | The extensions' ports, MariaDB, Dragonfly, LiteLLM, envoy-external (Pocket ID and Seafile's own public URLs for SeaDoc and notifications), the SMTP relay, Garage |
+| `seafile-seadoc-egress` | MariaDB, Seahub on port 80 (`SEAHUB_SERVICE_URL`) |
+| `seafile-ai-egress` | MariaDB, Dragonfly, Garage, LiteLLM, Seahub, the metadata server, SeaSearch |
+| `seafile-metadata-egress` | MariaDB, Dragonfly, Garage |
+| `seafile-notification-egress` | MariaDB |
+| `seafile-seasearch-egress` | Nothing (index on disk) |
+
 - Nothing on the internet is allowed. A new feature or upgrade that calls out
   raises `CiliumEgressPolicyDenied`; add a rule only if the destination is
-  expected. A new extension port needs adding to the extensions rule.
+  expected.
+- A new extension needs its own policy, and a new port on one needs adding to
+  the policies of the pods that call it.
 
 #### WebDAV
 
