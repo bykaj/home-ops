@@ -7,8 +7,8 @@ metadata:
 spec:
   # Egress only: Seahub is public, holds every library plus the S3 and database
   # credentials, so it may reach its extensions, database, cache, LiteLLM,
-  # Garage, Pocket ID and the SMTP relay and nothing else. Of the extensions
-  # (other controllers) only SeaDoc has a policy (seafile-seadoc-egress)
+  # Garage, Pocket ID and the SMTP relay and nothing else. Every extension
+  # (other controller) has its own policy below
   egress:
     - toEndpoints:
         - matchLabels:
@@ -137,4 +137,198 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: seadoc
+      app.kubernetes.io/instance: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-ai-egress
+spec:
+  # Egress only: Seafile AI reads the libraries from S3 and holds the LiteLLM
+  # key, so it may reach its database, cache, Garage, LiteLLM, Seahub, the
+  # metadata server and SeaSearch and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every MariaDB pod, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile-mariadb
+            app.kubernetes.io/name: mariadb
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app: seafile-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # Garage (S3_HOST s3.bykaj.io) behind Traefik on the NAS
+    - toCIDRSet:
+        - cidrGroupRef: nas
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Seahub (SEAFILE_SERVER_URL, port 80), the metadata server
+    # (INNER_METADATA_SERVER_URL, 8084) and SeaSearch (SEASEARCH_URL, 4080)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: seafile
+            app.kubernetes.io/instance: seafile
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: metadata
+            app.kubernetes.io/instance: seafile
+      toPorts:
+        - ports:
+            - port: "8084"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: seasearch
+            app.kubernetes.io/instance: seafile
+      toPorts:
+        - ports:
+            - port: "4080"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: ai
+      app.kubernetes.io/instance: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-metadata-egress
+spec:
+  # Egress only: the metadata server reads the libraries and keeps its data in
+  # S3, so it may reach its database, cache and Garage and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every MariaDB pod, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile-mariadb
+            app.kubernetes.io/name: mariadb
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app: seafile-dragonfly
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    # Garage (S3_HOST s3.bykaj.io) behind Traefik on the NAS
+    - toCIDRSet:
+        - cidrGroupRef: nas
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: metadata
+      app.kubernetes.io/instance: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-notification-egress
+spec:
+  # Egress only: the notification server only receives (Seahub's events, the
+  # clients' websockets) and checks permissions in the database, but gets the
+  # shared secrets through envFrom, so it may reach the database and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Every MariaDB pod, since the primary moves on failover
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: seafile-mariadb
+            app.kubernetes.io/name: mariadb
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: notification
+      app.kubernetes.io/instance: seafile
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: seafile-seasearch-egress
+spec:
+  # Egress only: SeaSearch keeps its index on disk and only answers queries, so
+  # it may reach DNS and nothing else
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: seasearch
       app.kubernetes.io/instance: seafile
