@@ -73,7 +73,6 @@ spec:
               CRAWLER_STORE_SCREENSHOT: "true"
               CRAWLER_FULL_PAGE_SCREENSHOT: "true"
               CRAWLER_SCREENSHOT_TIMEOUT_SEC: 120
-              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.bykaj.app"
               CRAWLER_BROWSER_TIMEZONE: "Europe/Amsterdam"
               # OCR config
               OCR_LANGS: "eng,nld"
