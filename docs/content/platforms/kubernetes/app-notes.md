@@ -40,8 +40,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   admins). The free tier allows up to 5 SSO users. The login page redirects
   straight to Pocket ID (`auto_redirect_ui_login_to_sso`), and the master key
   no longer works as a UI password (`disable_env_credential_login`). Password
-  login remains only for database users with a password, and SSO users have
-  none.
+  login is off for every account (`disable_password_login_when_sso_enabled`),
+  so `/login` returns 403. The master key still works for API calls. If
+  Pocket ID is down, the UI way back in is removing both settings and logging
+  in with the master key, since SSO users have no password.
 - Updates wait 3 days in Renovate, and the image comes from Docker Hub so that
   rule works ([KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 - The `litellm-egress` policy allows model providers by FQDN. A provider on a
