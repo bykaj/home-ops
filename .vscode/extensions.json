@@ -1,16 +1,19 @@
 {
   "recommendations": [
     "anthropic.claude-code",
-    "bluebrown.yamlfmt",
     "blueglassblock.better-json5",
+    "editorconfig.editorconfig",
+    "fnando.linter",
+    "github.vscode-github-actions",
     "hverlin.mise-vscode",
     "irongeek.vscode-env",
-    "ms-vscode-remote.remote-containers",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
     "nefrob.vscode-just-syntax",
+    "oxc.oxc-vscode",
     "PKief.material-icon-theme",
     "redhat.vscode-yaml",
     "samuelcolvin.jinjahtml",
-    "signageos.signageos-vscode-sops",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "timonwong.shellcheck"
   ]
 }

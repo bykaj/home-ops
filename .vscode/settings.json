@@ -27,7 +27,6 @@
   ],
   "material-icon-theme.files.associations": {
     "*.gotmpl": "smarty",
-    "*.sops.yaml": "lock",
     "helmfile.yaml": "helm",
     "kubeconfig": "kubernetes",
     "talosconfig": "kubernetes"
@@ -57,7 +56,6 @@
     "system": "base",
     "system-upgrade": "update"
   },
-  "sops.defaults.ageKeyFile": "age.key",
   "terminal.integrated.fontSize": 14,
   "vs-kubernetes": {
     "vs-kubernetes.knownKubeconfigs": ["${workspaceFolder}/kubeconfig"],
@@ -67,7 +65,13 @@
   "yaml.schemas": {
     "kubernetes": "./kubernetes/**/*.yaml"
   },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "[yaml]": {
-    "editor.defaultFormatter": "bluebrown.yamlfmt"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   }
 }
