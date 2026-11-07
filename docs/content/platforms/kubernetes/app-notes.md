@@ -89,6 +89,15 @@ How the gateway, models, keys and MCP servers fit together is on the
   sends `CONTEXT7_API_KEY` from the `litellm` 1Password item as a bearer
   token, and `litellm-egress` allows that host on port 443. Agents use it
   only as a fallback after kubesearch (see `AGENTS.md`).
+- The Kagi MCP server (web search and page extraction) is Kagi's hosted
+  server at `mcp.kagi.com`, set up like Context7: the proxy sends
+  `KAGI_API_KEY` from the `litellm` 1Password item as a bearer token, and
+  `litellm-egress` allows that host on port 443. The key belongs to Kagi's
+  Search API, which is billed per call and separate from the Kagi
+  subscription (the subscription has no API credits and Kagi has no OAuth
+  login). No team is granted it: the `claude-code` key leaves it out because
+  Claude Code has its own web search, so it waits for a client such as Open
+  WebUI.
 - The kguardian MCP server isn't run by the operator: `kguardian-mcp` points
   the proxy at the `/mcp` endpoint kguardian's llm-bridge already serves
   (port 8080, no authentication). `litellm-egress` allows that port

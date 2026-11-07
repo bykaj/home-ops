@@ -6,7 +6,8 @@ metadata:
   name: claude-code
 spec:
   alias: claude-code
-  # Virtual keys get no MCP servers unless granted
+  # Virtual keys get no MCP servers unless granted. kagi is left out on
+  # purpose: it's paid per search and Claude Code has its own web search
   mcpServers:
     - context7
     - home_assistant

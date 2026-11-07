@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: kagi-mcp
+spec:
+  # Kagi's hosted server (paid Search API, billed per call, separate from the
+  # Kagi subscription); the proxy sends the API key as a bearer token. Not
+  # granted to the claude-code team on purpose: Claude Code uses its own web
+  # search, so only teams that should spend on Kagi get it
+  alias: kagi
+  authTokenRef:
+    name: kagi-mcp-secret
+    key: KAGI_API_KEY
+  authType: bearer_token
+  params:
+    description: >-
+      Kagi web, news, video and image search, and full-page extraction as
+      markdown. Paid per call.
+  proxyRef: litellm
+  transport: http
+  url: https://mcp.kagi.com/mcp

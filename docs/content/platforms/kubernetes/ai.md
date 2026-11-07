@@ -119,7 +119,7 @@ may call.
 
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
-| `claude-code` | `ai` (team `claude-code`) | none | all servers |
+| `claude-code` | `ai` (team `claude-code`) | none | all servers except `kagi` |
 | `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
 | `paperless` | `default/paperless` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
@@ -135,8 +135,11 @@ may call.
   On a fresh install the key waits for the proxy and Flux retries. kguardian
   is the exception: it depends on `litellm`, which is accepted as is.
 - **MCP access** is granted per team: a key gets no MCP servers unless its team
-  lists them. The `claude-code` team lists every server and the model
-  `no-default-models`, which matches nothing, so its key can't spend money.
+  lists them. The `claude-code` team lists every server except `kagi` and the
+  model `no-default-models`, which matches nothing, so its key can't spend
+  money. `kagi` is paid per search and Claude Code has its own web search, so
+  only a future client that should search through Kagi (such as Open WebUI)
+  gets it.
 
 ## MCP servers
 
@@ -147,6 +150,7 @@ one key for all of them. Tools appear as `<server>-<tool>`.
 | --- | --- | --- |
 | `context7` | Context7's hosted server | `mcp.context7.com`, bearer key from the `litellm` item |
 | `home_assistant` | Operator-run pod (ha-mcp) | Home Assistant, as a dedicated user |
+| `kagi` | Kagi's hosted server | `mcp.kagi.com`, bearer key from the `litellm` item; no team has it yet |
 | `kguardian` | kguardian's own llm-bridge | `observability/kguardian-llm-bridge:8080`, no auth |
 | `kubesearch` | Operator-run pod | kubesearch.dev and GitHub clones (reference repos always cloned) |
 | `unifi_network` | Operator-run pod | The UniFi gateway, as a dedicated local account |
