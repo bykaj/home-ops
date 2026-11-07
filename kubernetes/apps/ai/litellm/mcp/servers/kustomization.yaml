@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./context7
   - ./home-assistant
+  - ./kagi
   - ./kguardian
   - ./kubesearch
   - ./unifi-network

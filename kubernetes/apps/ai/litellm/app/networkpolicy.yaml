@@ -98,6 +98,7 @@ spec:
     # with a new url
     - toFQDNs:
         - matchName: mcp.context7.com
+        - matchName: mcp.kagi.com
       toPorts:
         - ports:
             - port: "443"
