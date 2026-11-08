@@ -200,6 +200,12 @@ How the gateway, models, keys and MCP servers fit together is on the
   Mail filed into an archived folder later is picked up by the daily Full
   Sync (`MailSync__FullSyncIntervalHours: "24"`), which also updates the
   stored folder of refiled mail.
+- Mail account credentials (the IMAP app password) are encrypted in the
+  database with `Security__CredentialEncryptionKey`, from `ENCRYPTION_KEY`
+  in the `mail-archiver` 1Password item. A database dump alone can't reveal
+  them. Losing the key means re-entering the account passwords; to rotate,
+  keep the old key in `Security__CredentialEncryptionKeyPrevious` until
+  every account has been saved again.
 
 ### Paperless
 
