@@ -178,10 +178,13 @@ How the gateway, models, keys and MCP servers fit together is on the
 
 ### Mail Archiver
 
+- The NFS share `/mnt/vault/Applications/mail-archiver` holds `keys/`
+  (ASP.NET Data Protection keys, `/app/DataProtection-Keys`),
+  `data/import/` (local MBox/EML imports) and `data/raw-messages/`
+  (original messages).
 - The original of every archived message is kept byte for byte
   (`RawMessages__Storage: filesystem`), as gzip files under
-  `raw-messages/` on the NFS share (`/mnt/vault/Applications/mail-archiver`),
-  sharded by email id: `xx/yy/<id>.eml.gz`. Postgres keeps the parsed
+  `data/raw-messages/`, sharded by email id: `xx/yy/<id>.eml.gz`. Postgres keeps the parsed
   fields plus each original's SHA-256, size and relative path. Restore the
   database and that directory together: a database restore without the
   files leaves rows whose original answers HTTP 404. A `zcat` of a file is a

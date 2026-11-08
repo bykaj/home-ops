@@ -140,11 +140,11 @@ spec:
           mail-archiver:
             app:
               - path: /app/DataProtection-Keys
-                subPath: data
+                subPath: keys
               - path: /data/import
-                subPath: import
+                subPath: data/import
               - path: /data/raw-messages
-                subPath: raw-messages
+                subPath: data/raw-messages
       tmpfs:
         type: emptyDir
         globalMounts:
