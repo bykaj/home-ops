@@ -212,8 +212,8 @@ How the gateway, models, keys and MCP servers fit together is on the
   daily at 02:10 (`PAPERLESS_LLM_INDEX_TASK_CRON` default), so it is backed up
   with the rest of the PVC but can be regenerated.
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
-  LiteLLM, envoy-external (Pocket ID), the SMTP relay and `deb.debian.org` on
-  port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
+  LiteLLM, envoy-external (Pocket ID), the SMTP relay, `imap.fastmail.com` on
+  port 993 (mail rules, below) and `deb.debian.org` on port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
   apt-installs `tesseract-ocr-nld` on every start. If the install fails, the
   step only logs `Skipped tesseract-ocr-nld`, but the Django checks then stop
   the container (`ocr language nld is not installed`) and the pod restarts.
