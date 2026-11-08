@@ -217,6 +217,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   chat, `openai/text-embedding-3-small` for the chat's embeddings. Suggestions
   always ask for a tool call, so a replacement model must support forced tool
   calls through LiteLLM.
+- AI output (suggested titles and tags, chat answers) is in Dutch through
+  `PAPERLESS_AI_LLM_OUTPUT_LANGUAGE: nl-nl`. Without it Paperless falls back
+  to the user's UI language. The "LLM output language" field in the UI's AI
+  configuration overrides the variable, so leave that field empty.
 - The embeddings are a SQLite file (`llmindex.db`) on the data PVC, rebuilt
   daily at 02:10 (`PAPERLESS_LLM_INDEX_TASK_CRON` default), so it is backed up
   with the rest of the PVC but can be regenerated.

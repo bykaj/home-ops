@@ -69,6 +69,8 @@ spec:
               PAPERLESS_AI_LLM_EMBEDDING_MODEL: "openai/text-embedding-3-small"
               PAPERLESS_AI_LLM_ENDPOINT: "http://litellm.ai.svc.cluster.local:4000/v1"
               PAPERLESS_AI_LLM_MODEL: "chatgpt/gpt-6-luna"
+              # Suggested titles and tags, and chat answers, in Dutch
+              PAPERLESS_AI_LLM_OUTPUT_LANGUAGE: "nl-nl"
               # Configure folders
               PAPERLESS_CONSUMPTION_DIR: /mnt/archive/consume
               PAPERLESS_DATA_DIR: &dataPath /usr/src/paperless/data
