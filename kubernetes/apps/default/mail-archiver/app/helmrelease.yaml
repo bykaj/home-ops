@@ -37,6 +37,9 @@ spec:
               MailSync__CommandTimeoutSeconds: "300"
               MailSync__AlwaysForceFullSync: "false"
               MailSync__IgnoreSelfSignedCert: "false"
+              # Quick Sync only fetches mail delivered since the last sync, so mail filed
+              # into a folder later is only picked up by a Full Sync
+              MailSync__FullSyncIntervalHours: "24"
               # An excluded folder also excludes the folders below it
               MailSync__ExcludeSubfolders: "true"
               # Original messages (.eml) as gzip files on the NAS, metadata and checksum in Postgres

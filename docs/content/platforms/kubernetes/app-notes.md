@@ -195,6 +195,11 @@ How the gateway, models, keys and MCP servers fit together is on the
   excludes `Archive/Sent`. Use entries that name only folders outside the
   tree you want to keep. `MailSync__ExcludeSubfolders` is on, so an entry
   also covers the folders below it.
+- The 15-minute Quick Sync asks the server only for mail delivered since the
+  last sync (minus 12 hours), and moving a message keeps its delivery date.
+  Mail filed into an archived folder later is picked up by the daily Full
+  Sync (`MailSync__FullSyncIntervalHours: "24"`), which also updates the
+  stored folder of refiled mail.
 
 ### Paperless
 
@@ -219,8 +224,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
   `CiliumEgressPolicyDenied`; switch it back off rather than adding a rule.
-- No mail accounts are configured. Adding one needs an egress rule for its
-  IMAP server.
+- `paperless-egress` allows `imap.fastmail.com` on port 993 for mail rules
+  (for example consuming attachments from `Archive/Receipts`). The mail
+  account itself is set up in the Paperless UI. Another provider needs its
+  own rule.
 
 ### pgAdmin
 
