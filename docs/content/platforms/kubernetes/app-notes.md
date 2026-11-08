@@ -148,6 +148,7 @@ How the gateway, models, keys and MCP servers fit together is on the
 | App | Sign-in |
 | --- | --- |
 | [Karakeep](#karakeep) | Native OIDC |
+| [Mail Archiver](#mail-archiver) | Native OIDC, no password login |
 | [Paperless](#paperless) | Native OIDC, no password login |
 | [pgAdmin](#pgadmin) | Native OIDC |
 | [Seafile](#seafile) | Native OIDC (OAuth), no password login |
@@ -175,6 +176,31 @@ How the gateway, models, keys and MCP servers fit together is on the
   crawler refuses private addresses itself, and the policies block them too.
   There were none when this was set up (2026-11-04).
 
+### Mail Archiver
+
+- The original of every archived message is kept byte for byte
+  (`RawMessages__Storage: filesystem`), as gzip files under
+  `raw-messages/` on the NFS share (`/mnt/vault/Applications/mail-archiver`),
+  sharded by email id: `xx/yy/<id>.eml.gz`. Postgres keeps the parsed
+  fields plus each original's SHA-256, size and relative path. Restore the
+  database and that directory together: a database restore without the
+  files leaves rows whose original answers HTTP 404. A `zcat` of a file is a
+  plain `.eml` that other tools can import; the account and folder of each
+  message live only in Postgres.
+- Mail archived before the switch has no original. Only a fresh sync
+  (after deleting it from the archive) stores one; a Full Sync skips mail
+  that is already archived.
+- Folder exclusions are not anchored to the root: an entry also matches
+  every folder whose own name ends with it, at any depth, so `Sent` also
+  excludes `Archive/Sent`. Use entries that name only folders outside the
+  tree you want to keep. `MailSync__ExcludeSubfolders` is on, so an entry
+  also covers the folders below it.
+- The 15-minute Quick Sync asks the server only for mail delivered since the
+  last sync (minus 12 hours), and moving a message keeps its delivery date.
+  Mail filed into an archived folder later is picked up by the daily Full
+  Sync (`MailSync__FullSyncIntervalHours: "24"`), which also updates the
+  stored folder of refiled mail.
+
 ### Paperless
 
 - AI suggestions and document chat go through LiteLLM with the `paperless`
@@ -186,8 +212,8 @@ How the gateway, models, keys and MCP servers fit together is on the
   daily at 02:10 (`PAPERLESS_LLM_INDEX_TASK_CRON` default), so it is backed up
   with the rest of the PVC but can be regenerated.
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
-  LiteLLM, envoy-external (Pocket ID), the SMTP relay and `deb.debian.org` on
-  port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
+  LiteLLM, envoy-external (Pocket ID), the SMTP relay, `imap.fastmail.com` on
+  port 993 (mail rules, below) and `deb.debian.org` on port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
   apt-installs `tesseract-ocr-nld` on every start. If the install fails, the
   step only logs `Skipped tesseract-ocr-nld`, but the Django checks then stop
   the container (`ocr language nld is not installed`) and the pod restarts.
@@ -198,8 +224,10 @@ How the gateway, models, keys and MCP servers fit together is on the
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
   `CiliumEgressPolicyDenied`; switch it back off rather than adding a rule.
-- No mail accounts are configured. Adding one needs an egress rule for its
-  IMAP server.
+- `paperless-egress` allows `imap.fastmail.com` on port 993 for mail rules
+  (for example consuming attachments from `Archive/Receipts`). The mail
+  account itself is set up in the Paperless UI. Another provider needs its
+  own rule.
 
 ### pgAdmin
 
