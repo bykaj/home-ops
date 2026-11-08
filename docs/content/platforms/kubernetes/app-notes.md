@@ -148,6 +148,7 @@ How the gateway, models, keys and MCP servers fit together is on the
 | App | Sign-in |
 | --- | --- |
 | [Karakeep](#karakeep) | Native OIDC |
+| [Mail Archiver](#mail-archiver) | Native OIDC, no password login |
 | [Paperless](#paperless) | Native OIDC, no password login |
 | [pgAdmin](#pgadmin) | Native OIDC |
 | [Seafile](#seafile) | Native OIDC (OAuth), no password login |
@@ -174,6 +175,26 @@ How the gateway, models, keys and MCP servers fit together is on the
   can't be crawled: `CRAWLER_ALLOWED_INTERNAL_HOSTNAMES` is unset, so the
   crawler refuses private addresses itself, and the policies block them too.
   There were none when this was set up (2026-11-04).
+
+### Mail Archiver
+
+- The original of every archived message is kept byte for byte
+  (`RawMessages__Storage: filesystem`), as gzip files under
+  `raw-messages/` on the NFS share (`/mnt/vault/Applications/mail-archiver`),
+  sharded by email id: `xx/yy/<id>.eml.gz`. Postgres keeps the parsed
+  fields plus each original's SHA-256, size and relative path. Restore the
+  database and that directory together: a database restore without the
+  files leaves rows whose original answers HTTP 404. A `zcat` of a file is a
+  plain `.eml` that other tools can import; the account and folder of each
+  message live only in Postgres.
+- Mail archived before the switch has no original. Only a fresh sync
+  (after deleting it from the archive) stores one; a Full Sync skips mail
+  that is already archived.
+- Folder exclusions are not anchored to the root: an entry also matches
+  every folder whose own name ends with it, at any depth, so `Sent` also
+  excludes `Archive/Sent`. Use entries that name only folders outside the
+  tree you want to keep. `MailSync__ExcludeSubfolders` is on, so an entry
+  also covers the folders below it.
 
 ### Paperless
 

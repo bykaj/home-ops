@@ -37,6 +37,13 @@ spec:
               MailSync__CommandTimeoutSeconds: "300"
               MailSync__AlwaysForceFullSync: "false"
               MailSync__IgnoreSelfSignedCert: "false"
+              # An excluded folder also excludes the folders below it
+              MailSync__ExcludeSubfolders: "true"
+              # Original messages (.eml) as gzip files on the NAS, metadata and checksum in Postgres
+              RawMessages__Enabled: "true"
+              RawMessages__MaxMessageSizeMb: "0"
+              RawMessages__Storage: filesystem
+              RawMessages__FileSystem__BasePath: /data/raw-messages
               # Upload
               Upload__MaxFileSizeGB: "10"
               Upload__KeepAliveTimeoutHours: "4"
@@ -133,6 +140,8 @@ spec:
                 subPath: data
               - path: /data/import
                 subPath: import
+              - path: /data/raw-messages
+                subPath: raw-messages
       tmpfs:
         type: emptyDir
         globalMounts:
