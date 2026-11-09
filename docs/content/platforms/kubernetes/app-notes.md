@@ -226,19 +226,13 @@ How the gateway, models, keys and MCP servers fit together is on the
   with the rest of the PVC but can be regenerated.
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
   LiteLLM, envoy-external (Pocket ID), the SMTP relay, `imap.fastmail.com` on
-  port 993 (mail rules, below) and the Debian mirror on port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
+  port 993 (mail rules, below) and `deb.debian.org` on port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
   apt-installs `tesseract-ocr-nld` on every start. If the install fails, the
   step only logs `Skipped tesseract-ocr-nld`, but the Django checks then stop
   the container (`ocr language nld is not installed`) and the pod restarts.
   On the rollout that added the policy (2026-11-04), the first start's
   requests to the mirror (a CNAME to `debian.map.fastlydns.net`) were dropped
-  and the pod restarted once; the restart got through on the same rule. It
-  happened again on later fresh starts (2026-11-09: the install failed and
-  needed a manual restart): the first connections went out before Cilium had
-  loaded the IPs from the DNS answer. The rule therefore allows the mirror's
-  four Fastly addresses (`151.101.{2,66,130,194}.132`) by IP instead of by
-  name. If Debian moves the mirror, the install fails and
-  `CiliumEgressPolicyDenied` names the new address; update the list.
+  and the pod restarted once; the restart got through on the same rule.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
