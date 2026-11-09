@@ -170,7 +170,11 @@ How the gateway, models, keys and MCP servers fit together is on the
   Service IP (`10.43.0.10`): Chrome sends several DNS queries per hostname
   and closes the socket once one answers, so the late answers bounce. Without
   that rule, every page with many hosts set off `CiliumEgressPolicyDenied`
-  (`karakeep-chrome -> 10.43.0.10`).
+  (`karakeep-chrome -> 10.43.0.10`). Multicast (`224.0.0.0/4`) is in an
+  explicit `egressDeny`: Chrome's own local discovery (mDNS on
+  `224.0.0.251`) sends it now and then, even with no page open, and an
+  explicit deny drops it as `POLICY_DENY`, which the alert ignores (it fired
+  once on 2026-11-09, `karakeep-chrome -> 224.0.0.251`).
 - Bookmarks of internal hosts (`*.bykaj.app` behind envoy-internal, the LAN)
   can't be crawled: `CRAWLER_ALLOWED_INTERNAL_HOSTNAMES` is unset, so the
   crawler refuses private addresses itself, and the policies block them too.
