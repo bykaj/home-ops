@@ -233,20 +233,26 @@ How the gateway, models, keys and MCP servers fit together is on the
   port 993 (mail rules, below), and nothing on the internet at startup.
 - The image has no Dutch OCR data. Instead of `PAPERLESS_OCR_LANGUAGES`
   (its `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` from
-  `deb.debian.org` on every start), the `tessdata` image volume mounts
-  Tesseract's most accurate Dutch model (`tessdata_best`, slower than the
-  `fast` model Debian ships) from `ghcr.io/bykaj/tessdata-best`
-  ([bykaj/containers](https://github.com/bykaj/containers)) at
-  `/usr/share/tesseract-ocr/5/tessdata/nld.traineddata`. The kubelet pulls
-  it, so the egress policy is not involved. The apt route lost a Cilium
+  `deb.debian.org` on every start), Paperless uses Tesseract's most accurate
+  Dutch model (`tessdata_best`, slower than the `fast` model Debian ships)
+  from `ghcr.io/bykaj/tessdata-best`
+  ([bykaj/containers](https://github.com/bykaj/containers)), an image
+  volume the kubelet pulls, so the egress policy is not involved. Tesseract
+  reads a single tessdata folder and containerd only mounts directories
+  from an image volume (a single-file `subPath` fails with
+  `ImageVolumeMountFailed: only directory subpath is supported`, 2026-11-09),
+  so the `tessdata` init container copies the image's own models (`eng`,
+  `osd`, `configs`, `pdf.ttf`) plus `nld.traineddata` into the
+  `tessdata-dir` emptyDir, which is mounted over
+  `/usr/share/tesseract-ocr/5/tessdata`. The apt route lost a Cilium
   toFQDNs race on fresh pods (2026-11-04 and 2026-11-09: the first
   connections to the mirror, a CNAME to `debian.map.fastlydns.net`, were
   dropped and the start failed), and pinning the mirror's IPs broke because
   Fastly answers the cluster's resolver with different addresses.
-- The `5` in that path is Tesseract's major version. If a Paperless image
-  ships Tesseract 6, the model lands in the wrong folder and the Django
-  checks stop the container (`ocr language nld is not installed`): move the
-  mount path along with the bump.
+- The `5` in those paths is Tesseract's major version. If a Paperless image
+  ships Tesseract 6, the init container's copy fails (no `5/tessdata`
+  folder) and the pod stays in `Init:CrashLoopBackOff`: move the init
+  command and the `tessdata-dir` mount path along with the bump.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
