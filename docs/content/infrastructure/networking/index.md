@@ -104,9 +104,10 @@ Each policy file explains its own rules:
   `prune: false`, so a removed policy has to be deleted by hand.
 - [`paperless-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/paperless/app/networkpolicy.yaml)
   limits Paperless, which holds every document and its LiteLLM key, to its
-  database, cache, LiteLLM, Pocket ID and the SMTP relay, plus two FQDNs:
-  `deb.debian.org` (port 80, for the Dutch OCR package installed at every
-  start) and `imap.fastmail.com` (port 993, for mail rules) (see
+  database, cache, LiteLLM, Pocket ID and the SMTP relay, plus the FQDN
+  `imap.fastmail.com` (port 993, for mail rules). Its Dutch OCR model comes
+  from an image volume instead of an apt install, so it needs no Debian
+  mirror (see
   [Paperless](../../platforms/kubernetes/app-notes.md#paperless)).
 - [`plex-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/media/plex/app/networkpolicy.yaml)
   allows Plex the `internet` group on any port, since its plex.tv hosts change
