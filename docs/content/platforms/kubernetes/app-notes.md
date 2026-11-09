@@ -243,7 +243,7 @@ How the gateway, models, keys and MCP servers fit together is on the
   `ImageVolumeMountFailed: only directory subpath is supported`, 2026-11-09),
   so the `tessdata` init container copies the image's own models (`eng`,
   `osd`, `configs`, `pdf.ttf`) plus `nld.traineddata` into the
-  `tessdata-dir` emptyDir, which is mounted over
+  `tessdata` emptyDir, which is mounted over
   `/usr/share/tesseract-ocr/5/tessdata`. The apt route lost a Cilium
   toFQDNs race on fresh pods (2026-11-04 and 2026-11-09: the first
   connections to the mirror, a CNAME to `debian.map.fastlydns.net`, were
@@ -252,7 +252,7 @@ How the gateway, models, keys and MCP servers fit together is on the
 - The `5` in those paths is Tesseract's major version. If a Paperless image
   ships Tesseract 6, the init container's copy fails (no `5/tessdata`
   folder) and the pod stays in `Init:CrashLoopBackOff`: move the init
-  command and the `tessdata-dir` mount path along with the bump.
+  command and the `tessdata` mount path along with the bump.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off

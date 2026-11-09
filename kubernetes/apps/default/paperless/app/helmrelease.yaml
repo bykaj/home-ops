@@ -139,7 +139,7 @@ spec:
       # container. The `5` is Tesseract's major version: move both paths
       # (here and in the init command) along when a Paperless image ships
       # Tesseract 6, or the init copy fails and the pod never starts
-      tessdata-dir:
+      tessdata:
         type: emptyDir
         advancedMounts:
           *app :
