@@ -230,13 +230,23 @@ How the gateway, models, keys and MCP servers fit together is on the
   with the rest of the PVC but can be regenerated.
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
   LiteLLM, envoy-external (Pocket ID), the SMTP relay, `imap.fastmail.com` on
-  port 993 (mail rules, below) and `deb.debian.org` on port 80. The image has no Dutch OCR data, so its `init-tesseract-langs` step
-  apt-installs `tesseract-ocr-nld` on every start. If the install fails, the
-  step only logs `Skipped tesseract-ocr-nld`, but the Django checks then stop
-  the container (`ocr language nld is not installed`) and the pod restarts.
-  On the rollout that added the policy (2026-11-04), the first start's
-  requests to the mirror (a CNAME to `debian.map.fastlydns.net`) were dropped
-  and the pod restarted once; the restart got through on the same rule.
+  port 993 (mail rules, below), and nothing on the internet at startup.
+- The image has no Dutch OCR data. Instead of `PAPERLESS_OCR_LANGUAGES`
+  (its `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` from
+  `deb.debian.org` on every start), the `tessdata` image volume mounts
+  Tesseract's most accurate Dutch model (`tessdata_best`, slower than the
+  `fast` model Debian ships) from `ghcr.io/bykaj/tessdata-best`
+  ([bykaj/containers](https://github.com/bykaj/containers)) at
+  `/usr/share/tesseract-ocr/5/tessdata/nld.traineddata`. The kubelet pulls
+  it, so the egress policy is not involved. The apt route lost a Cilium
+  toFQDNs race on fresh pods (2026-11-04 and 2026-11-09: the first
+  connections to the mirror, a CNAME to `debian.map.fastlydns.net`, were
+  dropped and the start failed), and pinning the mirror's IPs broke because
+  Fastly answers the cluster's resolver with different addresses.
+- The `5` in that path is Tesseract's major version. If a Paperless image
+  ships Tesseract 6, the model lands in the wrong folder and the Django
+  checks stop the container (`ocr language nld is not installed`): move the
+  mount path along with the bump.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off

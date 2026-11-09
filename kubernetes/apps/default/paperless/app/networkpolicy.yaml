@@ -7,11 +7,11 @@ metadata:
 spec:
   # Egress only: Paperless is public, holds every document plus the database,
   # OIDC and LiteLLM credentials, so it may reach its database, cache, LiteLLM,
-  # Pocket ID, the SMTP relay, Fastmail IMAP and the Debian mirror and nothing
-  # else. The
-  # archive is an NFS volume, mounted by the kubelet, not the pod. The update
-  # check (api.github.com) is off for every user and stays blocked; switching
-  # it on in the UI settings sets off CiliumEgressPolicyDenied
+  # Pocket ID, the SMTP relay and Fastmail IMAP and nothing else. The archive
+  # is an NFS volume and the Dutch OCR model an image volume, both mounted by
+  # the kubelet, not the pod. The update check (api.github.com) is off for
+  # every user and stays blocked; switching it on in the UI settings sets off
+  # CiliumEgressPolicyDenied
   egress:
     - toEndpoints:
         - matchLabels:
@@ -76,15 +76,6 @@ spec:
       toPorts:
         - ports:
             - port: "993"
-              protocol: TCP
-    # The image has no Dutch OCR data; init-tesseract-langs apt-installs
-    # tesseract-ocr-nld (PAPERLESS_OCR_LANGUAGES) on every start, over plain
-    # HTTP from the image's Debian sources
-    - toFQDNs:
-        - matchName: deb.debian.org
-      toPorts:
-        - ports:
-            - port: "80"
               protocol: TCP
   endpointSelector:
     matchLabels:

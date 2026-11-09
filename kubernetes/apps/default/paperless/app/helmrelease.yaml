@@ -80,9 +80,10 @@ spec:
               PAPERLESS_CONSUMER_POLLING: "15"
               PAPERLESS_CONSUMER_RECURSIVE: "true"
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
-              # Configure OCR
+              # Configure OCR. The Dutch model comes from the tessdata image
+              # volume below, so PAPERLESS_OCR_LANGUAGES (an apt install at
+              # every start) stays unset
               PAPERLESS_OCR_LANGUAGE: nld+eng
-              PAPERLESS_OCR_LANGUAGES: nld
               # Configure user permissions
               USERMAP_UID: "${APP_UID}"
               USERMAP_GID: "${APP_GID}"
@@ -123,6 +124,19 @@ spec:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: *dataPath
+      # Tesseract's most accurate ("best") Dutch model, mounted from a
+      # data-only image (bykaj/containers) into the image's tessdata folder.
+      # The `5` is Tesseract's major version: move the path along when a
+      # Paperless image ships Tesseract 6, or the checks stop the container
+      tessdata:
+        type: image
+        image:
+          repository: ghcr.io/bykaj/tessdata-best
+          tag: 4.1.0
+        globalMounts:
+          - path: /usr/share/tesseract-ocr/5/tessdata/nld.traineddata
+            readOnly: true
+            subPath: tessdata/nld.traineddata
       tmpfs:
         type: emptyDir
         globalMounts:
