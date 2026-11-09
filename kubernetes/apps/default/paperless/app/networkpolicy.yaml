@@ -79,9 +79,17 @@ spec:
               protocol: TCP
     # The image has no Dutch OCR data; init-tesseract-langs apt-installs
     # tesseract-ocr-nld (PAPERLESS_OCR_LANGUAGES) on every start, over plain
-    # HTTP from the image's Debian sources
-    - toFQDNs:
-        - matchName: deb.debian.org
+    # HTTP from the image's Debian sources. By IP, not toFQDNs: a fresh pod's
+    # first apt connections went out before Cilium had loaded the IPs from the
+    # DNS answer and were dropped, so the install failed and the pod restarted.
+    # These are the Fastly anycast addresses deb.debian.org (a CNAME to
+    # debian.map.fastlydns.net) resolves to; if they change, the install fails
+    # and CiliumEgressPolicyDenied names the new IP
+    - toCIDR:
+        - 151.101.2.132/32
+        - 151.101.66.132/32
+        - 151.101.130.132/32
+        - 151.101.194.132/32
       toPorts:
         - ports:
             - port: "80"
