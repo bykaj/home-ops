@@ -121,6 +121,13 @@ spec:
         - fields:
             - family: IPv4
               type: 3
+  # Chrome's own local discovery (Cast, mDNS on 224.0.0.251) sends multicast
+  # now and then, even with no page open. The `internet` group already leaves
+  # it out; denying it explicitly drops it as POLICY_DENY instead of
+  # POLICY_DENIED, which CiliumEgressPolicyDenied does not alert on
+  egressDeny:
+    - toCIDR:
+        - 224.0.0.0/4
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: chrome
