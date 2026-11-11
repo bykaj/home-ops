@@ -132,7 +132,7 @@ spec:
         type: image
         image:
           repository: ghcr.io/bykaj/paperless-tessdata
-          tag: 4.1.0@sha256:815bf342bdaaf08b5770f9d3c840ab94b282d0ae9153e303165937f0e36b0bef
+          tag: 4.1.0@sha256:71339fd7dc99cb63fde786ba90836dd8643a9462bd5b235e92bb7ba66c25dc21
         globalMounts:
           - path: /usr/share/tesseract-ocr/5/tessdata
             readOnly: true
