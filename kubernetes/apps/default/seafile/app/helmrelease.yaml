@@ -33,7 +33,7 @@ spec:
           shared-permissions:
             image: &image
               repository: docker.io/seafileltd/seafile-pro-mc
-              tag: 14.0.9@sha256:94c03caa19a53d0fda44c00a7528225e221f5ec641ddf5e83637561d92ab987d
+              tag: 14.0.10@sha256:688fa35519b91893d29da082f681f08c79ffde56293b7611b15610e6c35083b1
             command:
               - /bin/sh
               - -c
