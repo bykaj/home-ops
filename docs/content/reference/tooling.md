@@ -19,7 +19,7 @@ more) and sets the environment:
 | --- | --- |
 | `KUBECONFIG` | `./kubeconfig` |
 | `TALOSCONFIG` | `./talosconfig` |
-| `FLATE_PATH` | `./kubernetes/clusters/main` |
+| `FLATE_PATH` | `./kubernetes/apps` |
 | `MINIJINJA_CONFIG_FILE` | `./.minijinja.toml` |
 
 `mise install` provisions everything. Its `postinstall` hook runs
