@@ -34,13 +34,15 @@ hand.
         Removing the app later deletes the `Snapshot` objects from the
         cluster, but the snapshots stay in the repository on the NAS.
 
-    - **Database (CNPG)**
+    - **Database**
 
-        If the app has a `<app>-postgres` cluster:
+        If the app has an `<app>-postgres` cluster or an `<app>-mariadb`,
+        start a base backup of it:
 
         ```sh
         just k8s db-backup <namespace> <app>
-        kubectl -n <namespace> get backup   # wait for the new backup's PHASE to be completed
+        kubectl -n <namespace> get backup           # CNPG: wait for the new backup's PHASE to be completed
+        kubectl -n <namespace> get physicalbackup   # MariaDB: wait for <app>-mariadb-v<N>'s LAST SCHEDULED to reset and STATUS to be Success
         ```
 
 3. **Find everything that refers to the app**:
