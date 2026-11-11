@@ -89,7 +89,7 @@ Renovate only gets release timestamps from Docker Hub, not from ghcr.io or
 Quay, so the image comes from `docker.io/litellm/litellm`; on a ghcr.io image
 the rule would hold every update indefinitely. LiteLLM has more than 1,000
 tags, more than Docker Hub lists to anonymous requests, so the Renovate
-workflow signs in with a read-only Docker Hub token from `op://Homelab/docker-hub`
+workflow signs in with a read-only Docker Hub token from `op://Automation/docker-hub`
 (see [KB-015](../../operations/troubleshooting/kb/015-renovate-release-age-holds-forever.md)).
 
 ### Yanked images
