@@ -43,7 +43,7 @@ jobs:
       - name: List Images
         run: |
           {
-            flate get images -p ./kubernetes/clusters/main -o json --no-progress | jq -r '.[]'
+            flate get images -p ./kubernetes/apps -o json --no-progress | jq -r '.[]'
             yq -N '.services[].image | select(. != null)' docker/*/*/docker-compose.yaml
           } | sort -u > "$RUNNER_TEMP/images.txt"
           echo "Checking $(wc -l < "$RUNNER_TEMP/images.txt") images"
