@@ -21,7 +21,7 @@ Docker Hub images can hit this too: Docker Hub only pages through the first
 1,000 tags of a repository for anonymous requests and answers `403 pagination
 offset too large for anonymous requests` after that. Renovate then falls back
 to the registry tag list, which has no timestamps. The Renovate workflow signs
-in with a read-only Docker Hub access token (`op://Homelab/docker-hub`) to
+in with a read-only Docker Hub access token (`op://Automation/docker-hub`) to
 avoid this. The tags API doesn't accept that token directly, so the workflow
 first exchanges it for a 15-minute JWT at `hub.docker.com/v2/auth/token`. If
 the access token expires, that step fails and so does the Renovate run.

@@ -1,11 +1,12 @@
 ---
-description: How runtime secrets reach the cluster, the NAS and bootstrap tooling
+description: How runtime secrets reach the cluster, the NAS, bootstrap tooling and GitHub Actions
 ---
 
 # Secrets
 
-Runtime secrets never live in Git. Everything resolves from 1Password (vault
-`Homelab`), through three different paths.
+Runtime secrets never live in Git. Everything resolves from 1Password: the
+cluster, the NAS and bootstrap tooling read vault `Homelab` through three
+different paths, and GitHub Actions workflows read vault `Automation`.
 
 ## Kubernetes: External Secrets
 
@@ -74,3 +75,33 @@ minijinja-cli <template> | op inject
 That is the `template` recipe in the root `.justfile`, used by
 `just talos render-config` and `just bootstrap`. A signed-in `op` session is a
 prerequisite for both.
+
+## GitHub Actions: `Automation` vault
+
+Workflows load their credentials with
+[`1password/load-secrets-action`](https://github.com/1password/load-secrets-action)
+and a service account whose token is the repository secret
+`OP_SERVICE_ACCOUNT_TOKEN`. That service account can only read the
+`Automation` vault, never `Homelab`:
+
+```yaml
+- name: Load Secrets
+  uses: 1password/load-secrets-action@<sha> # v5.0.1
+  id: load-secrets
+  env:
+    OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+    GITHUB_BOT_APP_CLIENT_ID: op://Automation/github-bot/GITHUB_BOT_APP_CLIENT_ID
+```
+
+| Item | Used for |
+|---|---|
+| `github-bot` | GitHub App token for Renovate, labeler, tag and the review bot |
+| `docker-hub` | Authenticated Docker Hub lookups in Renovate |
+| `claude-review` | Review bot OAuth token |
+
+The same service account is used by the public
+[bykaj/containers](https://github.com/bykaj/containers) repository, which
+also reads a `pushover` item for build-failure notifications. Anything in
+`Automation` is therefore readable by workflows of a public repository: keep
+it to credentials meant for CI, and keep one copy of each item, so a key
+rotation can't leave a stale copy behind.

@@ -85,9 +85,9 @@ jobs:
         uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5.0.1 # zizmor: ignore[unpinned-tools]
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          GITHUB_BOT_APP_CLIENT_ID: op://Homelab/github-bot/GITHUB_BOT_APP_CLIENT_ID
-          GITHUB_BOT_APP_PRIVATE_KEY: op://Homelab/github-bot/GITHUB_BOT_APP_PRIVATE_KEY
-          CLAUDE_CODE_OAUTH_TOKEN: op://Homelab/claude/CLAUDE_CODE_OAUTH_TOKEN
+          GITHUB_BOT_APP_CLIENT_ID: op://Automation/github-bot/GITHUB_BOT_APP_CLIENT_ID
+          GITHUB_BOT_APP_PRIVATE_KEY: op://Automation/github-bot/GITHUB_BOT_APP_PRIVATE_KEY
+          CLAUDE_CODE_OAUTH_TOKEN: op://Automation/claude-review/CLAUDE_CODE_OAUTH_TOKEN
 
       - name: Generate Token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
