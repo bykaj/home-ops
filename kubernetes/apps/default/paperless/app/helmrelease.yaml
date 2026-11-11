@@ -15,22 +15,11 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          # Tesseract only reads one tessdata folder and containerd mounts
-          # only directories from an image volume, so build the folder in an
-          # emptyDir: the image's own models (eng, osd, configs, pdf.ttf)
-          # plus the Dutch model from the tessdata image. No network needed
-          tessdata:
-            image: &image
-              repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 3.4.2@sha256:d704e84f88300eb6ab001ab15720a2330ff99169cf9f94d6b8fcc44b63a84c84
-            command:
-              - /bin/sh
-              - -c
-              - cp -a /usr/share/tesseract-ocr/5/tessdata/. /tessdata/ && cp /tessdata-best/nld.traineddata /tessdata/
         containers:
           app:
-            image: *image
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 3.4.2@sha256:d704e84f88300eb6ab001ab15720a2330ff99169cf9f94d6b8fcc44b63a84c84
             env:
               # OIDC integration
               PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
@@ -91,9 +80,9 @@ spec:
               PAPERLESS_CONSUMER_POLLING: "15"
               PAPERLESS_CONSUMER_RECURSIVE: "true"
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
-              # Configure OCR. The Dutch model comes from the tessdata image
-              # volume below, so PAPERLESS_OCR_LANGUAGES (an apt install at
-              # every start) stays unset
+              # Configure OCR. The models (nld, eng, deu, fra, spa, ita) come
+              # from the tessdata image volume below, so PAPERLESS_OCR_LANGUAGES
+              # (an apt install at every start) stays unset
               PAPERLESS_OCR_LANGUAGE: nld+eng
               # Configure user permissions
               USERMAP_UID: "${APP_UID}"
@@ -135,31 +124,19 @@ spec:
         existingClaim: "${KOPIUR_CLAIM:=${APP}}"
         globalMounts:
           - path: *dataPath
-      # The tessdata folder Tesseract reads, filled by the tessdata init
-      # container. The `5` is Tesseract's major version: move both paths
-      # (here and in the init command) along when a Paperless image ships
-      # Tesseract 6, or the init copy fails and the pod never starts
+      # Tesseract's complete tessdata folder with the most accurate ("best")
+      # models from a data-only image (bykaj/containers), mounted over the
+      # image's own folder. The `5` is Tesseract's major version: move the
+      # path along when a Paperless image ships Tesseract 6
       tessdata:
-        type: emptyDir
-        advancedMounts:
-          *app :
-            app:
-              - path: /usr/share/tesseract-ocr/5/tessdata
-            tessdata:
-              - path: /tessdata
-      # Tesseract's most accurate ("best") Dutch model from a data-only image
-      # (bykaj/containers)
-      tessdata-best:
         type: image
         image:
-          repository: ghcr.io/bykaj/tessdata-best
-          tag: 4.1.0@sha256:609a5ccbe1c5b034d5e928eb5ce9c3a8d213caeffd67824bb2655a4a18e614df
-        advancedMounts:
-          *app :
-            tessdata:
-              - path: /tessdata-best
-                readOnly: true
-                subPath: tessdata
+          repository: ghcr.io/bykaj/paperless-tessdata
+          tag: 4.1.0@sha256:815bf342bdaaf08b5770f9d3c840ab94b282d0ae9153e303165937f0e36b0bef
+        globalMounts:
+          - path: /usr/share/tesseract-ocr/5/tessdata
+            readOnly: true
+            subPath: tessdata
       tmpfs:
         type: emptyDir
         globalMounts:

@@ -231,28 +231,30 @@ How the gateway, models, keys and MCP servers fit together is on the
 - `paperless-egress` (`networkpolicy.yaml`) allows Postgres, Dragonfly,
   LiteLLM, envoy-external (Pocket ID), the SMTP relay, `imap.fastmail.com` on
   port 993 (mail rules, below), and nothing on the internet at startup.
-- The image has no Dutch OCR data. Instead of `PAPERLESS_OCR_LANGUAGES`
-  (its `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` from
-  `deb.debian.org` on every start), Paperless uses Tesseract's most accurate
-  Dutch model (`tessdata_best`, slower than the `fast` model Debian ships)
-  from `ghcr.io/bykaj/tessdata-best`
-  ([bykaj/containers](https://github.com/bykaj/containers)), an image
-  volume the kubelet pulls, so the egress policy is not involved. Tesseract
-  reads a single tessdata folder and containerd only mounts directories
-  from an image volume (a single-file `subPath` fails with
-  `ImageVolumeMountFailed: only directory subpath is supported`, 2026-11-09),
-  so the `tessdata` init container copies the image's own models (`eng`,
-  `osd`, `configs`, `pdf.ttf`) plus `nld.traineddata` into the
-  `tessdata` emptyDir, which is mounted over
-  `/usr/share/tesseract-ocr/5/tessdata`. The apt route lost a Cilium
-  toFQDNs race on fresh pods (2026-11-04 and 2026-11-09: the first
-  connections to the mirror, a CNAME to `debian.map.fastlydns.net`, were
-  dropped and the start failed), and pinning the mirror's IPs broke because
-  Fastly answers the cluster's resolver with different addresses.
-- The `5` in those paths is Tesseract's major version. If a Paperless image
-  ships Tesseract 6, the init container's copy fails (no `5/tessdata`
-  folder) and the pod stays in `Init:CrashLoopBackOff`: move the init
-  command and the `tessdata` mount path along with the bump.
+- The image has no Dutch OCR data, and Debian's other languages are the
+  `fast` models. Instead of `PAPERLESS_OCR_LANGUAGES` (its
+  `init-tesseract-langs` step apt-installs `tesseract-ocr-nld` from
+  `deb.debian.org` on every start), Paperless mounts a complete tessdata
+  folder from `ghcr.io/bykaj/paperless-tessdata`
+  ([bykaj/containers](https://github.com/bykaj/containers)) as an image
+  volume over `/usr/share/tesseract-ocr/5/tessdata`. It holds Tesseract's
+  most accurate models (`tessdata_best`, slower than `fast`) for Dutch,
+  English, German, French, Spanish and Italian, plus `osd` and Tesseract
+  5.5.0's `configs`, `tessconfigs` and `pdf.ttf`. The kubelet pulls it, so
+  the egress policy is not involved. The whole folder is mounted
+  (`subPath: tessdata`) because containerd only mounts directories from an
+  image volume (a single-file `subPath` fails with
+  `ImageVolumeMountFailed: only directory subpath is supported`,
+  2026-11-09). `PAPERLESS_OCR_LANGUAGE` picks which of the six are used
+  (`nld+eng`). The apt route lost a Cilium toFQDNs race on fresh pods
+  (2026-11-04 and 2026-11-09: the first connections to the mirror, a CNAME
+  to `debian.map.fastlydns.net`, were dropped and the start failed), and
+  pinning the mirror's IPs broke because Fastly answers the cluster's
+  resolver with different addresses.
+- The `5` in the mount path is Tesseract's major version. If a Paperless
+  image ships Tesseract 6, the mount lands in an unused folder and OCR fails
+  on the missing languages: move the mount path along with the bump, and
+  bump the Tesseract version the image takes its configs from.
 - The update check is off for every user and `api.github.com` is blocked.
   It is a per-user UI setting (Settings → General → Update checking) with no
   server-wide switch, so a user switching it on sets off
