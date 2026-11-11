@@ -26,15 +26,6 @@ spec:
               - matchPattern: "*"
     - toCIDRSet:
         - cidrGroupRef: internet
-    # SSDP device discovery (about every 30 s): with TTL 1 it never leaves the
-    # node and is dropped as TTL_EXCEEDED either way, but without this rule the
-    # policy drops it first and sets off CiliumEgressPolicyDenied
-    - toCIDR:
-        - 239.255.255.250/32
-      toPorts:
-        - ports:
-            - port: "1900"
-              protocol: UDP
     # NAT-PMP port-mapping check (about hourly) to the pod's default gateway,
     # the node's cilium_host address. Nothing listens there, so Plex logs "Not
     # Supported by gateway" and moves on; dropped, it retries 12 times and sets
@@ -45,6 +36,17 @@ spec:
         - ports:
             - port: "5351"
               protocol: UDP
+  # Local discovery: SSDP (239.255.255.250, about every 30 s), Plex's own GDM
+  # (239.0.0.250 and 255.255.255.255) and the multicast group joins it sends
+  # at startup. The pod can't reach the LAN, so none of it could work; the
+  # `internet` group already leaves these ranges out. Denying them explicitly
+  # drops them as POLICY_DENY instead of POLICY_DENIED, which
+  # CiliumEgressPolicyDenied does not alert on (it fired on Plex's startup
+  # burst after the NFS zeroscaler restarted it)
+  egressDeny:
+    - toCIDR:
+        - 224.0.0.0/4
+        - 255.255.255.255/32
   endpointSelector:
     matchLabels:
       app.kubernetes.io/controller: plex

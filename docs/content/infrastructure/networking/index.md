@@ -141,10 +141,12 @@ egress policy drops, so the alert means such a pod tried to reach a host outside
 its allowlist: either a missing rule or something it should not be doing. The
 one exception is an explicit `egressDeny`: Cilium reports those drops as
 `POLICY_DENY` instead of `POLICY_DENIED`, and the alert deliberately ignores
-them. Use it only for known, harmless traffic that is blocked anyway; the only
-one is `karakeep-chrome-egress`, which denies multicast (`224.0.0.0/4`) for
-Chrome's local discovery (see
-[Karakeep](../../platforms/kubernetes/app-notes.md#karakeep)). The
+them. Use it only for known, harmless traffic that is blocked anyway:
+`karakeep-chrome-egress` denies multicast (`224.0.0.0/4`) for Chrome's local
+discovery (see [Karakeep](../../platforms/kubernetes/app-notes.md#karakeep)),
+and `plex-egress` denies multicast and broadcast (`255.255.255.255`) for
+Plex's SSDP and GDM discovery (see
+[Plex](../../platforms/kubernetes/app-notes.md#plex)). The
 alert uses Hubble's `hubble_drop_total` metric, which names the source workload
 and the destination (DNS name when Cilium knows it, IP otherwise). Hubble runs
 on each agent for that metric; relay and UI are off. For the dropped flows

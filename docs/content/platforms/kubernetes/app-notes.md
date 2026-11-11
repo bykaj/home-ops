@@ -503,10 +503,15 @@ back.
 (the `internet` CIDR group) and nothing in the cluster or on the LAN. Remote
 access comes in through envoy-external and the LoadBalancer
 (`ManualPortMappingMode`, relay and DLNA off), so it isn't affected. The
-policy also allows Plex's SSDP discovery to `239.255.255.250:1900`: those
-packets have TTL 1 and are dropped as `TTL_EXCEEDED` anyway, but without the
-rule the policy would drop them first, about twice a minute, and set off
-`CiliumEgressPolicyDenied`. It also allows Plex's hourly NAT-PMP check
+policy explicitly denies multicast (`224.0.0.0/4`) and broadcast
+(`255.255.255.255`) with an `egressDeny`: Plex's local discovery (SSDP about
+twice a minute, GDM to `239.0.0.250` and the broadcast address, and multicast
+group joins at startup) can't reach the LAN from the pod anyway, and the
+explicit deny drops it as `POLICY_DENY`, which `CiliumEgressPolicyDenied`
+ignores. Before that, the policy only allowed SSDP to
+`239.255.255.250:1900`, and the startup burst set off the alert whenever the
+NFS zeroscaler restarted Plex (a 2-minute LAN outage during a gateway firmware
+update on 2026-11-11). It also allows Plex's hourly NAT-PMP check
 (UDP 5351) to its own node, the pod's default gateway: nothing answers, so
 Plex logs `NAT: PMP, got an error: Not Supported by gateway` and moves on;
 dropped, it showed up as `plex -> 10.42.x.y` (the node's `cilium_host`
