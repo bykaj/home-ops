@@ -90,6 +90,7 @@ Kustomization prunes.
 | --- | --- | --- |
 | Kopia snapshots | The `nas` repository on the NAS, and its B2 mirror | The `Snapshot` objects in the cluster are deleted with the app, but the snapshots in the repository are kept. Delete them with Kopia against the repository if the app won't come back; the B2 mirror follows on its next sync |
 | Barman base backups and WAL | Garage, `s3://postgresql/<app>/` | Retention stops with the `Cluster`, so nothing expires. Delete the prefix in Garage |
+| MariaDB base backups and binlogs | Garage, `s3://mariadb/<app>/` (every `v<N>/` timeline and `replica/`) | Retention stops with the `MariaDB`, and binlogs are never pruned. Delete the prefix in Garage |
 | Local database dumps | NAS, `/mnt/vault/Backups/Database` | Delete the app's files |
 | 1Password items | The `Homelab` vault | Archive the app's item, and any OIDC or API credentials made for it |
 | OIDC client | Pocket ID | Delete the client |
@@ -104,6 +105,41 @@ Kustomization prunes.
     bootstraps from Barman by default. For a fresh start,
     delete the backups first, or follow [New Database](new-database.md) for
     the database.
+
+## Deleting the database backups
+
+Delete the Garage prefix only after Flux has pruned the `Cluster` or
+`MariaDB`; until then the WAL archiver or binlog agent keeps writing into it.
+Use the S3 keys from the `cloudnative-pg` or `mariadb` 1Password item, list
+the prefix first, and keep the trailing slash, so `<app>` doesn't also match
+an app whose name starts with it:
+
+```sh
+aws s3 ls s3://postgresql/<app>/ --recursive --endpoint-url https://s3.bykaj.io --region <region>
+aws s3 rm s3://postgresql/<app>/ --recursive --endpoint-url https://s3.bykaj.io --region <region>
+```
+
+Use the `mariadb` bucket for MariaDB. garage-ui at `garage.bykaj.app` can
+delete the objects too. Remove the app's folder in
+`/mnt/vault/Backups/Database` on the NAS as well. Deleted objects remain
+recoverable for a while from the NAS backups of the Garage stack's data.
+
+!!! warning "Fresh start: delete before redeploying"
+
+    To bring an app back with an empty database, delete its prefix **before**
+    deploying it again with the `init` label from
+    [New Database](new-database.md). Without the label, the old data is
+    restored. With the label but old backups in place, a new CNPG cluster
+    archives into the same path as the old one (`skipEmptyWalArchiveCheck`
+    doesn't stop it), so a later rebuild may recover from the wrong backups,
+    and a new MariaDB never archives binlogs, because the agent only starts
+    in an empty prefix.
+
+    For MariaDB, a fresh start can keep the old backups instead: set
+    `MARIADB_TIMELINE` to a number not used before, so the new instance
+    archives into an empty `v<N>/` prefix. See
+    [Rebuilding](../../infrastructure/storage/mariadb.md#rebuilding). CNPG has
+    no equivalent, because the `serverName` is always `${APP}`.
 
 ## Retiring a domain
 
