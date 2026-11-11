@@ -142,23 +142,3 @@ recoverable for a while from the NAS backups of the Garage stack's data.
     archives into an empty `v<N>/` prefix. See
     [Rebuilding](../../infrastructure/storage/mariadb.md#rebuilding). CNPG has
     no equivalent, because the `serverName` is always `${APP}`.
-
-## Retiring a domain
-
-The reverse of [Adding a Domain](adding-a-domain.md), in **one PR**: there is
-no ordering problem when removing. First move or remove every route that
-still uses the domain, then remove the domain from:
-
-- `letsencrypt-production`'s `dnsZones` in
-  `cert-manager/cert-manager/app/clusterissuer.yaml`
-- `domainFilters` in both external-dns HelmReleases
-- the `Certificate` in `network/certificates/export/certificates.yaml`
-- the `PushSecret` in `network/certificates/export/pushsecrets.yaml`
-- the `ExternalSecret` in `network/certificates/import/externalsecrets.yaml`
-- the ingress entries in the cloudflared `config.yaml`
-- `certificateRefs` on both Gateways in `network/envoy-gateway/config/gateway.yaml`
-- the zone list in [DNS](../../infrastructure/networking/dns.md)
-
-After the merge, archive the `<domain>-tls` item in 1Password. Keep the zone
-in Cloudflare if the domain may come back; adding it again then starts at
-[PR 1](adding-a-domain.md#pr-1-serve-the-domain).

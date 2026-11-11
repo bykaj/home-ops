@@ -29,7 +29,7 @@ Both external-dns instances use `policy: sync` and `txtOwnerId: main`, so they
 also delete records whose route or Service disappears, but only records they
 own. They manage six zones: `bykaj.app`, `bykaj.dev`, `bykaj.io`, `cyrannus.id`,
 `drup.lol` and `kaj.pics`.
-To add one, follow [Adding a Domain](../../operations/runbooks/adding-a-domain.md).
+To add or retire one, follow [Domains](../../operations/runbooks/domains.md).
 
 ```mermaid
 graph LR

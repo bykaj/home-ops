@@ -1,8 +1,8 @@
 ---
-description: Serve a new domain from the cluster, with DNS, routing and a wildcard certificate
+description: Serve a new domain from the cluster, with DNS, routing and a wildcard certificate, or retire one
 ---
 
-# Adding a Domain
+# Domains
 
 A domain served by the cluster needs to be in six places: cert-manager,
 both external-dns instances, the certificates `export` and `import`
@@ -123,3 +123,15 @@ doesn't exist yet, it never becomes ready. `certificates-import` then never
 becomes healthy, so the export side, with the new `Certificate` and
 `PushSecret`, is never applied, and the item never gets created. Shipping the
 import only after the first push breaks that loop.
+
+## Retiring a domain
+
+The reverse of adding one, in **one PR**: there is no ordering problem when
+removing. First move or remove every route that still uses the domain (see
+[Retiring an App](retiring-an-app.md) for apps that go with it). Then undo
+every row of the [PR 1 table](#pr-1-serve-the-domain), and remove the
+`ExternalSecret` from [PR 2](#pr-2-import-the-certificate).
+
+After the merge, archive the `<domain>-tls` item in 1Password. Keep the zone
+in Cloudflare if the domain may come back; adding it again then starts at
+[PR 1](#pr-1-serve-the-domain).
