@@ -683,9 +683,9 @@ backend = "pipx:yamllint"
 specifiers = ["1.38.0"]
 
 [[tools."pipx:zensical"]]
-version = "0.1.0"
+version = "0.1.1"
 backend = "pipx:zensical"
-specifiers = ["0.1.0"]
+specifiers = ["0.1.1"]
 
 [[tools.ripgrep]]
 version = "15.2.0"
