@@ -46,10 +46,14 @@ The component creates, per app:
 - the `Restore`, which acts as a volume populator
 
 The mover runs as UID/GID `4000` by default and keeps a persistent cache on
-`openebs-hostpath` (5Gi by default). The `ClusterRepository` caps Kopia's cache
-budgets at 512 MiB for content and 1 GiB for metadata, so the cache sweeper
-keeps it inside the PVC. Kopia's own default of 5000 MiB per budget is larger
-than the volume.
+`openebs-hostpath`, as large as the app's volume (`KOPIUR_CAPACITY`, 5Gi by
+default, 1Gi for many apps). Hostpath volumes don't enforce their size, so the
+`ClusterRepository` caps Kopia's cache budgets instead: 512 MiB for content and
+1 GiB for metadata, which Kopia applies twice (also to its index-blob cache),
+about 2.5 GiB per cache on the node's disk. Kopia's own default is 5000 MiB per
+budget. The budgets are fixed on purpose: budgets as a percentage of capacity
+would give the largest caches (Plex, 120Gi) tens of GiB, and growing a cache
+PVC is not possible on `openebs-hostpath`.
 
 !!! warning "Changing the mover UID"
 
@@ -125,6 +129,11 @@ just k8s pvc-backup <namespace> <app>
 The recipe creates a `Snapshot` named `<app>-manual-<suffix>` for the app's
 `SnapshotPolicy`; follow it with `kubectl -n <namespace> get snapshot`. It
 falls under the policy's retention like the scheduled ones.
+
+### Restores
+
+To bring back some files, or roll an app's volume back to a snapshot, see
+[Restoring a Volume](../../operations/runbooks/restoring-a-volume.md).
 
 ### Database backups
 

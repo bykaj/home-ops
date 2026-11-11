@@ -13,6 +13,7 @@ Step-by-step procedures for recurring and disaster-recovery operations.
 - [New Database](new-database.md): first deploy of an app with a brand-new CNPG cluster
 - [Adding an App](adding-an-app.md): scaffold a new cluster app
 - [Retiring an App](retiring-an-app.md): remove an app or a domain, and clean up what stays behind
+- [Restoring a Volume](restoring-a-volume.md): bring back some files, or a whole app volume, from a Kopiur snapshot
 - [Adding a Domain](adding-a-domain.md): serve a new domain with DNS, routing and a wildcard certificate
 
 !!! tip "Prerequisites for every runbook"

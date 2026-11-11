@@ -42,10 +42,12 @@ spec:
         jitter: 1h
   moverDefaults:
     cache:
-      # Every cache PVC is 5Gi or larger (KOPIUR_CAPACITY default). Kopia's own
-      # defaults are 5000 MiB per budget, larger than the whole PVC, so the
-      # sweeper never runs and the cache fills the volume. The metadata budget
-      # applies twice: kopia caps the index-blobs cache at the same size.
+      # Cache PVCs are sized from KOPIUR_CAPACITY (often 1Gi) on openebs-hostpath,
+      # which doesn't enforce the size, so these budgets are what bounds the
+      # cache on the node's disk. Kopia's own defaults are 5000 MiB per budget.
+      # The metadata budget applies twice: kopia caps the index-blobs cache at
+      # the same size. Fixed MiB on purpose: percent-of-capacity budgets would
+      # give the 120Gi Plex cache tens of GiB.
       contentCacheSizeMb: 512
       metadataCacheSizeMb: 1024
     podSecurityContext:
