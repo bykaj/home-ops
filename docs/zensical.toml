@@ -62,6 +62,7 @@ nav = [
       { "New Database" = "operations/runbooks/new-database.md" },
       { "Adding an App" = "operations/runbooks/adding-an-app.md" },
       { "Retiring an App" = "operations/runbooks/retiring-an-app.md" },
+      { "Restoring a Volume" = "operations/runbooks/restoring-a-volume.md" },
       { "Adding a Domain" = "operations/runbooks/adding-a-domain.md" },
     ] },
     { "Alerting" = [
