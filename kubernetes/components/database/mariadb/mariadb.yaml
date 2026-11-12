@@ -13,7 +13,7 @@ spec:
     pointInTimeRecoveryRef:
       name: ${APP}-mariadb-recovery
   database: ${MARIADB_DATABASE:=${APP}}
-  image: docker.io/library/mariadb:12.3.3@sha256:d46e102fa8b9b72bfcdeb56f9dd538742092119dc8b11f31fe662605cd234cd9
+  image: docker.io/library/mariadb:12.3.3@sha256:2626e3d951d2a7efd3aa15c30fbcf5fb6b30f93df83d56f52adf3712d546ad16
   metrics:
     enabled: true
   myCnf: |
