@@ -12,7 +12,7 @@ pipx.uvx = true
 [tools]
 "actionlint" = "1.7.12"
 "aqua:1password/cli" = "2.42.0"
-"cloudflared" = "2026.10.7"
+"cloudflared" = "2026.11.0"
 "crane" = "0.22.1"
 "flux2" = "2.10.0"
 "gh" = "2.103.3"
