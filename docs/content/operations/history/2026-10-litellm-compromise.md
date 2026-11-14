@@ -62,7 +62,8 @@ bindings, and it had no database credentials. Nothing else was exposed.
   release check, which can't be turned off. GitHub's API accepts writes
   (gists, issues, repo contents) with any token, so a compromised image could
   send the provider keys out that way. Cilium can't narrow it to the release
-  endpoint without TLS interception. Remove the rule if LiteLLM gets a switch
-  for the check.
+  endpoint without TLS interception. Since 2026-11-14 (LiteLLM v1.109.0,
+  [#3402](https://github.com/bykaj/home-ops/pull/3402)) `LITELLM_OFFLINE_MODE`
+  turns the check off and the rule is gone. Don't add it back.
 - Not built yet: runtime detection (Tetragon) and diffing image contents on
   Renovate PRs.

@@ -102,19 +102,16 @@ spec:
       value: https://cyrannus.id/api/oidc/userinfo
     - name: PROXY_BASE_URL
       value: https://${APP_DOMAIN:=${APP_SUBDOMAIN:=${APP}}.bykaj.app}
-    # Use the bundled blog posts for the Admin UI: the RSS fetch is synchronous,
-    # so with docs.litellm.ai blocked by the egress policy every UI page load
-    # froze the whole proxy for the 5s timeout (failures aren't cached)
-    - name: LITELLM_LOCAL_BLOG_POSTS
-      value: "true"
-    # Use the bundled cost map instead of fetching it from GitHub at startup;
-    # the egress policy only allows the model providers
-    - name: LITELLM_LOCAL_MODEL_COST_MAP
-      value: "True"
     - name: LITELLM_LOG
       value: INFO
     - name: LITELLM_MODE
       value: PRODUCTION
+    # Stop every fetch LiteLLM makes on its own (cost map, Admin UI blog posts
+    # and release check, HIBP, tokenizers) and use the bundled copies; the
+    # egress policy only allows the configured destinations, and the blocked
+    # blog fetch used to freeze the whole proxy on every UI page load
+    - name: LITELLM_OFFLINE_MODE
+      value: "true"
     - name: LITELLM_MASTER_KEY
       valueFrom:
         secretKeyRef:
