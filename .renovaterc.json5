@@ -59,9 +59,25 @@
       matchPackageNames: ["docker.io/library/mariadb"],
       allowedVersions: "/^(11\\.8|\\d{2}\\.3)\\.\\d+$/",
     },
+    {
+      // The image also carries older date tags (v2026.9.24), which sort above
+      // the current v0.x releases
+      description: "Keep Hermes on v0.x releases",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/nousresearch/hermes-agent"],
+      allowedVersions: "/^v0\\.\\d+\\.\\d+$/",
+    },
     //
     // Release age rules
     //
+    {
+      // An agent with a shell, a LiteLLM key and Flux write access: a pulled
+      // release should never reach it. Docker Hub gives Renovate the timestamps
+      description: "Hold Hermes releases for 3 days",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/nousresearch/hermes-agent"],
+      minimumReleaseAge: "3 days",
+    },
     {
       // v1.107.0 shipped a credential stealer and was pulled within hours
       // (BerriAI/litellm#47826). Pulled from Docker Hub because Renovate only

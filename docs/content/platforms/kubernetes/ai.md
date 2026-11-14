@@ -16,6 +16,9 @@ Per-server details and gotchas are in [App Notes](app-notes.md#litellm).
 graph LR
     cc(Claude Code / Desktop<br/>on a Mac) -->|litellm.bykaj.app/mcp/| int[envoy-internal]
     int --> proxy[LiteLLM proxy]
+    phone(Browser / Hermes app) -->|chat.bykaj.app| int2[envoy-internal]
+    int2 --> hermes[Hermes]
+    hermes -->|litellm.ai.svc:4000<br/>/v1 and /mcp/| proxy
     apps(Karakeep, Paperless, Windshift,<br/>Seafile, kguardian) -->|litellm.ai.svc:4000/v1| proxy
     proxy --> models[(MiniMax, OpenAI)]
     proxy --> mcp[MCP servers]
@@ -43,7 +46,7 @@ two Flux Kustomizations in
 | Kustomization | Path | Contents |
 | --- | --- | --- |
 | `litellm` | `app/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
-| `litellm-mcp` | `mcp/` | MCP servers and the `claude-code` team and key |
+| `litellm-mcp` | `mcp/` | MCP servers, the `claude-code` team and key, and the `hermes` and `ops` teams |
 
 Postgres holds keys, teams, users and spend; Dragonfly is the response cache
 and router state. Models and MCP servers are file-backed
@@ -132,7 +135,9 @@ may call.
 
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
-| `claude-code` | `ai` (team `claude-code`) | none | all servers except `kagi` |
+| `claude-code` | `ai` (team `claude-code`) | none | all servers except `flux` and `kagi` |
+| `hermes` | `ai/hermes` (team `hermes`) | `chatgpt/gpt-6-luna`, `chatgpt/gpt-6.1-sol`, `minimax/MiniMax-M3`, `minimax/MiniMax-M3.1-Flash` | all servers except `flux` |
+| `hermes-ops` | `ai/hermes` (team `ops`) | none | `flux` |
 | `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
 | `paperless` | `default/paperless` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
@@ -148,11 +153,14 @@ may call.
   On a fresh install the key waits for the proxy and Flux retries. kguardian
   is the exception: it depends on `litellm`, which is accepted as is.
 - **MCP access** is granted per team: a key gets no MCP servers unless its team
-  lists them. The `claude-code` team lists every server except `kagi` and the
-  model `no-default-models`, which matches nothing, so its key can't spend
-  money. `kagi` is paid per search and Claude Code has its own web search, so
-  only a future client that should search through Kagi (such as Open WebUI)
-  gets it.
+  lists them, and the operator has no per-tool allowlist. The `claude-code`
+  team lists every server except `flux` and `kagi`, and the model
+  `no-default-models`, which matches nothing, so its key can't spend money.
+  `kagi` is paid per search and Claude Code has its own web search, so only
+  the `hermes` team gets it.
+- **Write access to the cluster** (the `flux` server) is its own team, `ops`,
+  so no read-mostly key can change the cluster. Each client that should fix
+  things gets its own key in that team.
 
 ## MCP servers
 
@@ -162,8 +170,9 @@ one key for all of them. Tools appear as `<server>-<tool>`.
 | Server | Runs | Reaches |
 | --- | --- | --- |
 | `context7` | Context7's hosted server | `mcp.context7.com`, bearer key from the `litellm` item |
+| `flux` | Operator-run pod (flux-operator-mcp) | The Kubernetes API as ServiceAccount `flux-mcp`; see [below](#fixing-the-cluster-through-an-agent) |
 | `home_assistant` | Operator-run pod (ha-mcp) | Home Assistant, as a dedicated user |
-| `kagi` | Kagi's hosted server | `mcp.kagi.com`, bearer key from the `litellm` item; no team has it yet |
+| `kagi` | Kagi's hosted server | `mcp.kagi.com`, bearer key from the `litellm` item; only the `hermes` team has it |
 | `kguardian` | kguardian's own llm-bridge | `observability/kguardian-llm-bridge:8080`, no auth |
 | `kubesearch` | Operator-run pod | kubesearch.dev and GitHub clones (reference repos always cloned) |
 | `unifi_network` | Operator-run pod | The UniFi gateway, as a dedicated local account |
@@ -171,6 +180,101 @@ one key for all of them. Tools appear as `<server>-<tool>`.
 Operator-run servers are `LiteLLMMCPServer` resources with a `workload` and
 listen on port 3000; each has a network policy that admits only the proxy.
 Agents use kubesearch first and Context7 only as a fallback (`AGENTS.md`).
+
+## Fixing the cluster through an agent
+
+The `flux` server runs flux-operator-mcp with its write tools on: reconcile,
+suspend and resume Flux objects, apply a manifest, delete a resource. The
+Flux controllers deploy whatever a Flux object points at as cluster-admin, so
+a free patch to one (another repo URL, path or values) would be cluster-admin
+too. What the server may do is therefore limited in the cluster, in
+[`mcp/servers/flux`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm/mcp/servers/flux):
+
+| Layer | Allows |
+| --- | --- |
+| `flux-mcp-read` and `view` | get, list and watch on everything troubleshooting needs, pod logs included; no Secrets, `pods/exec`, port-forward, node proxy or ServiceAccount tokens |
+| `flux-mcp-operate` | `patch` on Kustomizations, HelmReleases and sources, `patch` on Deployments and StatefulSets, `delete` on pods. No `create` anywhere, and no Flux object can be deleted (that would prune the app, PVCs included) |
+| `flux-mcp-flux-objects` (VAP) | On Flux objects only the `reconcile.fluxcd.io/*` annotations (reconcile, force, reset) and `spec.suspend` may change |
+| `flux-mcp-workloads` (VAP) | On Deployments and StatefulSets only `spec.replicas` and the pod template's `kubectl.kubernetes.io/restartedAt` annotation (rollout restart) may change |
+
+That covers reconciling, suspending and resuming, forcing a stuck HelmRelease,
+scaling an app back up after a resume (which keeps a manual scale), restarting
+a workload and deleting a stuck pod. Anything that loses data or can't be
+undone (deleting a PVC, a Kopiur cache, a Flux object) stays a job for a
+workstation. Both admission policies only match `system:serviceaccount:ai:flux-mcp`.
+
+Check the policies with a server-side dry run as the ServiceAccount; admission
+runs on dry runs too:
+
+```sh
+SA=system:serviceaccount:ai:flux-mcp
+# allowed
+kubectl -n default annotate kustomization paperless --as=$SA --dry-run=server --overwrite \
+  reconcile.fluxcd.io/requestedAt="$(date +%s)"
+kubectl -n default patch kustomization paperless --as=$SA --dry-run=server --type merge -p '{"spec":{"suspend":true}}'
+kubectl -n default patch deployment paperless --as=$SA --dry-run=server --type merge -p '{"spec":{"replicas":1}}'
+# denied
+kubectl -n default patch kustomization paperless --as=$SA --dry-run=server --type merge -p '{"spec":{"path":"./x"}}'
+kubectl -n default patch deployment paperless --as=$SA --dry-run=server --type json \
+  -p '[{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"busybox"}]'
+```
+
+## Hermes
+
+[Hermes](https://github.com/NousResearch/hermes-agent) is a self-hosted agent
+that runs all the time, in
+[`kubernetes/apps/ai/hermes`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/hermes):
+chat from a browser or the Hermes apps, scheduled jobs, memory, skills and a
+local shell in its own pod. The web app is `https://chat.bykaj.app`, the admin
+dashboard `https://hermes.bykaj.app`, both on `envoy-internal` only, so away
+from home they need Tailscale. Both sign in through Pocket ID (see
+[App Notes](app-notes.md#hermes)).
+
+It calls models and MCP servers only through LiteLLM's Service, with two keys
+from the pod's environment:
+
+- `LITELLM_API_KEY` (`hermes` key): its models, and every MCP server except
+  `flux`.
+- `LITELLM_OPS_API_KEY` (`hermes-ops` key): the `flux` server only.
+
+`/etc/hermes/config.yaml` (from `app/resources/config.yaml`) is a read-only
+overlay for sign-in, ports and security settings. Everything else lives on
+the `hermes` PVC (backed up by Kopiur) and is set up once, in the dashboard:
+the default profile (`/opt/data/config.yaml`) for everyday use, and an `ops`
+profile for fixing the cluster, which adds the `flux` server. The default
+profile:
+
+```yaml
+model:
+  default: chatgpt/gpt-6.1-sol
+  provider: custom:litellm
+
+providers:
+  litellm:
+    api: http://litellm.ai.svc.cluster.local:4000/v1
+    discover_models: true
+    key_env: LITELLM_API_KEY
+    name: LiteLLM
+
+mcp_servers:
+  litellm:
+    url: http://litellm.ai.svc.cluster.local:4000/mcp/
+    headers:
+      x-litellm-api-key: Bearer ${LITELLM_API_KEY}
+```
+
+The `ops` profile (`/opt/data/profiles/ops/config.yaml`) has the same
+settings plus a second server:
+
+```yaml
+mcp_servers:
+  litellm_ops:
+    url: http://litellm.ai.svc.cluster.local:4000/mcp/
+    headers:
+      x-litellm-api-key: Bearer ${LITELLM_OPS_API_KEY}
+```
+
+Restart the gateway (delete the `hermes` pod) after changing `mcp_servers`.
 
 ## Network
 
@@ -224,8 +328,9 @@ Add an MCP server
 :   Add a folder under `mcp/servers/` with a `LiteLLMMCPServer` (plus a network
     policy that admits only the proxy and limits its egress). A port other than
     3000, or a server outside the operator, needs its own rule in
-    `litellm-egress`. Then add its alias to the `claude-code` team. Add a
-    section to [App Notes](app-notes.md#litellm).
+    `litellm-egress`. Then add its alias to the `claude-code` and `hermes`
+    teams, or to `ops` if it can change things. Add a section to
+    [App Notes](app-notes.md#litellm).
 
 Add a consumer app
 :   Add a `LiteLLMVirtualKey` with `proxyNamespace: ai` and only the models it

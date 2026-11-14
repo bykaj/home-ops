@@ -1,0 +1,188 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/v1/serviceaccount.json
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flux-mcp
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/rbac.authorization.k8s.io/clusterrole_v1.json
+# Reading: the built-in view role (aggregated, no Secrets) plus everything it
+# leaves out that troubleshooting needs. Left out on purpose: Secrets,
+# pods/exec, pods/attach, pods/portforward, nodes/proxy, serviceaccounts/token,
+# and the 1Password, External Secrets generator, LiteLLM and CSR groups
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flux-mcp-read
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - componentstatuses
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - acme.cert-manager.io
+      - actions.github.com
+      - admissionregistration.k8s.io
+      - apiextensions.k8s.io
+      - apiregistration.k8s.io
+      - apps
+      - apps.emqx.io
+      - autoscaling
+      - autoscaling.k8s.io
+      - barmancloud.cnpg.io
+      - batch
+      - ceph.rook.io
+      - cert-manager.io
+      - cilium.io
+      - coordination.k8s.io
+      - csi.ceph.io
+      - discovery.k8s.io
+      - dragonflydb.io
+      - events.k8s.io
+      - external-secrets.io
+      - externaldns.k8s.io
+      - fluxcd.controlplane.io
+      - gateway.envoyproxy.io
+      - gateway.networking.k8s.io
+      - gateway.networking.x-k8s.io
+      - grafana.integreatly.org
+      - groupsnapshot.storage.k8s.io
+      - helm.toolkit.fluxcd.io
+      - k8s.mariadb.com
+      - kguardian.dev
+      - kopiur.home-operations.com
+      - kustomize.toolkit.fluxcd.io
+      - metrics.k8s.io
+      - monitoring.coreos.com
+      - monitoring.giantswarm.io
+      - networking.k8s.io
+      - node.k8s.io
+      - notification.toolkit.fluxcd.io
+      - objectbucket.io
+      - observability.giantswarm.io
+      - policy
+      - postgresql.cnpg.io
+      - rbac.authorization.k8s.io
+      - resource.k8s.io
+      - scheduling.k8s.io
+      - snapshot.storage.k8s.io
+      - source.toolkit.fluxcd.io
+      - storage.k8s.io
+      - tailscale.com
+      - talos.dev
+      - tuppr.home-operations.com
+    resources:
+      - "*"
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - /api
+      - /api/*
+      - /apis
+      - /apis/*
+      - /openapi
+      - /openapi/*
+      - /version
+    verbs:
+      - get
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/rbac.authorization.k8s.io/clusterrole_v1.json
+# Fixing: patch only, so nothing can be created, and no Flux object deleted
+# (deleting a Kustomization prunes its whole app, PVCs included). RBAC can't
+# limit which fields a patch touches; the admission policies do that
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flux-mcp-operate
+rules:
+  # Reconcile (reconcile.fluxcd.io annotations), suspend and resume
+  - apiGroups:
+      - helm.toolkit.fluxcd.io
+      - kustomize.toolkit.fluxcd.io
+      - source.toolkit.fluxcd.io
+    resources:
+      - gitrepositories
+      - helmcharts
+      - helmreleases
+      - helmrepositories
+      - kustomizations
+      - ocirepositories
+    verbs:
+      - patch
+  # Scale back up after a resume, rollout restart
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+    verbs:
+      - patch
+  # A stuck pod, by name; its controller recreates it
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - delete
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/rbac.authorization.k8s.io/clusterrolebinding_v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: ai
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/rbac.authorization.k8s.io/clusterrolebinding_v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp-read
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flux-mcp-read
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: ai
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/rbac.authorization.k8s.io/clusterrolebinding_v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp-operate
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flux-mcp-operate
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: ai

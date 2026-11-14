@@ -159,7 +159,8 @@ to date and every app has a purpose.
 
 | App | Purpose | Exposure | Uses | Upstream |
 | --- | --- | --- | --- | --- |
-| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway for hosted models and the Context7, Home Assistant, Kagi, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#databasedragonfly), [postgres](components.md#databasepostgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| [hermes](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/hermes) | Always-on agent (chat, scheduled jobs, shell) on LiteLLM, with Flux access for fixes; see [AI](ai.md#hermes) | internal | [backup](components.md#kopiur) | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) |
+| [litellm](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm) | LLM and MCP gateway for hosted models and the Context7, Flux, Home Assistant, Kagi, kguardian, kubesearch and UniFi MCP servers; see [AI](ai.md) | internal | [backup](components.md#kopiur), [dragonfly](components.md#databasedragonfly), [postgres](components.md#databasepostgres) | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
 | [litellm-operator](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/litellm-operator) | LiteLLM proxies, models, MCP servers, teams and keys as CRDs | — | — | [home-operations/litellm-operator](https://github.com/home-operations/litellm-operator) |
 
 ### `default`

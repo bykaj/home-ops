@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmteam_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMTeam
+metadata:
+  name: hermes
+spec:
+  alias: hermes
+  # Every server except flux, which only the ops team gets. kagi is Hermes' web
+  # search (paid per search); its pod may reach nothing outside the cluster
+  mcpServers:
+    - context7
+    - home_assistant
+    - kagi
+    - kguardian
+    - kubesearch
+    - unifi_network
+  # Subscription models first, MiniMax as the pay-per-token fallback
+  models:
+    - chatgpt/gpt-6-luna
+    - chatgpt/gpt-6.1-sol
+    - minimax/MiniMax-M3
+    - minimax/MiniMax-M3.1-Flash
+  proxyRef: litellm

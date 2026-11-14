@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: flux-mcp
+spec:
+  # Flux Operator's MCP server with its write tools on, for fixing things away
+  # from a workstation. What it may change is limited by its ServiceAccount
+  # (rbac.yaml) and two admission policies (validatingadmissionpolicy.yaml),
+  # not by the server; only the ops team gets it
+  alias: flux
+  params:
+    description: >-
+      Flux and Kubernetes state, and a few fixes: reconcile, suspend and resume
+      Flux objects, delete a pod, scale or restart a Deployment or
+      StatefulSet. Everything else is refused by the cluster.
+  proxyRef: litellm
+  transport: http
+  workload:
+    # renovate: datasource=docker depName=ghcr.io/controlplaneio-fluxcd/flux-operator-mcp
+    image: ghcr.io/controlplaneio-fluxcd/flux-operator-mcp:v0.62.1@sha256:0b4181bc9ada80eedf3e9df3355153abc9c3e6d8b913bddebe0b12908309bff6
+    args:
+      - serve
+      - --transport=http
+      # Port 3000 is the one litellm-egress allows for operator MCP servers
+      - --port=3000
+    automountServiceAccountToken: true
+    env:
+      - name: HOME
+        value: /tmp
+      - name: RUNTIME_NAMESPACE
+        value: ai
+    path: /mcp
+    podSecurityContext:
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    port: 3000
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+    serviceAccountName: flux-mcp
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+    volumes:
+      - name: tmp
+        emptyDir: {}

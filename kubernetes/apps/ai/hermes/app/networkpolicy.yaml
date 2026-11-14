@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hermes-egress
+spec:
+  # Egress only: Hermes is an agent with a shell, two LiteLLM keys (one with
+  # Flux write access) and every chat and memory, so a prompt injection must
+  # have nowhere to send them. It may reach LiteLLM (models and MCP servers,
+  # Kagi for web search) and Pocket ID and nothing else: no direct web access,
+  # skill hub installs, pip or git remotes, and update checks and telemetry
+  # stay blocked
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # Models and MCP servers, both through the proxy's Service
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: litellm
+            app.kubernetes.io/name: litellm
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "4000"
+              protocol: TCP
+    # Pocket ID discovery and JWKS for sign-in: cyrannus.id resolves to the
+    # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
+    - toEndpoints:
+        - matchLabels:
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+            k8s:io.kubernetes.pod.namespace: network
+      toPorts:
+        - ports:
+            - port: "10443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: hermes
+      app.kubernetes.io/instance: hermes

@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: hermes
+spec:
+  # Models and the read-mostly MCP servers (team hermes), for every profile
+  keyAlias: hermes
+  models:
+    - chatgpt/gpt-6-luna
+    - chatgpt/gpt-6.1-sol
+    - minimax/MiniMax-M3
+    - minimax/MiniMax-M3.1-Flash
+  proxyRef: litellm
+  secretKey: api-key
+  secretName: hermes-litellm
+  teamID: hermes
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: hermes-ops
+spec:
+  # The flux MCP server only (team ops), for the ops profile; no models
+  keyAlias: hermes-ops
+  models:
+    - no-default-models
+  proxyRef: litellm
+  secretKey: api-key
+  secretName: hermes-ops-litellm
+  teamID: ops
