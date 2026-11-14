@@ -74,6 +74,10 @@ MiniMax models therefore set MiniMax's official prices themselves
 `cache_read_input_token_cost` and the `_above_512k_tokens` variants in
 `params.additional`); update them when MiniMax changes its pricing. The
 `chatgpt/` models log $0, because the subscription isn't billed per token.
+Instead, the Plus fee ($20 a month from the 20th) is a subscription account
+on the ChatGPT account, counted once per billing period. It's set in the Admin
+UI and lives only in the database: neither the config nor the operator can
+manage subscription accounts yet.
 
 ### ChatGPT subscription
 
