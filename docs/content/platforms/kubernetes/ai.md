@@ -226,7 +226,7 @@ that runs all the time, in
 chat from a browser or an app, scheduled jobs, memory, skills and a local
 shell in its own pod. The web app is `https://chat.bykaj.app`, the admin
 dashboard `https://hermes.bykaj.app`, both on `envoy-internal` only, so away
-from home they need UniFi Teleport (WiFiman). Both sign in through Pocket ID (see
+from home they need One-Click VPN (UniFi Endpoint app). Both sign in through Pocket ID (see
 [App Notes](app-notes.md#hermes)).
 
 The apps connect to the web app's address: Hermes Desktop on the Macs, and
