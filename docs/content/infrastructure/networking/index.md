@@ -94,8 +94,8 @@ Each policy file explains its own rules:
   limits the LiteLLM proxy, which holds the model provider keys, to an egress
   allowlist. Model providers and external MCP servers (such as Context7) are
   allowed by FQDN (`toFQDNs`), so a provider or MCP server on a new host needs
-  a rule there. `api.github.com` is allowed too, for the Admin UI's release
-  check; it's the one destination that can take data out (see the
+  a rule there. LiteLLM's own fetches (release check, cost map, blog posts)
+  are off, so nothing else is allowed (see the
   [LiteLLM compromise](../../operations/history/2026-10-litellm-compromise.md#what-to-watch)).
 - [`notification-controller-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/flux-system/flux-instance/app/networkpolicy.yaml)
   limits Flux's notification controller, which serves the public webhook

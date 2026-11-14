@@ -62,18 +62,15 @@ How the gateway, models, keys and MCP servers fit together is on the
   `MAIL_FROM` from the `smtp` 1Password item. LiteLLM only sends email with
   `email` in `general_settings.alerting`.
 - Anything else LiteLLM fetches from the internet times out against that
-  policy, so it uses bundled copies instead: the model cost map
-  (`LITELLM_LOCAL_MODEL_COST_MAP`) and the Admin UI blog posts
-  (`LITELLM_LOCAL_BLOG_POSTS`). The blog fetch is synchronous, so without that
-  setting every UI page load froze the whole proxy for 5 seconds.
+  policy, so `LITELLM_OFFLINE_MODE=true` turns off every fetch it makes on its
+  own (model cost map, Admin UI blog posts and release check, Have I Been
+  Pwned, tokenizers) and it uses the bundled copies instead. The blog fetch is
+  synchronous, so without that every UI page load froze the whole proxy for 5
+  seconds.
 - The Prisma CLI that LiteLLM runs at startup for its database contacts
   `checkpoint.prisma.io` (version check and telemetry). `litellm-egress`
   blocks it and `CiliumEgressPolicyDenied` fired, so `CHECKPOINT_DISABLE=1`
   turns it off.
-- The Admin UI checks GitHub for the latest release every 5 minutes while it's
-  open, and the check can't be turned off. `litellm-egress` allows
-  `api.github.com` for it, because blocked attempts set off
-  `CiliumEgressPolicyDenied`.
 - MCP servers are `LiteLLMMCPServer` resources in `litellm/mcp/servers` (Flux
   Kustomization `litellm-mcp`); the operator runs each one and registers it
   with the proxy. `litellm-egress` allows them by the operator's
