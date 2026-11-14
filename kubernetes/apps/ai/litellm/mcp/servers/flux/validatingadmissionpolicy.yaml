@@ -75,28 +75,27 @@ spec:
           - CREATE
           - DELETE
           - UPDATE
+        # The scale subresources aren't in its role at all
         resources:
           - deployments
-          - deployments/scale
           - statefulsets
-          - statefulsets/scale
   validations:
-    - expression: request.operation == "UPDATE" && request.subResource == ""
-      message: flux-mcp may only update Deployments and StatefulSets themselves
+    - expression: request.operation == "UPDATE"
+      message: flux-mcp may only update Deployments and StatefulSets
     - expression: >-
-        request.operation != "UPDATE" || request.subResource != "" || (
+        request.operation != "UPDATE" || (
         object.spec.all(k, k == "replicas" || k == "template" || (k in oldObject.spec && object.spec[k] == oldObject.spec[k])) &&
         oldObject.spec.all(k, k == "replicas" || k == "template" || k in object.spec) &&
         object.spec.template.spec == oldObject.spec.template.spec &&
         (has(object.spec.template.metadata.labels) ? object.spec.template.metadata.labels : {}) == (has(oldObject.spec.template.metadata.labels) ? oldObject.spec.template.metadata.labels : {}))
       message: only spec.replicas and the pod template's restartedAt annotation may change
     - expression: >-
-        request.operation != "UPDATE" || request.subResource != "" || (
+        request.operation != "UPDATE" || (
         variables.newTemplateAnnotations.all(k, k == "kubectl.kubernetes.io/restartedAt" || (k in variables.oldTemplateAnnotations && variables.oldTemplateAnnotations[k] == variables.newTemplateAnnotations[k])) &&
         variables.oldTemplateAnnotations.all(k, k == "kubectl.kubernetes.io/restartedAt" || k in variables.newTemplateAnnotations))
       message: only the pod template's restartedAt annotation may change
     - expression: >-
-        request.operation != "UPDATE" || request.subResource != "" || (
+        request.operation != "UPDATE" || (
         (has(object.metadata.labels) ? object.metadata.labels : {}) == (has(oldObject.metadata.labels) ? oldObject.metadata.labels : {}) &&
         (has(object.metadata.annotations) ? object.metadata.annotations : {}) == (has(oldObject.metadata.annotations) ? oldObject.metadata.annotations : {}) &&
         (has(object.metadata.ownerReferences) ? object.metadata.ownerReferences : []) == (has(oldObject.metadata.ownerReferences) ? oldObject.metadata.ownerReferences : []) &&
@@ -104,9 +103,9 @@ spec:
       message: labels, annotations, owner references and finalizers may not change
   variables:
     - name: newTemplateAnnotations
-      expression: 'request.operation == "UPDATE" && request.subResource == "" && has(object.spec.template.metadata.annotations) ? object.spec.template.metadata.annotations : {}'
+      expression: 'request.operation == "UPDATE" && has(object.spec.template.metadata.annotations) ? object.spec.template.metadata.annotations : {}'
     - name: oldTemplateAnnotations
-      expression: 'request.operation == "UPDATE" && request.subResource == "" && has(oldObject.spec.template.metadata.annotations) ? oldObject.spec.template.metadata.annotations : {}'
+      expression: 'request.operation == "UPDATE" && has(oldObject.spec.template.metadata.annotations) ? oldObject.spec.template.metadata.annotations : {}'
 ---
 # yaml-language-server: $schema=https://schemas.bykaj.io/admissionregistration.k8s.io/validatingadmissionpolicybinding_v1.json
 apiVersion: admissionregistration.k8s.io/v1
