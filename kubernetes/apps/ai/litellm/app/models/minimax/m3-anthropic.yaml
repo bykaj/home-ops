@@ -21,6 +21,15 @@ spec:
           role: system
         - index: -1
           location: message
+      # Official per-token prices (platform.minimax.io/docs/guides/pricing, standard
+      # tier); set here because LiteLLM's bundled cost map has no anthropic/ entry
+      # and no >512K tier. No cache write price is listed, so writes count as free
+      cache_read_input_token_cost: 0.00000006 # $0.06/M
+      cache_read_input_token_cost_above_512k_tokens: 0.00000012 # $0.12/M
+      input_cost_per_token: 0.0000003 # $0.30/M
+      input_cost_per_token_above_512k_tokens: 0.0000006 # $0.60/M
+      output_cost_per_token: 0.0000012 # $1.20/M
+      output_cost_per_token_above_512k_tokens: 0.0000024 # $2.40/M
     apiBase: https://api.minimax.io/anthropic
     apiKeyRef:
       key: MINIMAX_API_KEY

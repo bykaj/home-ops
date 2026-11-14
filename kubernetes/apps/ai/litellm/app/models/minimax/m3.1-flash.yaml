@@ -3,7 +3,7 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: minimax-m3.1-flash-preview
+  name: minimax-m3.1-flash
 spec:
   info:
     extra:
@@ -14,7 +14,7 @@ spec:
     supportsFunctionCalling: true
     supportsPromptCaching: true
     supportsVision: true
-  modelName: minimax/MiniMax-M3.1-Flash-Preview
+  modelName: minimax/MiniMax-M3.1-Flash
   params:
     additional:
       cache_control_injection_points:
@@ -22,10 +22,16 @@ spec:
           role: system
         - index: -1
           location: message
+      # Official per-token prices (platform.minimax.io/docs/guides/pricing); set
+      # here because LiteLLM's bundled cost map has no entry for this model. No
+      # cache write price is listed, so writes count as free
+      cache_read_input_token_cost: 0.000000015 # $0.015/M
       extra_body:
         reasoning_split: true
+      input_cost_per_token: 0.00000015 # $0.15/M
+      output_cost_per_token: 0.0000006 # $0.60/M
     apiBase: https://api.minimax.io/v1
     apiKeyRef:
       key: MINIMAX_API_KEY
       name: litellm-secret
-    model: minimax/MiniMax-M3.1-Flash-Preview
+    model: minimax/MiniMax-M3.1-Flash
