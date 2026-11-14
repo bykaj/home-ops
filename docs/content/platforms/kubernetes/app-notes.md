@@ -96,7 +96,7 @@ How the gateway, models, keys and MCP servers fit together is on the
   login). Only the `hermes` team has it, as Hermes' web search; the
   `claude-code` key leaves it out because Claude Code has its own.
 - The Flux MCP server (flux-operator-mcp) is the only write-capable cluster
-  access an agent gets, and only the `ops` team has it. Its write tools are on
+  access an agent gets, and only the `hermes` team has it. Its write tools are on
   (no `--read-only`), so what it may change comes from its ServiceAccount
   `flux-mcp` and two `ValidatingAdmissionPolicies`, not from the server; see
   [Fixing the cluster through an agent](ai.md#fixing-the-cluster-through-an-agent).
@@ -172,9 +172,9 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   goes through the Kagi MCP server instead (paid per search).
   `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
   dependencies on first use.
-- The LiteLLM keys are pod environment variables. The terminal tool only gets
+- The LiteLLM key is a pod environment variable. The terminal tool only gets
   the variables in `terminal.env_passthrough` (none), so the agent's shell
-  can't read them.
+  can't read it.
 - Settings that must stay in each profile's own `config.yaml` (providers,
   `mcp_servers`, secret sources, `skills.external_dirs`): declaring them in the
   managed overlay makes every dashboard save strip them from the profile.

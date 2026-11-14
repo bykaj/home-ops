@@ -46,7 +46,7 @@ two Flux Kustomizations in
 | Kustomization | Path | Contents |
 | --- | --- | --- |
 | `litellm` | `app/` | `LiteLLMProxy`, models, egress policy, ServiceMonitor, Postgres ([postgres](components.md#databasepostgres)), cache ([dragonfly](components.md#databasedragonfly)) and the ChatGPT token volume ([kopiur](components.md#kopiur)) |
-| `litellm-mcp` | `mcp/` | MCP servers, the `claude-code` team and key, and the `hermes` and `ops` teams |
+| `litellm-mcp` | `mcp/` | MCP servers, the `claude-code` team and key, and the `hermes` team |
 
 Postgres holds keys, teams, users and spend; Dragonfly is the response cache
 and router state. Models and MCP servers are file-backed
@@ -136,8 +136,7 @@ may call.
 | Key | Lives in | Models | MCP |
 | --- | --- | --- | --- |
 | `claude-code` | `ai` (team `claude-code`) | none | all servers except `flux` and `kagi` |
-| `hermes` | `ai/hermes` (team `hermes`) | `chatgpt/gpt-6-luna`, `chatgpt/gpt-6.1-sol`, `minimax/MiniMax-M3`, `minimax/MiniMax-M3.1-Flash` | all servers except `flux` |
-| `hermes-ops` | `ai/hermes` (team `ops`) | none | `flux` |
+| `hermes` | `ai/hermes` (team `hermes`) | `chatgpt/gpt-6-luna`, `chatgpt/gpt-6.1-sol`, `minimax/MiniMax-M3`, `minimax/MiniMax-M3.1-Flash` | all servers |
 | `karakeep` | `default/karakeep` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
 | `kguardian` | `observability/kguardian` | `minimax/MiniMax-M3-anthropic` | — |
 | `paperless` | `default/paperless` | `chatgpt/gpt-6-luna`, `openai/text-embedding-3-small` | — |
@@ -158,9 +157,9 @@ may call.
   `no-default-models`, which matches nothing, so its key can't spend money.
   `kagi` is paid per search and Claude Code has its own web search, so only
   the `hermes` team gets it.
-- **Write access to the cluster** (the `flux` server) is its own team, `ops`,
-  so no read-mostly key can change the cluster. Each client that should fix
-  things gets its own key in that team.
+- **Write access to the cluster** (the `flux` server) only goes to the
+  `hermes` team, the agent used for ops work. Claude Code on the Macs has
+  kubectl and flux itself and doesn't get it.
 
 ## MCP servers
 
@@ -230,19 +229,18 @@ dashboard `https://hermes.bykaj.app`, both on `envoy-internal` only, so away
 from home they need Tailscale. Both sign in through Pocket ID (see
 [App Notes](app-notes.md#hermes)).
 
-It calls models and MCP servers only through LiteLLM's Service, with two keys
-from the pod's environment:
-
-- `LITELLM_API_KEY` (`hermes` key): its models, and every MCP server except
-  `flux`.
-- `LITELLM_OPS_API_KEY` (`hermes-ops` key): the `flux` server only.
+It calls models and MCP servers only through LiteLLM's Service, with the
+`hermes` key from the pod's environment (`LITELLM_API_KEY`): its models and
+every MCP server, `flux` included. Hermes is the agent for ops work on the
+cluster, the network and Home Assistant, and the Home Assistant and UniFi
+servers can already change things, so a second, read-only key would protect
+nothing. What it can do to the cluster is limited in the cluster itself (see
+[Fixing the cluster through an agent](#fixing-the-cluster-through-an-agent)).
 
 `/etc/hermes/config.yaml` (from `app/resources/config.yaml`) is a read-only
 overlay for sign-in, ports and security settings. Everything else lives on
-the `hermes` PVC (backed up by Kopiur) and is set up once, in the dashboard:
-the default profile (`/opt/data/config.yaml`) for everyday use, and an `ops`
-profile for fixing the cluster, which adds the `flux` server. The default
-profile:
+the `hermes` PVC (backed up by Kopiur) and is set up once, in the dashboard.
+The default profile (`/opt/data/config.yaml`):
 
 ```yaml
 model:
@@ -261,17 +259,6 @@ mcp_servers:
     url: http://litellm.ai.svc.cluster.local:4000/mcp/
     headers:
       x-litellm-api-key: Bearer ${LITELLM_API_KEY}
-```
-
-The `ops` profile (`/opt/data/profiles/ops/config.yaml`) has the same
-settings plus a second server:
-
-```yaml
-mcp_servers:
-  litellm_ops:
-    url: http://litellm.ai.svc.cluster.local:4000/mcp/
-    headers:
-      x-litellm-api-key: Bearer ${LITELLM_OPS_API_KEY}
 ```
 
 Restart the gateway (delete the `hermes` pod) after changing `mcp_servers`.
@@ -328,8 +315,8 @@ Add an MCP server
 :   Add a folder under `mcp/servers/` with a `LiteLLMMCPServer` (plus a network
     policy that admits only the proxy and limits its egress). A port other than
     3000, or a server outside the operator, needs its own rule in
-    `litellm-egress`. Then add its alias to the `claude-code` and `hermes`
-    teams, or to `ops` if it can change things. Add a section to
+    `litellm-egress`. Then add its alias to the `hermes` team, and to
+    `claude-code` unless it can change the cluster. Add a section to
     [App Notes](app-notes.md#litellm).
 
 Add a consumer app

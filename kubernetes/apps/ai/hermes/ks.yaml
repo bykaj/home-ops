@@ -7,8 +7,8 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur
-  # LiteLLMVirtualKey CRD only; the keys themselves wait for the proxy and the
-  # hermes and ops teams (litellm-mcp)
+  # LiteLLMVirtualKey CRD only; the key itself waits for the proxy and the
+  # hermes team (litellm-mcp)
   dependsOn:
     - name: litellm-operator
     - name: rook-ceph-cluster

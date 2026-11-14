@@ -5,12 +5,12 @@ kind: CiliumNetworkPolicy
 metadata:
   name: hermes-egress
 spec:
-  # Egress only: Hermes is an agent with a shell, two LiteLLM keys (one with
-  # Flux write access) and every chat and memory, so a prompt injection must
-  # have nowhere to send them. It may reach LiteLLM (models and MCP servers,
-  # Kagi for web search) and Pocket ID and nothing else: no direct web access,
-  # skill hub installs, pip or git remotes, and update checks and telemetry
-  # stay blocked
+  # Egress only: Hermes is an agent with a shell, a LiteLLM key that can change
+  # the cluster, the network and Home Assistant, and every chat and memory, so
+  # a prompt injection must have nowhere to send them. It may reach LiteLLM
+  # (models and MCP servers, Kagi for web search) and Pocket ID and nothing
+  # else: no direct web access, skill hub installs, pip or git remotes, and
+  # update checks and telemetry stay blocked
   egress:
     - toEndpoints:
         - matchLabels:

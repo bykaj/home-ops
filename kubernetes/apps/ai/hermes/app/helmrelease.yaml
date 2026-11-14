@@ -69,17 +69,12 @@ spec:
               HERMES_HOME: /opt/data
               HERMES_WRITE_SAFE_ROOT: /opt/data
               HOME: /opt/data
-              # Read by the profiles (provider key_env, MCP headers); not passed
+              # Read by the profile (provider key_env, MCP headers); not passed
               # to the terminal, which only gets terminal.env_passthrough
               LITELLM_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: hermes-litellm
-                    key: api-key
-              LITELLM_OPS_API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: hermes-ops-litellm
                     key: api-key
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
             probes:

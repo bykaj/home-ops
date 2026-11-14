@@ -8,7 +8,7 @@ spec:
   # Flux Operator's MCP server with its write tools on, for fixing things away
   # from a workstation. What it may change is limited by its ServiceAccount
   # (rbac.yaml) and two admission policies (validatingadmissionpolicy.yaml),
-  # not by the server; only the ops team gets it
+  # not by the server; only the hermes team gets it
   alias: flux
   params:
     description: >-

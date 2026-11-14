@@ -70,8 +70,8 @@ Each policy file explains its own rules:
   cover providers by FQDN (see
   [Audiobookshelf](../../platforms/kubernetes/app-notes.md#audiobookshelf)).
 - [`hermes-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/hermes/app/networkpolicy.yaml)
-  limits Hermes, an agent with a shell and two LiteLLM keys (one of them with
-  Flux write access), to LiteLLM and Pocket ID: it has no internet egress, and
+  limits Hermes, an agent with a shell and a LiteLLM key that can change the
+  cluster, the network and Home Assistant, to LiteLLM and Pocket ID: it has no internet egress, and
   searches the web through the Kagi MCP server (see
   [Hermes](../../platforms/kubernetes/app-notes.md#hermes)).
 - `immich-egress`, `immich-microservices-egress` and

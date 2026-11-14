@@ -6,10 +6,12 @@ metadata:
   name: hermes
 spec:
   alias: hermes
-  # Every server except flux, which only the ops team gets. kagi is Hermes' web
-  # search (paid per search); its pod may reach nothing outside the cluster
+  # Hermes is the ops agent for the cluster, the network and Home Assistant, so
+  # it gets every server, flux's write access included. kagi is its web search
+  # (paid per search); its pod may reach nothing outside the cluster
   mcpServers:
     - context7
+    - flux
     - home_assistant
     - kagi
     - kguardian
