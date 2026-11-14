@@ -248,10 +248,10 @@ overlay for sign-in, ports and security settings. Everything else lives on
 the `hermes` PVC (backed up by Kopiur). Hermes seeds a new default profile
 (`/opt/data/config.yaml`) with `anthropic/claude-opus-4.6` through OpenRouter,
 and providers and MCP servers have to live in the profile itself: put in the
-overlay, every dashboard save strips them from the profile. So the
-`litellm-seed` init container points the profile at LiteLLM with Hermes' own
-CLI (`hermes config set`, which keeps the rest of the file and its comments),
-before the gateway starts:
+overlay, every dashboard save strips them from the profile. So the `setup`
+init container, after running the image's config migration, points the
+profile at LiteLLM with Hermes' own CLI (`hermes config set`, which keeps the
+rest of the file and its comments), before the gateway starts:
 
 | Setting | When |
 | --- | --- |

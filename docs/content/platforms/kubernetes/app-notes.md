@@ -164,10 +164,11 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   `https://chat.bykaj.app/api/auth/oidc/callback`. Restrict the client to the
   admin group: everyone it admits has full agent access, shell included.
 - The image's boot hook runs the config migration through `s6-setuidgid`,
-  which fails as non-root, so the `config-migrate` init container runs it
-  first. `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start
-  on the `/run` emptyDir.
-- The `litellm-seed` init container ([AI](ai.md#hermes)) writes
+  which fails as non-root, so the `setup` init container runs it first, before
+  it seeds the profile with LiteLLM ([AI](ai.md#hermes)).
+  `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start on the
+  `/run` emptyDir.
+- The `setup` init container writes
   `${LITELLM_API_KEY}` into the MCP header literally, for Hermes to expand.
   The HelmRelease goes through Flux's variable substitution, so it's written
   `$${LITELLM_API_KEY}` there; a plain `${...}` would become an empty string.
