@@ -61,6 +61,9 @@ spec:
               - gateway
               - run
             env:
+              # boto3 (model listing) probes the EC2 metadata address
+              # 169.254.169.254, which hermes-egress blocks
+              AWS_EC2_METADATA_DISABLED: "true"
               HERMES_DASHBOARD: "true"
               HERMES_DASHBOARD_HOST: 0.0.0.0
               HERMES_DASHBOARD_PORT: "9119"
