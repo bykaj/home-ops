@@ -177,6 +177,14 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   goes through the Kagi MCP server instead (paid per search).
   `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
   dependencies on first use.
+- Fetches Hermes makes on its own fire `CiliumEgressPolicyDenied`, so they are
+  off: the model catalog (`model_catalog.enabled: false`; it polled
+  `hermes-agent.nousresearch.com` and `raw.githubusercontent.com` every 20
+  minutes), the update check (`updates.check: false`) and boto3's EC2
+  metadata probe of `169.254.169.254` (`AWS_EC2_METADATA_DISABLED`). Opening
+  the plugin catalog in the dashboard, the models.dev registry and skill hub
+  searches still try the internet and have no switch; a drop from those is
+  expected.
 - The LiteLLM key is a pod environment variable. The terminal tool only gets
   the variables in `terminal.env_passthrough` (none), so the agent's shell
   can't read it.
