@@ -1,0 +1,187 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: hermes
+  interval: 1h
+  values:
+    controllers:
+      hermes:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 10000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 10000
+            runAsNonRoot: true
+            runAsUser: 10000
+            seccompProfile:
+              type: RuntimeDefault
+          terminationGracePeriodSeconds: 60
+        strategy: Recreate
+        initContainers:
+          # The image's own boot hook runs this migration through
+          # `s6-setuidgid hermes`, which needs CAP_SETGID and fails as non-root.
+          # Skipped on first boot, when no config exists yet
+          config-migrate:
+            image: &image
+              repository: docker.io/nousresearch/hermes-agent
+              tag: v0.23.1@sha256:276d44685c65c0cb2a25f190b63c65c8906f9dc76486fb1c05ae71b5826bda08
+            command:
+              - /bin/sh
+              - -c
+              - >-
+                [ ! -f /opt/data/config.yaml ] ||
+                exec /opt/hermes/.venv/bin/python /opt/hermes/scripts/docker_config_migrate.py
+            env:
+              HOME: /opt/data
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        containers:
+          app:
+            image: *image
+            # The gateway serves the web app; HERMES_DASHBOARD adds the
+            # dashboard as a second s6 service
+            args:
+              - gateway
+              - run
+            env:
+              HERMES_DASHBOARD: "true"
+              HERMES_DASHBOARD_HOST: 0.0.0.0
+              HERMES_DASHBOARD_PORT: "9119"
+              # Tools come with the image; installing more needs the internet
+              HERMES_DISABLE_LAZY_INSTALLS: "true"
+              HERMES_HOME: /opt/data
+              HERMES_WRITE_SAFE_ROOT: /opt/data
+              HOME: /opt/data
+              # Read by the profile (provider key_env, MCP headers); not passed
+              # to the terminal, which only gets terminal.env_passthrough
+              LITELLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-litellm
+                    key: api-key
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+            # Pocket ID client ID and secret
+            envFrom:
+              - secretRef:
+                  name: hermes-secret
+            probes:
+              # The gateway's cron ticker writes a heartbeat every 60 s
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: &healthcheck
+                      - /bin/sh
+                      - -c
+                      - >-
+                        hb=$(cut -d. -f1 /opt/data/cron/ticker_heartbeat) &&
+                        [ $(( $(date +%s) - hb )) -lt 300 ]
+                  failureThreshold: 3
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *healthcheck
+                  failureThreshold: 3
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *healthcheck
+                  failureThreshold: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 4Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      data:
+        existingClaim: hermes
+        advancedMounts:
+          hermes:
+            app:
+              - path: /opt/data
+            config-migrate:
+              - path: /opt/data
+      config:
+        type: configMap
+        name: hermes-configmap
+        advancedMounts:
+          hermes:
+            app:
+              - path: /etc/hermes
+                readOnly: true
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+    route:
+      dashboard:
+        hostnames:
+          - hermes.bykaj.app
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 9119
+      webapp:
+        hostnames:
+          - chat.bykaj.app
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 9120
+            # Streamed replies and websockets stay open
+            timeouts:
+              request: 0s
+    service:
+      app:
+        ports:
+          dashboard:
+            appProtocol: kubernetes.io/wss
+            port: 9119
+          webapp:
+            appProtocol: kubernetes.io/wss
+            port: 9120

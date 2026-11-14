@@ -25,6 +25,7 @@ Sign-in methods:
 
 | App | Sign-in |
 | --- | --- |
+| [Hermes](#hermes) | Native OIDC for the web app and dashboard |
 | [LiteLLM](#litellm) | Native OIDC for the Admin UI; the API and `/mcp/` use keys |
 
 ### LiteLLM
@@ -92,9 +93,14 @@ How the gateway, models, keys and MCP servers fit together is on the
   `litellm-egress` allows that host on port 443. The key belongs to Kagi's
   Search API, which is billed per call and separate from the Kagi
   subscription (the subscription has no API credits and Kagi has no OAuth
-  login). No team is granted it: the `claude-code` key leaves it out because
-  Claude Code has its own web search, so it waits for a client such as Open
-  WebUI.
+  login). Only the `hermes` team has it, as Hermes' web search; the
+  `claude-code` key leaves it out because Claude Code has its own.
+- The Flux MCP server (flux-operator-mcp) is the only write-capable cluster
+  access an agent gets, and only the `hermes` team has it. Its write tools are on
+  (no `--read-only`), so what it may change comes from its ServiceAccount
+  `flux-mcp` and two `ValidatingAdmissionPolicies`, not from the server; see
+  [Fixing the cluster through an agent](ai.md#fixing-the-cluster-through-an-agent).
+  Its policy allows only the Kubernetes API, so `search_flux_docs` fails.
 - The kguardian MCP server isn't run by the operator: `kguardian-mcp` points
   the proxy at the `/mcp` endpoint kguardian's llm-bridge already serves
   (port 8080, no authentication). `litellm-egress` allows that port
@@ -139,6 +145,48 @@ How the gateway, models, keys and MCP servers fit together is on the
 - Windshift's key is in the `windshift-litellm` Secret and is pasted into its
   AI Connection by hand, so a new key needs a manual update there.
 - Background: [LiteLLM 1.107.0 compromise](../../operations/history/2026-10-litellm-compromise.md).
+
+### Hermes
+
+How Hermes is wired to LiteLLM and how its profiles are set up is on the
+[AI](ai.md#hermes) page; these are the gotchas.
+
+- **Sign-in.** One confidential Pocket ID client (with PKCE) serves both the
+  dashboard (`hermes.bykaj.app`) and the web app (`chat.bykaj.app`). Its
+  credentials are `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` in the `hermes`
+  1Password item, set as `HERMES_DASHBOARD_OIDC_CLIENT_ID` and
+  `HERMES_DASHBOARD_OIDC_CLIENT_SECRET`, which win over the managed config.
+  Hermes' docs only describe public clients; if sign-in fails with
+  `invalid_client`, the image ignores the secret, and turning the client into
+  a public one in Pocket ID is the fallback. Callback URLs:
+  `https://hermes.bykaj.app/auth/callback`,
+  `https://chat.bykaj.app/auth/callback` and
+  `https://chat.bykaj.app/api/auth/oidc/callback`. Restrict the client to the
+  admin group: everyone it admits has full agent access, shell included.
+- The image's boot hook runs the config migration through `s6-setuidgid`,
+  which fails as non-root, so the `config-migrate` init container runs it
+  first. `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start
+  on the `/run` emptyDir.
+- The probes check the gateway's cron heartbeat
+  (`/opt/data/cron/ticker_heartbeat`, written every 60 s), not a port.
+- The image also has older date tags (`v2026.9.24`) that sort above the
+  current `v0.x` releases, so Renovate is kept on `v0.x`. Updates wait 3 days,
+  like LiteLLM's.
+- `hermes-egress` allows only DNS, LiteLLM and Pocket ID. Installing skills
+  from the hub, `pip`, `git clone` and direct web fetches all fail; web search
+  goes through the Kagi MCP server instead (paid per search).
+  `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
+  dependencies on first use.
+- The LiteLLM key is a pod environment variable. The terminal tool only gets
+  the variables in `terminal.env_passthrough` (none), so the agent's shell
+  can't read it.
+- Settings that must stay in each profile's own `config.yaml` (providers,
+  `mcp_servers`, secret sources, `skills.external_dirs`): declaring them in the
+  managed overlay makes every dashboard save strip them from the profile.
+- The backend migrates its databases on upgrades, and rolling back the image
+  doesn't undo that; restore the Kopiur snapshot of the `hermes` PVC instead.
+  Before merging a Hermes update, take a fresh snapshot with
+  `just k8s pvc-backup ai hermes`, so the restore point isn't up to an hour old.
 
 ## `default`
 

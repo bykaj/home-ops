@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: hermes
+spec:
+  # Its models and every MCP server (team hermes)
+  keyAlias: hermes
+  models:
+    - chatgpt/gpt-6-luna
+    - chatgpt/gpt-6.1-sol
+    - minimax/MiniMax-M3
+    - minimax/MiniMax-M3.1-Flash
+  proxyRef: litellm
+  secretKey: api-key
+  secretName: hermes-litellm
+  teamID: hermes

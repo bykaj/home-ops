@@ -1,0 +1,34 @@
+---
+# Machine-level overlay at /etc/hermes/config.yaml: it wins over every
+# profile's own config.yaml on the PVC. Providers, MCP servers and skills stay
+# in the profiles (docs: platforms/kubernetes/ai.md#hermes); declaring them here
+# makes every dashboard save strip them from the profile
+dashboard:
+  oauth:
+    provider: self-hosted
+    # Client ID and secret come from hermes-secret (HERMES_DASHBOARD_OIDC_*)
+    self_hosted:
+      issuer: https://cyrannus.id
+      scopes: openid profile email
+  public_url: https://hermes.bykaj.app
+
+gateway:
+  multiplex_profiles: true
+
+security:
+  redact_secrets: true
+
+telemetry:
+  shared_metrics:
+    enabled: false
+    send: false
+
+terminal:
+  backend: local
+  cwd: /opt/data/workspace
+
+webapp:
+  enabled: true
+  host: 0.0.0.0
+  port: 9120
+  public_url: https://chat.bykaj.app
