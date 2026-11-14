@@ -185,6 +185,8 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   managed overlay makes every dashboard save strip them from the profile.
 - The backend migrates its databases on upgrades, and rolling back the image
   doesn't undo that; restore the Kopiur snapshot of the `hermes` PVC instead.
+  Before merging a Hermes update, take a fresh snapshot with
+  `just k8s pvc-backup ai hermes`, so the restore point isn't up to an hour old.
 
 ## `default`
 
