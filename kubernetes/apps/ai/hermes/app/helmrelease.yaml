@@ -77,6 +77,10 @@ spec:
                     name: hermes-litellm
                     key: api-key
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+            # Pocket ID client ID and secret
+            envFrom:
+              - secretRef:
+                  name: hermes-secret
             probes:
               # The gateway's cron ticker writes a heartbeat every 60 s
               liveness:

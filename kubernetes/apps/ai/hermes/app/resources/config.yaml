@@ -6,10 +6,8 @@
 dashboard:
   oauth:
     provider: self-hosted
+    # Client ID and secret come from hermes-secret (HERMES_DASHBOARD_OIDC_*)
     self_hosted:
-      # Public Pocket ID client (PKCE, no secret), shared by the dashboard and
-      # the web app
-      client_id: "<FIXME: Pocket ID client ID>"
       issuer: https://cyrannus.id
       scopes: openid profile email
   public_url: https://hermes.bykaj.app

@@ -25,7 +25,7 @@ Sign-in methods:
 
 | App | Sign-in |
 | --- | --- |
-| [Hermes](#hermes) | Native OIDC (public Pocket ID client) for the web app and dashboard |
+| [Hermes](#hermes) | Native OIDC for the web app and dashboard |
 | [LiteLLM](#litellm) | Native OIDC for the Admin UI; the API and `/mcp/` use keys |
 
 ### LiteLLM
@@ -151,9 +151,14 @@ How the gateway, models, keys and MCP servers fit together is on the
 How Hermes is wired to LiteLLM and how its profiles are set up is on the
 [AI](ai.md#hermes) page; these are the gotchas.
 
-- **Sign-in.** One public Pocket ID client (PKCE, no secret) serves both the
-  dashboard (`hermes.bykaj.app`) and the web app (`chat.bykaj.app`); its
-  client ID is in `app/resources/config.yaml`. Callback URLs:
+- **Sign-in.** One confidential Pocket ID client (with PKCE) serves both the
+  dashboard (`hermes.bykaj.app`) and the web app (`chat.bykaj.app`). Its
+  credentials are `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` in the `hermes`
+  1Password item, set as `HERMES_DASHBOARD_OIDC_CLIENT_ID` and
+  `HERMES_DASHBOARD_OIDC_CLIENT_SECRET`, which win over the managed config.
+  Hermes' docs only describe public clients; if sign-in fails with
+  `invalid_client`, the image ignores the secret, and turning the client into
+  a public one in Pocket ID is the fallback. Callback URLs:
   `https://hermes.bykaj.app/auth/callback`,
   `https://chat.bykaj.app/auth/callback` and
   `https://chat.bykaj.app/api/auth/oidc/callback`. Restrict the client to the
