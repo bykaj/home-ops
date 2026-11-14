@@ -8,9 +8,9 @@ spec:
   # Egress only: Hermes is an agent with a shell, a LiteLLM key that can change
   # the cluster, the network and Home Assistant, and every chat and memory, so
   # a prompt injection must have nowhere to send them. It may reach LiteLLM
-  # (models and MCP servers, Kagi for web search) and Pocket ID and nothing
-  # else: no direct web access, skill hub installs, pip or git remotes, and
-  # update checks and telemetry stay blocked
+  # (models and MCP servers, Kagi for web search), Pocket ID and the models.dev
+  # registry and nothing else: no direct web access, skill hub installs, pip or
+  # git remotes, and update checks and telemetry stay blocked
   egress:
     - toEndpoints:
         - matchLabels:
@@ -42,6 +42,14 @@ spec:
       toPorts:
         - ports:
             - port: "10443"
+              protocol: TCP
+    # Model metadata (context windows, capabilities, prices), fetched at start
+    # and refreshed in the background; it has no off switch
+    - toFQDNs:
+        - matchName: models.dev
+      toPorts:
+        - ports:
+            - port: "443"
               protocol: TCP
   endpointSelector:
     matchLabels:

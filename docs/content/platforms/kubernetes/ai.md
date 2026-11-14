@@ -245,29 +245,26 @@ nothing. What it can do to the cluster is limited in the cluster itself (see
 
 `/etc/hermes/config.yaml` (from `app/resources/config.yaml`) is a read-only
 overlay for sign-in, ports and security settings. Everything else lives on
-the `hermes` PVC (backed up by Kopiur) and is set up once, in the dashboard.
-The default profile (`/opt/data/config.yaml`):
+the `hermes` PVC (backed up by Kopiur). Hermes seeds a new default profile
+(`/opt/data/config.yaml`) with `anthropic/claude-opus-4.6` through OpenRouter,
+and providers and MCP servers have to live in the profile itself: put in the
+overlay, every dashboard save strips them from the profile. So the `setup`
+init container, after running the image's config migration, points the
+profile at LiteLLM with Hermes' own CLI (`hermes config set`, which keeps the
+rest of the file and its comments), before the gateway starts:
 
-```yaml
-model:
-  default: chatgpt/gpt-6.1-sol
-  provider: custom:litellm
+| Setting | When |
+| --- | --- |
+| `providers.litellm` (the proxy's `/v1`, `key_env: LITELLM_API_KEY`, model discovery) and `mcp_servers.litellm` (`/mcp/`, `x-litellm-api-key` header) | Every start: Git wins over changes in the dashboard |
+| `model.provider: custom:litellm`, `model.default: chatgpt/gpt-6.1-sol`, `model.base_url`, `model.context_length: 272000` | Only while the profile doesn't use LiteLLM yet, so a model picked in the dashboard survives restarts |
 
-providers:
-  litellm:
-    api: http://litellm.ai.svc.cluster.local:4000/v1
-    discover_models: true
-    key_env: LITELLM_API_KEY
-    name: LiteLLM
-
-mcp_servers:
-  litellm:
-    url: http://litellm.ai.svc.cluster.local:4000/mcp/
-    headers:
-      x-litellm-api-key: Bearer ${LITELLM_API_KEY}
-```
-
-Restart the gateway (delete the `hermes` pod) after changing `mcp_servers`.
+`model.context_length` is the LiteLLM model's `maxInputTokens`: Hermes can't
+read a context length from LiteLLM and would assume 256K. To start the model
+settings over, set `model.provider` to anything else and restart. The seed
+adds about 15 seconds to every start. `hermes mcp test litellm` (run in the pod
+with `HOME` and `HERMES_HOME` set to `/opt/data`) lists the tools Hermes gets
+through the proxy. Other profiles don't get the seed and need the same
+settings themselves.
 
 ## Network
 

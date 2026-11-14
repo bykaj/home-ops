@@ -164,15 +164,22 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   `https://chat.bykaj.app/api/auth/oidc/callback`. Restrict the client to the
   admin group: everyone it admits has full agent access, shell included.
 - The image's boot hook runs the config migration through `s6-setuidgid`,
-  which fails as non-root, so the `config-migrate` init container runs it
-  first. `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start
-  on the `/run` emptyDir.
+  which fails as non-root, so the `setup` init container runs it first, before
+  it seeds the profile with LiteLLM ([AI](ai.md#hermes)).
+  `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start on the
+  `/run` emptyDir.
+- The `setup` init container writes
+  `${LITELLM_API_KEY}` into the MCP header literally, for Hermes to expand.
+  The HelmRelease goes through Flux's variable substitution, so it's written
+  `$${LITELLM_API_KEY}` there; a plain `${...}` would become an empty string.
 - The probes check the gateway's cron heartbeat
   (`/opt/data/cron/ticker_heartbeat`, written every 60 s), not a port.
 - The image also has older date tags (`v2026.9.24`) that sort above the
   current `v0.x` releases, so Renovate is kept on `v0.x`. Updates wait 3 days,
   like LiteLLM's.
-- `hermes-egress` allows only DNS, LiteLLM and Pocket ID. Installing skills
+- `hermes-egress` allows only DNS, LiteLLM, Pocket ID and `models.dev`
+  (model metadata, which Hermes fetches at start and in the background with no
+  off switch). Installing skills
   from the hub, `pip`, `git clone` and direct web fetches all fail; web search
   goes through the Kagi MCP server instead (paid per search).
   `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
@@ -182,9 +189,8 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   `hermes-agent.nousresearch.com` and `raw.githubusercontent.com` every 20
   minutes), the update check (`updates.check: false`) and boto3's EC2
   metadata probe of `169.254.169.254` (`AWS_EC2_METADATA_DISABLED`). Opening
-  the plugin catalog in the dashboard, the models.dev registry and skill hub
-  searches still try the internet and have no switch; a drop from those is
-  expected.
+  the plugin catalog in the dashboard and skill hub searches still try the
+  internet; a drop from those is expected.
 - The LiteLLM key is a pod environment variable. The terminal tool only gets
   the variables in `terminal.env_passthrough` (none), so the agent's shell
   can't read it.

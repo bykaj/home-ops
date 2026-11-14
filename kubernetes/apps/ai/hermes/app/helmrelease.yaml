@@ -26,20 +26,48 @@ spec:
           terminationGracePeriodSeconds: 60
         strategy: Recreate
         initContainers:
-          # The image's own boot hook runs this migration through
-          # `s6-setuidgid hermes`, which needs CAP_SETGID and fails as non-root.
-          # Skipped on first boot, when no config exists yet
-          config-migrate:
+          # 1. The image's config migration, which its own boot hook runs
+          #    through `s6-setuidgid hermes`; that needs CAP_SETGID and fails
+          #    as non-root. Skipped on first boot, when no config exists yet.
+          # 2. Points the default profile at LiteLLM. Hermes seeds a new profile
+          #    with Opus through OpenRouter, and providers and MCP servers have
+          #    to live in the profile itself, not in the managed overlay. The
+          #    provider and the MCP server are set on every start (Git wins);
+          #    the model only while the profile doesn't use LiteLLM yet, so a
+          #    model picked in the dashboard survives restarts. $${...} keeps
+          #    Flux from substituting
+          setup:
             image: &image
               repository: docker.io/nousresearch/hermes-agent
               tag: v0.23.1@sha256:276d44685c65c0cb2a25f190b63c65c8906f9dc76486fb1c05ae71b5826bda08
             command:
               - /bin/sh
               - -c
-              - >-
-                [ ! -f /opt/data/config.yaml ] ||
-                exec /opt/hermes/.venv/bin/python /opt/hermes/scripts/docker_config_migrate.py
+              - |
+                set -eu
+                if [ -f /opt/data/config.yaml ]; then
+                  /opt/hermes/.venv/bin/python /opt/hermes/scripts/docker_config_migrate.py
+                fi
+                set_key() {
+                  hermes config set "$1" "$2" >/dev/null 2>&1 || { echo "failed to set $1"; exit 1; }
+                  echo "set $1"
+                }
+                set_key providers.litellm.name LiteLLM
+                set_key providers.litellm.api http://litellm.ai.svc.cluster.local:4000/v1
+                set_key providers.litellm.key_env LITELLM_API_KEY
+                set_key providers.litellm.discover_models true
+                set_key mcp_servers.litellm.url http://litellm.ai.svc.cluster.local:4000/mcp/
+                set_key mcp_servers.litellm.headers '{"x-litellm-api-key": "Bearer $${LITELLM_API_KEY}"}'
+                current=$(hermes config get model.provider 2>/dev/null | tail -n 1)
+                if [ "$current" != "custom:litellm" ]; then
+                  set_key model.provider custom:litellm
+                  set_key model.default chatgpt/gpt-6.1-sol
+                  set_key model.base_url http://litellm.ai.svc.cluster.local:4000/v1
+                  # maxInputTokens of the LiteLLM model; Hermes can't read it
+                  set_key model.context_length 272000
+                fi
             env:
+              HERMES_HOME: /opt/data
               HOME: /opt/data
             resources:
               requests:
@@ -137,7 +165,7 @@ spec:
           hermes:
             app:
               - path: /opt/data
-            config-migrate:
+            setup:
               - path: /opt/data
       config:
         type: configMap
