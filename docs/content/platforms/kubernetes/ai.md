@@ -223,11 +223,17 @@ kubectl -n default patch deployment paperless --as=$SA --dry-run=server --type j
 [Hermes](https://github.com/NousResearch/hermes-agent) is a self-hosted agent
 that runs all the time, in
 [`kubernetes/apps/ai/hermes`](https://github.com/bykaj/home-ops/tree/main/kubernetes/apps/ai/hermes):
-chat from a browser or the Hermes apps, scheduled jobs, memory, skills and a
-local shell in its own pod. The web app is `https://chat.bykaj.app`, the admin
+chat from a browser or an app, scheduled jobs, memory, skills and a local
+shell in its own pod. The web app is `https://chat.bykaj.app`, the admin
 dashboard `https://hermes.bykaj.app`, both on `envoy-internal` only, so away
-from home they need Tailscale. Both sign in through Pocket ID (see
+from home they need the UDM's VPN. Both sign in through Pocket ID (see
 [App Notes](app-notes.md#hermes)).
+
+The apps connect to the web app's address: Hermes Desktop on the Macs, and
+[Hermex](https://github.com/uzairansaruzi/hermex) (a community app, 2.1 or
+later) on iPhone and iPad. They sign in to the gateway in the system browser,
+and the gateway does the Pocket ID login, so they need nothing in Pocket ID
+of their own.
 
 It calls models and MCP servers only through LiteLLM's Service, with the
 `hermes` key from the pod's environment (`LITELLM_API_KEY`): its models and
