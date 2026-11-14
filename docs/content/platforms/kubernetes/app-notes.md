@@ -172,7 +172,9 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
 - The image also has older date tags (`v2026.9.24`) that sort above the
   current `v0.x` releases, so Renovate is kept on `v0.x`. Updates wait 3 days,
   like LiteLLM's.
-- `hermes-egress` allows only DNS, LiteLLM and Pocket ID. Installing skills
+- `hermes-egress` allows only DNS, LiteLLM, Pocket ID and `models.dev`
+  (model metadata, which Hermes fetches at start and in the background with no
+  off switch). Installing skills
   from the hub, `pip`, `git clone` and direct web fetches all fail; web search
   goes through the Kagi MCP server instead (paid per search).
   `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
@@ -181,11 +183,9 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   off: the model catalog (`model_catalog.enabled: false`; it polled
   `hermes-agent.nousresearch.com` and `raw.githubusercontent.com` every 20
   minutes), the update check (`updates.check: false`) and boto3's EC2
-  metadata probe of `169.254.169.254` (`AWS_EC2_METADATA_DISABLED`). The
-  models.dev registry has no switch and was retried every 5 minutes, so
-  `models_dev.url` points at a closed local port, where it fails without a
-  drop. Opening the plugin catalog in the dashboard and skill hub searches
-  still try the internet; a drop from those is expected.
+  metadata probe of `169.254.169.254` (`AWS_EC2_METADATA_DISABLED`). Opening
+  the plugin catalog in the dashboard and skill hub searches still try the
+  internet; a drop from those is expected.
 - The LiteLLM key is a pod environment variable. The terminal tool only gets
   the variables in `terminal.env_passthrough` (none), so the agent's shell
   can't read it.
