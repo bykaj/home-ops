@@ -52,6 +52,52 @@ spec:
               capabilities:
                 drop:
                   - ALL
+          # Points the default profile at LiteLLM. Hermes seeds a new profile
+          # with Opus through OpenRouter, and providers and MCP servers have to
+          # live in the profile itself, not in the managed overlay. The provider
+          # and the MCP server are set on every start (Git wins); the model only
+          # while the profile doesn't use LiteLLM yet, so a model picked in the
+          # dashboard survives restarts. $${...} keeps Flux from substituting
+          litellm-seed:
+            dependsOn: config-migrate
+            image: *image
+            command:
+              - /bin/sh
+              - -c
+              - |
+                set -eu
+                set_key() {
+                  hermes config set "$1" "$2" >/dev/null 2>&1 || { echo "failed to set $1"; exit 1; }
+                  echo "set $1"
+                }
+                set_key providers.litellm.name LiteLLM
+                set_key providers.litellm.api http://litellm.ai.svc.cluster.local:4000/v1
+                set_key providers.litellm.key_env LITELLM_API_KEY
+                set_key providers.litellm.discover_models true
+                set_key mcp_servers.litellm.url http://litellm.ai.svc.cluster.local:4000/mcp/
+                set_key mcp_servers.litellm.headers '{"x-litellm-api-key": "Bearer $${LITELLM_API_KEY}"}'
+                current=$(hermes config get model.provider 2>/dev/null | tail -n 1)
+                if [ "$current" != "custom:litellm" ]; then
+                  set_key model.provider custom:litellm
+                  set_key model.default chatgpt/gpt-6.1-sol
+                  set_key model.base_url http://litellm.ai.svc.cluster.local:4000/v1
+                  # maxInputTokens of the LiteLLM model; Hermes can't read it
+                  set_key model.context_length 272000
+                fi
+            env:
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
         containers:
           app:
             image: *image
@@ -138,6 +184,8 @@ spec:
             app:
               - path: /opt/data
             config-migrate:
+              - path: /opt/data
+            litellm-seed:
               - path: /opt/data
       config:
         type: configMap

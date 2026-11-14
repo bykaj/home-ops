@@ -167,6 +167,10 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   which fails as non-root, so the `config-migrate` init container runs it
   first. `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start
   on the `/run` emptyDir.
+- The `litellm-seed` init container ([AI](ai.md#hermes)) writes
+  `${LITELLM_API_KEY}` into the MCP header literally, for Hermes to expand.
+  The HelmRelease goes through Flux's variable substitution, so it's written
+  `$${LITELLM_API_KEY}` there; a plain `${...}` would become an empty string.
 - The probes check the gateway's cron heartbeat
   (`/opt/data/cron/ticker_heartbeat`, written every 60 s), not a port.
 - The image also has older date tags (`v2026.9.24`) that sort above the

@@ -245,34 +245,26 @@ nothing. What it can do to the cluster is limited in the cluster itself (see
 
 `/etc/hermes/config.yaml` (from `app/resources/config.yaml`) is a read-only
 overlay for sign-in, ports and security settings. Everything else lives on
-the `hermes` PVC (backed up by Kopiur). On first start Hermes writes its own
-defaults to the default profile (`/opt/data/config.yaml`), with
-`anthropic/claude-opus-4.6` through OpenRouter, so no LiteLLM models show up
-until it's pointed at LiteLLM. Set that once with Hermes' own CLI, which keeps
-the rest of the file and its comments (back up the file first):
+the `hermes` PVC (backed up by Kopiur). Hermes seeds a new default profile
+(`/opt/data/config.yaml`) with `anthropic/claude-opus-4.6` through OpenRouter,
+and providers and MCP servers have to live in the profile itself: put in the
+overlay, every dashboard save strips them from the profile. So the
+`litellm-seed` init container points the profile at LiteLLM with Hermes' own
+CLI (`hermes config set`, which keeps the rest of the file and its comments),
+before the gateway starts:
 
-```sh
-kubectl -n ai exec deploy/hermes -c app -- sh -c '
-export HOME=/opt/data HERMES_HOME=/opt/data
-cp -p /opt/data/config.yaml /opt/data/backups/config.yaml.$(date +%Y%m%d%H%M%S)
-hermes config set providers.litellm.name LiteLLM
-hermes config set providers.litellm.api http://litellm.ai.svc.cluster.local:4000/v1
-hermes config set providers.litellm.key_env LITELLM_API_KEY
-hermes config set providers.litellm.discover_models true
-hermes config set model.provider custom:litellm
-hermes config set model.default chatgpt/gpt-6.1-sol
-hermes config set model.base_url http://litellm.ai.svc.cluster.local:4000/v1
-hermes config set model.context_length 272000
-hermes config set mcp_servers.litellm.url http://litellm.ai.svc.cluster.local:4000/mcp/
-hermes config set mcp_servers.litellm.headers "{\"x-litellm-api-key\": \"Bearer \${LITELLM_API_KEY}\"}"
-'
-```
+| Setting | When |
+| --- | --- |
+| `providers.litellm` (the proxy's `/v1`, `key_env: LITELLM_API_KEY`, model discovery) and `mcp_servers.litellm` (`/mcp/`, `x-litellm-api-key` header) | Every start: Git wins over changes in the dashboard |
+| `model.provider: custom:litellm`, `model.default: chatgpt/gpt-6.1-sol`, `model.base_url`, `model.context_length: 272000` | Only while the profile doesn't use LiteLLM yet, so a model picked in the dashboard survives restarts |
 
-Then restart the gateway by deleting the `hermes` pod by its exact name: MCP
-servers are only loaded at startup. `hermes mcp test litellm` lists the tools
-it gets through the proxy. Hermes can't read a model's context length from
-LiteLLM and assumes 256K, hence `model.context_length` (the `maxInputTokens`
-of the LiteLLM model).
+`model.context_length` is the LiteLLM model's `maxInputTokens`: Hermes can't
+read a context length from LiteLLM and would assume 256K. To start the model
+settings over, set `model.provider` to anything else and restart. The seed
+adds about 15 seconds to every start. `hermes mcp test litellm` (run in the pod
+with `HOME` and `HERMES_HOME` set to `/opt/data`) lists the tools Hermes gets
+through the proxy. Other profiles don't get the seed and need the same
+settings themselves.
 
 ## Network
 
