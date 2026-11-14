@@ -13,7 +13,7 @@
       ansible.builtin.set_fact:
         ansible_become_password: "{{ ansible_become_password }}"
         doco_1pw_sa_token: "{{ lookup('community.general.onepassword', 'doco-cd', field='1PW_SA_TOKEN', vault='Homelab') }}"
-        doco_api_secret: "{{ lookup('community.general.onepassword', 'doco-cd', field='API_SECRET', vault='Homelab') }}"
+        doco_api_key: "{{ lookup('community.general.onepassword', 'doco-cd', field='API_SECRET', vault='Homelab') }}"
         doco_webhook_secret: "{{ lookup('community.general.onepassword', 'doco-cd', field='WEBHOOK_SECRET', vault='Homelab') }}"
       become: false
       no_log: true
@@ -53,8 +53,9 @@
           loop:
             - name: 1pw_token
               content: "{{ doco_1pw_sa_token }}"
-            - name: api_secret
-              content: "{{ doco_api_secret }}"
+            # doco-cd's API_KEYS_FILE: a YAML list of keys, each with a role
+            - name: api_keys
+              content: "{{ [{'key': doco_api_key, 'role': 'write'}] | to_nice_yaml }}"
             - name: webhook_secret
               content: "{{ doco_webhook_secret }}"
 

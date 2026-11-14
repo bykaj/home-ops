@@ -10,15 +10,17 @@ networks:
 secrets:
   1pw_token:
     file: /home/truenas_admin/.config/doco-cd/1pw_token
-  api_secret:
-    file: /home/truenas_admin/.config/doco-cd/api_secret
+  api_keys:
+    file: /home/truenas_admin/.config/doco-cd/api_keys
   webhook_secret:
     file: /home/truenas_admin/.config/doco-cd/webhook_secret
 services:
   app:
     container_name: doco-cd
     environment:
-      API_SECRET_FILE: /run/secrets/api_secret
+      # YAML list of keys with a role; `write` covers the poll run and run lookup of
+      # `just docker sync-stacks`. Read only at startup
+      API_KEYS_FILE: /run/secrets/api_keys
       DEPLOY_CONFIG_BASE_DIR: ./docker/nas/
       HTTP_PORT: 8880
       LOG_LEVEL: info
@@ -51,7 +53,7 @@ services:
     restart: unless-stopped
     secrets:
       - 1pw_token
-      - api_secret
+      - api_keys
       - webhook_secret
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

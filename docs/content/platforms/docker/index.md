@@ -45,7 +45,9 @@ just docker sync-stacks     # poll main now through doco-cd's REST API
 ```
 
 The recipe calls `POST /v1/api/poll/run` on `https://doco-cd.bykaj.app`
-(doco-cd behind Traefik) with the API secret from 1Password (`op://Homelab/doco-cd/API_SECRET`). It waits for the run
+(doco-cd behind Traefik) with the API key from 1Password (`op://Homelab/doco-cd/API_SECRET`). doco-cd reads its
+keys from the `api_keys` file in its config directory (`API_KEYS_FILE`), where this key has the `write` role: enough to
+trigger polls and read runs, not to delete projects. It waits for the run
 and fails if the run doesn't succeed. Only changed stacks are redeployed.
 
 doco-cd deploys its own stack like any other (see [`00-doco-cd`](#00-doco-cd)),
