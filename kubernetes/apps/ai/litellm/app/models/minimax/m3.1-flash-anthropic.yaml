@@ -3,7 +3,7 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: minimax-m3.1-flash-preview-anthropic
+  name: minimax-m3.1-flash-anthropic
 spec:
   info:
     extra:
@@ -13,7 +13,7 @@ spec:
     supportsFunctionCalling: true
     supportsPromptCaching: true
     supportsVision: true
-  modelName: minimax/MiniMax-M3.1-Flash-Preview-anthropic
+  modelName: minimax/MiniMax-M3.1-Flash-anthropic
   params:
     additional:
       cache_control_injection_points:
@@ -21,9 +21,15 @@ spec:
           role: system
         - index: -1
           location: message
+      # Official per-token prices (platform.minimax.io/docs/guides/pricing); set
+      # here because LiteLLM's bundled cost map has no entry for this model. No
+      # cache write price is listed, so writes count as free
+      cache_read_input_token_cost: 0.000000015 # $0.015/M
+      input_cost_per_token: 0.00000015 # $0.15/M
+      output_cost_per_token: 0.0000006 # $0.60/M
     apiBase: https://api.minimax.io/anthropic
     apiKeyRef:
       key: MINIMAX_API_KEY
       name: litellm-secret
     dropParams: true
-    model: anthropic/MiniMax-M3.1-Flash-Preview
+    model: anthropic/MiniMax-M3.1-Flash

@@ -60,11 +60,20 @@ ChatGPT models sign in with a login instead (see below).
 | Provider | Models | Notes |
 | --- | --- | --- |
 | ChatGPT | `gpt-6-astra`, `gpt-6-luna`, `gpt-6.1-sol` | The OpenAI row's GPT-6 models, billed to the ChatGPT Plus subscription instead of `OPENAI_API_KEY`; see [ChatGPT subscription](#chatgpt-subscription) |
-| MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash-Preview` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
+| MiniMax | `MiniMax-M3`, `MiniMax-M3.1-Flash` | Each twice: plain names use MiniMax's OpenAI-compatible API (`/v1`, with `reasoning_split`), `-anthropic` names its Anthropic-compatible API (`/anthropic`) |
 | OpenAI | GPT-6 Astra/Luna, GPT-6.1 Sol, `gpt-4.1-mini`, `gpt-4o-mini`, `text-embedding-3-small` | GPT-6 models use the Responses API and drop `temperature` |
 
 The MiniMax models have prompt-cache injection points for the system prompt
 and the last message; OpenAI caches prompts automatically.
+
+Spend in the Admin UI comes from LiteLLM's bundled cost map (offline mode,
+see [App Notes](app-notes.md#litellm)), which has no prices for the `anthropic/`
+routes, `MiniMax-M3.1-Flash` or M3's price tier above 512K input tokens. The
+MiniMax models therefore set MiniMax's official prices themselves
+(`input_cost_per_token`, `output_cost_per_token`,
+`cache_read_input_token_cost` and the `_above_512k_tokens` variants in
+`params.additional`); update them when MiniMax changes its pricing. The
+`chatgpt/` models log $0, because the subscription isn't billed per token.
 
 ### ChatGPT subscription
 
