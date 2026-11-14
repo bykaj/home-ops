@@ -245,29 +245,34 @@ nothing. What it can do to the cluster is limited in the cluster itself (see
 
 `/etc/hermes/config.yaml` (from `app/resources/config.yaml`) is a read-only
 overlay for sign-in, ports and security settings. Everything else lives on
-the `hermes` PVC (backed up by Kopiur) and is set up once, in the dashboard.
-The default profile (`/opt/data/config.yaml`):
+the `hermes` PVC (backed up by Kopiur). On first start Hermes writes its own
+defaults to the default profile (`/opt/data/config.yaml`), with
+`anthropic/claude-opus-4.6` through OpenRouter, so no LiteLLM models show up
+until it's pointed at LiteLLM. Set that once with Hermes' own CLI, which keeps
+the rest of the file and its comments (back up the file first):
 
-```yaml
-model:
-  default: chatgpt/gpt-6.1-sol
-  provider: custom:litellm
-
-providers:
-  litellm:
-    api: http://litellm.ai.svc.cluster.local:4000/v1
-    discover_models: true
-    key_env: LITELLM_API_KEY
-    name: LiteLLM
-
-mcp_servers:
-  litellm:
-    url: http://litellm.ai.svc.cluster.local:4000/mcp/
-    headers:
-      x-litellm-api-key: Bearer ${LITELLM_API_KEY}
+```sh
+kubectl -n ai exec deploy/hermes -c app -- sh -c '
+export HOME=/opt/data HERMES_HOME=/opt/data
+cp -p /opt/data/config.yaml /opt/data/backups/config.yaml.$(date +%Y%m%d%H%M%S)
+hermes config set providers.litellm.name LiteLLM
+hermes config set providers.litellm.api http://litellm.ai.svc.cluster.local:4000/v1
+hermes config set providers.litellm.key_env LITELLM_API_KEY
+hermes config set providers.litellm.discover_models true
+hermes config set model.provider custom:litellm
+hermes config set model.default chatgpt/gpt-6.1-sol
+hermes config set model.base_url http://litellm.ai.svc.cluster.local:4000/v1
+hermes config set model.context_length 272000
+hermes config set mcp_servers.litellm.url http://litellm.ai.svc.cluster.local:4000/mcp/
+hermes config set mcp_servers.litellm.headers "{\"x-litellm-api-key\": \"Bearer \${LITELLM_API_KEY}\"}"
+'
 ```
 
-Restart the gateway (delete the `hermes` pod) after changing `mcp_servers`.
+Then restart the gateway by deleting the `hermes` pod by its exact name: MCP
+servers are only loaded at startup. `hermes mcp test litellm` lists the tools
+it gets through the proxy. Hermes can't read a model's context length from
+LiteLLM and assumes 256K, hence `model.context_length` (the `maxInputTokens`
+of the LiteLLM model).
 
 ## Network
 
