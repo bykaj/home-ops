@@ -166,7 +166,7 @@ spec:
         type: image
         image:
           repository: ghcr.io/jdx/mise
-          tag: 2026.11.0@sha256:6e05da4113a812cc8ac72b21a38889d019fb0f97df6ce8075c0de98d1cf48cc4
+          tag: 2026.11.9@sha256:9a182adba2584a6f5b29ddc1f2c7651c93694a5f829d74452b90214616baacf4
         advancedMounts:
           hermes:
             app:
