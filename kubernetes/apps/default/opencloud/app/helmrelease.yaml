@@ -124,7 +124,7 @@ spec:
         type: image
         image:
           repository: docker.io/opencloudeu/web-extensions
-          tag: pastebin-2.2.0@sha256:f54c9ae1e5fdb19f6649b60d7c81f229c8b7ac2cd00de1c26d88adb40e90e07e
+          tag: pastebin-2.2.1@sha256:b38ae1c99caa6abb4f596b74546e42828c264f774bf758c9700426972baa9253
         globalMounts:
           - path: /opt/web-apps/pastebin
             subPath: web/apps/pastebin
