@@ -72,8 +72,9 @@ Each policy file explains its own rules:
 - [`hermes-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/hermes/app/networkpolicy.yaml)
   limits Hermes, an agent with a shell and a LiteLLM key that can change the
   cluster, the network and Home Assistant, to LiteLLM, Pocket ID, the
-  `models.dev` model registry and GitHub (for mise tool installs): it has no
-  other internet egress, and searches the web through the Kagi MCP server (see
+  `models.dev` model registry, GitHub (for mise tool installs) and the
+  signal-cli daemon: it has no other internet egress, and searches the web
+  through the Kagi MCP server (see
   [Hermes](../../platforms/kubernetes/app-notes.md#hermes)).
 - `immich-egress`, `immich-microservices-egress` and
   `immich-machine-learning-egress` (one
@@ -131,6 +132,11 @@ Each policy file explains its own rules:
   Pocket ID and the SMTP relay; the extensions get a subset of that. None has
   internet egress (see
   [Seafile](../../platforms/kubernetes/app-notes.md#egress-policy)).
+- [`signal-cli`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/signal-cli/app/networkpolicy.yaml)
+  admits only Hermes to the daemon's unauthenticated JSON-RPC API and lets it
+  reach only Signal's servers (`*.signal.org`), so Hermes gets Signal without
+  internet access of its own (see
+  [signal-cli](../../platforms/kubernetes/app-notes.md#signal-cli)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
   limits who can send mail through the relay (see [SMTP relay](#smtp-relay)).
 - [`windshift-egress`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/default/windshift/app/networkpolicy.yaml)

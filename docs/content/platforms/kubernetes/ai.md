@@ -289,6 +289,12 @@ belong to a profile: `hermes -p <name> cron create ...` with
 app. Removing a name from the list leaves the profile in place; delete it by
 hand with `hermes profile delete <name>`.
 
+The `ops` profile also talks Signal, through the
+[signal-cli](app-notes.md#signal-cli) daemon in the same namespace: only the
+owner's number may message it, and `--deliver signal` sends a cron report to
+the owner. Hermes keeps no internet access for this; only signal-cli reaches
+Signal's servers.
+
 The terminal has [mise](https://mise.jdx.dev) for installing CLI tools: its
 binary comes from the `ghcr.io/jdx/mise` image, mounted as an image volume at
 `/opt/mise`, and tools, shims and the global config

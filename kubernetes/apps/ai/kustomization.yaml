@@ -10,3 +10,4 @@ resources:
   - ./hermes/ks.yaml
   - ./litellm/ks.yaml
   - ./litellm-operator/ks.yaml
+  - ./signal-cli/ks.yaml

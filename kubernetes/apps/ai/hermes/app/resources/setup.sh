@@ -14,12 +14,18 @@
 # 3. Named profiles never read credentials from the pod's environment
 #    (multiplexing keeps profiles apart), so they get the key from the
 #    mounted Secret through a secrets.command.
+# 4. Signal for HERMES_SIGNAL_PROFILE: the daemon URL and the numbers from the
+#    hermes-signal Secret go into that profile's .env, never the pod's
+#    environment, where the default profile would read them too.
 #
 # ${LITELLM_API_KEY} and $(cat ...) are written into the profiles literally,
 # for Hermes to expand; this file isn't substituted by Flux.
 set -eu
 # Space-separated, set in the HelmRelease; empty means only the default profile
 : "${HERMES_PROFILES:=}"
+# Signal (step 4): the owning profile from the HelmRelease, the numbers from
+# the optional hermes-signal Secret
+: "${HERMES_SIGNAL_PROFILE:=}" "${SIGNAL_ACCOUNT:=}" "${SIGNAL_ALLOWED_USERS:=}" "${SIGNAL_HOME_CHANNEL:=}"
 
 if [ -f /opt/data/config.yaml ]; then
   /opt/hermes/.venv/bin/python /opt/hermes/scripts/docker_config_migrate.py
@@ -84,3 +90,16 @@ for profile in default $HERMES_PROFILES; do
     set_key model.context_length 272000
   fi
 done
+
+# Signal, for one profile only: a number can belong to one profile, and that
+# profile's cron jobs deliver to its home channel. UPPER_SNAKE keys go to the
+# profile's .env. Skipped until the hermes-signal Secret has the numbers
+if [ -n "$HERMES_SIGNAL_PROFILE" ] && [ -n "$SIGNAL_ACCOUNT" ]; then
+  profile=$HERMES_SIGNAL_PROFILE
+  set_key SIGNAL_HTTP_URL http://signal-cli.ai.svc.cluster.local:8080
+  set_key SIGNAL_ACCOUNT "$SIGNAL_ACCOUNT"
+  set_key SIGNAL_ALLOWED_USERS "$SIGNAL_ALLOWED_USERS"
+  set_key SIGNAL_HOME_CHANNEL "$SIGNAL_HOME_CHANNEL"
+else
+  echo "signal: skipped (no HERMES_SIGNAL_PROFILE or SIGNAL_ACCOUNT)"
+fi

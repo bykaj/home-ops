@@ -1,0 +1,86 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: signal-cli
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: signal-cli
+  interval: 1h
+  values:
+    controllers:
+      signal-cli:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 999
+            runAsNonRoot: true
+            runAsUser: 999
+            seccompProfile:
+              type: RuntimeDefault
+        # One daemon per account: two would fight over the same keys
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/asamk/signal-cli
+              tag: 0.14.10@sha256:34b52a33a89ce832fece924a78da811c789945ccc189dd6244f6c8d36c5aa4ff
+            # The image's entrypoint is signal-cli --config=/var/lib/signal-cli.
+            # Multi-account mode (no --account): the daemon starts before the
+            # number is registered, registration goes through its JSON-RPC
+            # API, and Hermes passes the account with every call
+            args:
+              - daemon
+              - --http
+              - 0.0.0.0:8080
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 5
+                  httpGet:
+                    path: /api/v1/check
+                    port: &port 8080
+                  periodSeconds: 30
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 30
+                  httpGet:
+                    path: /api/v1/check
+                    port: *port
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 10m
+                memory: 192Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    persistence:
+      data:
+        existingClaim: signal-cli
+        globalMounts:
+          - path: /var/lib/signal-cli
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+    service:
+      app:
+        ports:
+          http:
+            port: *port

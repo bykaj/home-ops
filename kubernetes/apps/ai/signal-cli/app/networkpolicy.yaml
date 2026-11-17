@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: signal-cli
+spec:
+  # The daemon's JSON-RPC API has no authentication and can send, read and
+  # register as the account, so only Hermes may call it. It holds the
+  # account's keys and messages, so it may reach Signal's servers and nothing
+  # else (*.signal.org: chat, storage, CDNs, contact discovery, SVR)
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+            k8s:io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "*.signal.org"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/controller: signal-cli
+      app.kubernetes.io/instance: signal-cli
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: hermes
+            app.kubernetes.io/instance: hermes
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
