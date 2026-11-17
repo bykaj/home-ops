@@ -8,7 +8,8 @@ spec:
   # The daemon's JSON-RPC API has no authentication and can send, read and
   # register as the account, so only Hermes may call it. It holds the
   # account's keys and messages, so it may reach Signal's servers and nothing
-  # else (*.signal.org: chat, storage, CDNs, contact discovery, SVR)
+  # else (**.signal.org: chat, storage, CDNs, contact discovery, SVR; `**`
+  # because the chat connection is grpc.chat.signal.org, two labels deep)
   egress:
     - toEndpoints:
         - matchLabels:
@@ -22,7 +23,7 @@ spec:
             dns:
               - matchPattern: "*"
     - toFQDNs:
-        - matchPattern: "*.signal.org"
+        - matchPattern: "**.signal.org"
       toPorts:
         - ports:
             - port: "443"

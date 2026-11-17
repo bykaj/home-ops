@@ -243,7 +243,8 @@ daemon's event stream and sends through its JSON-RPC API
   Hermes passes the account with every call.
 - The API has no authentication and can send, read and register as the
   account, so the `signal-cli` policy admits only the Hermes pod, and lets
-  the daemon reach only `*.signal.org`.
+  the daemon reach only `**.signal.org` (`**`, since the chat connection is
+  `grpc.chat.signal.org`, two labels below `signal.org`).
 - The PVC (`/var/lib/signal-cli`, backed up by Kopiur) holds the account's
   keys. Losing it means registering the number again, and contacts see a
   safety-number change.
