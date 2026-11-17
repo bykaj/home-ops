@@ -35,6 +35,7 @@ spec:
       APP_NAME: Immich
       APP_DOMAIN: kaj.pics
       POSTGRES_BACKUP_SCHEDULE: "22 0 * * *"
+      POSTGRES_BASE_BACKUP_SCHEDULE: "0 8 4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository

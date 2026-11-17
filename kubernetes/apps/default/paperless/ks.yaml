@@ -47,6 +47,7 @@ spec:
       KOPIUR_MOVER_UID: "4000"
       KOPIUR_MOVER_GID: "4000"
       POSTGRES_BACKUP_SCHEDULE: "57 0 * * *"
+      POSTGRES_BASE_BACKUP_SCHEDULE: "0 32 4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository

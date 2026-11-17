@@ -30,6 +30,7 @@ spec:
       APP_NAME: Windshift
       APP_SUBDOMAIN: projects
       POSTGRES_BACKUP_SCHEDULE: "54 0 * * *"
+      POSTGRES_BASE_BACKUP_SCHEDULE: "0 40 4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
