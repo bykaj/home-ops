@@ -11,6 +11,7 @@ spec:
   method: plugin
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
-  # Six fields, seconds first, in local time. Set per app: base backups that
-  # start together abort with HTTP 499 on Garage's UploadPart
+  # Six fields, seconds first, in the operator's time zone: Europe/Amsterdam,
+  # which k8tz injects (not UTC, though the chart sets no TZ). Set per app:
+  # base backups that start together abort with HTTP 499 on Garage's UploadPart
   schedule: "${POSTGRES_BASE_BACKUP_SCHEDULE:=0 40 4 * * *}"
