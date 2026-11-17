@@ -6,7 +6,9 @@ description: How runtime secrets reach the cluster, the NAS, bootstrap tooling a
 
 Runtime secrets never live in Git. Everything resolves from 1Password: the
 cluster, the NAS and bootstrap tooling read vault `Homelab` through three
-different paths, and GitHub Actions workflows read vault `Automation`.
+different paths, and GitHub Actions workflows read vault `Automation`. The
+cluster also reads `Automation`, for the few CI credentials it shares with
+the workflows; GitHub never reads `Homelab`.
 
 ## Kubernetes: External Secrets
 
@@ -36,6 +38,25 @@ spec:
     - extract:
         key: myapp
 ```
+
+The store searches two vaults in order: `Homelab` first, then `Automation`.
+An item name found in `Homelab` always wins; `Automation` only supplies items
+that exist there alone, like `github-bot`, whose GitHub App credentials the
+home-ops runners and konflate use as well as the workflows. That keeps one
+copy of the item, so a key rotation reaches both. The flip side: an item
+missing from `Homelab` (renamed, deleted) silently resolves from `Automation`
+if a same-named item exists there, instead of failing.
+
+`PushSecret`s (the TLS certificates in `network`) follow the same order. A new
+item is created in `Homelab`, the first vault; an existing one is updated
+wherever it's found. Don't give an `Automation` item the name of a pushed
+item, or a missing `Homelab` copy would send that certificate's private key to
+the vault GitHub workflows read.
+
+The Connect token must be able to read both vaults. The store's validation
+fetches every listed vault, so one the token can't read makes the whole store
+not ready, for every `ExternalSecret`: grant access in 1Password before adding
+a vault here.
 
 Random values that don't need to live in 1Password (tokens, passwords) come
 from a `ClusterGenerator` instead, with `refreshPolicy: CreatedOnce`.
@@ -95,7 +116,7 @@ and a service account whose token is the repository secret
 
 | Item | Used for |
 |---|---|
-| `github-bot` | GitHub App token for Renovate, labeler, tag and the review bot |
+| `github-bot` | GitHub App token for Renovate, labeler, tag and the review bot; the cluster reads it too (home-ops runners, konflate) |
 | `docker-hub` | Authenticated Docker Hub lookups in Renovate |
 | `claude-review` | Review bot OAuth token |
 
