@@ -188,8 +188,12 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
 - `hermes-egress` allows only DNS, LiteLLM, Pocket ID, `models.dev`
   (model metadata, which Hermes fetches at start and in the background with no
   off switch) and GitHub (`github.com`, `api.github.com`,
-  `*.githubusercontent.com`) plus `mise-versions.jdx.dev` for mise tool
-  installs. Installing skills from the hub, `pip` and direct web fetches fail;
+  `*.githubusercontent.com`) plus `mise-versions.jdx.dev` and
+  `tuf-repo-cdn.sigstore.dev` for mise tool installs. mise verifies GitHub
+  artifact attestations against Sigstore's trust root and hangs when it can't
+  fetch it; its self-update check (`mise.jdx.dev`) stays blocked and is off
+  (`MISE_DISABLE_UPDATE_WARNING`). Installing skills from the hub, `pip` and
+  direct web fetches fail;
   `git clone` works for GitHub only. Web search goes through the Kagi MCP
   server instead (paid per search). Hermes has no GitHub token, but GitHub is
   the one place a prompt injection that brings its own token could push data

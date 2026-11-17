@@ -51,13 +51,16 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
-    # mise tool installs: release downloads and version lists from GitHub, and
-    # mise's own cached version lists. Hermes has no GitHub token, but one
-    # brought in by a prompt injection could push data out; accepted for mise
+    # mise tool installs: release downloads, version lists and attestations
+    # from GitHub, mise's own cached version lists, and Sigstore's trust root
+    # to verify the attestations (without it the install hangs). Hermes has no
+    # GitHub token, but one brought in by a prompt injection could push data
+    # out; accepted for mise
     - toFQDNs:
         - matchName: api.github.com
         - matchName: github.com
         - matchName: mise-versions.jdx.dev
+        - matchName: tuf-repo-cdn.sigstore.dev
         - matchPattern: "*.githubusercontent.com"
       toPorts:
         - ports:
