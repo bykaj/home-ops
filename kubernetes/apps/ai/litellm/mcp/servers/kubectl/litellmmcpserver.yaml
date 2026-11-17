@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://schemas.bykaj.io/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: kubectl-mcp
+spec:
+  # kubectl-mcp-server in read-only mode, for looking around the cluster.
+  # Fixes go through the flux server; its ServiceAccount can only read
+  # (rbac.yaml). Only the hermes team gets it
+  alias: kubectl
+  params:
+    description: >-
+      Read-only Kubernetes access: resources, logs, events, metrics, CRDs,
+      certificates, Cilium policies and pod diagnostics. Secrets are not
+      readable; changes go through the flux server.
+  proxyRef: litellm
+  transport: http
+  workload:
+    # renovate: datasource=docker depName=docker.io/rohitghumare64/kubectl-mcp-server
+    image: docker.io/rohitghumare64/kubectl-mcp-server:2.0.0@sha256:f1f57aa5d4952f3c49e4d9bb8071a143d0812bdc8253922d51eeca8a2615ea29
+    args:
+      - --transport=http
+      - --host=0.0.0.0
+      # Port 3000 is the one litellm-egress allows for operator MCP servers
+      - --port=3000
+      # Hides and blocks every tool that changes state
+      - --read-only
+    automountServiceAccountToken: true
+    env:
+      # FastMCP's PyPI update check, which the egress policy would drop
+      - name: FASTMCP_CHECK_FOR_UPDATES
+        value: "off"
+      # kubectl and helm write their caches under HOME
+      - name: HOME
+        value: /tmp
+      # The Host header LiteLLM sends (the port is ignored); without it the
+      # server only accepts localhost
+      - name: MCP_ALLOWED_HOSTS
+        value: kubectl-mcp.ai.svc.cluster.local
+      # No OAuth: the network policy admits only LiteLLM
+      - name: MCP_ALLOW_UNAUTHENTICATED
+        value: "true"
+      - name: MCP_K8S_PROVIDER
+        value: in-cluster
+      # Instead of the default core,helm: Helm keeps releases in Secrets,
+      # which it can't read, and the flux server covers Flux
+      - name: MCP_TOOLSETS
+        value: core,diagnostics,crds,certs,cilium
+    path: /mcp
+    podSecurityContext:
+      runAsGroup: 10001
+      runAsNonRoot: true
+      runAsUser: 10001
+      seccompProfile:
+        type: RuntimeDefault
+    port: 3000
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+    serviceAccountName: kubectl-mcp
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+    volumes:
+      - name: tmp
+        emptyDir: {}

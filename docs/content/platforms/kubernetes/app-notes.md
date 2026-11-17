@@ -101,6 +101,13 @@ How the gateway, models, keys and MCP servers fit together is on the
   `flux-mcp` and two `ValidatingAdmissionPolicies`, not from the server; see
   [Fixing the cluster through an agent](ai.md#fixing-the-cluster-through-an-agent).
   Its policy allows only the Kubernetes API, so `search_flux_docs` fails.
+- The kubectl MCP server (kubectl-mcp-server) runs with `--read-only`, which
+  hides every tool that changes state, and its ServiceAccount `kubectl-mcp`
+  only has `view` and `flux-mcp-read`. `MCP_TOOLSETS` swaps the default
+  `helm` toolset (Helm keeps releases in Secrets, which it can't read) for
+  `diagnostics`, `crds`, `certs` and `cilium`. It's FastMCP-based, so
+  `FASTMCP_CHECK_FOR_UPDATES=off`, and it only accepts the `Host` LiteLLM
+  sends because of `MCP_ALLOWED_HOSTS`. Only the `hermes` team has it.
 - The kguardian MCP server isn't run by the operator: `kguardian-mcp` points
   the proxy at the `/mcp` endpoint kguardian's llm-bridge already serves
   (port 8080, no authentication). `litellm-egress` allows that port
@@ -177,11 +184,15 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
 - The image also has older date tags (`v2026.9.24`) that sort above the
   current `v0.x` releases, so Renovate is kept on `v0.x`. Updates wait 3 days,
   like LiteLLM's.
-- `hermes-egress` allows only DNS, LiteLLM, Pocket ID and `models.dev`
+- `hermes-egress` allows only DNS, LiteLLM, Pocket ID, `models.dev`
   (model metadata, which Hermes fetches at start and in the background with no
-  off switch). Installing skills
-  from the hub, `pip`, `git clone` and direct web fetches all fail; web search
-  goes through the Kagi MCP server instead (paid per search).
+  off switch) and GitHub (`github.com`, `api.github.com`,
+  `*.githubusercontent.com`) plus `mise-versions.jdx.dev` for mise tool
+  installs. Installing skills from the hub, `pip` and direct web fetches fail;
+  `git clone` works for GitHub only. Web search goes through the Kagi MCP
+  server instead (paid per search). Hermes has no GitHub token, but GitHub is
+  the one place a prompt injection that brings its own token could push data
+  to; that was accepted for mise.
   `HERMES_DISABLE_LAZY_INSTALLS` stops Hermes from installing tool
   dependencies on first use.
 - Fetches Hermes makes on its own fire `CiliumEgressPolicyDenied`, so they are
