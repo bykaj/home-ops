@@ -221,6 +221,59 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   doesn't undo that; restore the Kopiur snapshot of the `hermes` PVC instead.
   Before merging a Hermes update, take a fresh snapshot with
   `just k8s pvc-backup ai hermes`, so the restore point isn't up to an hour old.
+- Signal belongs to the `ops` profile (`HERMES_SIGNAL_PROFILE`): one number
+  can only be held by one profile, and a cron job delivers to the home channel
+  of its own profile. `setup.sh` writes `SIGNAL_HTTP_URL`, `SIGNAL_ACCOUNT`,
+  `SIGNAL_ALLOWED_USERS` and `SIGNAL_HOME_CHANNEL` into that profile's `.env`
+  from the `hermes-signal` Secret (fields `SIGNAL_ACCOUNT`, Hermes' number,
+  and `SIGNAL_OWNER`, the owner's, in the `hermes` 1Password item). That
+  Secret is not in the pod's environment: the default profile would pick up
+  Signal from there too. Without the fields, setup skips Signal. Removing them
+  later leaves the settings in the profile's `.env`; delete them there.
+
+### signal-cli
+
+The official `ghcr.io/asamk/signal-cli` image as a daemon for Hermes' Signal
+adapter, which doesn't talk to Signal itself: it reads messages from the
+daemon's event stream and sends through its JSON-RPC API
+(`http://signal-cli.ai.svc.cluster.local:8080`). No route.
+
+- Multi-account mode (`daemon --http`, no `--account`): the daemon starts
+  before a number is registered, registration goes through its API, and
+  Hermes passes the account with every call.
+- The API has no authentication and can send, read and register as the
+  account, so the `signal-cli` policy admits only the Hermes pod, and lets
+  the daemon reach only `*.signal.org`.
+- The PVC (`/var/lib/signal-cli`, backed up by Kopiur) holds the account's
+  keys. Losing it means registering the number again, and contacts see a
+  safety-number change.
+- Hermes has its own number. Linking it as a device to a personal account
+  would hand it every conversation of that account. Keep the number: a lapsed
+  number can be registered by someone else.
+
+Registering the number, from the Hermes pod (the only one the policy lets in):
+
+1. Solve the captcha at
+   [signalcaptchas.org/registration/generate.html](https://signalcaptchas.org/registration/generate.html)
+   and copy the `signalcaptcha://…` link it opens.
+2. Request the code by SMS (`"voice": false`). A VoIP number that can't
+   receive SMS: wait a minute, then request again with `"voice": true`.
+3. Verify the code, set a profile name and a PIN (registration lock, so the
+   number can't be taken over by re-registering it).
+
+```sh
+kubectl -n ai exec -it deploy/hermes -c app -- sh
+rpc() { curl -s http://signal-cli.ai.svc.cluster.local:8080/api/v1/rpc \
+  -H 'content-type: application/json' -d "$1"; echo; }
+rpc '{"jsonrpc":"2.0","id":1,"method":"register","params":{"account":"+31…","captcha":"signalcaptcha://…","voice":false}}'
+rpc '{"jsonrpc":"2.0","id":2,"method":"verify","params":{"account":"+31…","verificationCode":"123456"}}'
+rpc '{"jsonrpc":"2.0","id":3,"method":"updateProfile","params":{"account":"+31…","givenName":"Hermes"}}'
+rpc '{"jsonrpc":"2.0","id":4,"method":"setPin","params":{"account":"+31…","pin":"…"}}'
+```
+
+Then add `SIGNAL_ACCOUNT` and `SIGNAL_OWNER` to the `hermes` 1Password item.
+Reloader restarts Hermes when the `hermes-signal` Secret changes, and the
+`setup` init container switches Signal on for the `ops` profile.
 
 ## `default`
 

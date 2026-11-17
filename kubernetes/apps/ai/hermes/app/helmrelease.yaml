@@ -40,7 +40,16 @@ spec:
               # Named profiles, space-separated; deleting one stays manual
               # (hermes profile delete)
               HERMES_PROFILES: ops
+              # The one profile that owns the Signal number; its cron jobs
+              # can then deliver to Signal
+              HERMES_SIGNAL_PROFILE: ops
               HOME: /opt/data
+            # SIGNAL_* for that profile; optional, so setup still runs while
+            # the 1Password fields don't exist yet (Signal then stays off)
+            envFrom:
+              - secretRef:
+                  name: hermes-signal
+                  optional: true
             resources:
               requests:
                 cpu: 10m

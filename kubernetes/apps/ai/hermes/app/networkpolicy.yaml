@@ -9,8 +9,9 @@ spec:
   # the cluster, the network and Home Assistant, and every chat and memory, so
   # a prompt injection must have nowhere to send them. It may reach LiteLLM
   # (models and MCP servers, Kagi for web search), Pocket ID, the models.dev
-  # registry and GitHub (for mise) and nothing else: no direct web access,
-  # skill hub installs or pip, and update checks and telemetry stay blocked
+  # registry, GitHub (for mise) and the signal-cli daemon and nothing else: no
+  # direct web access, skill hub installs or pip, and update checks and
+  # telemetry stay blocked. Signal itself is reached only by signal-cli
   egress:
     - toEndpoints:
         - matchLabels:
@@ -32,6 +33,17 @@ spec:
       toPorts:
         - ports:
             - port: "4000"
+              protocol: TCP
+    # Signal messages for the ops profile, through the signal-cli daemon
+    # (JSON-RPC and the SSE event stream)
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/controller: signal-cli
+            app.kubernetes.io/instance: signal-cli
+            k8s:io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: "8080"
               protocol: TCP
     # Pocket ID discovery and JWKS for sign-in: cyrannus.id resolves to the
     # envoy-external LoadBalancer IP, which Cilium translates to the envoy pods
