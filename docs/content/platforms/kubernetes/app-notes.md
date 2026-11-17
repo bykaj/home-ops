@@ -192,7 +192,7 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   `tuf-repo-cdn.sigstore.dev` for mise tool installs. mise verifies GitHub
   artifact attestations against Sigstore's trust root and hangs when it can't
   fetch it; its self-update check (`mise.jdx.dev`) stays blocked and is off
-  (`MISE_HIDE_UPDATE_WARNING`). Installing skills from the hub, `pip` and
+  (`MISE_DISABLE_UPDATE_WARNING`). Installing skills from the hub, `pip` and
   direct web fetches fail;
   `git clone` works for GitHub only. Web search goes through the Kagi MCP
   server instead (paid per search). Hermes has no GitHub token, but GitHub is

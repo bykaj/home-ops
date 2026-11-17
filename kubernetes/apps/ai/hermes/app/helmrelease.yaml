@@ -88,7 +88,7 @@ spec:
               # Skips mise's self-update check (mise.jdx.dev, blocked by
               # hermes-egress), which stalled `mise --version` for 90 s; the
               # binary comes from the image, which Renovate updates
-              MISE_HIDE_UPDATE_WARNING: "1"
+              MISE_DISABLE_UPDATE_WARNING: "1"
               MISE_STATE_DIR: /opt/data/.local/state/mise
               # The image's PATH with mise's shims and binary after Hermes' own
               PATH: /opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/opt/data/.local/share/mise/shims:/opt/mise:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
