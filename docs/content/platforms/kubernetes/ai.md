@@ -291,9 +291,9 @@ hand with `hermes profile delete <name>`.
 
 The `ops` profile also talks Signal, through the
 [signal-cli](app-notes.md#signal-cli) daemon in the same namespace: only the
-owner's number may message it, and `--deliver signal` sends a cron report to
-the owner. Hermes keeps no internet access for this; only signal-cli reaches
-Signal's servers.
+owner may message it (allowed by number and by Signal UUID), and
+`--deliver signal` sends a cron report to the owner. Hermes keeps no internet
+access for this; only signal-cli reaches Signal's servers.
 
 The terminal has [mise](https://mise.jdx.dev) for installing CLI tools: its
 binary comes from the `ghcr.io/jdx/mise` image, mounted as an image volume at

@@ -225,11 +225,20 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   can only be held by one profile, and a cron job delivers to the home channel
   of its own profile. `setup.sh` writes `SIGNAL_HTTP_URL`, `SIGNAL_ACCOUNT`,
   `SIGNAL_ALLOWED_USERS` and `SIGNAL_HOME_CHANNEL` into that profile's `.env`
-  from the `hermes-signal` Secret (fields `SIGNAL_ACCOUNT`, Hermes' number,
-  and `SIGNAL_OWNER`, the owner's, in the `hermes` 1Password item). That
+  from the `hermes-signal` Secret (fields in the `hermes` 1Password item:
+  `SIGNAL_ACCOUNT_NUMBER`, Hermes' number; `SIGNAL_OWNER_UUID`, the owner's
+  Signal account UUID; `SIGNAL_OWNER_NUMBER`, the owner's number). That
   Secret is not in the pod's environment: the default profile would pick up
-  Signal from there too. Without the fields, setup skips Signal. Removing them
-  later leaves the settings in the profile's `.env`; delete them there.
+  Signal from there too.
+  Without the fields, setup skips Signal. Removing them later leaves the
+  settings in the profile's `.env`; delete them there.
+- The allowlist holds the owner's number **and** UUID. Signal leaves the
+  number out while the owner keeps it hidden from non-contacts (the default)
+  and includes it once it's shared, and Hermes only checks one identifier per
+  message: the number if present, else the UUID. The UUID isn't shown in the
+  Signal apps; a dropped message logs it ("Dropped a message from
+  unrecognized signal user …" in the profile's `logs/gateway.log`). Cron
+  reports go to the UUID, which works whatever the number settings are.
 
 ### signal-cli
 
@@ -272,7 +281,8 @@ rpc '{"jsonrpc":"2.0","id":3,"method":"updateProfile","params":{"account":"+31�
 rpc '{"jsonrpc":"2.0","id":4,"method":"setPin","params":{"account":"+31…","pin":"…"}}'
 ```
 
-Then add `SIGNAL_ACCOUNT` and `SIGNAL_OWNER` to the `hermes` 1Password item.
+Then add `SIGNAL_ACCOUNT_NUMBER`, `SIGNAL_OWNER_UUID` and `SIGNAL_OWNER_NUMBER`
+to the `hermes` 1Password item.
 Reloader restarts Hermes when the `hermes-signal` Secret changes, and the
 `setup` init container switches Signal on for the `ops` profile.
 
