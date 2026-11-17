@@ -226,9 +226,10 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   of its own profile. `setup.sh` writes `SIGNAL_HTTP_URL`, `SIGNAL_ACCOUNT`,
   `SIGNAL_ALLOWED_USERS` and `SIGNAL_HOME_CHANNEL` into that profile's `.env`
   from the `hermes-signal` Secret (fields in the `hermes` 1Password item:
-  `SIGNAL_ACCOUNT`, Hermes' number; `SIGNAL_OWNER`, the owner's Signal account
-  UUID; `SIGNAL_OWNER_NUMBER`, the owner's number). That Secret is not in the
-  pod's environment: the default profile would pick up Signal from there too.
+  `SIGNAL_ACCOUNT_NUMBER`, Hermes' number; `SIGNAL_OWNER_UUID`, the owner's
+  Signal account UUID; `SIGNAL_OWNER_NUMBER`, the owner's number). That
+  Secret is not in the pod's environment: the default profile would pick up
+  Signal from there too.
   Without the fields, setup skips Signal. Removing them later leaves the
   settings in the profile's `.env`; delete them there.
 - The allowlist holds the owner's number **and** UUID. Signal leaves the
@@ -280,7 +281,7 @@ rpc '{"jsonrpc":"2.0","id":3,"method":"updateProfile","params":{"account":"+31�
 rpc '{"jsonrpc":"2.0","id":4,"method":"setPin","params":{"account":"+31…","pin":"…"}}'
 ```
 
-Then add `SIGNAL_ACCOUNT`, `SIGNAL_OWNER` (UUID) and `SIGNAL_OWNER_NUMBER`
+Then add `SIGNAL_ACCOUNT_NUMBER`, `SIGNAL_OWNER_UUID` and `SIGNAL_OWNER_NUMBER`
 to the `hermes` 1Password item.
 Reloader restarts Hermes when the `hermes-signal` Secret changes, and the
 `setup` init container switches Signal on for the `ops` profile.
