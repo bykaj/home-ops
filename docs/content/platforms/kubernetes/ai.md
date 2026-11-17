@@ -251,13 +251,16 @@ the `hermes` PVC (backed up by Kopiur). Hermes seeds a new default profile
 (`/opt/data/config.yaml`) with `anthropic/claude-opus-4.6` through OpenRouter,
 and providers and MCP servers have to live in the profile itself: put in the
 overlay, every dashboard save strips them from the profile. So the `setup`
-init container, after running the image's config migration, points the
-profile at LiteLLM with Hermes' own CLI (`hermes config set`, which keeps the
-rest of the file and its comments), before the gateway starts:
+init container, after running the image's config migration, creates the
+named profiles listed in `HERMES_PROFILES` (now `ops`, under
+`/opt/data/profiles/`) if they don't exist yet, and points the default
+profile and those at LiteLLM with Hermes' own CLI (`hermes config set`, which
+keeps the rest of the file and its comments), before the gateway starts:
 
 | Setting | When |
 | --- | --- |
 | `providers.litellm` (the proxy's `/v1`, `key_env: LITELLM_API_KEY`, model discovery) and `mcp_servers.litellm` (`/mcp/`, `x-litellm-api-key` header) | Every start: Git wins over changes in the dashboard |
+| `secrets.command` (named profiles only): `echo LITELLM_API_KEY=$(cat /mnt/secrets/litellm/api-key)` | Every start |
 | `model.provider: custom:litellm`, `model.default: chatgpt/gpt-6.1-sol`, `model.base_url`, `model.context_length: 272000` | Only while the profile doesn't use LiteLLM yet, so a model picked in the dashboard survives restarts |
 
 `model.context_length` is the LiteLLM model's `maxInputTokens`: Hermes can't
@@ -265,8 +268,24 @@ read a context length from LiteLLM and would assume 256K. To start the model
 settings over, set `model.provider` to anything else and restart. The seed
 adds about 15 seconds to every start. `hermes mcp test litellm` (run in the pod
 with `HOME` and `HERMES_HOME` set to `/opt/data`) lists the tools Hermes gets
-through the proxy. Other profiles don't get the seed and need the same
-settings themselves.
+through the proxy; add `-p <profile>` for a named one.
+
+The gateway serves every profile from one process (`gateway.multiplex_profiles`),
+and to keep their credentials apart a named profile never reads them from the
+pod's environment, only from its own `.env` and secret sources. The default
+profile uses the `LITELLM_API_KEY` environment variable; the named ones get
+the same `hermes` key from the `hermes-litellm` Secret, mounted at
+`/mnt/secrets/litellm`, through the `secrets.command` helper above, so a key
+rotation by the operator reaches them on the next start. All profiles share
+the key and so the same models and MCP servers.
+
+To add a profile, add its name to `HERMES_PROFILES` in the HelmRelease. Its
+persona goes in `/opt/data/profiles/<name>/SOUL.md` (optional, read with
+every message; without one Hermes uses its default), and scheduled jobs
+belong to a profile: `hermes -p <name> cron create ...` with
+`--deliver bot-chat:<name>` puts the result in that profile's chat in the web
+app. Removing a name from the list leaves the profile in place; delete it by
+hand with `hermes profile delete <name>`.
 
 The terminal has [mise](https://mise.jdx.dev) for installing CLI tools: its
 binary comes from the `ghcr.io/jdx/mise` image, mounted as an image volume at

@@ -204,7 +204,11 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   internet; a drop from those is expected.
 - The LiteLLM key is a pod environment variable. The terminal tool only gets
   the variables in `terminal.env_passthrough` (none), so the agent's shell
-  can't read it.
+  can't read it from there, but the named profiles need it as a file
+  (`/mnt/secrets/litellm/api-key`, see [Hermes](ai.md#hermes)), and the shell
+  runs as the same user, so it can read that. The key only works against
+  LiteLLM, which is reachable from the cluster and the home network
+  (`envoy-internal`), not from the internet.
 - Settings that must stay in each profile's own `config.yaml` (providers,
   `mcp_servers`, secret sources, `skills.external_dirs`): declaring them in the
   managed overlay makes every dashboard save strip them from the profile.
