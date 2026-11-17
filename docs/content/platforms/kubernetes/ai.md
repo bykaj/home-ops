@@ -261,7 +261,7 @@ keeps the rest of the file and its comments), before the gateway starts:
 
 | Setting | When |
 | --- | --- |
-| `providers.litellm` (the proxy's `/v1`, `key_env: LITELLM_API_KEY`, model discovery) and `mcp_servers.litellm` (`/mcp/`, `x-litellm-api-key` header) | Every start: Git wins over changes in the dashboard |
+| `providers.litellm` (the proxy's `/v1`, `key_env: LITELLM_API_KEY`, model discovery) and `mcp_servers.litellm` (`/mcp/`, `x-litellm-api-key` header, `connect_timeout: 120`, since a cold tool list through LiteLLM can pass the default 30 s) | Every start: Git wins over changes in the dashboard |
 | `secrets.command` (named profiles only): `echo LITELLM_API_KEY=$(cat /mnt/secrets/litellm/api-key)` | Every start |
 | `model.provider: custom:litellm`, `model.default: chatgpt/gpt-6.1-sol`, `model.base_url`, `model.context_length: 272000` | Only while the profile doesn't use LiteLLM yet, so a model picked in the dashboard survives restarts |
 
