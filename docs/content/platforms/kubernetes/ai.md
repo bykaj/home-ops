@@ -153,13 +153,14 @@ may call.
   is the exception: it depends on `litellm`, which is accepted as is.
 - **MCP access** is granted per team: a key gets no MCP servers unless its team
   lists them, and the operator has no per-tool allowlist. The `claude-code`
-  team lists every server except `flux` and `kagi`, and the model
+  team lists every server except `flux`, `kagi` and `kubectl`, and the model
   `no-default-models`, which matches nothing, so its key can't spend money.
   `kagi` is paid per search and Claude Code has its own web search, so only
   the `hermes` team gets it.
-- **Write access to the cluster** (the `flux` server) only goes to the
-  `hermes` team, the agent used for ops work. Claude Code on the Macs has
-  kubectl and flux itself and doesn't get it.
+- **Cluster access** (the `flux` server, which can fix things, and the
+  read-only `kubectl` server) only goes to the `hermes` team, the agent used
+  for ops work. Claude Code on the Macs has kubectl and flux itself and
+  doesn't get them.
 
 ## MCP servers
 
@@ -173,6 +174,7 @@ one key for all of them. Tools appear as `<server>-<tool>`.
 | `home_assistant` | Operator-run pod (ha-mcp) | Home Assistant, as a dedicated user |
 | `kagi` | Kagi's hosted server | `mcp.kagi.com`, bearer key from the `litellm` item; only the `hermes` team has it |
 | `kguardian` | kguardian's own llm-bridge | `observability/kguardian-llm-bridge:8080`, no auth |
+| `kubectl` | Operator-run pod (kubectl-mcp-server, `--read-only`) | The Kubernetes API as ServiceAccount `kubectl-mcp`, with the same read-only roles as `flux` (`view` and `flux-mcp-read`); only the `hermes` team has it |
 | `kubesearch` | Operator-run pod | kubesearch.dev and GitHub clones (reference repos always cloned) |
 | `unifi_network` | Operator-run pod | The UniFi gateway, as a dedicated local account |
 
@@ -265,6 +267,16 @@ adds about 15 seconds to every start. `hermes mcp test litellm` (run in the pod
 with `HOME` and `HERMES_HOME` set to `/opt/data`) lists the tools Hermes gets
 through the proxy. Other profiles don't get the seed and need the same
 settings themselves.
+
+The terminal has [mise](https://mise.jdx.dev) for installing CLI tools: its
+binary comes from the `ghcr.io/jdx/mise` image, mounted as an image volume at
+`/opt/mise`, and tools, shims and the global config
+(`/opt/data/.config/mise/config.toml`) live on the PVC. The `MISE_*`
+directories are fixed in the pod's environment because the terminal's `HOME`
+moves into each profile, so every profile shares one install. Downloads may
+only come from GitHub (see [App Notes](app-notes.md#hermes)), so tools that GitHub
+releases or the aqua registry serve install, and tools from other hosts don't.
+mise calls GitHub's API without a token, which allows 60 requests an hour.
 
 ## Network
 

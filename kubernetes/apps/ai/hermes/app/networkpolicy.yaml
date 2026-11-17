@@ -8,9 +8,9 @@ spec:
   # Egress only: Hermes is an agent with a shell, a LiteLLM key that can change
   # the cluster, the network and Home Assistant, and every chat and memory, so
   # a prompt injection must have nowhere to send them. It may reach LiteLLM
-  # (models and MCP servers, Kagi for web search), Pocket ID and the models.dev
-  # registry and nothing else: no direct web access, skill hub installs, pip or
-  # git remotes, and update checks and telemetry stay blocked
+  # (models and MCP servers, Kagi for web search), Pocket ID, the models.dev
+  # registry and GitHub (for mise) and nothing else: no direct web access,
+  # skill hub installs or pip, and update checks and telemetry stay blocked
   egress:
     - toEndpoints:
         - matchLabels:
@@ -47,6 +47,18 @@ spec:
     # and refreshed in the background; it has no off switch
     - toFQDNs:
         - matchName: models.dev
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # mise tool installs: release downloads and version lists from GitHub, and
+    # mise's own cached version lists. Hermes has no GitHub token, but one
+    # brought in by a prompt injection could push data out; accepted for mise
+    - toFQDNs:
+        - matchName: api.github.com
+        - matchName: github.com
+        - matchName: mise-versions.jdx.dev
+        - matchPattern: "*.githubusercontent.com"
       toPorts:
         - ports:
             - port: "443"

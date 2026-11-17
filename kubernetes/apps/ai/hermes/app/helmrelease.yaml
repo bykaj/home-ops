@@ -107,6 +107,15 @@ spec:
                   secretKeyRef:
                     name: hermes-litellm
                     key: api-key
+              # mise (the image volume below) keeps its tools and its global
+              # config on the PVC. The terminal's HOME moves into each profile,
+              # so the paths are fixed to share one install between profiles
+              MISE_CACHE_DIR: /opt/data/.cache/mise
+              MISE_CONFIG_DIR: /opt/data/.config/mise
+              MISE_DATA_DIR: /opt/data/.local/share/mise
+              MISE_STATE_DIR: /opt/data/.local/state/mise
+              # The image's PATH with mise's shims and binary after Hermes' own
+              PATH: /opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/opt/data/.local/share/mise/shims:/opt/mise:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
             # Pocket ID client ID and secret
             envFrom:
@@ -175,6 +184,19 @@ spec:
             app:
               - path: /etc/hermes
                 readOnly: true
+      # The mise binary from its image, for installing CLI tools on the PVC;
+      # downloads are limited to GitHub by hermes-egress
+      mise:
+        type: image
+        image:
+          repository: ghcr.io/jdx/mise
+          tag: 2026.11.0@sha256:6e05da4113a812cc8ac72b21a38889d019fb0f97df6ce8075c0de98d1cf48cc4
+        advancedMounts:
+          hermes:
+            app:
+              - path: /opt/mise
+                readOnly: true
+                subPath: usr/local/bin
       run:
         type: emptyDir
         globalMounts:

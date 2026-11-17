@@ -8,5 +8,6 @@ resources:
   - ./home-assistant
   - ./kagi
   - ./kguardian
+  - ./kubectl
   - ./kubesearch
   - ./unifi-network

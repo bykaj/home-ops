@@ -7,14 +7,15 @@ metadata:
 spec:
   alias: hermes
   # Hermes is the ops agent for the cluster, the network and Home Assistant, so
-  # it gets every server, flux's write access included. kagi is its web search
-  # (paid per search); its pod may reach nothing outside the cluster
+  # it gets every server, flux's write access included (kubectl only reads).
+  # kagi is its web search (paid per search); its pod can't reach the web
   mcpServers:
     - context7
     - flux
     - home_assistant
     - kagi
     - kguardian
+    - kubectl
     - kubesearch
     - unifi_network
   # Subscription models first, MiniMax as the pay-per-token fallback
