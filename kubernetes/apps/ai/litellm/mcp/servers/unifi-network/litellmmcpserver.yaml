@@ -10,7 +10,7 @@ spec:
   transport: http
   workload:
     # renovate: datasource=docker depName=ghcr.io/sirkirby/unifi-network-mcp
-    image: ghcr.io/sirkirby/unifi-network-mcp:0.47.0@sha256:5950c04b97686fa90fba74d1cca4514fc4f3fb9c5452a048a446852b56df0572
+    image: ghcr.io/sirkirby/unifi-network-mcp:0.48.0@sha256:0e7aa0dd506e8c921acb7ec1ad9089a73e8be4531db1f4f13944d406c7e936c2
     automountServiceAccountToken: false
     env:
       # Host headers the HTTP transport accepts (DNS rebinding protection)
