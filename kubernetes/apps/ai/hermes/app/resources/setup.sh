@@ -65,6 +65,10 @@ for profile in default $HERMES_PROFILES; do
   set_key providers.litellm.key_env LITELLM_API_KEY
   set_key providers.litellm.discover_models true
   set_key mcp_servers.litellm.url http://litellm.ai.svc.cluster.local:4000/mcp/
+  # LiteLLM lists the tools of every MCP server behind it; a cold list (after
+  # a restart, with the hosted servers slow to answer) took 31 s, and at
+  # Hermes' default of 30 s the gateway then started without any MCP tools
+  set_key mcp_servers.litellm.connect_timeout 120
   # shellcheck disable=SC2016 # literal on purpose, Hermes expands it
   set_key mcp_servers.litellm.headers '{"x-litellm-api-key": "Bearer ${LITELLM_API_KEY}"}'
   if [ "$profile" != default ]; then
