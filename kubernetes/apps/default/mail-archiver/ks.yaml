@@ -25,6 +25,7 @@ spec:
       APP: *app
       APP_NAME: "Mail Archiver"
       POSTGRES_BACKUP_SCHEDULE: "18 0 * * *"
+      POSTGRES_BASE_BACKUP_SCHEDULE: "0 24 4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository

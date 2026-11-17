@@ -43,6 +43,7 @@ in progress until the Kustomization's timeout, instead of failing at once.
 | `POSTGRES_USERNAME` | `${APP}` | Owner role created on initial bootstrap |
 | `POSTGRES_DATABASE` | `${APP}` | Database created on initial bootstrap |
 | `POSTGRES_BACKUP_SCHEDULE` | `23 0 * * *` | Cron schedule for the local NFS dump. Set it per app to `<minute> 0 * * *` with the minute from `just k8s cron-minute <app>`, so the dumps are spread over the hour |
+| `POSTGRES_BASE_BACKUP_SCHEDULE` | `0 40 4 * * *` | Barman base backup to Garage: six fields, seconds first, in the operator's time zone (Europe/Amsterdam, injected by k8tz, like the MariaDB operator's). Set it per app to its own slot in the 04:xx hour, see [Backups](#backups) |
 
 A brand-new database needs one extra label on first deploy. See
 [New Database](../../operations/runbooks/new-database.md).
@@ -83,7 +84,22 @@ so names don't collide.
 
 - **Barman Cloud** (`ScheduledBackup`, daily) with continuous WAL archiving to
   Garage S3 at `s3://postgresql/${APP}/${POSTGRES_DATABASE}/`,
-  `retentionPolicy: 14d`.
+  `retentionPolicy: 14d`. Each app's base backup has its own slot,
+  eight minutes apart (a base backup takes up to about five):
+
+    | Time | App |
+    | --- | --- |
+    | 04:00 | autobrr |
+    | 04:08 | immich |
+    | 04:16 | litellm |
+    | 04:24 | mail-archiver |
+    | 04:32 | paperless |
+    | 04:40 | windshift |
+
+    04:50 is the MariaDB physical backup. Until November 2026 every base
+    backup started at 04:40; uploading together, one or two aborted with
+    HTTP 499 on Garage's `UploadPart` every few nights, while WAL archiving
+    kept working. A new app takes the next free slot.
 - **Local dumps** with
   [postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-local)
   to an NFS share on the NAS, keeping 7 daily, 4 weekly and 1 monthly. The

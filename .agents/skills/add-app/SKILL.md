@@ -106,10 +106,12 @@ spec:
     substitute:
       APP: <app>
       POSTGRES_BACKUP_SCHEDULE: "<minute> 0 * * *"
+      POSTGRES_BASE_BACKUP_SCHEDULE: "0 <slot> 4 * * *"
 ```
 
 - `healthCheckExprs` alone does nothing: Flux only evaluates it for resources listed in `healthChecks` (or with `wait: true`, which this skill avoids). List the app's own database resources there by name. Keep the expressions `current`-only and guarded with `has()`, so a database that is still starting counts as in progress, not failed.
 - `<minute>` is the output of `just k8s cron-minute <app>`. Every app gets its own stable minute in the 00:xx hour, so the nightly dumps don't all start at once; don't leave the `23 0 * * *` default.
+- `<slot>` is the base backup's own minute in the 04:xx hour (six cron fields, seconds first): take the next free one from the slot table in the Backups section of `docs/content/infrastructure/storage/postgres.md` (eight minutes apart; 04:50 is MariaDB's) and add the app there. Base backups that start together abort with HTTP 499 on Garage, so never leave the `0 40 4 * * *` default.
 - The `components.database/postgres: init` label is only for a database that has never been backed up: it makes the cluster start with a plain `initdb` instead of recovering from Barman, which would fail without a backup. Leave it out when a backup already exists. After the first deploy, the label has to be removed in a follow-up commit once the first backup has run (`docs/content/operations/runbooks/new-database.md`); tell the user.
 
 **If the app needs MySQL or MariaDB**, it gets its own replicated MariaDB from the `database/mariadb` component instead. Same pattern: `../../../../components/database/mariadb`, the `MariaDB` health check (`current: has(status.conditions) && status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')`, plus a `healthChecks` entry for `<app>-mariadb`), `MARIADB_BACKUP_SCHEDULE` from `just k8s cron-minute <app>`, `dependsOn: []` in the HelmRelease, and the `components.database/mariadb: init` label for a brand-new database (remove it after the first base backup, then run `just k8s mariadb-mark-initialized <ns> <app>`, or the operator goes into an init error; tell the user). The app connects to `${APP}-mariadb-primary:3306` as `${APP}` with the password in the `${APP}-mariadb-app` Secret (key `password`). All knobs, and the timeline bump a rebuild needs, are in `docs/content/infrastructure/storage/mariadb.md`.
@@ -446,6 +448,7 @@ Show the user the created files and get confirmation before committing. Commit s
 - **A public app without an egress policy** — every `envoy-external` app gets `networkpolicy.yaml` (see above); only Gatus is exempt, on purpose.
 - **Allowing `*.example.com` for a CDN** — it matches one label only; downloads that redirect to `a.b.example.com` are dropped. Use `**.example.com`.
 - **Leaving `POSTGRES_BACKUP_SCHEDULE` at its default** — set it from `just k8s cron-minute <app>`.
+- **Leaving `POSTGRES_BASE_BACKUP_SCHEDULE` at its default** — give the app the next free slot from the table in `docs/content/infrastructure/storage/postgres.md`.
 - **Adding the `components.database/postgres: init` label for a database that already has a backup**, or leaving it in after the first backup — see the New Database runbook.
 - **Adding the postgres, mariadb or dragonfly component without `dependsOn: []` in the HelmRelease** — their JSON patches append to that list, and the Kustomization build fails if it's missing.
 - **Adding `wait`, `commonMetadata`, or `timeout` to `ks.yaml`** — all three are boilerplate now. Leave `wait` unset unless another Kustomization depends on this one and it has no `healthChecks` (then, and only then, `wait: true`).
