@@ -47,6 +47,12 @@ copy of the item, so a key rotation reaches both. The flip side: an item
 missing from `Homelab` (renamed, deleted) silently resolves from `Automation`
 if a same-named item exists there, instead of failing.
 
+`PushSecret`s (the TLS certificates in `network`) follow the same order. A new
+item is created in `Homelab`, the first vault; an existing one is updated
+wherever it's found. Don't give an `Automation` item the name of a pushed
+item, or a missing `Homelab` copy would send that certificate's private key to
+the vault GitHub workflows read.
+
 The Connect token must be able to read both vaults. The store's validation
 fetches every listed vault, so one the token can't read makes the whole store
 not ready, for every `ExternalSecret`: grant access in 1Password before adding
