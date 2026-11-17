@@ -134,7 +134,7 @@ Each policy file explains its own rules:
   [Seafile](../../platforms/kubernetes/app-notes.md#egress-policy)).
 - [`signal-cli`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/signal-cli/app/networkpolicy.yaml)
   admits only Hermes to the daemon's unauthenticated JSON-RPC API and lets it
-  reach only Signal's servers (`*.signal.org`), so Hermes gets Signal without
+  reach only Signal's servers (`**.signal.org`), so Hermes gets Signal without
   internet access of its own (see
   [signal-cli](../../platforms/kubernetes/app-notes.md#signal-cli)).
 - [`smtp-relay`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/network/smtp-relay/app/networkpolicy.yaml)
