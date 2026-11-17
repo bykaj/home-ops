@@ -175,10 +175,11 @@ How Hermes is wired to LiteLLM and how its profiles are set up is on the
   it seeds the profile with LiteLLM ([AI](ai.md#hermes)).
   `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` lets s6 start on the
   `/run` emptyDir.
-- The `setup` init container writes
-  `${LITELLM_API_KEY}` into the MCP header literally, for Hermes to expand.
-  The HelmRelease goes through Flux's variable substitution, so it's written
-  `$${LITELLM_API_KEY}` there; a plain `${...}` would become an empty string.
+- The `setup` init container runs `app/resources/setup.sh` from the
+  `hermes-scripts` ConfigMap. It writes `${LITELLM_API_KEY}` into the MCP
+  header literally, for Hermes to expand; generated ConfigMaps skip Flux's
+  variable substitution, so the script needs no `$${...}` escaping (in the
+  HelmRelease itself a plain `${...}` would become an empty string).
 - The probes check the gateway's cron heartbeat
   (`/opt/data/cron/ticker_heartbeat`, written every 60 s), not a port.
 - The image also has older date tags (`v2026.9.24`) that sort above the

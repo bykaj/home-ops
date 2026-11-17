@@ -12,6 +12,9 @@ configMapGenerator:
   - name: hermes-configmap
     files:
       - config.yaml=./resources/config.yaml
+  - name: hermes-scripts
+    files:
+      - setup.sh=./resources/setup.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

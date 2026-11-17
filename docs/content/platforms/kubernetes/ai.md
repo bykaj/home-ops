@@ -251,7 +251,9 @@ the `hermes` PVC (backed up by Kopiur). Hermes seeds a new default profile
 (`/opt/data/config.yaml`) with `anthropic/claude-opus-4.6` through OpenRouter,
 and providers and MCP servers have to live in the profile itself: put in the
 overlay, every dashboard save strips them from the profile. So the `setup`
-init container, after running the image's config migration, creates the
+init container
+([`app/resources/setup.sh`](https://github.com/bykaj/home-ops/blob/main/kubernetes/apps/ai/hermes/app/resources/setup.sh)),
+after running the image's config migration, creates the
 named profiles listed in `HERMES_PROFILES` (now `ops`, under
 `/opt/data/profiles/`) if they don't exist yet, and points the default
 profile and those at LiteLLM with Hermes' own CLI (`hermes config set`, which
