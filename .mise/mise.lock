@@ -668,9 +668,9 @@ backend = "npm:oxfmt"
 specifiers = ["0.75.0"]
 
 [[tools."pipx:ansible"]]
-version = "14.6.0"
+version = "15.0.0"
 backend = "pipx:ansible"
-specifiers = ["14.6.0"]
+specifiers = ["15.0.0"]
 
 [[tools."pipx:ansible-core"]]
 version = "2.22.0"
