@@ -188,6 +188,8 @@
         commitMessageTopic: "{{{groupName}}} group",
       },
       minimumGroupSize: 2,
+      // Keep proposing patches for the current minor after the next minor ships
+      separateMinorPatch: true,
     },
     {
       description: "MariaDB Operator Group",
