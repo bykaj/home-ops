@@ -35,6 +35,8 @@ spec:
                     name: "immich-postgres-app"
                     key: uri
               IMMICH_ALLOW_SETUP: "false"
+              # v3.4.2 binds the metrics exporter to IMMICH_HOST (default "::"), which breaks its URL parsing (HTTP 400)
+              IMMICH_HOST: "0.0.0.0"
               IMMICH_MEDIA_LOCATION: &mediaLocation /data
               IMMICH_TELEMETRY_INCLUDE: "all"
               IMMICH_WORKERS_INCLUDE: "api"
