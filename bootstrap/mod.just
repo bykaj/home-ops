@@ -12,7 +12,7 @@ configs := "kubeconfig talosconfig"
 
 [confirm('Bootstrap cluster? [y|N]')]
 [doc('Bootstrap a Talos & Kubernetes cluster end-to-end')]
-cluster: nodes k8s (kubeconfig "node") base apps kubeconfig store-configs
+cluster: nodes k8s (kubeconfig "node") base apps kubeconfig store-configs drop-helm-owners
 
 [confirm('Bootstrap Docker host ' + host + '? [y|N]')]
 [doc('Bootstrap a Docker host with Ansible (host = directory under docker/)')]
@@ -128,6 +128,47 @@ apps:
     if ! helmfile -f "{{ source_directory() }}/kubernetes/helmfile/apps.yaml" sync --hide-notes; then
         just log fatal "Failed to sync helmfile" "stage" "{{ recipe_name() }}"
     fi
+
+# Helm 4 server-side applies as field manager "helm" and has no flag to rename it; Flux applies
+# as "helm-controller" and never drops the "helm" entry. Fields a later chart version stops
+# rendering would then stay on the object, so remove the entry once helm-controller co-owns it.
+[doc('Remove the bootstrap helmfile field manager once Flux manages the same releases')]
+drop-helm-owners timeout="15m":
+    just log info "Running stage..." "stage" "{{ recipe_name() }}"
+    releases="$(helmfile -f "{{ source_directory() }}/kubernetes/helmfile/apps.yaml" list --output json | jq -r '.[] | "\(.namespace)/\(.name)"')"
+    for r in $releases; do
+        ns="${r%/*}" rel="${r#*/}"
+        just log info "Waiting for HelmRelease to be Ready" "stage" "{{ recipe_name() }}" "release" "$r"
+        if ! kubectl -n "$ns" wait "helmrelease/${rel}" --for=create --timeout="{{ timeout }}" >/dev/null \
+            || ! kubectl -n "$ns" wait "helmrelease/${rel}" --for=condition=Ready --timeout="{{ timeout }}" >/dev/null; then
+            just log fatal "HelmRelease not Ready" "stage" "{{ recipe_name() }}" "release" "$r"
+        fi
+        fixed=0 skipped=0
+        while IFS='|' read -r api kind obj_ns name; do
+            group="${api%/*}"
+            [[ "$group" == "$api" ]] && group=""
+            res="${kind}${group:+.${group}}"
+            json="$(kubectl get "$res" "$name" -n "${obj_ns:-$ns}" --show-managed-fields -o json 2>/dev/null)" || continue
+            if [[ "$(jq '.metadata.managedFields | any(.manager == "helm")' <<<"$json")" != "true" ]]; then
+                continue
+            fi
+            if [[ "$(jq '.metadata.managedFields | any(.manager == "helm-controller")' <<<"$json")" != "true" ]]; then
+                (( ++skipped ))
+                continue
+            fi
+            # Guard each removal with a test op, so a concurrent change to managedFields fails the patch instead of removing the wrong entry
+            while idx="$(jq -e '.metadata.managedFields | map(.manager) | index("helm")' <<<"$json")"; do
+                kubectl patch "$res" "$name" -n "${obj_ns:-$ns}" --type=json \
+                    -p "[{\"op\":\"test\",\"path\":\"/metadata/managedFields/${idx}/manager\",\"value\":\"helm\"},{\"op\":\"remove\",\"path\":\"/metadata/managedFields/${idx}\"}]" >/dev/null
+                json="$(kubectl get "$res" "$name" -n "${obj_ns:-$ns}" --show-managed-fields -o json)"
+            done
+            (( ++fixed ))
+        done < <(helm get manifest -n "$ns" "$rel" | yq -r 'select(.kind != null) | [.apiVersion, .kind, (.metadata.namespace // ""), .metadata.name] | join("|")')
+        just log info "Removed helm field manager" "stage" "{{ recipe_name() }}" "release" "$r" "objects" "$fixed"
+        if (( skipped > 0 )); then
+            just log warn "Not yet managed by helm-controller, left as is; re-run this recipe later" "stage" "{{ recipe_name() }}" "release" "$r" "objects" "$skipped"
+        fi
+    done
 
 # Wait until every apiserver answers /readyz. Helm and kubectl calls after this stage are not retried.
 [private]
