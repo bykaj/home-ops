@@ -186,6 +186,10 @@ An app picks its exposure by setting `parentRefs` on its `HTTPRoute` (the
 domain served (`bykaj.app`, `bykaj.dev`, `bykaj.io`, and others) are issued by
 cert-manager and attached to both Gateways.
 
+Both Gateway Services are `LoadBalancer` Services without NodePorts
+(`allocateLoadBalancerNodePorts: false` in the shared `EnvoyProxy`): Cilium
+answers on the LoadBalancer IP directly, so nothing needs a port on every node.
+
 ```mermaid
 graph LR
     lan(LAN client) -->|DNS: UDM| int[envoy-internal<br/>10.73.20.110]
