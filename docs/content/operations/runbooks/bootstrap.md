@@ -37,7 +37,7 @@ just bootstrap cluster
 
 ```mermaid
 graph LR
-    nodes --> k8s --> kubeconfig --> base --> apps --> store-configs
+    nodes --> k8s --> kubeconfig --> base --> apps --> store-configs --> drop-helm-owners
 ```
 
 1. **nodes**: renders each node's Talos config (templates plus 1Password
@@ -68,9 +68,36 @@ graph LR
 
 6. **store-configs**: uploads `kubeconfig` and `talosconfig` to the
    `cluster` item in 1Password (see [Client configs](#client-configs)).
+7. **drop-helm-owners**: waits until Flux reports each helmfile release's
+   HelmRelease `Ready` (up to 15 minutes each), then removes the `helm` field
+   manager from every object in that release (see
+   [Field managers](#field-managers)).
 
 Once `flux-instance` is healthy, Flux reconciles `kubernetes/` and manages the
 same releases from then on.
+
+### Field managers
+
+Helm 4 server-side applies the helmfile releases as field manager `helm`, and
+has no option to name it differently. When Flux takes the releases over,
+helm-controller applies as `helm-controller` and leaves the `helm` entry in
+place. A field that a later chart version stops rendering then stays on the
+object, because `helm` still owns it: in October 2026 a Spegel annotation
+outlived the chart version that set it, and in November 2026 a Cilium upgrade
+failed on a leftover init container without an image.
+
+The `drop-helm-owners` stage removes the `helm` entry so helm-controller is the
+only owner. It only touches objects that helm-controller already manages; others
+are logged as a warning. Re-run it on its own if that happens, or if the stage
+timed out:
+
+```sh
+just bootstrap drop-helm-owners [timeout]
+```
+
+The patches change only `metadata.managedFields`, so nothing restarts. Objects
+applied with `kubectl apply --server-side` in the **base** stage need no cleanup:
+Flux's kustomize-controller removes the `kubectl` field manager by itself.
 
 !!! tip "Every stage is safe to re-run"
 
