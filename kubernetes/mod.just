@@ -91,10 +91,11 @@ prune-pods:
     done
 
 # Each node keeps about ten hourly audit files of ~100 MB, so `files` reads that many of the newest per node.
+# The default of 2 also covers a violation logged just before the current file was rotated.
 # Pods created by a controller have no name yet in a metadata-level audit event; the workload object
 # (Deployment, Job, ...) is audited by name when Flux applies it.
 [doc('List Pod Security violations from the kube-apiserver audit logs on every node')]
-pss-violations files="1":
+pss-violations files="2":
     nodes="$(talosctl config info -o yaml | yq -r -e '.nodes | join(" ")')"
     for node in $nodes; do
         logs="$(talosctl -n "$node" ls /var/log/audit/kube | awk '$NF ~ /^kube-apiserver-.*\.log$/ { print $NF }' | sort; echo kube-apiserver.log)"
