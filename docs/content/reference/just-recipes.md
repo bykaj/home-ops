@@ -16,8 +16,9 @@ See [Bootstrap](../operations/runbooks/bootstrap.md).
 
 | Recipe | Does |
 | --- | --- |
-| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig → `store-configs` |
+| `cluster` | Talos config → `talosctl bootstrap` → kubeconfig → CRDs and bootstrap Secrets → helmfile apps → kubeconfig → `store-configs` → `drop-helm-owners` |
 | `docker <host>` | Run `bootstrap/docker/<host>/bootstrap.yaml` against the `<host>` inventory group ([details](../operations/runbooks/bootstrap.md#docker-hosts)) |
+| `drop-helm-owners [timeout]` | Once each helmfile release's HelmRelease is `Ready`, remove the stale `helm` field manager from its objects ([details](../operations/runbooks/bootstrap.md#field-managers)) |
 | `restore-configs` | Restore `kubeconfig` and `talosconfig` from the `cluster` item in 1Password ([details](../operations/runbooks/bootstrap.md#client-configs)) |
 | `store-configs [files...]` | Upload `kubeconfig` and `talosconfig`, or only the files given, with their certificate expiry dates to the `cluster` item in 1Password (skips unchanged files) |
 
@@ -57,6 +58,7 @@ Day-2 cluster operations
 | `delete-ks <ns> <ks>` | Render a Flux Kustomization locally and delete its resources |
 | `prune-pods` | Delete pods in `Failed`, `Pending` or `Succeeded` phase |
 | `mariadb-mark-initialized <ns> <app>` | Set `Initialized` and `BinlogsReplayed` on `<app>-mariadb` after removing its init label ([details](../infrastructure/storage/mariadb.md#using-the-component)) |
+| `pss-violations [files]` | List Pod Security violations from the newest kube-apiserver audit file(s) on each node ([details](../platforms/kubernetes/index.md#pod-security)) |
 | `pvc-backup <ns> <app>` | Create a one-off Kopiur `Snapshot` ([details](../infrastructure/storage/backups.md#manual-backups)) |
 | `sync <hr\|ks\|gitrepo\|ocirepo\|es>` | Force reconciliation of every resource of that kind |
 | `sync-es <ns> <name>` | Force-sync one ExternalSecret |
