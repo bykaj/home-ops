@@ -8,3 +8,5 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: "disabled"
   labels:
     goldilocks.fairwinds.com/enabled: "true"
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/warn: baseline

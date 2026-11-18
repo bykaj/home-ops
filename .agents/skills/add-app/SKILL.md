@@ -421,7 +421,7 @@ Document the policy: a bullet in the policy list on `docs/content/infrastructure
 
 Add `./<app>/ks.yaml` to `kubernetes/apps/<namespace>/kustomization.yaml` `resources`, in alphabetical position among the app entries (`namespace.yaml` stays first; leave existing entries where they are).
 
-**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `alerts` component and the literal `name: _` in namespace.yaml (kustomize renames it) — and register the directory in `kubernetes/clusters/main`'s apps kustomization if namespaces are listed there.
+**New namespace?** Create `kubernetes/apps/<namespace>/` with a `namespace.yaml` and `kustomization.yaml` copied from an existing namespace (e.g. `selfhosted`) — keep the `alerts` component and the literal `name: _` in namespace.yaml (kustomize renames it), and give it Pod Security labels like the other app namespaces (`pod-security.kubernetes.io/audit: baseline` and `warn: baseline` today; `enforce: privileged` only if its pods need host access, see the Pod Security section of `docs/content/platforms/kubernetes/index.md`) — and register the directory in `kubernetes/clusters/main`'s apps kustomization if namespaces are listed there.
 
 ## Step 4: Verify
 

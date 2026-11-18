@@ -102,6 +102,43 @@ Conventions:
 The [Adding an App](../../operations/runbooks/adding-an-app.md) runbook walks through
 scaffolding one.
 
+## Pod Security
+
+Every namespace sets a
+[Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+level with labels in its `namespace.yaml`. Talos's own admission defaults are
+not in effect here, so a namespace without labels allows anything.
+
+| Namespaces | Labels | Why |
+| --- | --- | --- |
+| actions-runner-system, ai, cert-manager, database, default, development, downloads, external-secrets, media, security, system-upgrade | `audit: baseline`, `warn: baseline` | App namespaces; nothing running in them needs more than baseline |
+| kube-system, network, observability, rook-ceph, system | `enforce: privileged` | Run pods that need host access: control plane and Cilium, the Tailscale exit node, node-exporter and kguardian, Ceph OSDs and CSI, Spegel and the GPU driver |
+| flux-system | `warn: restricted` | Set by flux-operator, which owns this namespace: it marks it `kustomize.toolkit.fluxcd.io/ssa: Ignore`, so labels in `flux-system/namespace.yaml` are never applied |
+
+`baseline` forbids privileged containers, host namespaces, `hostPath`
+volumes, host ports and added capabilities beyond a small safe set. Kopiur's
+privileged movers stay within that set (`CHOWN`, `DAC_OVERRIDE`, `FOWNER`,
+`FSETID`).
+
+The app namespaces are in a warn-and-audit phase: violations are reported but
+not blocked, and switch to `enforce: baseline` once none show up. Violations
+fire the `PodSecurityBaselineViolation` alert (see
+[Alerting](../../operations/alerting/index.md#custom-rules)). The metric behind
+it has no namespace, so find the pod with:
+
+```sh
+just k8s pss-violations [files]   # reads the newest audit file(s) on each node
+```
+
+The audit logs keep about ten hours (ten hourly files per node). A pod created
+by a controller shows as `(new)` with the creating controller as user; the
+workload itself appears by name when Flux applies it. To check what is running
+right now against a level, without changing anything:
+
+```sh
+kubectl label --dry-run=server --overwrite ns <namespace> pod-security.kubernetes.io/enforce=baseline
+```
+
 ## Validating changes locally
 
 ```sh
