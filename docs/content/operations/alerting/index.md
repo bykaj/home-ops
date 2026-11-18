@@ -59,6 +59,7 @@ Rules for one app live in that app's `prometheusrule.yaml` (or its chart's
 | `NvmeTemperatureCritical` | critical | An NVMe drive is at or above its warning threshold for 1 minute |
 | `NvmeTemperatureHigh` | warning | An NVMe drive is within 2 °C of its warning threshold for 5 minutes |
 | `OomKilled` | critical | A container restarted because of an OOM kill in the last 10 minutes |
+| `PodSecurityBaselineViolation` | warning | A pod create or update in the last 10 minutes violated the Pod Security baseline of a namespace that audits it; find it with `just k8s pss-violations` (see [Pod Security](../../platforms/kubernetes/index.md#pod-security)) |
 | `ZfsUnexpectedPoolState` | critical | A NAS ZFS pool is not `online` |
 
 ### Per app

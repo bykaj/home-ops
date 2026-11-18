@@ -7,4 +7,5 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: "disabled"
   labels:
     goldilocks.fairwinds.com/enabled: "true"
+    pod-security.kubernetes.io/enforce: privileged
     resource.kubernetes.io/admin-access: "true"

@@ -169,6 +169,28 @@ spec:
                 expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
                 labels:
                   severity: critical
+      pod-security-rules:
+        groups:
+          - name: pod-security
+            rules:
+              - alert: PodSecurityBaselineViolation
+                annotations:
+                  description: >-
+                    {{ printf "%.0f" $value }} pod create or update request(s) in the last 10 minutes would break the
+                    Pod Security baseline in a namespace labelled `pod-security.kubernetes.io/audit: baseline`. The
+                    metric has no namespace; run `just k8s pss-violations` to see which pods and why.
+                  summary: A pod violates the Pod Security baseline of its namespace.
+                # Audit mode counts every violation once, in the warn phase and after enforcement alike. The second
+                # branch catches series created by their first violation in the window, which increase() counts as 0
+                expr: >-
+                  sum(
+                    increase(pod_security_evaluations_total{decision="deny",mode="audit",policy_level="baseline"}[10m]) > 0
+                    or
+                    (pod_security_evaluations_total{decision="deny",mode="audit",policy_level="baseline"}
+                      unless pod_security_evaluations_total{decision="deny",mode="audit",policy_level="baseline"} offset 10m)
+                  ) > 0
+                labels:
+                  severity: warning
       zfs-rules:
         groups:
           - name: zfs
