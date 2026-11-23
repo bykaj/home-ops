@@ -12,7 +12,7 @@ pipx.uvx = true
 [tools]
 "actionlint" = "1.7.12"
 "aqua:1password/cli" = "2.42.0"
-"cloudflared" = "2026.11.1"
+"cloudflared" = "2026.11.2"
 "crane" = "0.22.1"
 "flux2" = "2.10.1"
 "gh" = "2.105.0"
@@ -22,7 +22,7 @@ pipx.uvx = true
 "github:postfinance/topf" = "v0.6.2"
 "gum" = "2.0.2"
 "helm" = "4.3.2"
-"aqua:helmfile/helmfile" = "1.8.4"
+"aqua:helmfile/helmfile" = "1.8.5"
 "jq" = "1.8.2"
 "just" = "1.59.0"
 "krew" = "0.5.0"
@@ -42,7 +42,7 @@ pipx.uvx = true
 "talos" = "1.14.6"
 "uv" = "0.13.9"
 "yq" = "4.54.3"
-"zizmor" = "1.32.0"
+"zizmor" = "1.33.1"
 
 [hooks]
 postinstall = [
