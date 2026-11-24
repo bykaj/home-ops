@@ -23,7 +23,7 @@ services:
       - source: filen_cli_auth_config
         target: /run/secrets/filen-cli-auth-config.txt
     container_name: filen-cli
-    image: docker.io/filen/cli:0.3.0
+    image: docker.io/filen/cli:0.3.1
     labels:
       dexd.enabled: "true"
       traefik.enable: "true"
