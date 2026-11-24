@@ -284,7 +284,7 @@ spec:
           app:
             image:
               repository: docker.io/seafileltd/seasearch
-              tag: 1.0.8@sha256:1d5c3f0bbbae5716be0c4b6222ac80e0310233d31683a7e989b4dfd9976514af
+              tag: 1.0.9@sha256:366f2d0cc70a4a54d9617244fbaf4f487568c103febbd904b002bd8af5369f3f
             env:
               # Only used on the first start, to create the admin
               SS_FIRST_ADMIN_PASSWORD:
