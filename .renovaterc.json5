@@ -219,6 +219,23 @@
       minimumGroupSize: 2,
     },
     {
+      // Only the images released with the Seafile server; sdoc-server and
+      // seasearch have their own versions
+      description: "Seafile Group",
+      groupName: "seafile",
+      matchDatasources: ["docker"],
+      matchPackageNames: [
+        "docker.io/seafileltd/notification-server",
+        "docker.io/seafileltd/seafile-ai",
+        "docker.io/seafileltd/seafile-md-server",
+        "docker.io/seafileltd/seafile-pro-mc",
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       // After the mise tools catch-all so talos wins its own group; unites the
       // mise pin, the factory installer image, and the tuppr upgrade version
       description: "Talos Group",
