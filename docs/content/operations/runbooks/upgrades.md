@@ -22,6 +22,9 @@ Merging the PR is the upgrade. tuppr upgrades one node at a time
 - no Kopiur `Snapshot` is `Running`
 - no Kopiur `Restore` is `Resolving` or `Restoring`
 - the `CephCluster` reports `HEALTH_OK`
+- Talos only: every CNPG `Cluster` is `Ready` with all its instances
+- Talos only: every `MariaDB` is `Ready`, and all its replicas are replicating
+  and at the same GTID
 
 Nodes due for an upgrade get the `tuppr.home-operations.com/outdated` taint.
 Ceph daemons tolerate it, so they aren't evicted early.
