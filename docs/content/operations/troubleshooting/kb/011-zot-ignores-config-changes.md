@@ -6,7 +6,7 @@ description: Zot keeps using its old config after doco-cd deploys a change
 
 ## Symptom
 
-After a change to `docker/nas/06-zot/config/config.json` is deployed, Zot
+After a change to `docker/nas/07-zot/config/config.json` is deployed, Zot
 still behaves as before, for example new mirror paths return 404.
 
 ## Cause
