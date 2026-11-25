@@ -23,3 +23,22 @@ spec:
       kind: CephCluster
       expr: |-
         status.ceph.health in ['HEALTH_OK']
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      expr: |-
+        has(status.readyInstances) && status.readyInstances == object.spec.instances &&
+        has(status.conditions) && status.conditions.exists(c, c.type == 'Ready' && c.status == 'True')
+    # Ready doesn't cover a replica that follows another replica, so the GTIDs
+    # have to match too (KB-021)
+    - apiVersion: k8s.mariadb.com/v1alpha1
+      kind: MariaDB
+      expr: |-
+        has(status.conditions) && status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') &&
+        (!has(object.spec.replication) || (
+          has(status.replication) && has(status.replication.replicas) &&
+          size(status.replication.replicas) == object.spec.replicas - 1 &&
+          status.replication.replicas.all(r,
+            status.replication.replicas[r].slaveIORunning &&
+            status.replication.replicas[r].slaveSQLRunning &&
+            status.replication.replicas.all(o,
+              status.replication.replicas[r].gtidCurrentPos == status.replication.replicas[o].gtidCurrentPos))))

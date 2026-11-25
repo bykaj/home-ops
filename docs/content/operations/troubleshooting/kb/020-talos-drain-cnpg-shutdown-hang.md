@@ -48,9 +48,16 @@ so a hung pod is killed within the drain timeout. The hang itself isn't fixed.
       sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" -e "START ALL SLAVES"'
     ```
 
-4. Retry the upgrade. If a drain hangs on a Postgres pod again, delete exactly
+    Then check that each replica follows the current primary. Thread state and
+    lag don't show that; see [KB-021](021-mariadb-replica-stale.md).
+
+4. Retry the upgrade with the command below. If a drain hangs on a Postgres pod again, delete exactly
    that pod with `--grace-period=0 --force`, after checking in its log that
    Postgres has stopped.
+
+    ```sh
+    kubectl annotate talosupgrade talos tuppr.home-operations.com/reset="$(date)"
+    ```
 
 ## Seen
 

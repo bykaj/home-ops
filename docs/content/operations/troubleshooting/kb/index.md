@@ -30,6 +30,7 @@ and fix. To find one from what you see, start at the
 | [018](018-nic-rx-ring-overflow.md) | Packet drop alerts from NIC RX ring overflows |
 | [019](019-charts-mirror-chart-pruned.md) | Chart pull `DENIED` from the charts mirror |
 | [020](020-talos-drain-cnpg-shutdown-hang.md) | Talos upgrade fails on a Postgres pod that won't stop |
+| [021](021-mariadb-replica-stale.md) | MariaDB replica is stale but reports Ready |
 
 ## Adding an entry
 

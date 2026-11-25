@@ -54,6 +54,8 @@ Start from what you see and follow the most likely entry.
 
 - A Talos upgrade fails with `failed to drain node` on a Postgres pod, and the
   node stays cordoned: [KB-020](kb/020-talos-drain-cnpg-shutdown-hang.md)
+- A MariaDB replica shows no lag but its GTID doesn't move, or one fails with
+  error 1236: [KB-021](kb/021-mariadb-replica-stale.md)
 
 ### Secrets
 
