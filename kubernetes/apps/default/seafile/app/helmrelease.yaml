@@ -176,7 +176,7 @@ spec:
           app:
             image:
               repository: docker.io/seafileltd/seafile-md-server
-              tag: 14.0.10@sha256:2d29ba716611c3f3c55debfc7032b49ba536e3658190fe35e2614295b4f80b93
+              tag: 14.0.11@sha256:db198b173004515d84e91f2a6a58291a708fca461d6b28de50b71eca5700f0d0
             env:
               # In-memory cache; the metadata itself lives in the seafile-metadata bucket
               MD_MAX_CACHE_SIZE: 512MB
