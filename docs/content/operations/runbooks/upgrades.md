@@ -44,6 +44,9 @@ kubectl get talosupgrade,kubernetesupgrade
 kubectl -n system-upgrade logs -l app.kubernetes.io/name=tuppr -f
 ```
 
+If the upgrade fails with a node still cordoned, see
+[KB-020](../troubleshooting/kb/020-talos-drain-cnpg-shutdown-hang.md).
+
 When it's done, run the [Health Check](health-check.md).
 
 ## Manual

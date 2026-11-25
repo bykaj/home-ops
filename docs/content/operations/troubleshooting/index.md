@@ -52,6 +52,9 @@ Start from what you see and follow the most likely entry.
 - Kopiur backups fail with `PermissionDenied` on `/var/cache/kopia`:
   [KB-008](kb/008-kopiur-mover-uid-change.md)
 
+- A Talos upgrade fails with `failed to drain node` on a Postgres pod, and the
+  node stays cordoned: [KB-020](kb/020-talos-drain-cnpg-shutdown-hang.md)
+
 ### Secrets
 
 - 1Password Connect fails with `failed to Unmarshal credentials file data`

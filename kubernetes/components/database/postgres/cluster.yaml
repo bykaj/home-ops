@@ -48,6 +48,10 @@ spec:
   resources:
     requests:
       memory: 512Mi
+  # Both must leave room within the 5m drain timeout of a Talos upgrade, or an
+  # instance manager that hangs on shutdown fails the upgrade (KB-020).
+  smartShutdownTimeout: 60
+  stopDelay: 180
   storage:
     size: 5Gi
     storageClass: openebs-hostpath
