@@ -341,6 +341,7 @@ url_api = "https://api.github.com/repos/mitsuhiko/minijinja/releases/assets/7217
 version = "0.6.2"
 backend = "github:postfinance/topf"
 specifiers = ["v0.6.2"]
+unsupported_platforms = ["windows-x64"]
 
 [tools."github:postfinance/topf"."platforms.linux-arm64"]
 checksum = "sha256:8f528bd90fc3d173a0a10609dbc1a5001ae002f44fd75c214b5e760aff3f0514"
