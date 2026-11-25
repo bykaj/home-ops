@@ -6,7 +6,7 @@ metadata:
   name: litellm
 spec:
   # renovate: datasource=docker depName=docker.io/litellm/litellm
-  image: docker.io/litellm/litellm:v1.109.1@sha256:11175975a3093e05e92faee2fe2fe3412a3ae2fcaa849eb0fe25d5f0d8bcb2e9
+  image: docker.io/litellm/litellm:1.110.2@sha256:ef798594ca3db8d81bad2e1439f536f49b71fe095ee9f20416f5e149b4e22035
   replicas: 1
   # Admin API for DB-backed resources (LiteLLMVirtualKey); models and MCP
   # servers stay file-backed because applyMode is left at its default
