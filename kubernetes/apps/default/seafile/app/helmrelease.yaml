@@ -145,7 +145,7 @@ spec:
           app:
             image:
               repository: docker.io/seafileltd/seafile-ai
-              tag: 14.0.9@sha256:9c54642b0e072692afd79202b88f3b3a11d9773ccd9df81858a1bd765d47adf5
+              tag: 14.0.11@sha256:59c6ec91f48d2f70d46007e9157fff6c48cbece5c9305bfaa75aaacc514a16c1
             env:
               AI_API_KEY: *litellmKey
               EMBEDDING_MODEL: *embeddingModel
