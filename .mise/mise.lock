@@ -63,38 +63,23 @@ checksum = "sha256:8c457a0dc852c15beb35af77717ed32294345a300e15c444ed42c79ebc433
 url = "https://cache.agilebits.com/dist/1P/op2/pkg/v2.42.0/op_windows_amd64_v2.42.0.zip"
 
 [[tools."aqua:helmfile/helmfile"]]
-version = "1.8.5"
+version = "1.8.6"
 backend = "aqua:helmfile/helmfile"
-specifiers = ["1.8.5"]
+specifiers = ["1.8.6"]
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-arm64"]
-checksum = "sha256:023b28a0630b60b392407f107b336502d11fec7e901dc631cfff7d2cc86a80c2"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780886000"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.linux-x64"]
-checksum = "sha256:e10344a4e6121689265c8fbe8ce96977b4722a9f953db862014a08b99938c333"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885994"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-arm64"]
-checksum = "sha256:aa8c5e0c0ebb331e5a3eacbe3ee4bacd45f8a0c6ef361a79dea23b7bf4c4a76f"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885934"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.macos-x64"]
-checksum = "sha256:4a3919de8d4401a0e3ab751a4f15806c0b72561c1045eebe0c9ad91d90f90021"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780886003"
 provenance = "github-attestations"
 
 [tools."aqua:helmfile/helmfile"."platforms.windows-x64"]
-checksum = "sha256:37b7014bbcd2abc5bd8508b39812f7125d3bd0f70717fe578ae99cee7cc36b4e"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.8.5/helmfile_1.8.5_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/780885938"
 provenance = "github-attestations"
 
 [[tools.cloudflared]]
@@ -233,39 +218,39 @@ url_api = "https://api.github.com/repos/cli/cli/releases/assets/793445150"
 provenance = "github-attestations"
 
 [[tools."github:docker/compose"]]
-version = "5.8.0"
+version = "5.8.1"
 backend = "github:docker/compose"
-specifiers = ["v5.8.0"]
+specifiers = ["v5.8.1"]
 
 [tools."github:docker/compose"."platforms.linux-arm64"]
-checksum = "sha256:1a9c918b2fb49b9c87f0018c64b5abd0d30715155e98dc939779fbaee6c414d3"
+checksum = "sha256:e169103deb35aa6633a78eca0a2a0658275d573dd689a33c839c71badfa00cce"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/compose/releases/download/v5.8.0/docker-compose-linux-aarch64"
-url_api = "https://api.github.com/repos/docker/compose/releases/assets/759067215"
+url = "https://github.com/docker/compose/releases/download/v5.8.1/docker-compose-linux-aarch64"
+url_api = "https://api.github.com/repos/docker/compose/releases/assets/800558438"
 
 [tools."github:docker/compose"."platforms.linux-x64"]
-checksum = "sha256:b8840f5008c447f41fce0a57ae3adeab42c89b1eb6e6012524bcabbfb4ffbaf6"
+checksum = "sha256:cf2713394ca63900da5d00e0be12045634cea93a504e1ab2f2ae24eed7f2d359"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/compose/releases/download/v5.8.0/docker-compose-linux-x86_64"
-url_api = "https://api.github.com/repos/docker/compose/releases/assets/759067214"
+url = "https://github.com/docker/compose/releases/download/v5.8.1/docker-compose-linux-x86_64"
+url_api = "https://api.github.com/repos/docker/compose/releases/assets/800558424"
 
 [tools."github:docker/compose"."platforms.macos-arm64"]
-checksum = "sha256:008b8fcf6c6d60340f5796626a0f0d51c042085793a9b1653343011727140b71"
+checksum = "sha256:775ddf9cfad37b21a29dd83707481d3806c2a83ed2139bc5f19543857d341d81"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/compose/releases/download/v5.8.0/docker-compose-darwin-aarch64"
-url_api = "https://api.github.com/repos/docker/compose/releases/assets/759067212"
+url = "https://github.com/docker/compose/releases/download/v5.8.1/docker-compose-darwin-aarch64"
+url_api = "https://api.github.com/repos/docker/compose/releases/assets/800558432"
 
 [tools."github:docker/compose"."platforms.macos-x64"]
-checksum = "sha256:5c41cd573c549dc66abb03c5b29d6d4dfaae206b2e79848d1c32482bb2a3b416"
+checksum = "sha256:59ddcb7f6a077b2b11b361fca4c62a1de20fd44054ec6c98188c9bb993db4fbb"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/compose/releases/download/v5.8.0/docker-compose-darwin-x86_64"
-url_api = "https://api.github.com/repos/docker/compose/releases/assets/759067227"
+url = "https://github.com/docker/compose/releases/download/v5.8.1/docker-compose-darwin-x86_64"
+url_api = "https://api.github.com/repos/docker/compose/releases/assets/800558431"
 
 [tools."github:docker/compose"."platforms.windows-x64"]
-checksum = "sha256:0c2d9245a5f61e8e3cc85009b8b4888fa82fded08239d28bd6da5ca818eda2b2"
+checksum = "sha256:7a0e8c884521adfb5dbf7c6250f89172cd7f5cb68ce284c401cc3fe1a116f988"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/compose/releases/download/v5.8.0/docker-compose-windows-x86_64.exe"
-url_api = "https://api.github.com/repos/docker/compose/releases/assets/759067226"
+url = "https://github.com/docker/compose/releases/download/v5.8.1/docker-compose-windows-x86_64.exe"
+url_api = "https://api.github.com/repos/docker/compose/releases/assets/800558413"
 
 [[tools."github:home-operations/flate"]]
 version = "0.8.0"
@@ -684,9 +669,9 @@ backend = "pipx:yamllint"
 specifiers = ["1.38.0"]
 
 [[tools."pipx:zensical"]]
-version = "0.1.3"
+version = "0.1.4"
 backend = "pipx:zensical"
-specifiers = ["0.1.3"]
+specifiers = ["0.1.4"]
 
 [[tools.ripgrep]]
 version = "16.0.0"
